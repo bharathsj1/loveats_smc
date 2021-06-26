@@ -49,6 +49,8 @@ class CustomTextFormField extends StatelessWidget {
     return Container(
       child: TextFormField(
         controller: textEditingController,
+        autovalidateMode: AutovalidateMode.disabled,
+        validator: (value) => value.isEmpty ? 'This field is required' : null,
         style: textFormFieldStyle,
         maxLines: maxLines,
         decoration: InputDecoration(

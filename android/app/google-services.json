@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "374748620674",
+    "project_id": "loveatsnew",
+    "storage_bucket": "loveatsnew.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374748620674:android:8961f41d1081ac251b519b",
+        "android_client_info": {
+          "package_name": "com.example.crud_task"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "374748620674-qbkd2tsqqbgfcj0939ig0okbm4kn94fm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUraFNNCcmgAhkV7NY7Iy40P87S6RBsE8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "374748620674-qbkd2tsqqbgfcj0939ig0okbm4kn94fm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "374748620674-2f9v8lvq2lede52gbvnou2l4bds4gk95.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.smc.loveats"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374748620674:android:9d284d5dc1a130441b519b",
+        "android_client_info": {
+          "package_name": "com.smc.loveats"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "374748620674-5ovl2cngt0g08945ej1madlbv9g3t3a1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.smc.loveats",
+            "certificate_hash": "c4f58c8b0755fe1893b10dd9c69575d181c0fd58"
+          }
+        },
+        {
+          "client_id": "374748620674-qbkd2tsqqbgfcj0939ig0okbm4kn94fm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUraFNNCcmgAhkV7NY7Iy40P87S6RBsE8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "374748620674-qbkd2tsqqbgfcj0939ig0okbm4kn94fm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "374748620674-2f9v8lvq2lede52gbvnou2l4bds4gk95.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.smc.loveats"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

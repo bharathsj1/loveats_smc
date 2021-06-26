@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:potbelly/models/UserModel.dart';
 import 'package:potbelly/screens/login_screen.dart';
@@ -10,14 +11,21 @@ import 'package:potbelly/widgets/custom_text_form_field.dart';
 import 'package:potbelly/widgets/dark_overlay.dart';
 import 'package:potbelly/widgets/image_pick.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
+import 'package:potbelly/widgets/snackbar.dart';
 import 'package:potbelly/widgets/spaces.dart';
+import 'package:potbelly/widgets/toaster.dart';
 
 class RegisterScreen extends StatefulWidget {
+  final String email;
+
+  const RegisterScreen({Key key, this.email}) : super(key: key);
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final _formKey = GlobalKey<FormState>();
+
   final nameController = TextEditingController();
 
   final emailController = TextEditingController();
@@ -32,6 +40,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   double heightOfScreen;
   double widthOfScreen;
+
+  @override
+  void initState() {
+    if (widget.email != null) {
+      emailController.text = widget.email;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -176,72 +192,68 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildForm() {
-    return Column(
-      children: <Widget>[
-        CustomTextFormField(
-          hasPrefixIcon: true,
-          textEditingController: nameController,
-          prefixIconImagePath: ImagePath.personIcon,
-          hintText: StringConst.HINT_TEXT_NAME,
-        ),
-        SpaceH16(),
-        CustomTextFormField(
-          hasPrefixIcon: true,
-          textEditingController: emailController,
-          prefixIconImagePath: ImagePath.emailIcon,
-          hintText: StringConst.HINT_TEXT_EMAIL,
-        ),
-        SpaceH16(),
-        CustomTextFormField(
-          hasPrefixIcon: true,
-          textEditingController: passwordController,
-          prefixIconImagePath: ImagePath.passwordIcon,
-          hintText: StringConst.HINT_TEXT_PASSWORD,
-          obscured: true,
-        ),
-        SpaceH16(),
-        CustomTextFormField(
-          hasPrefixIcon: true,
-          textEditingController: confirmPasswordController,
-          prefixIconImagePath: ImagePath.passwordIcon,
-          hintText: StringConst.HINT_TEXT_CONFIRM_PASSWORD,
-          obscured: true,
-        ),
-        SpaceH16(),
-        CustomTextFormField(
-          hasPrefixIcon: true,
-          textEditingController: phoneNoController,
-          prefixIconImagePath: ImagePath.callIcon,
-          hintText: StringConst.HINT_TEXT_PHONE_NO,
-        ),
-      ],
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          CustomTextFormField(
+            hasPrefixIcon: true,
+            textEditingController: nameController,
+            prefixIconImagePath: ImagePath.personIcon,
+            hintText: StringConst.HINT_TEXT_NAME,
+          ),
+          SpaceH16(),
+          CustomTextFormField(
+            hasPrefixIcon: true,
+            textEditingController: emailController,
+            prefixIconImagePath: ImagePath.emailIcon,
+            hintText: StringConst.HINT_TEXT_EMAIL,
+          ),
+          SpaceH16(),
+          CustomTextFormField(
+            hasPrefixIcon: true,
+            textEditingController: passwordController,
+            prefixIconImagePath: ImagePath.passwordIcon,
+            hintText: StringConst.HINT_TEXT_PASSWORD,
+            obscured: true,
+          ),
+          SpaceH16(),
+          CustomTextFormField(
+            hasPrefixIcon: true,
+            textEditingController: phoneNoController,
+            prefixIconImagePath: ImagePath.callIcon,
+            hintText: StringConst.HINT_TEXT_PHONE_NO,
+          ),
+        ],
+      ),
     );
   }
 
   void validateFormAndCreateUser(BuildContext context) async {
+    FirebaseAuth _auth = FirebaseAuth.instance;
+    var currentUser = await _auth.currentUser();
     print('In validate Form');
-    if (nameController.text.isEmpty) {
-    } else if (emailController.text.isEmpty ||
-        !emailController.text.contains('@')) {
-    } else if (passwordController.text.isEmpty ||
-        confirmPasswordController.text.isEmpty) {
-    } else if (passwordController.text != confirmPasswordController.text) {
-    } else if (phoneNoController.text.isEmpty) {}
-    // String profileImageURL =
-    //     await Service().uploadImageToServer(_profilePicture);
+    String message;
+    if (_formKey.currentState.validate()) {
+      UserModel userModel = UserModel(
+          currentUser != null ? currentUser.uid : '',
+          nameController.text,
+          emailController.text,
+          passwordController.text,
+          phoneNoController.text,
+          '');
 
-    UserModel userModel = UserModel(
-        '',
-        nameController.text,
-        emailController.text,
-        passwordController.text,
-        phoneNoController.text,
-        '');
-
-    bool isCreated =
-        await Service().registerWithEmail(userModel, _profilePicture);
-    if (isCreated)
-      Navigator.push(context, MaterialPageRoute(builder: (_) => RootScreen()));
-    else {}
+      if (widget.email != null) {
+        message = await Service().setDataInUserCollection(userModel);
+      } else {
+        message = await Service().registerWithEmail(userModel, _profilePicture);
+      }
+      if (message.contains('successfully'))
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => RootScreen()));
+      else {
+        showSnackBar(context, message);
+      }
+    }
   }
 }

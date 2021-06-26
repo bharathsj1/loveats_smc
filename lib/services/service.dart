@@ -16,52 +16,49 @@ class Service {
   FirebaseAuth _auth = FirebaseAuth.instance;
   CollectionReference usersCollection = Firestore.instance.collection('users');
 
-  Future<FirebaseUser> signInWithGoogle() async {
+  Future<String> signInWithGoogle() async {
     try {
       GoogleSignInAccount googleSignIn = await GoogleSignIn().signIn();
-
       GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignIn.authentication;
       AuthCredential authCredential = GoogleAuthProvider.getCredential(
           idToken: googleSignInAuthentication.idToken,
           accessToken: googleSignInAuthentication.accessToken);
-
       AuthResult _authResult = await _auth.signInWithCredential(authCredential);
-      return _authResult.user;
+      bool isUserAvailable =
+          await checkIfUserAvailable('uId', _authResult.user.uid);
+      if (isUserAvailable) {
+        return 'Successfully logged in';
+      } else {
+        return 'register screen';
+      }
     } catch (error) {
       print(error.toString());
-      return null;
+      return error;
     }
   }
 
-  Future<bool> registerWithEmail(UserModel userModel, File image) async {
-    print('In Register With Email Function');
-    QuerySnapshot querySnapshot = await usersCollection
-        .where('email', isEqualTo: userModel.email)
-        .getDocuments();
+  Future<String> registerWithEmail(UserModel userModel, File image) async {
+    try {
+      AuthResult _authResult = await _auth.createUserWithEmailAndPassword(
+          email: userModel.email, password: userModel.password);
+      String url = await uploadImageToServer(image);
 
-    if (querySnapshot.documents.length > 0) {
-      return false;
-    } else {
-      try {
-        AuthResult _authResult = await _auth.createUserWithEmailAndPassword(
-            email: userModel.email, password: userModel.password);
-        String url = await uploadImageToServer(image);
-
-        UserModel _user = UserModel(_authResult.user.uid, userModel.name,
-            userModel.email, userModel.password, userModel.phoneNo, url);
-        usersCollection.document(userModel.phoneNo).setData(_user.toJson());
-        return true;
-      } catch (e) {
-        print(e.code.toString());
-        if (e.code == 'weak-password') {
-          return false;
-        } else if (e.code == 'email-already-in-use') {
-          return false;
-        }
-      }
+      UserModel _user = UserModel(_authResult.user.uid, userModel.name,
+          userModel.email, userModel.password, userModel.phoneNo, url ?? '');
+      usersCollection.document(userModel.phoneNo).setData(_user.toJson());
+      return 'Your account has been created successfully';
+    } catch (e) {
+      print(e.toString());
+      if (e.code == 'weak-password') {
+        return 'Password is weak';
+      } else if (e.code == 'ERROR_INVALID_EMAIL') {
+        return 'Email is not Valid';
+      } else if (e.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+        return 'This user is already registed';
+      } else
+        return 'error';
     }
-    return false;
   }
 
   Future<FirebaseUser> signInWithApple() async {
@@ -124,21 +121,56 @@ class Service {
     return userClass[0];
   }
 
-  Future<String> uploadImageToServer(File image) async {
-    String fileName = basename(image.path);
+  Future<String> signInWithEmail(
+      BuildContext context, String email, String password) async {
+    AuthResult user;
     try {
-      StorageReference reference =
-          FirebaseStorage.instance.ref().child("images/$fileName");
-
-      StorageUploadTask uploadTask = reference.putFile(image);
-
-      //Snapshot of the uploading task
-      StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
-      String url = await taskSnapshot.ref.getDownloadURL();
-      return url;
+      user = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
     } catch (error) {
-      print(error.toString());
+      if (error.code == 'ERROR_USER_NOT_FOUND') {
+        return 'User not found';
+      } else if (error.code == 'ERROR_WRONG_PASSWORD') {
+        return 'Invalid Password';
+      } else if (error.code == 'ERROR_INVALID_EMAIL') {
+        return 'Invalid email';
+      } else
+        return error;
+    }
+    return user != null ? 'Logged in successfully' : 'Some error occured';
+  }
+
+  Future<String> uploadImageToServer(File image) async {
+    if (image != null) {
+      String fileName = basename(image.path);
+      try {
+        StorageReference reference =
+            FirebaseStorage.instance.ref().child("images/$fileName");
+
+        StorageUploadTask uploadTask = reference.putFile(image);
+
+        //Snapshot of the uploading task
+        StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+        String url = await taskSnapshot.ref.getDownloadURL();
+        return url;
+      } catch (error) {
+        print(error.toString());
+      }
     }
     return null;
+  }
+
+  Future<bool> checkIfUserAvailable(String key, String value) async {
+    final userDocs =
+        await usersCollection.where(key, isEqualTo: value).getDocuments();
+    if (userDocs.documents.length > 0)
+      return true;
+    else
+      return false;
+  }
+
+  Future<String> setDataInUserCollection(UserModel userModel) async {
+    usersCollection.document(userModel.phoneNo).setData(userModel.toJson());
+    return 'successfully';
   }
 }
