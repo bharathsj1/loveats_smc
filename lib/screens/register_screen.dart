@@ -13,7 +13,6 @@ import 'package:potbelly/widgets/image_pick.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:potbelly/widgets/snackbar.dart';
 import 'package:potbelly/widgets/spaces.dart';
-import 'package:potbelly/widgets/toaster.dart';
 
 class RegisterScreen extends StatefulWidget {
   final String email;
@@ -235,13 +234,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     print('In validate Form');
     String message;
     if (_formKey.currentState.validate()) {
+      String url = await Service().uploadImageToServer(_profilePicture);
+
       UserModel userModel = UserModel(
           currentUser != null ? currentUser.uid : '',
           nameController.text,
           emailController.text,
           passwordController.text,
           phoneNoController.text,
-          '');
+          url ?? '');
 
       if (widget.email != null) {
         message = await Service().setDataInUserCollection(userModel);

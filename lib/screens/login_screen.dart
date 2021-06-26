@@ -185,6 +185,7 @@ Widget _buildForm(
 
 _signInWithGoogle(BuildContext context) async {
   String message = await Service().signInWithGoogle();
+  print(message);
 
   if (message.contains('successfully'))
     Navigator.pushAndRemoveUntil(context,
@@ -205,11 +206,25 @@ _signInWithGoogle(BuildContext context) async {
 }
 
 _signInWithApple(BuildContext context) async {
-  FirebaseUser _user = await Service().signInWithApple();
-  if (_user != null) {
+  String message = await Service().signInWithApple();
+  print(message);
+
+  if (message.contains('successfully'))
     Navigator.pushAndRemoveUntil(context,
         MaterialPageRoute(builder: (_) => RootScreen()), (route) => false);
-  }
+  else if (message.contains('register screen')) {
+    FirebaseAuth _auth = FirebaseAuth.instance;
+    var currUser = await _auth.currentUser();
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (_) => RegisterScreen(
+            email: currUser.email,
+          ),
+        ),
+        (route) => false);
+  } else
+    showSnackBar(context, message);
 }
 
 Widget _buildFooter(BuildContext context, TextEditingController email,
