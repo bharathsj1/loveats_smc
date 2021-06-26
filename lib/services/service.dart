@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:path/path.dart';
 import 'package:potbelly/models/UserModel.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:potbelly/screens/login_screen.dart';
 
 class Service {
@@ -29,24 +34,30 @@ class Service {
     }
   }
 
-  Future<bool> registerWithEmail(UserModel userModel) async {
+  Future<bool> registerWithEmail(UserModel userModel, File image) async {
+    print('In Register With Email Function');
     QuerySnapshot querySnapshot = await usersCollection
         .where('email', isEqualTo: userModel.email)
         .getDocuments();
 
     if (querySnapshot.documents.length > 0) {
-      return null;
+      return false;
     } else {
       try {
         AuthResult _authResult = await _auth.createUserWithEmailAndPassword(
             email: userModel.email, password: userModel.password);
-        usersCollection.document(userModel.phoneNo).setData(userModel.toJson());
+        String url = await uploadImageToServer(image);
+
+        UserModel _user = UserModel(_authResult.user.uid, userModel.name,
+            userModel.email, userModel.password, userModel.phoneNo, url);
+        usersCollection.document(userModel.phoneNo).setData(_user.toJson());
         return true;
       } catch (e) {
+        print(e.code.toString());
         if (e.code == 'weak-password') {
-          print('The password provided is too weak.');
+          return false;
         } else if (e.code == 'email-already-in-use') {
-          print('The account already exists for that email.');
+          return false;
         }
       }
     }
@@ -102,7 +113,32 @@ class Service {
 
   Future<UserModel> getUserDetail() async {
     FirebaseUser _user = await _auth.currentUser();
+    final userDocs =
+        await usersCollection.where('uId', isEqualTo: _user.uid).getDocuments();
 
-    return UserModel(_user.displayName ?? '', _user.email ?? '', '', '');
+    List<UserModel> userClass = userDocs.documents.map((e) {
+      return UserModel.fromSnapshot(e);
+    }).toList();
+
+    if (userClass.length == 0) return null;
+    return userClass[0];
+  }
+
+  Future<String> uploadImageToServer(File image) async {
+    String fileName = basename(image.path);
+    try {
+      StorageReference reference =
+          FirebaseStorage.instance.ref().child("images/$fileName");
+
+      StorageUploadTask uploadTask = reference.putFile(image);
+
+      //Snapshot of the uploading task
+      StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+      String url = await taskSnapshot.ref.getDownloadURL();
+      return url;
+    } catch (error) {
+      print(error.toString());
+    }
+    return null;
   }
 }

@@ -19,7 +19,7 @@ dependencies:
   apple_sign_in: ^0.1.0
   auth_buttons: ^1.0.1+4
   carousel_slider: ^1.4.1
-  cloud_firestore: 
+  cloud_firestore: null
   cupertino_icons: ^1.0.0
   firebase_auth: ^0.15.3
   firebase_core: ^0.4.0
@@ -31,6 +31,7 @@ dependencies:
   flutter_svg: ^0.17.1
   google_fonts: null
   google_sign_in: ^5.0.4
+  image_picker: ^0.6.2
   provider: ^4.3.2+2
   sign_in_with_apple: ^3.0.0
   video_player: ^1.0.1

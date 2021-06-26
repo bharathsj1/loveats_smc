@@ -8,8 +8,6 @@ import 'package:potbelly/widgets/foody_bite_card.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:potbelly/widgets/spaces.dart';
 
-// adde
-
 class ProfileScreen extends StatefulWidget {
   static const int TAB_NO = 3;
 
@@ -53,16 +51,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: <Widget>[
                     Column(
                       children: [
-                        CircleAvatar(
-                          backgroundImage: AssetImage(ImagePath.andy),
-                          minRadius: Sizes.RADIUS_60,
-                          maxRadius: Sizes.RADIUS_60,
-                        ),
+                       userModel?.profileImage != null
+                                ? CircleAvatar(
+                                    backgroundImage:
+                                        NetworkImage(userModel.profileImage),
+                                    backgroundColor: Colors.transparent,
+                                    minRadius: Sizes.RADIUS_60,
+                                    maxRadius: Sizes.RADIUS_60,
+                                  )
+                                : CircleAvatar()
+                           ,
                         SpaceH8(),
-                        Text(userModel.name ?? 'Not Available',
+                        Text(userModel?.name ?? 'Not Available',
                             style: Styles.foodyBiteTitleTextStyle),
                         SpaceH8(),
-                        Text(userModel.email ?? 'Not Available',
+                        Text(userModel?.email ?? 'Not Available',
                             style: Styles.foodyBiteSubtitleTextStyle),
                       ],
                     ),
@@ -156,7 +159,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   getUserDetail() async {
-    userModel = await Service().getUserDetail();
+    final user = await Service().getUserDetail();
+    userModel = user;
+
     setState(() {
       _isLoading = false;
     });
