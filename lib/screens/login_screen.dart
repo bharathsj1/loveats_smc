@@ -27,6 +27,7 @@ class BackgroundVideo extends StatefulWidget {
 class _BackgroundVideoState extends State<BackgroundVideo> {
   VideoPlayerController _controller;
   final _formKey = GlobalKey<FormState>();
+  bool isLogin = false;
 
   Service _service;
   final emailController = TextEditingController();
@@ -86,7 +87,10 @@ class _BackgroundVideoState extends State<BackgroundVideo> {
                   children: <Widget>[
                     _buildHeader(),
                     SizedBox(height: Sizes.HEIGHT_130),
-                    _buildForm(emailController, passwordController, _formKey),
+                    isLogin
+                        ? _buildForm(
+                            emailController, passwordController, _formKey)
+                        : Container(),
                     SpaceH36(),
                     _buildFooter(
                         context, emailController, passwordController, _formKey)
