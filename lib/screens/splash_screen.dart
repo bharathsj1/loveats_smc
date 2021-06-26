@@ -69,10 +69,6 @@ class _SplashScreenState extends State<SplashScreen>
                 builder: (_) =>
                     user != null ? RootScreen() : BackgroundVideo()),
             (route) => false);
-        // AppRouter.navigator.pushNamedAndRemoveUntil(
-        //   AppRouter.loginScreen,
-        //   (Route<dynamic> route) => false,
-        // );
       });
     }
   }

@@ -24,11 +24,18 @@ class BackgroundVideo extends StatefulWidget {
   _BackgroundVideoState createState() => _BackgroundVideoState();
 }
 
-class _BackgroundVideoState extends State<BackgroundVideo> {
+class _BackgroundVideoState extends State<BackgroundVideo>
+    with TickerProviderStateMixin {
   VideoPlayerController _controller;
   final _formKey = GlobalKey<FormState>();
-
+  bool isLogin = false;
+  double opa = 0.0;
+  bool isSignIn = false;
+  int bottom = 20;
   Service _service;
+
+  AnimationController animation;
+  Animation<double> _fadeInFadeOut;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   @override
@@ -44,6 +51,21 @@ class _BackgroundVideoState extends State<BackgroundVideo> {
 
         // Ensure the first frame is shown after the video is initialized.
         setState(() {});
+
+        animation = AnimationController(
+          vsync: this,
+          duration: Duration(seconds: 5),
+        );
+        _fadeInFadeOut = Tween<double>(begin: 0.0, end: 1).animate(animation);
+
+        animation.addStatusListener((status) {
+          if (status == AnimationStatus.completed) {
+            animation.reverse();
+          } else if (status == AnimationStatus.dismissed) {
+            animation.forward();
+          }
+        });
+        animation.forward();
       });
   }
 
@@ -65,9 +87,6 @@ class _BackgroundVideoState extends State<BackgroundVideo> {
             children: [
               SizedBox(
                 child: FittedBox(
-                  // If your background video doesn't look right, try changing the BoxFit property.
-                  // BoxFit.fill created the look I was going for.
-
                   child: SizedBox(
                     child: VideoPlayer(_controller),
                     height: heightOfScreen,
@@ -79,25 +98,144 @@ class _BackgroundVideoState extends State<BackgroundVideo> {
               DarkOverLay(),
               Positioned(
                 left: 0,
-                top: 0,
+                top: 100,
                 right: 0,
                 bottom: 36,
                 child: ListView(
-                  children: <Widget>[
+                  children: [
                     _buildHeader(),
                     SizedBox(height: Sizes.HEIGHT_130),
-                    _buildForm(emailController, passwordController, _formKey),
+                    isLogin
+                        ? _buildForm(
+                            emailController, passwordController, _formKey)
+                        : Container(),
                     SpaceH36(),
-                    _buildFooter(
-                        context, emailController, passwordController, _formKey)
+                    isLogin
+                        ? _buildFooter(context, emailController,
+                            passwordController, _formKey)
+                        : Container()
                   ],
                 ),
-              )
+              ),
+              !isSignIn && !isLogin
+                  ? Positioned(
+                      bottom: 90,
+                      left: 20,
+                      right: 20,
+                      child: InkWell(
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => RegisterScreen())),
+                        child: Container(
+                          height: 50.0,
+                          decoration: BoxDecoration(
+                            // color: Decorations.primaryButtonDecoration
+                            border: Border.all(color: Colors.white, width: 2.0),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Create Account',
+                              style: TextStyle(
+                                  fontSize: 18.0, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(),
+              !isSignIn && !isLogin
+                  ? Positioned(
+                      bottom: 20,
+                      left: 20,
+                      right: 20,
+                      child: InkWell(
+                        onTap: () => _signIn(),
+                        child: Container(
+                          height: 50.0,
+                          decoration: BoxDecoration(
+                            // color: Decorations.primaryButtonDecoration
+                            border: Border.all(color: Colors.white, width: 2.0),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Sign in',
+                              style: TextStyle(
+                                  fontSize: 18.0, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(),
+              SpaceH36(),
+              isSignIn
+                  ? Positioned(
+                      left: 20,
+                      right: 20,
+                      bottom: bottom.toDouble(),
+                      child: FadeTransition(
+                        opacity: _fadeInFadeOut,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SignInButton(
+                              Buttons.Email,
+                              // mini: true,
+                              onPressed: () => _showLoginForm(),
+                            ),
+                            SignInButton(
+                              Buttons.Google,
+                              // mini: true,
+                              onPressed: () => _signInWithGoogle(context),
+                            ),
+                            SizedBox(width: 14),
+                            Platform.isIOS
+                                ? SignInButton(
+                                    Buttons.Apple,
+                                    // mini: true,
+                                    onPressed: () => _signInWithApple(context),
+                                  )
+                                : Container(),
+                            Platform.isIOS ? SizedBox(width: 10) : Container(),
+                            SignInButton(
+                              Buttons.Facebook,
+                              // mini: true,
+                              onPressed: () {},
+                            ),
+                            SizedBox(height: Sizes.HEIGHT_20),
+                            InkWell(
+                                onTap: () => _signIn(),
+                                child: Text('Back',
+                                    style: Styles.customNormalTextStyle()))
+                          ],
+                        ),
+                      ),
+                    )
+                  : Container(),
+              // _buildFooter(
+              //     context, emailController, passwordController, _formKey)
             ],
           ),
         ),
       ),
     );
+  }
+
+  _showLoginForm() {
+    setState(() {
+      isSignIn = !isSignIn;
+      isLogin = !isLogin;
+    });
+  }
+
+  _signIn() {
+    setState(() {
+      isSignIn = !isSignIn;
+    });
   }
 
   // TODO 8: Override the dipose() method to cleanup the video controller.
@@ -185,6 +323,7 @@ Widget _buildForm(
 
 _signInWithGoogle(BuildContext context) async {
   String message = await Service().signInWithGoogle();
+  print(message);
 
   if (message.contains('successfully'))
     Navigator.pushAndRemoveUntil(context,
@@ -205,11 +344,25 @@ _signInWithGoogle(BuildContext context) async {
 }
 
 _signInWithApple(BuildContext context) async {
-  FirebaseUser _user = await Service().signInWithApple();
-  if (_user != null) {
+  String message = await Service().signInWithApple();
+  print(message);
+
+  if (message.contains('successfully'))
     Navigator.pushAndRemoveUntil(context,
         MaterialPageRoute(builder: (_) => RootScreen()), (route) => false);
-  }
+  else if (message.contains('register screen')) {
+    FirebaseAuth _auth = FirebaseAuth.instance;
+    var currUser = await _auth.currentUser();
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (_) => RegisterScreen(
+            email: currUser.email,
+          ),
+        ),
+        (route) => false);
+  } else
+    showSnackBar(context, message);
 }
 
 Widget _buildFooter(BuildContext context, TextEditingController email,
@@ -221,71 +374,14 @@ Widget _buildFooter(BuildContext context, TextEditingController email,
         onTap: () => _signInWithEmail(context, email, pass, key),
       ),
       SizedBox(height: Sizes.HEIGHT_20),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          InkWell(
-            onTap: () => _signInWithGoogle(context),
-            child: Container(
-              height: 40.0,
-              width: 40.0,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                image: DecorationImage(
-                  image: AssetImage('assets/images/google_icon.png'),
-                  fit: BoxFit.fill,
-                ),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          SizedBox(width: 14),
-          Platform.isIOS
-              ? SignInButton(
-                  Buttons.Apple,
-                  mini: true,
-                  onPressed: () => _signInWithApple(context),
-                )
-              : Container(),
-          Platform.isIOS ? SizedBox(width: 10) : Container(),
-          SignInButton(
-            Buttons.Facebook,
-            mini: true,
-            onPressed: () {},
-          ),
-        ],
-      ),
-      SizedBox(height: Sizes.HEIGHT_20),
       InkWell(
         onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => RegisterScreen(),
-          ),
+            context, MaterialPageRoute(builder: (_) => RegisterScreen())),
+        child: Text(
+          StringConst.CREATE_NEW_ACCOUNT,
+          style: Styles.normalTextStyle,
         ),
-        child: Container(
-          width: Sizes.WIDTH_150,
-          height: Sizes.HEIGHT_24,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                StringConst.CREATE_NEW_ACCOUNT,
-                textAlign: TextAlign.center,
-                style: Styles.customNormalTextStyle(),
-              ),
-              Spacer(),
-              Container(
-                height: 1,
-                margin: EdgeInsets.symmetric(horizontal: 1),
-                decoration: Decorations.horizontalBarDecoration,
-                child: Container(),
-              ),
-            ],
-          ),
-        ),
-      ),
+      )
     ],
   );
 }
