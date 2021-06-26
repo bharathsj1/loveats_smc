@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "939367908984",
+    "project_id": "loveatsnew-f09de",
+    "storage_bucket": "loveatsnew-f09de.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:939367908984:android:8bbf07cb603ab226608f8d",
+        "android_client_info": {
+          "package_name": "com.smc.loveats"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "939367908984-bji2d2vo7t18ps7lnobo2oh3i77c5lgu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClTXj4OPrG1817CwNO45aACXu6jwMAMe0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "939367908984-bji2d2vo7t18ps7lnobo2oh3i77c5lgu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

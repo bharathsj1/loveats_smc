@@ -21,7 +21,7 @@ class TrendingRestaurantsScreen extends StatelessWidget {
           appBar: AppBar(
             elevation: 0.0,
             leading: InkWell(
-              // onTap: () => AppRouter.navigator.pop(),
+              onTap: () => AppRouter.navigator.pop(),
               child: Image.asset(
                 ImagePath.arrowBackIcon,
                 color: AppColors.headingText,
@@ -66,17 +66,17 @@ class TrendingRestaurantsScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return Container(
                         child: FoodyBiteCard(
-                          // onTap: () => AppRouter.navigator.pushNamed(
-                          //   AppRouter.restaurantDetailsScreen,
-                          //   arguments: RestaurantDetails(
-                          //     imagePath: imagePaths[index],
-                          //     restaurantName: restaurantNames[index],
-                          //     restaurantAddress: addresses[index],
-                          //     rating: ratings[index],
-                          //     category: category[index],
-                          //     distance: distance[index],
-                          //   ),
-                          // ),
+                          onTap: () => AppRouter.navigator.pushNamed(
+                            AppRouter.restaurantDetailsScreen,
+                            arguments: RestaurantDetails(
+                              imagePath: imagePaths[index],
+                              restaurantName: restaurantNames[index],
+                              restaurantAddress: addresses[index],
+                              rating: ratings[index],
+                              category: category[index],
+                              distance: distance[index],
+                            ),
+                          ),
                           imagePath: imagePaths[index],
                           status: status[index],
                           cardTitle: restaurantNames[index],

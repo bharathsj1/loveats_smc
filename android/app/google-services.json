@@ -7,6 +7,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:374748620674:android:e35e38c6b0d8bd421b519b",
+        "android_client_info": {
+          "package_name": "com.davidcobbina.potbelly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "374748620674-qbkd2tsqqbgfcj0939ig0okbm4kn94fm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUraFNNCcmgAhkV7NY7Iy40P87S6RBsE8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "374748620674-qbkd2tsqqbgfcj0939ig0okbm4kn94fm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "374748620674-2f9v8lvq2lede52gbvnou2l4bds4gk95.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.smc.loveats"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:374748620674:android:8961f41d1081ac251b519b",
         "android_client_info": {
           "package_name": "com.example.crud_task"

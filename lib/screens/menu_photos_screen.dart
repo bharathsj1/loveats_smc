@@ -2,9 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/values/values.dart';
 
-class MenuPhotosScreen extends StatelessWidget {
+class MenuPhotosScreen extends StatefulWidget {
+  List images;
+  MenuPhotosScreen({@required this.images});
+
+  @override
+  _MenuPhotosScreenState createState() => _MenuPhotosScreenState();
+}
+
+class _MenuPhotosScreenState extends State<MenuPhotosScreen> {
   final double heightForSmallImages = 100.0;
+
   final double heightForBigImages = 200.0;
+
+  @override
+    void initState() {
+     print(widget.images);
+      super.initState();
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -14,13 +29,14 @@ class MenuPhotosScreen extends StatelessWidget {
     var widthOfSmallImage =
         (widthOfScreen - (marginAroundEntireScreen + marginBetweenImages)) / 3;
     var widthOfLargeImage = (widthOfSmallImage * 2) + 16;
+    
 
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
         leading: InkWell(
-          // onTap: () => AppRouter.navigator.pop(),
-          child: Image.asset(
+          onTap: () => AppRouter.navigator.pop(),
+          child:  Image.asset(
             ImagePath.arrowBackIcon,
             color: AppColors.headingText,
           ),
@@ -84,21 +100,21 @@ class MenuPhotosScreen extends StatelessWidget {
               onTap: () => navigateToPreviewPhotos(context),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(Sizes.RADIUS_8),
-                child: Image.asset(
-                  ImagePath.avocado,
+                child: Image.network(
+                  widget.images[1],
                   width: widthOfSmallImage,
                   height: heightForSmallImages,
                   fit: BoxFit.fitHeight,
                 ),
               ),
             ),
-            SizedBox(height: Sizes.MARGIN_16),
+            SizedBox(height: Sizes.MARGIN_16), 
             InkWell(
               onTap: () => navigateToPreviewPhotos(context),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(Sizes.RADIUS_8),
-                child: Image.asset(
-                  ImagePath.strawberries,
+                child: Image.network(
+                 widget.images[2],
                   width: widthOfSmallImage,
                   height: heightForSmallImages,
                   fit: BoxFit.fitHeight,
@@ -112,8 +128,8 @@ class MenuPhotosScreen extends StatelessWidget {
           onTap: () => navigateToPreviewPhotos(context),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(Sizes.RADIUS_8),
-            child: Image.asset(
-              ImagePath.cake_big,
+            child: Image.network(
+              widget.images[1],
               width: widthOfLargeImage,
               fit: BoxFit.fitHeight,
               height: heightForBigImages + Sizes.MARGIN_16,
@@ -130,8 +146,8 @@ class MenuPhotosScreen extends StatelessWidget {
       onTap: () => navigateToPreviewPhotos(context),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(Sizes.RADIUS_8),
-        child: Image.asset(
-          ImagePath.dinnerIsServed,
+        child: Image.network(
+          widget.images[0],
           width: width,
           height: height,
           fit: BoxFit.fitHeight,
@@ -162,8 +178,8 @@ class MenuPhotosScreen extends StatelessWidget {
                 right: (i != numberOfImages) ? Sizes.MARGIN_16 : 0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(Sizes.RADIUS_8),
-              child: Image.asset(
-                imagePaths[i - 1],
+              child: Image.network(
+                widget.images[i - 1],
                 width: imageWidth,
                 height: heightForSmallImages,
                 fit: BoxFit.fitHeight,
@@ -177,6 +193,6 @@ class MenuPhotosScreen extends StatelessWidget {
   }
 
   void navigateToPreviewPhotos(BuildContext context) {
-   // AppRouter.navigator.pushNamed(AppRouter.previewMenuPhotosScreen);
+    AppRouter.navigator.pushNamed(AppRouter.previewMenuPhotosScreen);
   }
 }

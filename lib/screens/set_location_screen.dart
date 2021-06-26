@@ -83,10 +83,10 @@ class SetLocationScreen extends StatelessWidget {
                     PotbellyButton(
                       StringConst.TURN_GPS,
                       buttonWidth: widthOfScreen,
-                      // onTap: () => AppRouter.navigator.pushNamedAndRemoveUntil(
-                      //   AppRouter.rootScreen,
-                      //   (Route<dynamic> route) => false,
-                      // ),
+                      onTap: () => AppRouter.navigator.pushNamedAndRemoveUntil(
+                        AppRouter.rootScreen,
+                        (Route<dynamic> route) => false,
+                      ),
                     ),
                     Spacer(),
                   ],
@@ -101,10 +101,10 @@ class SetLocationScreen extends StatelessWidget {
 
   Widget _buildSkipButton() {
     return InkWell(
-      // onTap: () => AppRouter.navigator.pushNamedAndRemoveUntil(
-      //   AppRouter.rootScreen,
-      //   (Route<dynamic> route) => false,
-      // ),
+      onTap: () => AppRouter.navigator.pushNamedAndRemoveUntil(
+        AppRouter.rootScreen,
+        (Route<dynamic> route) => false,
+      ),
       child: Container(
         width: 80,
         height: 40,

@@ -14,7 +14,6 @@ class StringConst {
   static const String HINT_TEXT_NAME = "Name";
   static const String HINT_TEXT_EMAIL = "Email";
   static const String HINT_TEXT_PASSWORD = "Password";
-  static const String HINT_TEXT_PHONE_NO = "Phone no";
   static const String HINT_TEXT_CONFIRM_PASSWORD = "Confirm Password";
   static const String HINT_TEXT_HOME_SEARCH_BAR = "Find Restaurants";
   static const String HINT_TEXT_TRENDING_SEARCH_BAR = "Search";
@@ -28,6 +27,7 @@ class StringConst {
   static const String WELCOME_MESSAGE = "Welcome to";
   static const String SEND = "Send";
   static const String TRENDING_RESTAURANTS = "Trending Restaurants";
+  static const String PROMOTIONS = "Promotions";
   static const String CATEGORY = "Category";
   static const String FRIENDS = "Friends";
   static const String MENU_AND_PHOTOS = "Menu & Photos";

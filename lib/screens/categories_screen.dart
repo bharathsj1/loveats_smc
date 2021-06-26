@@ -18,7 +18,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       appBar: AppBar(
         elevation: 0.0,
         leading: InkWell(
-          // onTap: () => AppRouter.navigator.pop(),
+          onTap: () => AppRouter.navigator.pop(),
           child: Image.asset(
             ImagePath.arrowBackIcon,
             color: AppColors.headingText,
@@ -54,16 +54,16 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           itemBuilder: (context, index) {
             return Container(
               child: FoodyBiteCategoryCard(
-                // onTap: () => AppRouter.navigator.pushNamed(
-                //   AppRouter.categoryDetailScreen,
-                //   arguments: CategoryDetailScreenArguments(
-                //     categoryName: category[index],
-                //     imagePath: categoryListImagePaths[index],
-                //     selectedCategory: index,
-                //     numberOfCategories: categoryListImagePaths.length,
-                //     gradient: gradients[index],
-                //   ),
-                // ),
+                onTap: () => AppRouter.navigator.pushNamed(
+                  AppRouter.categoryDetailScreen,
+                  arguments: CategoryDetailScreenArguments(
+                    categoryName: category[index],
+                    imagePath: categoryListImagePaths[index],
+                    selectedCategory: index,
+                    numberOfCategories: categoryListImagePaths.length,
+                    gradient: gradients[index],
+                  ),
+                ),
                 width: MediaQuery.of(context).size.width,
                 imagePath: categoryListImagePaths[index],
                 gradient: gradients[index],

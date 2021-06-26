@@ -51,14 +51,14 @@ class _NewReviewScreenState extends State<NewReviewScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 InkWell(
-                  // onTap: () => AppRouter.navigator.pushNamedAndRemoveUntil(
-                  //   AppRouter.rootScreen,
-                  //   (Route<dynamic> route) => false,
-                  //   arguments: CurrentScreen(
-                  //     tab_no: HomeScreen.TAB_NO,
-                  //     currentScreen: HomeScreen(),
-                  //   ),
-                  // ),
+                  onTap: () => AppRouter.navigator.pushNamedAndRemoveUntil(
+                    AppRouter.rootScreen,
+                    (Route<dynamic> route) => false,
+                    arguments: CurrentScreen(
+                      tab_no: HomeScreen.TAB_NO,
+                      currentScreen: HomeScreen(),
+                    ),
+                  ),
                   child: Center(
                     child: Container(
                       margin: const EdgeInsets.only(left: 4),
@@ -82,16 +82,16 @@ class _NewReviewScreenState extends State<NewReviewScreen> {
                   ),
                 ),
                 InkWell(
-                  // onTap: () => canPost
-                  //     ? AppRouter.navigator.pushNamedAndRemoveUntil(
-                  //         AppRouter.rootScreen,
-                  //         (Route<dynamic> route) => false,
-                  //         arguments: CurrentScreen(
-                  //           tab_no: HomeScreen.TAB_NO,
-                  //           currentScreen: HomeScreen(),
-                  //         ),
-                  //       )
-                  //     : null,
+                  onTap: () => canPost
+                      ? AppRouter.navigator.pushNamedAndRemoveUntil(
+                          AppRouter.rootScreen,
+                          (Route<dynamic> route) => false,
+                          arguments: CurrentScreen(
+                            tab_no: HomeScreen.TAB_NO,
+                            currentScreen: HomeScreen(),
+                          ),
+                        )
+                      : null,
                   child: Center(
                     child: Container(
                       margin: const EdgeInsets.only(right: 8),

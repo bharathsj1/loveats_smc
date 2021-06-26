@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/services/AuthenticationService.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/custom_text_form_field.dart';
 import 'package:potbelly/widgets/dark_overlay.dart';
+import 'package:potbelly/widgets/loaders.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:potbelly/widgets/spaces.dart';
 
-class ForgotPasswordScreen extends StatelessWidget {
+class ForgotPasswordScreen extends StatefulWidget {
+  @override
+  _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
+}
+
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  TextEditingController _emailContoller = TextEditingController();
+  bool loader = false;
+  bool validator = false;
+  final _key = GlobalKey<FormState>();
+  var service = AuthenticationService();
+
   @override
   Widget build(BuildContext context) {
     var heightOfScreen = MediaQuery.of(context).size.height;
@@ -51,13 +64,26 @@ class ForgotPasswordScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: Sizes.HEIGHT_60),
-                      Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: Sizes.MARGIN_16),
-                        child: CustomTextFormField(
-                          hasPrefixIcon: true,
-                          prefixIconImagePath: ImagePath.emailIcon,
-                          hintText: StringConst.HINT_TEXT_EMAIL,
+                      Form(
+                        key: _key,
+                        autovalidate: validator,
+                        onChanged: () {
+                          setState(() {
+                            if (validator == true) {
+                              _key.currentState.validate();
+                            }
+                          });
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: Sizes.MARGIN_16),
+                          child: CustomTextFormField(
+                            controller: _emailContoller,
+                            validator: 'validateEmail',
+                            hasPrefixIcon: true,
+                            prefixIconImagePath: ImagePath.emailIcon,
+                            hintText: StringConst.HINT_TEXT_EMAIL,
+                          ),
                         ),
                       ),
                       SizedBox(height: Sizes.HEIGHT_180),
@@ -65,12 +91,22 @@ class ForgotPasswordScreen extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(
                           horizontal: Sizes.MARGIN_16,
                         ),
-                        child: PotbellyButton(
-                          StringConst.SEND,
-                          buttonWidth: widthOfScreen,
-                          // onTap: () => AppRouter.navigator
-                          //     .pushReplacementNamed(AppRouter.loginScreen),
-                        ),
+                        child: loader
+                            ? Smallloader()
+                            : PotbellyButton(StringConst.SEND,
+                                buttonWidth: widthOfScreen, onTap: () {
+                                if (_key.currentState.validate()) {
+                                setState(() {
+                                  loader = true;
+                                });
+                                  service.resetpassword(
+                                      context, _emailContoller.text);
+                                } else {
+                                  print('error');
+                                  this.validator = true;
+                                  setState(() {});
+                                }
+                              }),
                       )
                     ],
                   ),
@@ -88,7 +124,7 @@ class ForgotPasswordScreen extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         InkWell(
-          // onTap: () => AppRouter.navigator.pop(),
+          onTap: () => AppRouter.navigator.pop(),
           child: Padding(
             padding: const EdgeInsets.only(
               left: Sizes.MARGIN_12,

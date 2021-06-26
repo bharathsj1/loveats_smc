@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:potbelly/screens/login_screen.dart';
-import 'package:potbelly/services/service.dart';
+import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/services/AuthenticationService.dart';
+import 'package:potbelly/services/localstorage.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/custom_app_bar.dart';
 
 class SettingsScreen extends StatelessWidget {
+  var service = AuthenticationService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,23 +56,23 @@ class SettingsScreen extends StatelessWidget {
               tiles: <Widget>[
                 SettingsListTile(
                   title: "Change Password",
-                  // onTap: () => AppRouter.navigator
-                  //     .pushNamed(AppRouter.changePasswordScreen),
+                  onTap: () => AppRouter.navigator
+                      .pushNamed(AppRouter.changePasswordScreen),
                 ),
                 SettingsListTile(
                   title: "Change Language",
-                  // onTap: () => AppRouter.navigator
-                  //     .pushNamed(AppRouter.changeLanguageScreen),
+                  onTap: () => AppRouter.navigator
+                      .pushNamed(AppRouter.changeLanguageScreen),
                 ),
                 SettingsListTile(
                   title: "Order List",
-                  // onTap: () => AppRouter.navigator
-                  //     .pushNamed(AppRouter.changeLanguageScreen),
+                  onTap: () => AppRouter.navigator
+                      .pushNamed(AppRouter.changeLanguageScreen),
                 ),
                 SettingsListTile(
                   title: "Payment",
-                  // onTap: () => AppRouter.navigator
-                  //     .pushNamed(AppRouter.changeLanguageScreen),
+                  onTap: () => AppRouter.navigator
+                      .pushNamed(AppRouter.changeLanguageScreen),
                 )
               ],
             ).toList(),
@@ -140,10 +142,6 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  _logoutFunction(BuildContext context) async {
-    await Service().logout(context);
-  }
-
   Widget _buildAlertDialog(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
     return Container(
@@ -210,7 +208,14 @@ class SettingsScreen extends StatelessWidget {
                     ),
                     textStyle: textTheme.button
                         .copyWith(color: AppColors.secondaryElement),
-                    onPressed: () => _logoutFunction(context),
+                    onPressed: (){
+                      this.service.logOut(context);
+                      Localstorage().loggout();
+                        AppRouter.navigator.pushNamedAndRemoveUntil(
+                      AppRouter.loginScreen,
+                      (Route<dynamic> route) => false,
+                    );
+                    }
                   ),
                 ],
               )

@@ -28,7 +28,7 @@ class ChangePasswordScreen extends StatelessWidget {
             title: "Change Password",
             trailing: <Widget>[
               InkWell(
-                // onTap: () => AppRouter.navigator.pop(),
+                onTap: () => AppRouter.navigator.pop(),
                 child: Center(
                   child: Container(
                     margin:
@@ -90,10 +90,10 @@ class ChangePasswordScreen extends StatelessWidget {
               PotbellyButton(
                 "Update",
                 buttonWidth: MediaQuery.of(context).size.width,
-                // onTap: () => AppRouter.navigator.pushNamedAndRemoveUntil(
-                //   AppRouter.loginScreen,
-                //   (Route<dynamic> route) => false,
-                // ),
+                onTap: () => AppRouter.navigator.pushNamedAndRemoveUntil(
+                  AppRouter.loginScreen,
+                  (Route<dynamic> route) => false,
+                ),
               ),
               Spacer(flex: 1),
             ],

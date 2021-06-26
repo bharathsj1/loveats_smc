@@ -21,7 +21,7 @@ class ReviewRatingScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0.0,
         leading: InkWell(
-          // onTap: () => AppRouter.navigator.pop(),
+          onTap: () => AppRouter.navigator.pop(),
           child: Image.asset(
             ImagePath.arrowBackIcon,
             color: AppColors.headingText,

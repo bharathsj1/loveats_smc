@@ -1,10 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:potbelly/screens/splash_screen.dart';
+import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/theme.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Firebase.initializeApp();
   runApp(App());
 }
 
@@ -14,7 +15,9 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: buildLightTheme(context),
-      home: SplashScreen(),
+      initialRoute: AppRouter.splashScreen,
+      onGenerateRoute: AppRouter.onGenerateRoute,
+      navigatorKey: AppRouter.navigator.key,
     );
   }
 }

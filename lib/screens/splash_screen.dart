@@ -1,9 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:potbelly/routes/router.gr.dart';
-import 'package:potbelly/screens/home_screen.dart';
-import 'package:potbelly/screens/login_screen.dart';
-import 'package:potbelly/screens/root_screen.dart';
+import 'package:potbelly/services/localstorage.dart';
 import 'package:potbelly/values/values.dart';
 import 'dart:math' as math;
 
@@ -20,7 +17,6 @@ class _SplashScreenState extends State<SplashScreen>
   Animation<double> _textAnimation;
   bool hasImageAnimationStarted = false;
   bool hasTextAnimationStarted = false;
-  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -59,20 +55,24 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
-  void textControllerListener() async {
+  void textControllerListener() {
     if (_textController.status == AnimationStatus.completed) {
-      final user = await firebaseAuth.currentUser();
-      Future.delayed(Duration(milliseconds: 1000), () {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (_) =>
-                    user != null ? RootScreen() : BackgroundVideo()),
-            (route) => false);
-        // AppRouter.navigator.pushNamedAndRemoveUntil(
-        //   AppRouter.loginScreen,
-        //   (Route<dynamic> route) => false,
-        // );
+      Future.delayed(Duration(milliseconds: 1000), () async {
+     await Localstorage().getuser().then((user) {
+      print(user);
+      if(user == null){
+        AppRouter.navigator.pushNamedAndRemoveUntil(
+          AppRouter.loginScreen,
+          (Route<dynamic> route) => false,
+        );
+      }
+      else{
+         AppRouter.navigator.pushNamedAndRemoveUntil(
+            AppRouter.rootScreen,
+            (Route<dynamic> route) => false,
+          );
+      }
+     });
       });
     }
   }

@@ -8,17 +8,17 @@ import 'package:potbelly/widgets/search_input_field.dart';
 import 'package:potbelly/widgets/spaces.dart';
 
 class SearchResultsScreen extends StatelessWidget {
-  // final SearchValue searchValue;
+  final SearchValue searchValue;
 
-  // SearchResultsScreen(this.searchValue);
+  SearchResultsScreen(this.searchValue);
 
   @override
   Widget build(BuildContext context) {
     void navigateToDetailScreen() {
-      // AppRouter.navigator.pushNamed(AppRouter.restaurantDetailsScreen);
+      AppRouter.navigator.pushNamed(AppRouter.restaurantDetailsScreen);
     }
 
-    // var controller = TextEditingController(text: searchValue.value);
+    var controller = TextEditingController(text: searchValue.value);
 
     return Scaffold(
       body: SafeArea(
@@ -32,7 +32,7 @@ class SearchResultsScreen extends StatelessWidget {
             children: <Widget>[
               FoodyBiteSearchInputField(
                 ImagePath.searchIcon,
-                // controller: controller,
+                controller: controller,
                 textFormFieldStyle:
                     Styles.customNormalTextStyle(color: AppColors.accentText),
                 hintText: StringConst.HINT_TEXT_TRENDING_SEARCH_BAR,
@@ -54,17 +54,17 @@ class SearchResultsScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Container(
                       child: FoodyBiteCard(
-                        // onTap: () => AppRouter.navigator.pushNamed(
-                        //   AppRouter.restaurantDetailsScreen,
-                        //   arguments: RestaurantDetails(
-                        //     imagePath: imagePaths[index],
-                        //     restaurantName: restaurantNames[index],
-                        //     restaurantAddress: addresses[index],
-                        //     rating: ratings[index],
-                        //     category: category[index],
-                        //     distance: distance[index],
-                        //   ),
-                        // ),
+                        onTap: () => AppRouter.navigator.pushNamed(
+                          AppRouter.restaurantDetailsScreen,
+                          arguments: RestaurantDetails(
+                            imagePath: imagePaths[index],
+                            restaurantName: restaurantNames[index],
+                            restaurantAddress: addresses[index],
+                            rating: ratings[index],
+                            category: category[index],
+                            distance: distance[index],
+                          ),
+                        ),
                         imagePath: imagePaths[index],
                         status: status[index],
                         cardTitle: restaurantNames[index],
