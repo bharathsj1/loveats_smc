@@ -2,8 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
-import 'package:potbelly/routes/router.gr.dart';
-import 'package:potbelly/screens/home_screen.dart';
 import 'package:potbelly/screens/register_screen.dart';
 import 'package:potbelly/screens/root_screen.dart';
 import 'package:potbelly/services/service.dart';
@@ -11,9 +9,11 @@ import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/custom_text_form_field.dart';
 import 'package:potbelly/widgets/dark_overlay.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
+import 'package:potbelly/widgets/snackbar.dart';
 import 'package:potbelly/widgets/spaces.dart';
 
 import 'package:video_player/video_player.dart';
+import 'dart:io' show Platform;
 
 // import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -25,12 +25,12 @@ class BackgroundVideo extends StatefulWidget {
 }
 
 class _BackgroundVideoState extends State<BackgroundVideo> {
-  // TODO 4: Create a VideoPlayerController object.
   VideoPlayerController _controller;
+  final _formKey = GlobalKey<FormState>();
 
   Service _service;
-
-  // TODO 5: Override the initState() method and setup your VideoPlayerController
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -47,43 +47,11 @@ class _BackgroundVideoState extends State<BackgroundVideo> {
       });
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return MaterialApp(
-  //     theme: ThemeData(
-  //       // Adjusted theme colors to match logo.
-  //       primaryColor: Color(0xffb55e28),
-  //       accentColor: Color(0xffffd544),
-  //     ),
-  //     home: SafeArea(
-  //       child: Scaffold(
-  //         // TODO 6: Create a Stack Widget
-  //         body: Stack(
-  //           children: <Widget>[
-  //             // TODO 7: Add a SizedBox to contain our video.
-  //             SizedBox.expand(
-  //               child: FittedBox(
-  //                 // If your background video doesn't look right, try changing the BoxFit property.
-  //                 // BoxFit.fill created the look I was going for.
-  //                 fit: BoxFit.cover,
-  //                 child: SizedBox(
-  //                   width: _controller.value.size?.width ?? 0,
-  //                   height: _controller.value.size?.height ?? 0,
-  //                   child: VideoPlayer(_controller),
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     var heightOfScreen = MediaQuery.of(context).size.height;
     var widthOfScreen = MediaQuery.of(context).size.width;
+
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -118,9 +86,10 @@ class _BackgroundVideoState extends State<BackgroundVideo> {
                   children: <Widget>[
                     _buildHeader(),
                     SizedBox(height: Sizes.HEIGHT_130),
-                    _buildForm(),
+                    _buildForm(emailController, passwordController, _formKey),
                     SpaceH36(),
-                    _buildFooter(context)
+                    _buildFooter(
+                        context, emailController, passwordController, _formKey)
                   ],
                 ),
               )
@@ -139,6 +108,19 @@ class _BackgroundVideoState extends State<BackgroundVideo> {
   }
 }
 
+_signInWithEmail(BuildContext context, TextEditingController emailCont,
+    TextEditingController passwordCont, key) async {
+  if (key.currentState.validate()) {
+    String message = await Service()
+        .signInWithEmail(context, emailCont.text, passwordCont.text);
+    if (message.contains('successfully')) {
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (_) => RootScreen()), (route) => false);
+    } else
+      showSnackBar(context, message);
+  }
+}
+
 @override
 Widget _buildHeader() {
   return Align(
@@ -154,36 +136,46 @@ Widget _buildHeader() {
   );
 }
 
-Widget _buildForm() {
+Widget _buildForm(
+    TextEditingController email, TextEditingController password, _key) {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: Sizes.MARGIN_48),
     child: Column(
       children: [
-        CustomTextFormField(
-          hasPrefixIcon: true,
-          prefixIconImagePath: ImagePath.emailIcon,
-          hintText: StringConst.HINT_TEXT_EMAIL,
-        ),
-        SpaceH16(),
-        CustomTextFormField(
-          hasPrefixIcon: true,
-          prefixIconImagePath: ImagePath.passwordIcon,
-          hintText: StringConst.HINT_TEXT_PASSWORD,
-          obscured: true,
-        ),
-        Align(
-          alignment: Alignment.topRight,
-          child: InkWell(
-            // onTap: () =>
-            //     AppRouter.navigator.pushNamed(AppRouter.forgotPasswordScreen),
-            child: Container(
-              margin: EdgeInsets.only(top: Sizes.MARGIN_16),
-              child: Text(
-                StringConst.FORGOT_PASSWORD_QUESTION,
-                textAlign: TextAlign.right,
-                style: Styles.customNormalTextStyle(),
+        Form(
+          key: _key,
+          child: Column(
+            children: [
+              CustomTextFormField(
+                hasPrefixIcon: true,
+                prefixIconImagePath: ImagePath.emailIcon,
+                hintText: StringConst.HINT_TEXT_EMAIL,
+                textEditingController: email,
               ),
-            ),
+              SpaceH16(),
+              CustomTextFormField(
+                hasPrefixIcon: true,
+                prefixIconImagePath: ImagePath.passwordIcon,
+                hintText: StringConst.HINT_TEXT_PASSWORD,
+                obscured: true,
+                textEditingController: password,
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: InkWell(
+                  // onTap: () =>
+                  //     AppRouter.navigator.pushNamed(AppRouter.forgotPasswordScreen),
+                  child: Container(
+                    margin: EdgeInsets.only(top: Sizes.MARGIN_16),
+                    child: Text(
+                      StringConst.FORGOT_PASSWORD_QUESTION,
+                      textAlign: TextAlign.right,
+                      style: Styles.customNormalTextStyle(),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -192,11 +184,24 @@ Widget _buildForm() {
 }
 
 _signInWithGoogle(BuildContext context) async {
-  FirebaseUser _user = await Service().signInWithGoogle();
-  if (_user != null) {
+  String message = await Service().signInWithGoogle();
+
+  if (message.contains('successfully'))
     Navigator.pushAndRemoveUntil(context,
         MaterialPageRoute(builder: (_) => RootScreen()), (route) => false);
-  }
+  else if (message.contains('register screen')) {
+    FirebaseAuth _auth = FirebaseAuth.instance;
+    var currUser = await _auth.currentUser();
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (_) => RegisterScreen(
+            email: currUser.email,
+          ),
+        ),
+        (route) => false);
+  } else
+    showSnackBar(context, message);
 }
 
 _signInWithApple(BuildContext context) async {
@@ -207,15 +212,13 @@ _signInWithApple(BuildContext context) async {
   }
 }
 
-Widget _buildFooter(BuildContext context) {
+Widget _buildFooter(BuildContext context, TextEditingController email,
+    TextEditingController pass, key) {
   return Column(
     children: [
       PotbellyButton(
         StringConst.LOGIN,
-        // onTap: () => AppRouter.navigator.pushNamedAndRemoveUntil(
-        //   AppRouter.rootScreen,
-        //   (Route<dynamic> route) => false,
-        // ),
+        onTap: () => _signInWithEmail(context, email, pass, key),
       ),
       SizedBox(height: Sizes.HEIGHT_20),
       Row(
@@ -237,12 +240,14 @@ Widget _buildFooter(BuildContext context) {
             ),
           ),
           SizedBox(width: 14),
-          SignInButton(
-            Buttons.Apple,
-            mini: true,
-            onPressed: () => _signInWithApple(context),
-          ),
-          SizedBox(width: 10),
+          Platform.isIOS
+              ? SignInButton(
+                  Buttons.Apple,
+                  mini: true,
+                  onPressed: () => _signInWithApple(context),
+                )
+              : Container(),
+          Platform.isIOS ? SizedBox(width: 10) : Container(),
           SignInButton(
             Buttons.Facebook,
             mini: true,

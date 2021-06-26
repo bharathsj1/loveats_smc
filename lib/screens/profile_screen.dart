@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:potbelly/models/UserModel.dart';
-import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/settings_screen.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
@@ -51,16 +50,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: <Widget>[
                     Column(
                       children: [
-                       userModel?.profileImage != null
-                                ? CircleAvatar(
-                                    backgroundImage:
-                                        NetworkImage(userModel.profileImage),
-                                    backgroundColor: Colors.transparent,
-                                    minRadius: Sizes.RADIUS_60,
-                                    maxRadius: Sizes.RADIUS_60,
-                                  )
-                                : CircleAvatar()
-                           ,
+                        userModel?.profileImage != null
+                            ? CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage(userModel.profileImage),
+                                backgroundColor: Colors.transparent,
+                                minRadius: Sizes.RADIUS_60,
+                                maxRadius: Sizes.RADIUS_60,
+                              )
+                            : CircleAvatar(),
                         SpaceH8(),
                         Text(userModel?.name ?? 'Not Available',
                             style: Styles.foodyBiteTitleTextStyle),
@@ -170,7 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget detail({@required String number, @required String text}) {
     return Container(
       child: Column(
-        children: <Widget>[
+        children: [
           Text(
             number,
             style: Styles.customNormalTextStyle(
