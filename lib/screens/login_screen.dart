@@ -56,7 +56,7 @@ class _BackgroundVideoState extends State<BackgroundVideo>
           vsync: this,
           duration: Duration(seconds: 5),
         );
-        _fadeInFadeOut = Tween<double>(begin: 0.0, end: 1).animate(animation);
+        _fadeInFadeOut = Tween<double>(begin: 0.2, end: 1).animate(animation);
 
         animation.addStatusListener((status) {
           if (status == AnimationStatus.completed) {

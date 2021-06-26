@@ -28,7 +28,7 @@ class Service {
       bool isUserAvailable =
           await checkIfUserAvailable('uId', _authResult.user.uid);
       if (isUserAvailable) {
-        return 'Successfully logged in';
+        return 'successfully logged in';
       } else {
         return 'register screen';
       }
@@ -61,8 +61,7 @@ class Service {
     }
   }
 
-  Future<FirebaseUser> signInWithApple() async {
-    UserUpdateInfo userUpdateInfo;
+  Future<String> signInWithApple() async {
     final result = await AppleSignIn.performRequests([
       AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
     ]);
@@ -81,10 +80,17 @@ class Service {
             await _auth.signInWithCredential(credentials);
 
         final firebaseUser = authResult.user;
-
-        // userUpdateInfo.displayName = firebaseUser.displayName;
-        // await firebaseUser.updateProfile(userUpdateInfo);
-        return firebaseUser;
+        UserUpdateInfo userUpdateInfo = UserUpdateInfo();
+        userUpdateInfo.displayName = firebaseUser.displayName;
+        await firebaseUser.updateProfile(userUpdateInfo);
+        bool isUserAvailable =
+            await checkIfUserAvailable('uId', authResult.user.uid);
+        if (isUserAvailable) {
+          return 'successfully logged in';
+        } else {
+          return 'register screen';
+        }
+        break;
 
       case AuthorizationStatus.error:
         throw PlatformException(
