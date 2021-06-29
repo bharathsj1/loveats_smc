@@ -21,28 +21,29 @@ class CustomTextFormField extends StatelessWidget {
   final bool hasPrefixIcon;
   final int maxLines;
   final TextEditingController textEditingController;
+  final Function function;
 
-  CustomTextFormField({
-    this.hasPrefixIcon = false,
-    this.prefixIconImagePath,
-    this.maxLines = 1,
-    this.textFormFieldStyle = Styles.normalTextStyle,
-    this.hintTextStyle = Styles.normalTextStyle,
-    this.borderStyle = BorderStyle.none,
-    this.borderRadius = Sizes.RADIUS_12,
-    this.borderWidth = Sizes.WIDTH_0,
-    this.contentPaddingHorizontal = Sizes.PADDING_0,
-    this.contentPaddingVertical = Sizes.PADDING_22,
-    this.hintText,
-    this.prefixIconColor = AppColors.secondaryText,
-    this.borderColor = AppColors.greyShade1,
-    this.focusedBorderColor = AppColors.greyShade1,
-    this.enabledBorderColor = AppColors.greyShade1,
-    this.fillColor = AppColors.fillColor,
-    this.filled = true,
-    this.obscured = false,
-    this.textEditingController,
-  });
+  CustomTextFormField(
+      {this.hasPrefixIcon = false,
+      this.prefixIconImagePath,
+      this.maxLines = 1,
+      this.textFormFieldStyle = Styles.normalTextStyle,
+      this.hintTextStyle = Styles.normalTextStyle,
+      this.borderStyle = BorderStyle.none,
+      this.borderRadius = Sizes.RADIUS_12,
+      this.borderWidth = Sizes.WIDTH_0,
+      this.contentPaddingHorizontal = Sizes.PADDING_0,
+      this.contentPaddingVertical = Sizes.PADDING_22,
+      this.hintText,
+      this.prefixIconColor = AppColors.secondaryText,
+      this.borderColor = AppColors.greyShade1,
+      this.focusedBorderColor = AppColors.greyShade1,
+      this.enabledBorderColor = AppColors.greyShade1,
+      this.fillColor = AppColors.fillColor,
+      this.filled = true,
+      this.obscured = false,
+      this.textEditingController,
+      this.function});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +51,7 @@ class CustomTextFormField extends StatelessWidget {
       child: TextFormField(
         controller: textEditingController,
         autovalidateMode: AutovalidateMode.disabled,
-        validator: (value) => value.isEmpty ? 'This field is required' : null,
+        validator: (value) => function(value),
         style: textFormFieldStyle,
         maxLines: maxLines,
         decoration: InputDecoration(

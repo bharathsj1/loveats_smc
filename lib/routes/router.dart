@@ -11,6 +11,7 @@ import 'package:potbelly/screens/edit_profile_screen.dart';
 import 'package:potbelly/screens/filter_screen.dart';
 import 'package:potbelly/screens/find_friends_screen.dart';
 import 'package:potbelly/screens/forgot_password_screen.dart';
+import 'package:potbelly/screens/google_map.dart';
 import 'package:potbelly/screens/home_screen.dart';
 import 'package:potbelly/screens/login_screen.dart';
 import 'package:potbelly/screens/menu_photos_screen.dart';
@@ -81,6 +82,7 @@ class $Router {
   ChangeLanguageScreen changeLanguageScreen;
   EditProfileScreen editProfileScreen;
   NewReviewScreen newReviewScreen;
+  GoogleMaps googleMaps;
 }
 
 class SearchValue {
@@ -96,7 +98,7 @@ class RestaurantDetails {
   final String category;
   final String distance;
   final String rating;
-   var data;
+  var data;
 
   RestaurantDetails({
     @required this.imagePath,
@@ -105,9 +107,10 @@ class RestaurantDetails {
     @required this.category,
     @required this.distance,
     @required this.rating,
-     this.data,
+    this.data,
   });
 }
+
 class PromotionDetails {
   final String image;
   final String name;
@@ -115,7 +118,7 @@ class PromotionDetails {
   final String thumnail;
   final String description;
   final String id;
-   var data;
+  var data;
 
   PromotionDetails({
     @required this.image,
@@ -124,7 +127,7 @@ class PromotionDetails {
     @required this.thumnail,
     @required this.description,
     @required this.id,
-     this.data,
+    this.data,
   });
 }
 

@@ -3,6 +3,9 @@ part of values;
 class StringConst {
   //strings
   static const String APP_NAME = "Loveats";
+  static const String BASE_URL = "http://love.signaturemediachannel.com/api/";
+  static const String LOCAL_URL = 'http://loveats.test/';
+
   static const String PROMOTIONS = "Promotions";
   static const String FOODY_BITE = "Loveats";
   static const String FORGOT_PASSWORD_QUESTION = "Forgot Password?";

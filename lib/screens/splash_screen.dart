@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/services/service.dart';
+
 import 'package:potbelly/screens/home_screen.dart';
 import 'package:potbelly/screens/login_screen.dart';
 import 'package:potbelly/screens/root_screen.dart';
@@ -62,12 +64,13 @@ class _SplashScreenState extends State<SplashScreen>
   void textControllerListener() async {
     if (_textController.status == AnimationStatus.completed) {
       final user = await firebaseAuth.currentUser();
+      final shared = await Service().loggedUser();
       Future.delayed(Duration(milliseconds: 1000), () {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
                 builder: (_) =>
-                    user != null ? RootScreen() : BackgroundVideo()),
+                    shared != null ? RootScreen() : BackgroundVideo()),
             (route) => false);
       });
     }

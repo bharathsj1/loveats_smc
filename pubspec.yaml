@@ -18,9 +18,12 @@ dependencies:
   animations: ^1.1.2
   apple_sign_in: ^0.1.0
   auth_buttons: ^1.0.1+4
+  auto_route: ^0.3.1
   carousel_slider: ^4.0.0
   cloud_firestore: null
   cupertino_icons: ^1.0.0
+  device_info: ^2.0.2
+  dio: null
   firebase_auth: ^0.15.3
   firebase_core: ^0.4.0
   firebase_database: ^3.0.0
@@ -28,23 +31,23 @@ dependencies:
   flutter_feather_icons: ^1.0.3
   flutter_rating_bar: ^3.0.1+1
   flutter_signin_button: ^2.0.0
+  flutter_slidable: ^0.6.0
   flutter_svg: ^0.17.1
   fluttertoast: ^8.0.7
+  geolocator: null
   google_fonts: null
+  google_maps_flutter: ^1.0.6
   google_sign_in: ^5.0.4
   image_picker: ^0.6.2
-  provider: ^4.3.2+2
-  sign_in_with_apple: ^3.0.0
-  video_player: ^1.0.1
-  auto_route: ^0.3.1
-  toast:
-  video_thumbnail:
-  path_provider:
-  skeleton_text: ^3.0.0
   image_viewer: ^1.5.0
-  flutter_slidable: ^0.6.0
-  shared_preferences:
-
+  path_provider: null
+  provider: ^4.3.2+2
+  shared_preferences: null
+  sign_in_with_apple: ^3.0.0
+  skeleton_text: ^3.0.0
+  toast: null
+  video_player: ^1.0.1
+  video_thumbnail: null
 
 #  flutter_launcher_icons: ^0.8.1
 dev_dependencies:

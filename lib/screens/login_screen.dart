@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
+import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/register_screen.dart';
 import 'package:potbelly/screens/root_screen.dart';
 import 'package:potbelly/services/service.dart';
@@ -251,7 +252,7 @@ _signInWithEmail(BuildContext context, TextEditingController emailCont,
   if (key.currentState.validate()) {
     String message = await Service()
         .signInWithEmail(context, emailCont.text, passwordCont.text);
-    if (message.contains('successfully')) {
+    if (message.contains('success')) {
       Navigator.pushAndRemoveUntil(context,
           MaterialPageRoute(builder: (_) => RootScreen()), (route) => false);
     } else
@@ -274,6 +275,18 @@ Widget _buildHeader() {
   );
 }
 
+emailValidation(String value) {
+  if (value.isEmpty)
+    return 'Email is required';
+  else if (!value.contains('@')) return 'Invalid Email';
+}
+
+passwordValidation(String value) {
+  if (value.isEmpty)
+    return 'Password is required';
+  else if (value.length < 8) return 'Password is wrong';
+}
+
 Widget _buildForm(
     TextEditingController email, TextEditingController password, _key) {
   return Container(
@@ -289,6 +302,7 @@ Widget _buildForm(
                 prefixIconImagePath: ImagePath.emailIcon,
                 hintText: StringConst.HINT_TEXT_EMAIL,
                 textEditingController: email,
+                function: emailValidation,
               ),
               SpaceH16(),
               CustomTextFormField(
@@ -297,12 +311,13 @@ Widget _buildForm(
                 hintText: StringConst.HINT_TEXT_PASSWORD,
                 obscured: true,
                 textEditingController: password,
+                function: passwordValidation,
               ),
               Align(
                 alignment: Alignment.topRight,
                 child: InkWell(
-                  // onTap: () =>
-                  //     AppRouter.navigator.pushNamed(AppRouter.forgotPasswordScreen),
+                  onTap: () => AppRouter.navigator
+                      .pushNamed(AppRouter.forgotPasswordScreen),
                   child: Container(
                     margin: EdgeInsets.only(top: Sizes.MARGIN_16),
                     child: Text(
@@ -336,6 +351,8 @@ _signInWithGoogle(BuildContext context) async {
         MaterialPageRoute(
           builder: (_) => RegisterScreen(
             email: currUser.email,
+            uid: currUser.uid,
+            type: 1,
           ),
         ),
         (route) => false);
@@ -358,6 +375,8 @@ _signInWithApple(BuildContext context) async {
         MaterialPageRoute(
           builder: (_) => RegisterScreen(
             email: currUser.email,
+             uid: currUser.uid,
+             type: 2,
           ),
         ),
         (route) => false);

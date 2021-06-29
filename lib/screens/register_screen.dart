@@ -13,12 +13,14 @@ import 'package:potbelly/widgets/image_pick.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:potbelly/widgets/snackbar.dart';
 import 'package:potbelly/widgets/spaces.dart';
-import 'package:potbelly/widgets/toaster.dart';
 
 class RegisterScreen extends StatefulWidget {
   final String email;
+  final String uid;
+  final int type;
 
-  const RegisterScreen({Key key, this.email}) : super(key: key);
+  const RegisterScreen({Key key, this.email, this.uid, this.type})
+      : super(key: key);
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
@@ -40,6 +42,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   double heightOfScreen;
   double widthOfScreen;
+
+  Service _service = Service();
 
   @override
   void initState() {
@@ -191,6 +195,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  passwordValidator(String value) {
+    if (value.isEmpty) {
+      return 'Passowrd field is required';
+    } else if (value.length <= 7) {
+      return 'Password field must be greater then 8';
+    }
+  }
+
+  emailValidator(String value) {
+    if (value.isEmpty) {
+      return 'Email field is required';
+    } else if (!value.contains('@')) {
+      return 'Email is invalid';
+    }
+  }
+
+  nameValidator(String value) {
+    if (value.isEmpty)
+      return 'Name field is required';
+    else if (value.length < 3) return 'Please enter valid name';
+  }
+
+  phoneValidator(String value) {
+    if (value.isEmpty)
+      return 'Phone number is required';
+    else if (value.length < 10) return 'Invalid PHone Number';
+  }
+
   Widget _buildForm() {
     return Form(
       key: _formKey,
@@ -201,6 +233,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             textEditingController: nameController,
             prefixIconImagePath: ImagePath.personIcon,
             hintText: StringConst.HINT_TEXT_NAME,
+            function: nameValidator,
           ),
           SpaceH16(),
           CustomTextFormField(
@@ -208,6 +241,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             textEditingController: emailController,
             prefixIconImagePath: ImagePath.emailIcon,
             hintText: StringConst.HINT_TEXT_EMAIL,
+            function: emailValidator,
           ),
           SpaceH16(),
           CustomTextFormField(
@@ -215,6 +249,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             textEditingController: passwordController,
             prefixIconImagePath: ImagePath.passwordIcon,
             hintText: StringConst.HINT_TEXT_PASSWORD,
+            function: passwordValidator,
             obscured: true,
           ),
           SpaceH16(),
@@ -223,6 +258,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             textEditingController: phoneNoController,
             prefixIconImagePath: ImagePath.callIcon,
             hintText: StringConst.HINT_TEXT_PHONE_NO,
+            function: phoneValidator,
           ),
         ],
       ),
@@ -230,30 +266,56 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void validateFormAndCreateUser(BuildContext context) async {
-    FirebaseAuth _auth = FirebaseAuth.instance;
-    var currentUser = await _auth.currentUser();
-    print('In validate Form');
-    String message;
+    print('In Validating form section');
+
     if (_formKey.currentState.validate()) {
       UserModel userModel = UserModel(
-          currentUser != null ? currentUser.uid : '',
+          '',
           nameController.text,
           emailController.text,
           passwordController.text,
           phoneNoController.text,
           '');
 
-      if (widget.email != null) {
-        message = await Service().setDataInUserCollection(userModel);
-      } else {
-        message = await Service().registerWithEmail(userModel, _profilePicture);
-      }
-      if (message.contains('successfully'))
-        Navigator.push(
+      String uid = widget.uid;
+
+      var message = await _service.registerUserWithEmail(
+          userModel, _profilePicture, uid, widget.type ?? 0);
+      print(message);
+      if (message == 'success') {
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => RootScreen()));
-      else {
+      } else {
         showSnackBar(context, message);
       }
+    } else {
+      print('Not Validate');
     }
+
+    // FirebaseAuth _auth = FirebaseAuth.instance;
+    // var currentUser = await _auth.currentUser();
+    // print('In validate Form');
+    // String message;
+    // if (_formKey.currentState.validate()) {
+    //   UserModel userModel = UserModel(
+    //       currentUser != null ? currentUser.uid : '',
+    //       nameController.text,
+    //       emailController.text,
+    //       passwordController.text,
+    //       phoneNoController.text,
+    //       '');
+
+    //   if (widget.email != null) {
+    //     message = await Service().setDataInUserCollection(userModel);
+    //   } else {
+    //     message = await Service().registerWithEmail(userModel, _profilePicture);
+    //   }
+    //   if (message.contains('successfully'))
+    //     Navigator.push(
+    //         context, MaterialPageRoute(builder: (_) => RootScreen()));
+    //   else {
+    //     showSnackBar(context, message);
+    //   }
+    // }
   }
 }

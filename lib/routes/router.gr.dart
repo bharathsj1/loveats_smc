@@ -7,6 +7,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:potbelly/screens/google_map.dart';
 import 'package:potbelly/screens/login_screen.dart';
 import 'package:potbelly/screens/splash_screen.dart';
 import 'package:potbelly/screens/forgot_password_screen.dart';
@@ -64,6 +65,7 @@ class AppRouter {
   static const changeLanguageScreen = '/change-language-screen';
   static const editProfileScreen = '/edit-profile-screen';
   static const newReviewScreen = '/new-review-screen';
+  static const googleMap = '/google-map';
   static final navigator = ExtendedNavigator();
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -178,12 +180,16 @@ class AppRouter {
         );
       case AppRouter.addRatingsScreen:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => AddRatingsScreen(resId: args,),
+          builder: (_) => AddRatingsScreen(
+            resId: args,
+          ),
           settings: settings,
         );
       case AppRouter.menuPhotosScreen:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => MenuPhotosScreen(images: args,),
+          builder: (_) => MenuPhotosScreen(
+            images: args,
+          ),
           settings: settings,
         );
       case AppRouter.previewMenuPhotosScreen:
@@ -239,6 +245,11 @@ class AppRouter {
       case AppRouter.newReviewScreen:
         return CupertinoPageRoute<dynamic>(
           builder: (_) => NewReviewScreen(),
+          settings: settings,
+        );
+      case AppRouter.googleMap:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => GoogleMaps(),
           settings: settings,
         );
       default:

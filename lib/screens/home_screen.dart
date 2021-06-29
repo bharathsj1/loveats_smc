@@ -1,14 +1,10 @@
-import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:potbelly/models/promotions.dart';
-import 'package:potbelly/models/restaurants.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
-import 'package:potbelly/screens/preview_menu_photos.dart';
 import 'package:potbelly/services/DatabaseManager.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/values/data.dart';
@@ -16,11 +12,10 @@ import 'package:potbelly/widgets/category_card.dart';
 import 'package:potbelly/widgets/foody_bite_card.dart';
 import 'package:potbelly/widgets/heading_row.dart';
 import 'package:potbelly/widgets/search_input_field.dart';
-import 'package:http/http.dart';
-import 'dart:convert';
-import 'package:potbelly/models/Article.dart';
 import 'package:video_player/video_player.dart';
 import 'package:skeleton_text/skeleton_text.dart';
+
+import 'google_map.dart';
 
 class HomeScreen extends StatefulWidget {
   static const int TAB_NO = 0;
@@ -176,40 +171,70 @@ class _HomeScreenState extends State<HomeScreen> {
             vertical: Sizes.MARGIN_8,
           ),
           child: ListView(
-            children: <Widget>[
-              FoodyBiteSearchInputField(
-                ImagePath.searchIcon,
-                controller: searchcontroller,
-                textFormFieldStyle:
-                    Styles.customNormalTextStyle(color: AppColors.accentText),
-                hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
-                hintTextStyle:
-                    Styles.customNormalTextStyle(color: AppColors.accentText),
-                suffixIconImagePath: ImagePath.settingsIcon,
-                borderWidth: 0.0,
-                onTapOfLeadingIcon: () {
-                  pausevideo();
-                  FocusScope.of(context).unfocus();
-                  AppRouter.navigator
-                      .pushNamed(
-                    AppRouter.searchResultsScreen,
-                    arguments: SearchValue(
-                      searchcontroller.text,
+            children: [
+              InkWell(
+                onTap: () => bottomSheetForLocation(context),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 5.0),
+                      child: Icon(Icons.location_on,
+                          size: Sizes.HEIGHT_22, color: AppColors.indigo),
                     ),
-                  )
-                      .then((value) {
-                    this.searchcontroller.text = '';
-                    FocusScope.of(context).unfocus();
-                    setState(() {});
-                    resumevideo();
-                  });
-                },
-                onTapOfSuffixIcon: () {
-                  pausevideo();
-                    AppRouter.navigator.pushNamed(AppRouter.filterScreen).then((value) => resumevideo());
-                },
-                borderStyle: BorderStyle.solid
+                    Container(
+                      padding: EdgeInsets.only(
+                        bottom: 5,
+                      ),
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                        color: Colors.black38,
+                        width: 1.0,
+                      ))),
+                      child: Text(
+                        "Preston",
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
+              SizedBox(
+                height: Sizes.MARGIN_14,
+              ),
+              FoodyBiteSearchInputField(ImagePath.searchIcon,
+                  controller: searchcontroller,
+                  textFormFieldStyle:
+                      Styles.customNormalTextStyle(color: AppColors.accentText),
+                  hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
+                  hintTextStyle:
+                      Styles.customNormalTextStyle(color: AppColors.accentText),
+                  suffixIconImagePath: ImagePath.settingsIcon,
+                  borderWidth: 0.0, onTapOfLeadingIcon: () {
+                pausevideo();
+                FocusScope.of(context).unfocus();
+                AppRouter.navigator
+                    .pushNamed(
+                  AppRouter.searchResultsScreen,
+                  arguments: SearchValue(
+                    searchcontroller.text,
+                  ),
+                )
+                    .then((value) {
+                  this.searchcontroller.text = '';
+                  FocusScope.of(context).unfocus();
+                  setState(() {});
+                  resumevideo();
+                });
+              }, onTapOfSuffixIcon: () {
+                pausevideo();
+                AppRouter.navigator
+                    .pushNamed(AppRouter.filterScreen)
+                    .then((value) => resumevideo());
+              }, borderStyle: BorderStyle.solid),
               SizedBox(height: 16.0),
               HeadingRow(
                   title: StringConst.TRENDING_RESTAURANTS,
@@ -580,5 +605,85 @@ class _HomeScreenState extends State<HomeScreen> {
           .add(CircleAvatar(backgroundImage: AssetImage(imagePaths[i - 1])));
     });
     return profilePhotos;
+  }
+
+  bottomSheetForLocation(BuildContext context) {
+    return showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        builder: (context) {
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(10.0),
+                  topRight: const Radius.circular(10.0),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Search Location',
+                    style: Styles.customNormalTextStyle(color: Colors.black),
+                  ),
+                  Divider(),
+                  TextField(
+                    decoration: InputDecoration(
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: Image.asset(
+                            ImagePath.searchIcon,
+                          ),
+                        ),
+                        hintText: 'Search for your location',
+                        hintStyle: TextStyle(
+                          color: Colors.black26,
+                          fontSize: 16,
+                        ),
+                        border: InputBorder.none),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  InkWell(
+                  onTap: ()=>AppRouter.navigator.pushNamed(AppRouter.googleMap),
+                    child: Row(
+                      children: [
+                        Icon(Icons.location_searching, size: 12.0),
+                        SizedBox(
+                          width: 5.0,
+                        ),
+                        Text('Use current location',
+                            style: Styles.customNormalTextStyle(
+                                color: Colors.indigo)),
+                      ],
+                    ),
+                  ),
+                  Divider(),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Text(
+                    'Saved Addresses',
+                    style: Styles.customNormalTextStyle(color: Colors.black),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.home),
+                    title: Text('Home'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    subtitle: Text('Habib Street, Banigala'),
+                  ),
+                  Divider(),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:potbelly/models/UserModel.dart';
+import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/settings_screen.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/foody_bite_card.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:potbelly/widgets/spaces.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const int TAB_NO = 3;
@@ -19,6 +21,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   UserModel userModel;
   bool _isLoading = true;
+  SharedPreferences prefs;
+
   @override
   void initState() {
     getUserDetail();
@@ -50,20 +54,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: <Widget>[
                     Column(
                       children: [
-                        userModel?.profileImage != null
+                        prefs.getString('photo') != null
                             ? CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage(userModel.profileImage),
+                                backgroundImage: NetworkImage(
+                                  StringConst.LOCAL_URL +
+                                      prefs.getString('photo'),
+                                ),
                                 backgroundColor: Colors.transparent,
                                 minRadius: Sizes.RADIUS_60,
                                 maxRadius: Sizes.RADIUS_60,
                               )
                             : CircleAvatar(),
                         SpaceH8(),
-                        Text(userModel?.name ?? 'Not Available',
+                        Text(prefs.getString('name')?? 'Not Available',
                             style: Styles.foodyBiteTitleTextStyle),
                         SpaceH8(),
-                        Text(userModel?.email ?? 'Not Available',
+                        Text(prefs.getString('email')?? 'Not Available',
                             style: Styles.foodyBiteSubtitleTextStyle),
                       ],
                     ),
@@ -101,10 +107,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         SpaceW16(),
                         PotbellyButton(
                           'Settings',
-                          onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => SettingsScreen())),
+                          onTap: () => AppRouter.navigator
+                              .pushNamed(AppRouter.settingsScreen),
                           buttonWidth: MediaQuery.of(context).size.width / 3,
                           buttonHeight: Sizes.HEIGHT_50,
                           decoration: BoxDecoration(
@@ -157,9 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   getUserDetail() async {
-    final user = await Service().getUserDetail();
-    userModel = user;
-
+    prefs = await Service().initializdPrefs();
     setState(() {
       _isLoading = false;
     });
