@@ -12,7 +12,7 @@ import 'package:potbelly/widgets/heading_row.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:potbelly/widgets/ratings_widget.dart';
 import 'package:potbelly/widgets/spaces.dart';
-// import 'package:image_viewer/image_viewer.dart';
+import 'package:image_viewer/image_viewer.dart';
 
 class PromotionDetailsScreen extends StatelessWidget {
   final PromotionDetails promotionDetails;

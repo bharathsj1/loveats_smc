@@ -51,7 +51,7 @@ packages:
     source: hosted
     version: "1.0.1+4"
   auto_route:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: auto_route
       url: "https://pub.dartlang.org"
@@ -286,6 +286,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  flutter_slidable:
+    dependency: "direct main"
+    description:
+      name: flutter_slidable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.0"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -387,6 +394,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.6"
+  image_viewer:
+    dependency: "direct main"
+    description:
+      name: image_viewer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.5.0"
   intl:
     dependency: transitive
     description:
@@ -548,6 +562,34 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  shared_preferences:
+    dependency: "direct main"
+    description:
+      name: shared_preferences
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.7+3"
+  shared_preferences_macos:
+    dependency: transitive
+    description:
+      name: shared_preferences_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1+11"
+  shared_preferences_platform_interface:
+    dependency: transitive
+    description:
+      name: shared_preferences_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
+  shared_preferences_web:
+    dependency: transitive
+    description:
+      name: shared_preferences_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2+7"
   sign_in_with_apple:
     dependency: "direct main"
     description:

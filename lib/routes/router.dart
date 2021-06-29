@@ -96,7 +96,7 @@ class RestaurantDetails {
   final String category;
   final String distance;
   final String rating;
-  var data;
+   var data;
 
   RestaurantDetails({
     @required this.imagePath,
@@ -105,10 +105,9 @@ class RestaurantDetails {
     @required this.category,
     @required this.distance,
     @required this.rating,
-    this.data,
+     this.data,
   });
 }
-
 class PromotionDetails {
   final String image;
   final String name;
@@ -116,7 +115,7 @@ class PromotionDetails {
   final String thumnail;
   final String description;
   final String id;
-  var data;
+   var data;
 
   PromotionDetails({
     @required this.image,
@@ -125,7 +124,7 @@ class PromotionDetails {
     @required this.thumnail,
     @required this.description,
     @required this.id,
-    this.data,
+     this.data,
   });
 }
 

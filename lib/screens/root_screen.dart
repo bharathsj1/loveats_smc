@@ -100,10 +100,13 @@ class _RootScreenState extends State<RootScreen>
       floatingActionButton: FloatingActionButton(
         child: AnimatedBuilder(
           animation: _controller,
-          child: Icon(
-            Icons.add,
-            size: 36,
-            color: AppColors.white,
+          child: RotatedBox(
+            quarterTurns: 2,
+            child: Icon(
+              Icons.shopping_cart_outlined,
+              size: 26,
+              color: AppColors.white,
+            ),
           ),
           builder: (context, child) => Transform.rotate(
             angle: angle,
@@ -117,7 +120,8 @@ class _RootScreenState extends State<RootScreen>
           _isPanelVisible ? _controller.forward() : _controller.reverse();
           _isPanelVisible
               ? changeScreen(
-                  currentScreen: NewReviewScreen(),
+                  // currentScreen: NewReviewScreen(),
+                  currentScreen: Cart(),
                   currentTab: NewReviewScreen.TAB_NO,
                 )
               : changeScreen(
@@ -155,7 +159,8 @@ class _RootScreenState extends State<RootScreen>
                   ),
                   SizedBox(width: 40),
                   bottomNavigationIcon(
-                    destination: Cart(),
+                    destination: BookmarksScreen(),
+                    // destination: Cart(),
                     currentTab: BookmarksScreen.TAB_NO,
                     activeIcon: ImagePath.activeBookmarksIcon2,
                     nonActiveIcon: ImagePath.bookmarksIcon,

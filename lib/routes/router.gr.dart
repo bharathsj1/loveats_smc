@@ -178,16 +178,12 @@ class AppRouter {
         );
       case AppRouter.addRatingsScreen:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => AddRatingsScreen(
-            resId: args,
-          ),
+          builder: (_) => AddRatingsScreen(resId: args,),
           settings: settings,
         );
       case AppRouter.menuPhotosScreen:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => MenuPhotosScreen(
-            images: args,
-          ),
+          builder: (_) => MenuPhotosScreen(images: args,),
           settings: settings,
         );
       case AppRouter.previewMenuPhotosScreen:

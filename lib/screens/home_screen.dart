@@ -177,36 +177,39 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           child: ListView(
             children: <Widget>[
-              FoodyBiteSearchInputField(ImagePath.searchIcon,
-                  controller: searchcontroller,
-                  textFormFieldStyle:
-                      Styles.customNormalTextStyle(color: AppColors.accentText),
-                  hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
-                  hintTextStyle:
-                      Styles.customNormalTextStyle(color: AppColors.accentText),
-                  suffixIconImagePath: ImagePath.settingsIcon,
-                  borderWidth: 0.0, onTapOfLeadingIcon: () {
-                pausevideo();
-                FocusScope.of(context).unfocus();
-                AppRouter.navigator
-                    .pushNamed(
-                  AppRouter.searchResultsScreen,
-                  arguments: SearchValue(
-                    searchcontroller.text,
-                  ),
-                )
-                    .then((value) {
-                  this.searchcontroller.text = '';
+              FoodyBiteSearchInputField(
+                ImagePath.searchIcon,
+                controller: searchcontroller,
+                textFormFieldStyle:
+                    Styles.customNormalTextStyle(color: AppColors.accentText),
+                hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
+                hintTextStyle:
+                    Styles.customNormalTextStyle(color: AppColors.accentText),
+                suffixIconImagePath: ImagePath.settingsIcon,
+                borderWidth: 0.0,
+                onTapOfLeadingIcon: () {
+                  pausevideo();
                   FocusScope.of(context).unfocus();
-                  setState(() {});
-                  resumevideo();
-                });
-              }, onTapOfSuffixIcon: () {
-                pausevideo();
-                AppRouter.navigator
-                    .pushNamed(AppRouter.filterScreen)
-                    .then((value) => resumevideo());
-              }, borderStyle: BorderStyle.solid),
+                  AppRouter.navigator
+                      .pushNamed(
+                    AppRouter.searchResultsScreen,
+                    arguments: SearchValue(
+                      searchcontroller.text,
+                    ),
+                  )
+                      .then((value) {
+                    this.searchcontroller.text = '';
+                    FocusScope.of(context).unfocus();
+                    setState(() {});
+                    resumevideo();
+                  });
+                },
+                onTapOfSuffixIcon: () {
+                  pausevideo();
+                    AppRouter.navigator.pushNamed(AppRouter.filterScreen).then((value) => resumevideo());
+                },
+                borderStyle: BorderStyle.solid
+              ),
               SizedBox(height: 16.0),
               HeadingRow(
                   title: StringConst.TRENDING_RESTAURANTS,

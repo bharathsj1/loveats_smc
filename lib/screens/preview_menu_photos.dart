@@ -51,7 +51,7 @@ class _PreviewMenuPhotosScreenState extends State<PreviewMenuPhotosScreen> {
         backgroundColor: AppColors.kFoodyBiteDarkBackground,
         elevation: 0.0,
         leading: InkWell(
-          // onTap: () => AppRouter.navigator.pop(context),
+          onTap: () => AppRouter.navigator.pop(context),
           child: Image.asset(
             ImagePath.arrowBackIcon,
             color: AppColors.primaryColor,
@@ -77,18 +77,19 @@ class _PreviewMenuPhotosScreenState extends State<PreviewMenuPhotosScreen> {
               child: Align(
                 alignment: Alignment.center,
                 child: CarouselSlider(
-                    items: child,
-                    options: CarouselOptions(
-                      height: 400,
-                      autoPlay: false,
-                      enlargeCenterPage: false,
-                      viewportFraction: 1.0,
-                      onPageChanged: (index, reaseon) {
-                        setState(() {
-                          _current = index;
-                        });
-                      },
-                    )),
+                  items: child,
+                  options: CarouselOptions(
+                  height: 400,
+                  autoPlay: false,
+                  enlargeCenterPage: false,
+                  viewportFraction: 1.0,
+                  onPageChanged: (index,reaseon) {
+                    setState(() {
+                      _current = index;
+                    });
+                  },
+                  )
+                ),
               ),
             ),
             Expanded(

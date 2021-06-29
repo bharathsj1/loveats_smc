@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
@@ -7,18 +8,43 @@ import 'package:potbelly/widgets/foody_bite_card.dart';
 import 'package:potbelly/widgets/search_input_field.dart';
 import 'package:potbelly/widgets/spaces.dart';
 
-class SearchResultsScreen extends StatelessWidget {
+class SearchResultsScreen extends StatefulWidget {
   final SearchValue searchValue;
-
   SearchResultsScreen(this.searchValue);
+
+  @override
+  _SearchResultsScreenState createState() => _SearchResultsScreenState();
+}
+
+class _SearchResultsScreenState extends State<SearchResultsScreen> {
+  List records = [];
+  List search = [];
+  bool searching = false;
+  var controller = TextEditingController();
+
+  @override
+  void initState() {
+    controller.text = widget.searchValue.value;
+    if (widget.searchValue.value != '') {
+      searching = true;
+    }
+    // print(widget.searchValue);
+    super.initState();
+  }
+
+  searchfromlist() {
+    records = search
+        .where((product) => product['name']
+            .toLowerCase()
+            .contains(controller.text.toLowerCase()))
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     void navigateToDetailScreen() {
-      // AppRouter.navigator.pushNamed(AppRouter.restaurantDetailsScreen);
+      AppRouter.navigator.pushNamed(AppRouter.restaurantDetailsScreen);
     }
-
-    // var controller = TextEditingController(text: searchValue.value);
 
     return Scaffold(
       body: SafeArea(
@@ -30,52 +56,97 @@ class SearchResultsScreen extends StatelessWidget {
           ),
           child: Column(
             children: <Widget>[
-              FoodyBiteSearchInputField(
-                ImagePath.searchIcon,
-                // controller: controller,
-                textFormFieldStyle:
-                    Styles.customNormalTextStyle(color: AppColors.accentText),
-                hintText: StringConst.HINT_TEXT_TRENDING_SEARCH_BAR,
-                hintTextStyle:
-                    Styles.customNormalTextStyle(color: AppColors.accentText),
-                suffixIconImagePath: ImagePath.closeIcon,
-                onTapOfSuffixIcon: () => Navigator.pop(context),
-                borderWidth: 0.0,
-                borderStyle: BorderStyle.solid,
-              ),
+              FoodyBiteSearchInputField(ImagePath.searchIcon,
+                  controller: controller,
+                  textFormFieldStyle:
+                      Styles.customNormalTextStyle(color: AppColors.accentText),
+                  hintText: StringConst.HINT_TEXT_TRENDING_SEARCH_BAR,
+                  hintTextStyle:
+                      Styles.customNormalTextStyle(color: AppColors.accentText),
+                  suffixIconImagePath: ImagePath.closeIcon,
+                  onTapOfSuffixIcon: () => Navigator.pop(context),
+                  borderWidth: 0.0,
+                  borderStyle: BorderStyle.solid,
+                  onChanged: (value) {
+                    setState(() {
+                      this.searching = true;
+                      searchfromlist();
+                    });
+                  }),
               SizedBox(height: Sizes.WIDTH_16),
               Expanded(
-                child: ListView.separated(
-                  scrollDirection: Axis.vertical,
-                  itemCount: 4,
-                  separatorBuilder: (context, index) {
-                    return SpaceH8();
-                  },
-                  itemBuilder: (context, index) {
-                    return Container(
-                      child: FoodyBiteCard(
-                        // onTap: () => AppRouter.navigator.pushNamed(
-                        //   AppRouter.restaurantDetailsScreen,
-                        //   arguments: RestaurantDetails(
-                        //     imagePath: imagePaths[index],
-                        //     restaurantName: restaurantNames[index],
-                        //     restaurantAddress: addresses[index],
-                        //     rating: ratings[index],
-                        //     category: category[index],
-                        //     distance: distance[index],
-                        //   ),
-                        // ),
-                        imagePath: imagePaths[index],
-                        status: status[index],
-                        cardTitle: restaurantNames[index],
-                        rating: ratings[index],
-                        category: category[index],
-                        distance: distance[index],
-                        address: addresses[index],
-                      ),
-                    );
-                  },
-                ),
+                child: StreamBuilder(
+                    stream: Firestore.instance
+                        .collection('Restaurants')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              AppColors.secondaryElement,
+                            ),
+                          ),
+                        );
+                      } else {
+                        List<DocumentSnapshot> items = snapshot.data.documents;
+                        // if (searching == true) {
+                        // } else {
+                        records.clear();
+                        items.forEach((e) {
+                          records.add(e.data);
+                          // print(e.data());
+                        });
+                        search = records;
+                        // }
+                        if (searching == true) {
+                          searchfromlist();
+                        }
+                        return ListView.separated(
+                          physics: BouncingScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          itemCount: records.length,
+                          separatorBuilder: (context, index) {
+                            return SpaceH8();
+                          },
+                          itemBuilder: (context, index) {
+                            return Container(
+                              margin: EdgeInsets.only(bottom: 10),
+                              child: FoodyBiteCard(
+                                onTap: () => AppRouter.navigator.pushNamed(
+                                  AppRouter.restaurantDetailsScreen,
+                                  arguments: RestaurantDetails(
+                                      imagePath: records[index]['image'],
+                                      restaurantName: records[index]['name'],
+                                      restaurantAddress: records[index]
+                                              ['address'] +
+                                          ' ' +
+                                          records[index]['city'] +
+                                          ' ' +
+                                          records[index]['country'],
+                                      rating: records[index]['ratings'],
+                                      category: records[index]['type'],
+                                      distance: records[index]['distance'],
+                                      data: records[index]),
+                                ),
+                                imagePath: records[index]['image'],
+                                status:
+                                    records[index]['open'] ? "OPEN" : "CLOSE",
+                                cardTitle: records[index]['name'],
+                                rating: records[index]['ratings'],
+                                category: records[index]['type'],
+                                distance: records[index]['distance'],
+                                address: records[index]['address'] +
+                                    ' ' +
+                                    records[index]['city'] +
+                                    ' ' +
+                                    records[index]['country'],
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    }),
               ),
             ],
           ),

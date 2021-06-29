@@ -3,10 +3,10 @@ import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/values/values.dart';
 
 class MenuPhotosScreen extends StatelessWidget {
+    List images;
+  MenuPhotosScreen({@required this.images});
   final double heightForSmallImages = 100.0;
   final double heightForBigImages = 200.0;
-  List images;
-  MenuPhotosScreen({@required this.images});
   @override
   Widget build(BuildContext context) {
     var marginBetweenImages = Sizes.MARGIN_16 * 2;

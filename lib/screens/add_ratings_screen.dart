@@ -7,7 +7,7 @@ import 'package:potbelly/widgets/ratings_widget.dart';
 import 'package:potbelly/widgets/spaces.dart';
 
 class AddRatingsScreen extends StatefulWidget {
-  var resId;
+      var resId;
   AddRatingsScreen({@required this.resId});
   @override
   _AddRatingsScreenState createState() => _AddRatingsScreenState();

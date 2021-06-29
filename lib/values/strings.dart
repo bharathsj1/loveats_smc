@@ -33,6 +33,8 @@ class StringConst {
   static const String MENU_AND_PHOTOS = "Menu & Photos";
   static const String PREVIEW = "Preview";
   static const String REVIEWS_AND_RATINGS = "Reviews & Ratings";
+  static const String Food_Items = "Items";
+  static const String Description = "Description";
   static const String SEE_ALL_32 = "See all (32)";
   static const String SEE_ALL_45 = "See all (45)";
   static const String SEE_ALL_9 = "See all (9)";
@@ -53,5 +55,4 @@ class StringConst {
 
   //Font Family
   static const String FONT_FAMILY = "Josefin Sans";
-  static const String Description = "Description";
 }

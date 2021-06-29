@@ -66,6 +66,23 @@ class FoodyBiteCard extends StatelessWidget {
                       child: imagePath.substring(0, 4) == 'http'
                           ? Image.network(
                               imagePath,
+                              loadingBuilder: (BuildContext ctx, Widget child,
+                                  ImageChunkEvent loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                } else {
+                                  return Container(
+                                    height: imageHeight,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                AppColors.secondaryElement),
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
                               width: MediaQuery.of(context).size.width,
                               height: imageHeight,
                               fit: BoxFit.cover,
