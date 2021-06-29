@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/values/values.dart';
 
 class CustomAppBar extends StatelessWidget {
@@ -52,7 +53,7 @@ class CustomAppBar extends StatelessWidget {
 
   Widget defaultLeading() {
     return InkWell(
-      // onTap: () => AppRouter.navigator.pop(),
+      onTap: () => AppRouter.navigator.pop(),
       child: Image.asset(
         ImagePath.arrowBackIcon,
         color: AppColors.headingText,

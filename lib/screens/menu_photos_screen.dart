@@ -5,7 +5,8 @@ import 'package:potbelly/values/values.dart';
 class MenuPhotosScreen extends StatelessWidget {
   final double heightForSmallImages = 100.0;
   final double heightForBigImages = 200.0;
-
+  List images;
+  MenuPhotosScreen({@required this.images});
   @override
   Widget build(BuildContext context) {
     var marginBetweenImages = Sizes.MARGIN_16 * 2;
@@ -19,7 +20,7 @@ class MenuPhotosScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0.0,
         leading: InkWell(
-          // onTap: () => AppRouter.navigator.pop(),
+          onTap: () => AppRouter.navigator.pop(),
           child: Image.asset(
             ImagePath.arrowBackIcon,
             color: AppColors.headingText,
@@ -177,6 +178,6 @@ class MenuPhotosScreen extends StatelessWidget {
   }
 
   void navigateToPreviewPhotos(BuildContext context) {
-   // AppRouter.navigator.pushNamed(AppRouter.previewMenuPhotosScreen);
+    // AppRouter.navigator.pushNamed(AppRouter.previewMenuPhotosScreen);
   }
 }

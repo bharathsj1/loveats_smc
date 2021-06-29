@@ -88,7 +88,7 @@ class ForgotPasswordScreen extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         InkWell(
-          // onTap: () => AppRouter.navigator.pop(),
+          onTap: () => AppRouter.navigator.pop(),
           child: Padding(
             padding: const EdgeInsets.only(
               left: Sizes.MARGIN_12,

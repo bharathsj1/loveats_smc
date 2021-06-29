@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:potbelly/screens/splash_screen.dart';
 import 'package:potbelly/theme.dart';
+import 'package:potbelly/routes/router.gr.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +15,9 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: buildLightTheme(context),
+      initialRoute: AppRouter.splashScreen,
+      onGenerateRoute: AppRouter.onGenerateRoute,
+      navigatorKey: AppRouter.navigator.key,
       home: SplashScreen(),
     );
   }

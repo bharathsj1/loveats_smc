@@ -14,9 +14,9 @@ import 'package:potbelly/widgets/ratings_widget.dart';
 import 'package:potbelly/widgets/spaces.dart';
 
 class RestaurantDetailsScreen extends StatelessWidget {
-  // final RestaurantDetails restaurantDetails;
+  final RestaurantDetails restaurantDetails;
 
-  // RestaurantDetailsScreen({@required this.restaurantDetails});
+  RestaurantDetailsScreen({@required this.restaurantDetails});
 
   TextStyle addressTextStyle = Styles.customNormalTextStyle(
     color: AppColors.accentText,
@@ -71,14 +71,22 @@ class RestaurantDetailsScreen extends StatelessWidget {
                   children: <Widget>[
                     Stack(
                       children: <Widget>[
-                        // Positioned(
-                        //   child: Image.asset(
-                        //     restaurantDetails.imagePath,
-                        //     width: MediaQuery.of(context).size.width,
-                        //     height: heightOfStack,
-                        //     fit: BoxFit.cover,
-                        //   ),
-                        // ),
+                        Positioned(
+                          child: restaurantDetails.imagePath.substring(0, 4) ==
+                                  'http'
+                              ? Image.network(
+                                  restaurantDetails.imagePath,
+                                  width: MediaQuery.of(context).size.width,
+                                  height: heightOfStack,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  restaurantDetails.imagePath,
+                                  width: MediaQuery.of(context).size.width,
+                                  height: heightOfStack,
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
                         DarkOverLay(
                             gradient: Gradients.restaurantDetailsGradient),
                         Positioned(
@@ -90,7 +98,7 @@ class RestaurantDetailsScreen extends StatelessWidget {
                             child: Row(
                               children: <Widget>[
                                 InkWell(
-                                  // onTap: () => AppRouter.navigator.pop(),
+                                  onTap: () => AppRouter.navigator.pop(),
                                   child: Padding(
                                     padding: const EdgeInsets.only(
                                       left: Sizes.MARGIN_16,
@@ -142,7 +150,7 @@ class RestaurantDetailsScreen extends StatelessWidget {
                                           Image.asset(ImagePath.callIcon),
                                           SizedBox(width: 8.0),
                                           Text(
-                                            '+233 549546967',
+                                            restaurantDetails.data['phone'],
                                             style: Styles.normalTextStyle,
                                           )
                                         ],
@@ -196,45 +204,45 @@ class RestaurantDetailsScreen extends StatelessWidget {
                             children: <Widget>[
                               Row(
                                 children: <Widget>[
-                                  // Text(
-                                  //   restaurantDetails.restaurantName,
-                                  //   textAlign: TextAlign.left,
-                                  //   style: Styles.customTitleTextStyle(
-                                  //     color: AppColors.headingText,
-                                  //     fontWeight: FontWeight.w600,
-                                  //     fontSize: Sizes.TEXT_SIZE_20,
-                                  //   ),
-                                  // ),
+                                  Text(
+                                    restaurantDetails.restaurantName,
+                                    textAlign: TextAlign.left,
+                                    style: Styles.customTitleTextStyle(
+                                      color: AppColors.headingText,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: Sizes.TEXT_SIZE_20,
+                                    ),
+                                  ),
                                   SizedBox(width: 4.0),
-                                  // CardTags(
-                                  //   title: restaurantDetails.category,
-                                  //   decoration: BoxDecoration(
-                                  //     gradient: Gradients.secondaryGradient,
-                                  //     boxShadow: [
-                                  //       Shadows.secondaryShadow,
-                                  //     ],
-                                  //     borderRadius: BorderRadius.all(
-                                  //         Radius.circular(8.0)),
-                                  //   ),
-                                  // ),
+                                  CardTags(
+                                    title: restaurantDetails.category,
+                                    decoration: BoxDecoration(
+                                      gradient: Gradients.secondaryGradient,
+                                      boxShadow: [
+                                        Shadows.secondaryShadow,
+                                      ],
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0)),
+                                    ),
+                                  ),
                                   SizedBox(width: 4.0),
-                                  // CardTags(
-                                  //   title: restaurantDetails.distance,
-                                  //   decoration: BoxDecoration(
-                                  //     color: Color.fromARGB(255, 132, 141, 255),
-                                  //     borderRadius: BorderRadius.all(
-                                  //         Radius.circular(8.0)),
-                                  //   ),
-                                  // ),
+                                  CardTags(
+                                    title: restaurantDetails.distance,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 132, 141, 255),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0)),
+                                    ),
+                                  ),
                                   Spacer(flex: 1),
-                                  // Ratings(restaurantDetails.rating)
+                                  Ratings(restaurantDetails.rating)
                                 ],
                               ),
                               SizedBox(height: 16.0),
-                              // Text(
-                              //   restaurantDetails.restaurantAddress,
-                              //   style: addressTextStyle,
-                              // ),
+                              Text(
+                                restaurantDetails.restaurantAddress,
+                                style: addressTextStyle,
+                              ),
                               SizedBox(height: 8.0),
                               RichText(
                                 text: TextSpan(
@@ -244,7 +252,13 @@ class RestaurantDetailsScreen extends StatelessWidget {
                                     TextSpan(
                                         text: "daily time ",
                                         style: addressTextStyle),
-                                    TextSpan(text: "9:30 am to 11:30 am "),
+                                    TextSpan(
+                                        text: restaurantDetails
+                                                .data['open_time'] +
+                                            " am to " +
+                                            restaurantDetails
+                                                .data['close_time'] +
+                                            " am "),
                                   ],
                                 ),
                               )
@@ -254,8 +268,8 @@ class RestaurantDetailsScreen extends StatelessWidget {
                           HeadingRow(
                             title: StringConst.MENU_AND_PHOTOS,
                             number: StringConst.SEE_ALL_32,
-                            // onTapOfNumber: () => AppRouter.navigator
-                            //     .pushNamed(AppRouter.menuPhotosScreen),
+                            onTapOfNumber: () => AppRouter.navigator
+                                .pushNamed(AppRouter.menuPhotosScreen,arguments: restaurantDetails.data['menu']),
                           ),
                           SizedBox(height: 16.0),
                           Container(
@@ -263,18 +277,26 @@ class RestaurantDetailsScreen extends StatelessWidget {
                             width: MediaQuery.of(context).size.width,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: 4,
+                              itemCount: restaurantDetails.data['menu'].length,
                               itemBuilder: (context, index) {
                                 return Container(
                                   margin: EdgeInsets.only(right: 12.0),
                                   decoration: BoxDecoration(
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(8))),
-                                  child: Image.asset(
-                                    menuPhotosImagePaths[index],
-                                    fit: BoxFit.fill,
-                                    width: 160,
-                                  ),
+                                  child: restaurantDetails.imagePath
+                                              .substring(0, 4) ==
+                                          'http'
+                                      ? Image.network(
+                                          restaurantDetails.data['menu'][index],
+                                          fit: BoxFit.fill,
+                                          width: 160,
+                                        )
+                                      : Image.asset(
+                                          menuPhotosImagePaths[index],
+                                          fit: BoxFit.fill,
+                                          width: 160,
+                                        ),
                                 );
                               },
                             ),
@@ -283,8 +305,8 @@ class RestaurantDetailsScreen extends StatelessWidget {
                           HeadingRow(
                             title: StringConst.REVIEWS_AND_RATINGS,
                             number: StringConst.SEE_ALL_32,
-                            // onTapOfNumber: () => AppRouter.navigator
-                            //     .pushNamed(AppRouter.reviewRatingScreen),
+                            onTapOfNumber: () => AppRouter.navigator
+                                .pushNamed(AppRouter.reviewRatingScreen),
                           ),
                           SizedBox(height: 16.0),
                           Column(
@@ -299,8 +321,8 @@ class RestaurantDetailsScreen extends StatelessWidget {
               ),
               PotbellyButton(
                 'Rate Your Experience ',
-                // onTap: () =>
-                //     AppRouter.navigator.pushNamed(AppRouter.addRatingsScreen),
+                onTap: () =>
+                    AppRouter.navigator.pushNamed(AppRouter.addRatingsScreen,arguments: restaurantDetails.data['id'] ),
                 buttonHeight: 65,
                 buttonWidth: MediaQuery.of(context).size.width,
                 decoration: Decorations.customHalfCurvedButtonDecoration(
@@ -370,4 +392,6 @@ class RestaurantDetailsScreen extends StatelessWidget {
     });
     return userListTiles;
   }
+
+
 }

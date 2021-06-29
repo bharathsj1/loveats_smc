@@ -77,17 +77,18 @@ class _PreviewMenuPhotosScreenState extends State<PreviewMenuPhotosScreen> {
               child: Align(
                 alignment: Alignment.center,
                 child: CarouselSlider(
-                  height: 400,
-                  items: child,
-                  autoPlay: false,
-                  enlargeCenterPage: false,
-                  viewportFraction: 1.0,
-                  onPageChanged: (index) {
-                    setState(() {
-                      _current = index;
-                    });
-                  },
-                ),
+                    items: child,
+                    options: CarouselOptions(
+                      height: 400,
+                      autoPlay: false,
+                      enlargeCenterPage: false,
+                      viewportFraction: 1.0,
+                      onPageChanged: (index, reaseon) {
+                        setState(() {
+                          _current = index;
+                        });
+                      },
+                    )),
               ),
             ),
             Expanded(

@@ -63,12 +63,19 @@ class FoodyBiteCard extends StatelessWidget {
                   children: <Widget>[
                     ClipRRect(
                       borderRadius: BorderRadius.circular(4),
-                      child: Image.asset(
-                        imagePath,
-                        width: MediaQuery.of(context).size.width,
-                        height: imageHeight,
-                        fit: BoxFit.cover,
-                      ),
+                      child: imagePath.substring(0, 4) == 'http'
+                          ? Image.network(
+                              imagePath,
+                              width: MediaQuery.of(context).size.width,
+                              height: imageHeight,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(
+                              imagePath,
+                              width: MediaQuery.of(context).size.width,
+                              height: imageHeight,
+                              fit: BoxFit.cover,
+                            ),
                     ),
                     Container(
                       margin: EdgeInsets.symmetric(

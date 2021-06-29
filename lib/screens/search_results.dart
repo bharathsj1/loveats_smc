@@ -8,9 +8,9 @@ import 'package:potbelly/widgets/search_input_field.dart';
 import 'package:potbelly/widgets/spaces.dart';
 
 class SearchResultsScreen extends StatelessWidget {
-  // final SearchValue searchValue;
+  final SearchValue searchValue;
 
-  // SearchResultsScreen(this.searchValue);
+  SearchResultsScreen(this.searchValue);
 
   @override
   Widget build(BuildContext context) {

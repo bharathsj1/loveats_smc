@@ -18,7 +18,7 @@ dependencies:
   animations: ^1.1.2
   apple_sign_in: ^0.1.0
   auth_buttons: ^1.0.1+4
-  carousel_slider: ^1.4.1
+  carousel_slider: ^4.0.0
   cloud_firestore: null
   cupertino_icons: ^1.0.0
   firebase_auth: ^0.15.3
@@ -36,11 +36,19 @@ dependencies:
   provider: ^4.3.2+2
   sign_in_with_apple: ^3.0.0
   video_player: ^1.0.1
+  toast:
+  video_thumbnail:
+  path_provider:
+  skeleton_text: ^3.0.0
+    
 
 #  flutter_launcher_icons: ^0.8.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  
+  auto_route_generator: ^0.3.2
+
 #flutter_icons:
 #  image_path: "assets/launcher/logo.png"
 #  android: true
@@ -62,6 +70,7 @@ flutter:
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
   assets:
+    - assets/
     - assets/images/
     - assets/launcher/
     - assets/loveats.mp4

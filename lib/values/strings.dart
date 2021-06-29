@@ -3,7 +3,7 @@ part of values;
 class StringConst {
   //strings
   static const String APP_NAME = "Loveats";
-
+  static const String PROMOTIONS = "Promotions";
   static const String FOODY_BITE = "Loveats";
   static const String FORGOT_PASSWORD_QUESTION = "Forgot Password?";
   static const String HAVE_AN_ACCOUNT_QUESTION = "Already have an account?";
@@ -53,4 +53,5 @@ class StringConst {
 
   //Font Family
   static const String FONT_FAMILY = "Josefin Sans";
+  static const String Description = "Description";
 }

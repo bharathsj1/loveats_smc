@@ -4,7 +4,6 @@ import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/new_review_screen.dart';
 import 'package:potbelly/screens/profile_screen.dart';
 import 'package:potbelly/values/values.dart';
-import 'package:potbelly/widgets/card_tags.dart';
 import 'dart:math' as math;
 
 import 'bookmarks_screen.dart';

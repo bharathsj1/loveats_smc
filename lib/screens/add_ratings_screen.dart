@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/custom_text_form_field.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
@@ -6,6 +7,8 @@ import 'package:potbelly/widgets/ratings_widget.dart';
 import 'package:potbelly/widgets/spaces.dart';
 
 class AddRatingsScreen extends StatefulWidget {
+  var resId;
+  AddRatingsScreen({@required this.resId});
   @override
   _AddRatingsScreenState createState() => _AddRatingsScreenState();
 }
@@ -34,7 +37,7 @@ class _AddRatingsScreenState extends State<AddRatingsScreen> {
         appBar: AppBar(
           elevation: 0.0,
           leading: InkWell(
-            // onTap: () => AppRouter.navigator.pop(),
+            onTap: () => AppRouter.navigator.pop(),
             child: Image.asset(
               ImagePath.arrowBackIcon,
               color: AppColors.headingText,
@@ -51,7 +54,7 @@ class _AddRatingsScreenState extends State<AddRatingsScreen> {
           ),
           actions: <Widget>[
             InkWell(
-              // onTap: () => AppRouter.navigator.pop(),
+              onTap: () => AppRouter.navigator.pop(),
               child: Image.asset(
                 ImagePath.closeIcon,
                 color: Colors.grey,
@@ -87,7 +90,7 @@ class _AddRatingsScreenState extends State<AddRatingsScreen> {
                   alignment: Alignment.bottomCenter,
                   child: PotbellyButton(
                     'Done',
-                    // onTap: () => AppRouter.navigator.pop(),
+                    onTap: () => AppRouter.navigator.pop(),
                     buttonHeight: 65,
                     buttonWidth: MediaQuery.of(context).size.width,
                     decoration: Decorations.customHalfCurvedButtonDecoration(
