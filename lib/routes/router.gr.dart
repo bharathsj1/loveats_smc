@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:potbelly/screens/google_map.dart';
+import 'package:potbelly/screens/Promotionalert.dart';
+import 'package:potbelly/screens/checkoutScreen.dart';
 import 'package:potbelly/screens/login_screen.dart';
 import 'package:potbelly/screens/splash_screen.dart';
 import 'package:potbelly/screens/forgot_password_screen.dart';
@@ -57,6 +59,7 @@ class AppRouter {
   static const addRatingsScreen = '/add-ratings-screen';
   static const menuPhotosScreen = '/menu-photos-screen';
   static const previewMenuPhotosScreen = '/preview-menu-photos-screen';
+  static const promotionScreen = '/promotion-screen';
   static const categoriesScreen = '/categories-screen';
   static const categoryDetailScreen = '/category-detail-screen';
   static const findFriendsScreen = '/find-friends-screen';
@@ -66,6 +69,7 @@ class AppRouter {
   static const editProfileScreen = '/edit-profile-screen';
   static const newReviewScreen = '/new-review-screen';
   static const googleMap = '/google-map';
+  static const checkoutScreen = '/checkout-screen';
   static final navigator = ExtendedNavigator();
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -159,6 +163,11 @@ class AppRouter {
           builder: (_) => BookmarksScreen(),
           settings: settings,
         );
+      case AppRouter.checkoutScreen:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => CheckoutScreen(checkoutdata: args,),
+          settings: settings,
+        );
       case AppRouter.filterScreen:
         return CupertinoPageRoute<dynamic>(
           builder: (_) => FilterScreen(),
@@ -195,6 +204,11 @@ class AppRouter {
       case AppRouter.previewMenuPhotosScreen:
         return CupertinoPageRoute<dynamic>(
           builder: (_) => PreviewMenuPhotosScreen(),
+          settings: settings,
+        );
+      case AppRouter.promotionScreen:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => PromotionPhotosScreen(),
           settings: settings,
         );
       case AppRouter.categoriesScreen:

@@ -33,7 +33,7 @@ class CartProvider with ChangeNotifier {
       Toast.show('Product Added in Cart', context, duration: 3);
     } else {
       // increase the qty
-      cartitems[index]['qty'] = (double.parse(cartitems[index]['qty'])+double.parse(product['qty'])).toString() ;
+      cartitems[index]['qty'] = (int.parse(cartitems[index]['qty'])+int.parse(product['qty'])).toString() ;
       cartitems[index]['payableAmount'] =
           (double.parse(cartitems[index]['price']) * double.parse(cartitems[index]['qty'])).toString();
       print('payable');
@@ -48,7 +48,7 @@ class CartProvider with ChangeNotifier {
       print('total');
       print(totalAmount);
       notifyListeners();
-      Toast.show('Adding Quantity +1', context, duration: 3);
+      Toast.show('Adding Quantity +'+product['qty'], context, duration: 3);
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('cartlist', jsonEncode(cartitems));
@@ -62,7 +62,7 @@ class CartProvider with ChangeNotifier {
     }
     int ntotalAmount = 1 * int.parse(cart['price']);
     print(ntotalAmount);
-    if (totalAmount > 0) {
+    if (totalAmount > 0) { 
       totalAmount = totalAmount - ntotalAmount;
       print(totalAmount);
     } else {

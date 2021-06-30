@@ -178,6 +178,6 @@ class MenuPhotosScreen extends StatelessWidget {
   }
 
   void navigateToPreviewPhotos(BuildContext context) {
-    // AppRouter.navigator.pushNamed(AppRouter.previewMenuPhotosScreen);
+    AppRouter.navigator.pushNamed(AppRouter.promotionScreen);
   }
 }

@@ -129,7 +129,8 @@ class FoodyBiteCard extends StatelessWidget {
                               CardTags(
                                 title: distance,
                                 decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 132, 141, 255),
+                                  // color: Color.fromARGB(255, 132, 141, 255),
+                                  color: AppColors.secondaryElement,
                                   borderRadius: BorderRadius.all(
                                       Radius.circular(tagRadius)),
                                 ),
@@ -272,7 +273,7 @@ class FoodyBiteCard extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
                           ),
-                          child: Image.asset(ImagePath.activeBookmarksIcon2),
+                          child: Image.asset(ImagePath.activeBookmarksIcon2,color: AppColors.secondaryElement),
                         ),
                       ),
                     )

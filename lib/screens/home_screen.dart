@@ -14,6 +14,8 @@ import 'package:potbelly/widgets/heading_row.dart';
 import 'package:potbelly/widgets/search_input_field.dart';
 import 'package:video_player/video_player.dart';
 import 'package:skeleton_text/skeleton_text.dart';
+import 'package:popup_card/popup_card.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'google_map.dart';
 
@@ -33,30 +35,29 @@ class _HomeScreenState extends State<HomeScreen> {
   int active_video = 0;
   bool loader = true;
   List records = [];
+  List subscription=[
+    'assets/images/mainscreen.jpg'
+  ];
 
   @override
   void initState() {
-    // initialize();
-    // Localstorage().getlocal().then((value) {
-    // Promotion().createDemoPromotions();
-    // Restaurant().createDemoRestaurants('Restaurant 1');
-    // Restaurant().createDemoRestaurants('Restaurant 2');
-    // Localstorage().setlocal();
-    // });
-    // setpromos();
-    // getpromos();
-    getlocalpromos();
+    // getlocalpromos();
+        //  var localdate= jsonDecode(promodate);
+    checkpromo();
     super.initState();
   }
 
-  // setpromos() async {
-  //   Promotion().uploadvideopromotion(await rootBundle.load('assets/p1.mp4'), 'Promotion 1');
-  //   Promotion().uploadimagepromotion(await rootBundle.load('assets/p2.jpeg'), 'Promotion 2');
-  //   Promotion().uploadvideopromotion(await rootBundle.load('assets/p5.mp4'), 'Promotion 3');
-  //    Promotion().uploadimagepromotion(await rootBundle.load('assets/p3.jpeg'), 'Promotion 4');
-  //   Promotion().uploadimagepromotion(await rootBundle.load('assets/p4.jpeg'), 'Promotion 5');
-
-  // }
+  checkpromo() async {
+    var show= await Promotion().checkpromo();
+    print(show);
+    if(show){
+       AppRouter.navigator.pushNamed(AppRouter.promotionScreen);
+       Promotion().setpromo();
+    }
+    else{
+      print('promo already viewed');
+    }
+  }
 
   getpromos() async {
     await DatabaseManager().getpromotions().then((value) {
@@ -155,6 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -171,7 +173,8 @@ class _HomeScreenState extends State<HomeScreen> {
             vertical: Sizes.MARGIN_8,
           ),
           child: ListView(
-            children: [
+            
+            children: <Widget>[
               InkWell(
                 onTap: () => bottomSheetForLocation(context),
                 child: Row(
@@ -180,9 +183,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 5.0),
                       child: Icon(Icons.location_on,
-                          size: Sizes.HEIGHT_22, color: AppColors.indigo),
-                    ),
-                    Container(
+                          size: Sizes.HEIGHT_22, color: AppColors.indigo),),
+              
+                 Container(
                       padding: EdgeInsets.only(
                         bottom: 5,
                       ),
@@ -240,6 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: StringConst.TRENDING_RESTAURANTS,
                   number: StringConst.SEE_ALL_45,
                   onTapOfNumber: () {
+                  
                     pausevideo();
                     AppRouter.navigator
                         .pushNamed(AppRouter.trendingRestaurantsScreen)
@@ -272,6 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 280,
                         width: MediaQuery.of(context).size.width,
                         child: ListView.builder(
+                          physics: BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             itemCount: records.length,
                             itemBuilder: (context, index) {
@@ -324,6 +329,33 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }
                   }),
+                   SizedBox(height: 12.0),
+                  Container(
+                     height: 160,
+                    //  width: 180,
+                    //  color: Colors.red,
+                     margin: EdgeInsets.symmetric(horizontal: 5),
+                    child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              itemCount: subscription.length,
+                              itemBuilder: (context, i) {
+                                return InkWell(
+                                  onTap: (){
+                                     AppRouter.navigator.pushNamed(AppRouter.promotionScreen);
+                                  },
+                                  child: ClipRRect(
+                                     borderRadius: BorderRadius.circular(4),
+                                    child: Image.asset(
+                                    subscription[i],
+                                    width: MediaQuery.of(context).size.width/1.12,
+                                    
+                                    fit: BoxFit.cover,
+                              ),
+                                  ),
+                                );
+                              }),
+                  ),
               // promolist.length == 0 ? Container() : SizedBox(height: 16.0),
               // promolist.length == 0
               //     ? Container()
@@ -334,213 +366,214 @@ class _HomeScreenState extends State<HomeScreen> {
               //             .pushNamed(AppRouter.trendingRestaurantsScreen),
               //       ),
               promolist.length == 0 ? Container() : SizedBox(height: 16.0),
-              promolist.length == 0
-                  ? Container()
-                  : loader
-                      ? Container(
-                          height: 190,
-                          child: CarouselSlider(
-                              options: CarouselOptions(
-                                enableInfiniteScroll: true,
-                              ),
-                              items: List.generate(
-                                3,
-                                (ind) => SkeletonAnimation(
-                                  shimmerColor: Colors.grey[350],
-                                  shimmerDuration: 1100,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                    ),
-                                    margin: EdgeInsets.symmetric(horizontal: 4),
-                                  ),
-                                ),
-                              )),
-                        )
-                      : Container(
-                          height: 190,
-                          width: 50,
-                          child: CarouselSlider(
-                              options: CarouselOptions(
-                                enableInfiniteScroll: true,
-                                onPageChanged: (ind, reason) {
-                                  print(ind);
-                                  active_video = ind;
-                                  if (_controller != null) {
-                                    _controller.pause();
-                                  }
-                                  setState(() {});
-                                  print(promolist[ind]);
-                                  if (promolist[ind]['videoUrl'] != '') {
-                                    print('here');
-                                    print('here');
-                                    initialize(promolist[ind]['videoUrl']);
-                                  }
-                                },
-                              ),
-                              items: List.generate(
-                                  this.promolist.length,
-                                  (ind) => _controller == null
-                                      ? Container()
-                                      : SizedBox(
-                                          height: 230,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              1.2,
-                                          child: Container(
-                                            color: Colors.black,
-                                            margin: EdgeInsets.only(right: 8.0),
-                                            child: FittedBox(
-                                              child: active_video == ind &&
-                                                      (promolist[ind]
-                                                              ['videoUrl'] !=
-                                                          '')
-                                                  ? SizedBox(
-                                                      height: 50,
-                                                      width: 50,
-                                                      child: _controller == null
-                                                          ? Container()
-                                                          : InkWell(
-                                                              onTap: () {
-                                                                navigatortopromotion(
-                                                                    ind);
-                                                              },
-                                                              child: VideoPlayer(
-                                                                  _controller),
-                                                            ))
-                                                  : promolist[ind]['image'] !=
-                                                              null &&
-                                                          promolist[ind]
-                                                                  ['image'] !=
-                                                              ''
-                                                      ? promolist[ind]['image']
-                                                                  .substring(
-                                                                      0, 4) ==
-                                                              'http'
-                                                          ? InkWell(
-                                                              onTap: () {
-                                                                navigatortopromotion(
-                                                                    ind);
-                                                              },
-                                                              child:
-                                                                  Image.network(
-                                                                promolist[ind]
-                                                                    ['image'],
-                                                                width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                            )
-                                                          : InkWell(
-                                                              onTap: () {
-                                                                navigatortopromotion(
-                                                                    ind);
-                                                              },
-                                                              child:
-                                                                  Image.asset(
-                                                                promolist[ind]
-                                                                    ['image'],
-                                                                width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                            )
-                                                      : active_video != ind &&
-                                                              (promolist[ind][
-                                                                          'videoUrl'] !=
-                                                                      '' ||
-                                                                  promolist[ind]
-                                                                          ['videoUrl'] !=
-                                                                      null)
-                                                          ? InkWell(
-                                                              onTap: () {
-                                                                navigatortopromotion(
-                                                                    ind);
-                                                              },
-                                                              child: Stack(
-                                                                children: [
-                                                                  Padding(
-                                                                    padding:
-                                                                        const EdgeInsets.fromLTRB(
-                                                                            5,
-                                                                            3,
-                                                                            5,
-                                                                            3),
-                                                                    child: promolist[ind]['thumbnailUrl'].substring(0,
-                                                                                4) ==
-                                                                            'http'
-                                                                        ? Image
-                                                                            .network(
-                                                                            promolist[ind]['thumbnailUrl'],
-                                                                            width:
-                                                                                MediaQuery.of(context).size.width,
-                                                                            height:
-                                                                                230,
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                          )
-                                                                        : Image
-                                                                            .asset(
-                                                                            promolist[ind]['thumbnailUrl'],
-                                                                            width:
-                                                                                MediaQuery.of(context).size.width,
-                                                                            height:
-                                                                                230,
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                          ),
-                                                                  ),
-                                                                  Positioned(
-                                                                      right: 0,
-                                                                      child:
-                                                                          Container(
-                                                                        margin: EdgeInsets.only(
-                                                                            top:
-                                                                                6),
-                                                                        width:
-                                                                            90,
-                                                                        height:
-                                                                            25,
-                                                                        decoration: BoxDecoration(
-                                                                            color:
-                                                                                Colors.black38,
-                                                                            borderRadius: BorderRadius.circular(100)),
-                                                                        child:
-                                                                            Row(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.center,
-                                                                          children: [
-                                                                            Text(
-                                                                              'Play',
-                                                                              style: TextStyle(color: AppColors.white, fontSize: 18, fontWeight: FontWeight.bold),
-                                                                            ),
-                                                                            SizedBox(
-                                                                              width: 2,
-                                                                            ),
-                                                                            Icon(
-                                                                              Icons.play_arrow_outlined,
-                                                                              size: 22,
-                                                                              color: AppColors.white,
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      )),
-                                                                ],
-                                                              ),
-                                                            )
-                                                          : Container(),
-                                              fit: BoxFit.fill,
-                                            ),
-                                          ),
-                                        ))),
-                        ),
+              // promolist.length == 0
+              //     ? Container()
+              //     : loader
+              //         ? Container(
+              //             height: 190,
+              //             child: CarouselSlider(
+              //                 options: CarouselOptions(
+              //                   enableInfiniteScroll: true,
+              //                 ),
+              //                 items: List.generate(
+              //                   1,
+              //                   (ind) => SkeletonAnimation(
+              //                     shimmerColor: Colors.grey[350],
+              //                     shimmerDuration: 1100,
+              //                     child: Container(
+              //                       decoration: BoxDecoration(
+              //                         color: Colors.grey[300],
+              //                       ),
+              //                       margin: EdgeInsets.symmetric(horizontal: 4),
+              //                     ),
+              //                   ),
+              //                 )),
+              //           )
+              //         : Container(
+              //             height: 190,
+              //             width: 50,
+              //             child: CarouselSlider(
+              //                 options: CarouselOptions(
+              //                   enableInfiniteScroll: true,
+              //                   onPageChanged: (ind, reason) {
+              //                     print(ind);
+              //                     active_video = ind;
+              //                     if (_controller != null) {
+              //                       _controller.pause();
+              //                     }
+              //                     setState(() {});
+              //                     print(promolist[ind]);
+              //                     if (promolist[ind]['videoUrl'] != '') {
+              //                       print('here');
+              //                       print('here');
+              //                       initialize(promolist[ind]['videoUrl']);
+              //                     }
+              //                   },
+              //                 ),
+              //                 items: List.generate(
+              //                     this.promolist.length,
+              //                     (ind) => _controller == null
+              //                         ? Container()
+              //                         : SizedBox(
+              //                             height: 230,
+              //                             width: MediaQuery.of(context)
+              //                                     .size
+              //                                     .width /
+              //                                 1.2,
+              //                             child: Container(
+              //                               color: Colors.black,
+              //                               margin: EdgeInsets.only(right: 8.0),
+              //                               child: FittedBox(
+              //                                 child: active_video == ind &&
+              //                                         (promolist[ind]
+              //                                                 ['videoUrl'] !=
+              //                                             '')
+              //                                     ? SizedBox(
+              //                                         height: 50,
+              //                                         width: 50,
+              //                                         child: _controller == null
+              //                                             ? Container()
+              //                                             : InkWell(
+              //                                                 onTap: () {
+              //                                                   navigatortopromotion(
+              //                                                       ind);
+              //                                                 },
+              //                                                 child: VideoPlayer(
+              //                                                     _controller),
+              //                                               ))
+              //                                     : promolist[ind]['image'] !=
+              //                                                 null &&
+              //                                             promolist[ind]
+              //                                                     ['image'] !=
+              //                                                 ''
+              //                                         ? promolist[ind]['image']
+              //                                                     .substring(
+              //                                                         0, 4) ==
+              //                                                 'http'
+              //                                             ? InkWell(
+              //                                                 onTap: () {
+              //                                                   navigatortopromotion(
+              //                                                       ind);
+              //                                                 },
+              //                                                 child:
+              //                                                     Image.network(
+              //                                                   promolist[ind]
+              //                                                       ['image'],
+              //                                                   width: MediaQuery.of(
+              //                                                           context)
+              //                                                       .size
+              //                                                       .width,
+              //                                                   fit: BoxFit
+              //                                                       .cover,
+              //                                                 ),
+              //                                               )
+              //                                             : InkWell(
+              //                                                 onTap: () {
+              //                                                   navigatortopromotion(
+              //                                                       ind);
+              //                                                 },
+              //                                                 child:
+              //                                                     Image.asset(
+              //                                                   promolist[ind]
+              //                                                       ['image'],
+              //                                                   width: MediaQuery.of(
+              //                                                           context)
+              //                                                       .size
+              //                                                       .width,
+              //                                                   fit: BoxFit
+              //                                                       .cover,
+              //                                                 ),
+              //                                               )
+              //                                         : active_video != ind &&
+              //                                                 (promolist[ind][
+              //                                                             'videoUrl'] !=
+              //                                                         '' ||
+              //                                                     promolist[ind]
+              //                                                             ['videoUrl'] !=
+              //                                                         null)
+              //                                             ? InkWell(
+              //                                                 onTap: () {
+              //                                                   navigatortopromotion(
+              //                                                       ind);
+              //                                                 },
+              //                                                 child: Stack(
+              //                                                   children: [
+              //                                                     Padding(
+              //                                                       padding:
+              //                                                           const EdgeInsets.fromLTRB(
+              //                                                               5,
+              //                                                               3,
+              //                                                               5,
+              //                                                               3),
+              //                                                       child: promolist[ind]['thumbnailUrl'].substring(0,
+              //                                                                   4) ==
+              //                                                               'http'
+              //                                                           ? Image
+              //                                                               .network(
+              //                                                               promolist[ind]['thumbnailUrl'],
+              //                                                               width:
+              //                                                                   MediaQuery.of(context).size.width,
+              //                                                               height:
+              //                                                                   230,
+              //                                                               fit:
+              //                                                                   BoxFit.cover,
+              //                                                             )
+              //                                                           : Image
+              //                                                               .asset(
+              //                                                               promolist[ind]['thumbnailUrl'],
+              //                                                               width:
+              //                                                                   MediaQuery.of(context).size.width,
+              //                                                               height:
+              //                                                                   230,
+              //                                                               fit:
+              //                                                                   BoxFit.cover,
+              //                                                             ),
+              //                                                     ),
+              //                                                     Positioned(
+              //                                                         right: 0,
+              //                                                         child:
+              //                                                             Container(
+              //                                                           margin: EdgeInsets.only(
+              //                                                               top:
+              //                                                                   6),
+              //                                                           width:
+              //                                                               90,
+              //                                                           height:
+              //                                                               25,
+              //                                                           decoration: BoxDecoration(
+              //                                                               color:
+              //                                                                   Colors.black38,
+              //                                                               borderRadius: BorderRadius.circular(100)),
+              //                                                           child:
+              //                                                               Row(
+              //                                                             mainAxisAlignment:
+              //                                                                 MainAxisAlignment.center,
+              //                                                             children: [
+              //                                                               Text(
+              //                                                                 'Play',
+              //                                                                 style: TextStyle(color: AppColors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              //                                                               ),
+              //                                                               SizedBox(
+              //                                                                 width: 2,
+              //                                                               ),
+              //                                                               Icon(
+              //                                                                 Icons.play_arrow_outlined,
+              //                                                                 size: 22,
+              //                                                                 color: AppColors.white,
+              //                                                               ),
+              //                                                             ],
+              //                                                           ),
+              //                                                         )),
+              //                                                   ],
+              //                                                 ),
+              //                                               )
+              //                                             : Container(),
+              //                                 fit: BoxFit.fill,
+              //                               ),
+              //                             ),
+              //                           ))),
+              //           ),
+             
               SizedBox(height: 16.0),
               HeadingRow(
                 title: StringConst.CATEGORY,

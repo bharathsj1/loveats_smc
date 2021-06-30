@@ -155,7 +155,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                                       }
                                     });
                                   },
-                                  child: Image.asset( bookmark? ImagePath.activeBookmarksIcon: ImagePath.bookmarksIcon,
+                                  child: Image.asset( bookmark? ImagePath.activeBookmarksIcon3: ImagePath.bookmarksIcon,
                                       color:  bookmark? AppColors.secondaryElement: Colors.white),
                                 ),
                               ],
@@ -217,7 +217,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                                       child: Row(
                                         children: <Widget>[
                                           SizedBox(width: 4.0),
-                                          Image.asset(ImagePath.directionIcon),
+                                          Image.asset(ImagePath.directionIcon,color: AppColors.secondaryElement,),
                                           SizedBox(width: 8.0),
                                           Text(
                                             'Direction',
@@ -269,7 +269,8 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                                   CardTags(
                                     title: widget.restaurantDetails.distance,
                                     decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 132, 141, 255),
+                                      // color: Color.fromARGB(255, 132, 141, 255),
+                                      color: AppColors.secondaryElement,
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(8.0)),
                                     ),

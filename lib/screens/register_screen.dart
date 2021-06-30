@@ -96,6 +96,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       SpaceH40(),
                       PotbellyButton(
                         StringConst.REGISTER,
+                        
                         onTap: () => validateFormAndCreateUser(context),
                       ),
                       SpaceH40(),
@@ -184,7 +185,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Align(
                       alignment: Alignment.bottomRight,
                       child: Image.asset(
-                        ImagePath.uploadIcon,
+                        ImagePath.uploadIcon2,
                         fit: BoxFit.none,
                       ),
                     )

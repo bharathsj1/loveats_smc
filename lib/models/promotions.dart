@@ -1,66 +1,68 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class Promotion {
   final CollectionReference promotionlist =
-  Firestore.instance.collection('Promotions');
+      Firestore.instance.collection('Promotions');
   String _tempDir;
   File imapath;
 
-  List promotiondata=[
+  List promotiondata = [
     {
       'id': '0',
-        'name': 'Subscription 1',
-        'videoUrl': 'assets/p1.mp4',
-        'thumbnailUrl': "assets/p1thum.png",
-        'description':
-            'What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing',
-        "image": "",
-        'createdAt': DateTime.now()
+      'name': 'Subscription 1',
+      'videoUrl': 'assets/p1.mp4',
+      'thumbnailUrl': "assets/p1thum.png",
+      'description':
+          'What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing',
+      "image": "",
+      'createdAt': DateTime.now()
     },
     {
       'id': '1',
-        'name': 'Subscription 2',
-        'videoUrl': '',
-        'thumbnailUrl': "",
-        'description':
-            'What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing',
-        "image": "assets/p2.jpeg",
-        'createdAt': DateTime.now()
+      'name': 'Subscription 2',
+      'videoUrl': '',
+      'thumbnailUrl': "",
+      'description':
+          'What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing',
+      "image": "assets/p2.jpeg",
+      'createdAt': DateTime.now()
     },
     {
       'id': '2',
-        'name': 'Subscription 3',
-        'videoUrl': 'assets/p5.mp4',
-        'thumbnailUrl': "assets/p5thum.png",
-        'description':
-            'What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing',
-        "image": "",
-        'createdAt': DateTime.now()
+      'name': 'Subscription 3',
+      'videoUrl': 'assets/p5.mp4',
+      'thumbnailUrl': "assets/p5thum.png",
+      'description':
+          'What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing',
+      "image": "",
+      'createdAt': DateTime.now()
     },
     {
       'id': '3',
-        'name': 'Subscription 4',
-        'videoUrl': '',
-        'thumbnailUrl': "",
-        'description':
-            'What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing',
-        "image": "assets/p3.jpeg",
-        'createdAt': DateTime.now()
+      'name': 'Subscription 4',
+      'videoUrl': '',
+      'thumbnailUrl': "",
+      'description':
+          'What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing',
+      "image": "assets/p3.jpeg",
+      'createdAt': DateTime.now()
     },
     {
       'id': '4',
-        'name': 'Subscription 5',
-        'videoUrl': '',
-        'thumbnailUrl': "",
-        'description':
-            'What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing',
-        "image": "assets/p4.jpeg",
-        'createdAt': DateTime.now()
+      'name': 'Subscription 5',
+      'videoUrl': '',
+      'thumbnailUrl': "",
+      'description':
+          'What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing',
+      "image": "assets/p4.jpeg",
+      'createdAt': DateTime.now()
     },
   ];
 
@@ -89,12 +91,11 @@ class Promotion {
   _getImage(videoPathUrl) async {
     try {
       final uint8list = await VideoThumbnail.thumbnailFile(
-        thumbnailPath: _tempDir,
-        video: videoPathUrl,
-        imageFormat: ImageFormat.PNG,
-        quality: 50,
-        timeMs: 2000
-      );
+          thumbnailPath: _tempDir,
+          video: videoPathUrl,
+          imageFormat: ImageFormat.PNG,
+          quality: 50,
+          timeMs: 2000);
 
       imapath = File(uint8list);
       print(imapath);
@@ -187,5 +188,31 @@ class Promotion {
     } catch (e) {
       // catch errors here
     }
+  }
+
+  Future checkpromo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var promodate = prefs.getInt("promodate");
+    if (promodate == null) {
+      return true;
+    } else {
+      var localdate= DateTime.fromMillisecondsSinceEpoch(promodate);
+      final date2 = DateTime.now();
+      final difference = date2.difference(localdate).inDays;
+      print(difference);
+      if(difference >0){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+  }
+
+  Future setpromo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('promodate');
+    var date= DateTime.now().millisecondsSinceEpoch;
+    await prefs.setInt('promodate', date);
   }
 }

@@ -213,6 +213,7 @@ class _RootScreenState extends State<RootScreen>
         padding: const EdgeInsets.all(8.0),
         child: Image.asset(
           (this.currentTab == currentTab) ? activeIcon : nonActiveIcon,
+          color: AppColors.secondaryElement,
         ),
       ),
     );

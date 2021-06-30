@@ -17,6 +17,7 @@ class ImagePath {
   static const String passwordIcon = "$imageDir/password_icon.png";
   static const String arrowBackIcon = "$imageDir/arrow_back.png";
   static const String uploadIcon = "$imageDir/upload_icon.png";
+  static const String uploadIcon2 = "$imageDir/upload_icon2.png";
   static const String searchIcon = "$imageDir/search_icon.png";
   static const String settingsIcon = "$imageDir/settings_icon.png";
   static const String addIcon = "$imageDir/add_icon.png";
@@ -28,6 +29,7 @@ class ImagePath {
   static const String bookmarksIcon = "$imageDir/bookmarks_icon.png";
   static const String activeBookmarksIcon = "$imageDir/bookmarks_icon_selected.png";
   static const String activeBookmarksIcon2 = "$imageDir/bookmarks_icon_selected_2.png";
+  static const String activeBookmarksIcon3 = "$imageDir/bookmarks_icon_selected3.png";
   static const String starIcon = "$imageDir/star_icon.png";
   static const String closeIcon = "$imageDir/close_icon.png";
   static const String searchIconBlue = "$imageDir/search_icon_blue.png";

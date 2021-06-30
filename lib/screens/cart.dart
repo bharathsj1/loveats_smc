@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/custom_header.dart';
 import 'package:potbelly/services/cartservice.dart';
 import 'package:potbelly/values/values.dart';
+import 'package:potbelly/widgets/potbelly_button.dart';
 
 class Cart extends StatefulWidget {
   static const int TAB_NO = 1;
@@ -13,6 +15,9 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
   TabController _tabController;
   List cartlist = [];
   bool loader = true;
+  double totalAmount = 0.0;
+  int charges = 0;
+  int shipping = 3;
 
   getcartlist() async {
     var cart = await CartProvider().getcartslist();
@@ -21,8 +26,19 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
       cartlist.add(item);
     }
     loader = false;
+    calculate();
     print(cartlist);
     setState(() {});
+  }
+
+  calculate() {
+    double total = 0;
+    cartlist.forEach((f) {
+      total += double.parse(f['price']) * double.parse(f['qty']);
+    });
+    totalAmount = total;
+    print('total');
+    print(totalAmount);
   }
 
   final List<Map<String, String>> foods = [
@@ -54,7 +70,6 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
   }
 
   calculateprice(index, type) {
-    int ntotalAmount = 1 * int.parse(cartlist[index]['price']);
     cartlist[index]['qty'] = type == 'add'
         ? (int.parse(cartlist[index]['qty']) + 1).toString()
         : (int.parse(cartlist[index]['qty']) - 1).toString();
@@ -78,7 +93,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                 ),
               )
             : ListView.builder(
-                itemCount: this.cartlist.length,
+                itemCount: cartlist.length,
                 itemBuilder: (BuildContext context, int index) {
                   Color primaryColor = Theme.of(context).primaryColor;
                   return Container(
@@ -186,7 +201,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                             MainAxisAlignment.end,
                                         children: <Widget>[
                                           InkWell(
-                                            onTap: () {
+                                            onTap: () async {
                                               if (int.parse(
                                                       cartlist[index]['qty']) >
                                                   1) {
@@ -195,7 +210,9 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                                 //                 ['qty']) -
                                                 //             1)
                                                 //         .toString();
-                                                        calculateprice(index,'minus');
+                                                await calculateprice(
+                                                    0, 'minus');
+                                                calculate();
                                                 setState(() {});
                                                 if (int.parse(cartlist[index]
                                                         ['qty']) ==
@@ -222,7 +239,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                             style: TextStyle(fontSize: 18),
                                           ),
                                           InkWell(
-                                            onTap: () {
+                                            onTap: () async {
                                               print('here');
                                               // cartlist[index]['qty'] =
                                               //     (int.parse(cartlist[index]
@@ -230,7 +247,8 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                               //             1)
                                               //         .toString();
                                               print(cartlist[index]['qty']);
-                                               calculateprice(index,'add');
+                                              await calculateprice(0, 'add');
+                                              calculate();
                                               setState(() {});
 
                                               // Provider.of<CartProvider>(context, listen: false)
@@ -458,21 +476,77 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                       Expanded(
                         child: this.renderAddList(),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 15.0,
-                          horizontal: 35.0,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: theme.primaryColor,
-                        ),
-                        child: Text(
-                          'CHECKOUT',
-                          style: TextStyle(
-                            color: Colors.white,
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Subtotal'),
+                              Text('\$' + totalAmount.toStringAsFixed(2))
+                            ],
                           ),
-                        ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Shipping'),
+                              Text('\$' + shipping.toStringAsFixed(2))
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Service Charges'),
+                              Text('\$' + charges.toStringAsFixed(2))
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Divider(height: 3, color: AppColors.headingText),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Total',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                '\$' +
+                                    (totalAmount + shipping + charges)
+                                        .toStringAsFixed(2),
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          PotbellyButton(StringConst.CHECKOUT, buttonHeight: 50,
+                              onTap: () {
+                                var data={
+                                  'cartlist': cartlist,
+                                  'charges':charges,
+                                  'shipping':shipping,
+                                  'total': totalAmount,
+                                  'type': 'cart'
+                                };
+                            AppRouter.navigator.pushNamed(
+                              AppRouter.checkoutScreen, arguments: data
+                            );
+                          }),
+                          SizedBox(
+                            height: 30,
+                          )
+                        ],
                       ),
                     ],
                   ),

@@ -24,6 +24,10 @@ class StringConst {
   static const String LOGIN = "Login";
   static const String SKIP = "Skip";
   static const String REGISTER = "Register";
+  static const String SUBSCRIPTION = "BUY SUBSCRIPTION";
+  static const String CHECKOUT = "CHECK OUT";
+  static const String PAYNOW = "PAY NOW";
+  static const String SUMMARY = "Summary";
   static const String TURN_GPS = "Turn On GPS";
   static const String TURN_GPS_DESCRIPTION =
       "Please turn on your GPS to find out better restaurant suggestionsnear you.";

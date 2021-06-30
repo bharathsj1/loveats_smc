@@ -10,7 +10,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.10.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -23,7 +23,7 @@ dependencies:
   cloud_firestore: null
   cupertino_icons: ^1.0.0
   device_info: ^2.0.2
-  dio: null
+  dio:
   firebase_auth: ^0.15.3
   firebase_core: ^0.4.0
   firebase_database: ^3.0.0
@@ -36,7 +36,7 @@ dependencies:
   fluttertoast: ^8.0.7
   geolocator: null
   google_fonts: null
-  google_maps_flutter: ^1.0.6
+  google_maps_flutter: 
   google_sign_in: ^5.0.4
   image_picker: ^0.6.2
   image_viewer: ^1.5.0
@@ -48,6 +48,12 @@ dependencies:
   toast: null
   video_player: ^1.0.1
   video_thumbnail: null
+  intro_slider: ^3.0.2
+  popup_card: ^0.1.0
+  rflutter_alert: ^2.0.2
+  flutter_stripe: ^1.0.2
+
+
 
 #  flutter_launcher_icons: ^0.8.1
 dev_dependencies:

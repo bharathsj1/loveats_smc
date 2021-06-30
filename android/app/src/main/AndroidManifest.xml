@@ -8,11 +8,13 @@
          FlutterApplication and put your custom class here. -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- android:label="foodybite" -->
     <application
-        android:label="foodybite"
+        android:label="Loveats"
         android:icon="@mipmap/ic_launcher">
+        <!-- android:name=".MainActivity" -->
         <activity
-            android:name="io.flutter.embedding.android.FlutterActivity"
+            android:name="io.flutter.embedding.android.FlutterFragmentActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
