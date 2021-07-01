@@ -43,7 +43,7 @@ class _BackgroundVideoState extends State<BackgroundVideo>
   void initState() {
     super.initState();
     // Pointing the video controller to our local asset.
-    _controller = VideoPlayerController.asset("assets/loveats.mp4")
+    _controller = VideoPlayerController.asset("assets/loveats2.mp4")
       ..initialize().then((_) {
         _controller.setVolume(0.0);
         // Once the video has been loaded we play the video and set looping to true.
@@ -123,24 +123,21 @@ class _BackgroundVideoState extends State<BackgroundVideo>
                       bottom: 90,
                       left: 20,
                       right: 20,
-                      child: InkWell(
-                        onTap: () => Navigator.push(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 30),
+                        child: PotbellyButton(
+                          // StringConst.SUBSCRIPTION,
+                          'Create Account',
+                          buttonHeight: 50,
+                           buttonTextStyle: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),color: AppColors.secondaryElement),
+                          onTap: () => Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (_) => RegisterScreen())),
-                        child: Container(
-                          height: 50.0,
-                          decoration: BoxDecoration(
-                            // color: Decorations.primaryButtonDecoration
-                            border: Border.all(color: Colors.white, width: 2.0),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Create Account',
-                              style: TextStyle(
-                                  fontSize: 18.0, color: Colors.white),
-                            ),
+                            MaterialPageRoute(builder: (_) => RegisterScreen()
+
+                                // style: TextStyle(
+                                //     fontSize: 18.0, color: Colors.white),
+                                ),
                           ),
                         ),
                       ),
@@ -148,25 +145,24 @@ class _BackgroundVideoState extends State<BackgroundVideo>
                   : Container(),
               !isSignIn && !isLogin
                   ? Positioned(
-                      bottom: 20,
+                      bottom: 30,
                       left: 20,
                       right: 20,
                       child: InkWell(
                         onTap: () => _signIn(),
                         child: Container(
-                          height: 50.0,
-                          decoration: BoxDecoration(
-                            // color: Decorations.primaryButtonDecoration
-                            border: Border.all(color: Colors.white, width: 2.0),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Sign in',
-                              style: TextStyle(
-                                  fontSize: 18.0, color: Colors.white),
-                            ),
-                          ),
+                           margin: EdgeInsets.symmetric(horizontal: 30),
+                          child: PotbellyButton('Sign in',
+                          buttonHeight: 50,
+                          buttonTextStyle: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(100)),
+
+                           onTap: () => _signIn()
+
+                              // style: TextStyle(
+                              //     fontSize: 18.0, color: Colors.white),
+
+                              ),
                         ),
                       ),
                     )
@@ -190,6 +186,7 @@ class _BackgroundVideoState extends State<BackgroundVideo>
                             ),
                             SignInButton(
                               Buttons.Google,
+
                               // mini: true,
                               onPressed: () => _signInWithGoogle(context),
                             ),
@@ -211,7 +208,7 @@ class _BackgroundVideoState extends State<BackgroundVideo>
                             InkWell(
                                 onTap: () => _signIn(),
                                 child: Text('Back',
-                                    style: Styles.customNormalTextStyle()))
+                                    style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white)))
                           ],
                         ),
                       ),
@@ -242,8 +239,8 @@ class _BackgroundVideoState extends State<BackgroundVideo>
   // TODO 8: Override the dipose() method to cleanup the video controller.
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
+    super.dispose();
   }
 }
 
@@ -375,8 +372,8 @@ _signInWithApple(BuildContext context) async {
         MaterialPageRoute(
           builder: (_) => RegisterScreen(
             email: currUser.email,
-             uid: currUser.uid,
-             type: 2,
+            uid: currUser.uid,
+            type: 2,
           ),
         ),
         (route) => false);

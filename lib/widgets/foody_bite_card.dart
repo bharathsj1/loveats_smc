@@ -54,7 +54,7 @@ class FoodyBiteCard extends StatelessWidget {
         child: Card(
           elevation: cardElevation,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(15),
           ),
           child: Stack(
             children: <Widget>[
@@ -62,7 +62,7 @@ class FoodyBiteCard extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15)),
                       child: imagePath.substring(0, 4) == 'http'
                           ? Image.network(
                               imagePath,
@@ -107,7 +107,7 @@ class FoodyBiteCard extends StatelessWidget {
                                 cardTitle,
                                 textAlign: TextAlign.left,
                                 style: Styles.customTitleTextStyle(
-                                  color: AppColors.headingText,
+                                  color: Colors.black87,
                                   fontWeight: FontWeight.w600,
                                   fontSize: Sizes.TEXT_SIZE_20,
                                 ),
@@ -182,7 +182,7 @@ class FoodyBiteCard extends StatelessWidget {
                                     address,
                                     textAlign: TextAlign.left,
                                     style: Styles.customNormalTextStyle(
-                                      color: AppColors.accentText,
+                                      color: Colors.black54,
                                       fontSize: Sizes.TEXT_SIZE_14,
                                     ),
                                   ),

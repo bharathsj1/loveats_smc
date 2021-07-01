@@ -1,4 +1,3 @@
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -35,26 +34,23 @@ class _HomeScreenState extends State<HomeScreen> {
   int active_video = 0;
   bool loader = true;
   List records = [];
-  List subscription=[
-    'assets/images/mainscreen.jpg'
-  ];
+  List subscription = ['assets/images/mainscreen.jpg'];
 
   @override
   void initState() {
     // getlocalpromos();
-        //  var localdate= jsonDecode(promodate);
+    //  var localdate= jsonDecode(promodate);
     checkpromo();
     super.initState();
   }
 
   checkpromo() async {
-    var show= await Promotion().checkpromo();
+    var show = await Promotion().checkpromo();
     print(show);
-    if(show){
-       AppRouter.navigator.pushNamed(AppRouter.promotionScreen);
-       Promotion().setpromo();
-    }
-    else{
+    if (show) {
+      AppRouter.navigator.pushNamed(AppRouter.promotionScreen);
+      Promotion().setpromo();
+    } else {
       print('promo already viewed');
     }
   }
@@ -156,7 +152,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -173,7 +168,6 @@ class _HomeScreenState extends State<HomeScreen> {
             vertical: Sizes.MARGIN_8,
           ),
           child: ListView(
-            
             children: <Widget>[
               InkWell(
                 onTap: () => bottomSheetForLocation(context),
@@ -183,9 +177,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 5.0),
                       child: Icon(Icons.location_on,
-                          size: Sizes.HEIGHT_22, color: AppColors.indigo),),
-              
-                 Container(
+                          size: Sizes.HEIGHT_22,
+                          color: AppColors.secondaryElement),
+                    ),
+                    Container(
                       padding: EdgeInsets.only(
                         bottom: 5,
                       ),
@@ -208,42 +203,50 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: Sizes.MARGIN_14,
               ),
-              FoodyBiteSearchInputField(ImagePath.searchIcon,
-                  controller: searchcontroller,
-                  textFormFieldStyle:
-                      Styles.customNormalTextStyle(color: AppColors.accentText),
-                  hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
-                  hintTextStyle:
-                      Styles.customNormalTextStyle(color: AppColors.accentText),
-                  suffixIconImagePath: ImagePath.settingsIcon,
-                  borderWidth: 0.0, onTapOfLeadingIcon: () {
-                pausevideo();
-                FocusScope.of(context).unfocus();
-                AppRouter.navigator
-                    .pushNamed(
-                  AppRouter.searchResultsScreen,
-                  arguments: SearchValue(
-                    searchcontroller.text,
-                  ),
-                )
-                    .then((value) {
-                  this.searchcontroller.text = '';
-                  FocusScope.of(context).unfocus();
-                  setState(() {});
-                  resumevideo();
-                });
-              }, onTapOfSuffixIcon: () {
-                pausevideo();
-                AppRouter.navigator
-                    .pushNamed(AppRouter.filterScreen)
-                    .then((value) => resumevideo());
-              }, borderStyle: BorderStyle.solid),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Material(
+                  elevation: 5,
+                  borderRadius: BorderRadius.circular(20),
+                  child: FoodyBiteSearchInputField(ImagePath.searchIcon,
+                      borderRadius: 20,
+                      controller: searchcontroller,
+                      contentPaddingVertical: 6,
+                      textFormFieldStyle:
+                          Styles.customNormalTextStyle(color: Colors.black54),
+                      hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
+                      hintTextStyle:
+                          Styles.customNormalTextStyle(color: Colors.black54),
+                      suffixIconImagePath: ImagePath.settingsIcon,
+                      borderWidth: 0.0, onTapOfLeadingIcon: () {
+                    pausevideo();
+                    FocusScope.of(context).unfocus();
+                    AppRouter.navigator
+                        .pushNamed(
+                      AppRouter.searchResultsScreen,
+                      arguments: SearchValue(
+                        searchcontroller.text,
+                      ),
+                    )
+                        .then((value) {
+                      this.searchcontroller.text = '';
+                      FocusScope.of(context).unfocus();
+                      setState(() {});
+                      resumevideo();
+                    });
+                  }, onTapOfSuffixIcon: () {
+                    pausevideo();
+                    AppRouter.navigator
+                        .pushNamed(AppRouter.filterScreen)
+                        .then((value) => resumevideo());
+                  }, borderStyle: BorderStyle.solid),
+                ),
+              ),
               SizedBox(height: 16.0),
               HeadingRow(
                   title: StringConst.TRENDING_RESTAURANTS,
                   number: StringConst.SEE_ALL_45,
                   onTapOfNumber: () {
-                  
                     pausevideo();
                     AppRouter.navigator
                         .pushNamed(AppRouter.trendingRestaurantsScreen)
@@ -273,15 +276,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       });
 
                       return Container(
-                        height: 280,
+                        height: 300,
                         width: MediaQuery.of(context).size.width,
                         child: ListView.builder(
-                          physics: BouncingScrollPhysics(),
+                            physics: BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             itemCount: records.length,
                             itemBuilder: (context, index) {
                               return Container(
-                                margin: EdgeInsets.only(right: 4.0),
+                                margin: EdgeInsets.only(right: 4.0, bottom: 15),
                                 child: FoodyBiteCard(
                                   onTap: () {
                                     if (_controller != null) {
@@ -323,39 +326,82 @@ class _HomeScreenState extends State<HomeScreen> {
                                       records[index]['city'] +
                                       ' ' +
                                       records[index]['country'],
+                                  cardElevation: 1,
                                 ),
                               );
                             }),
                       );
                     }
                   }),
-                   SizedBox(height: 12.0),
-                  Container(
-                     height: 160,
-                    //  width: 180,
-                    //  color: Colors.red,
-                     margin: EdgeInsets.symmetric(horizontal: 5),
-                    child: ListView.builder(
-                            physics: BouncingScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              itemCount: subscription.length,
-                              itemBuilder: (context, i) {
-                                return InkWell(
-                                  onTap: (){
-                                     AppRouter.navigator.pushNamed(AppRouter.promotionScreen);
-                                  },
-                                  child: ClipRRect(
-                                     borderRadius: BorderRadius.circular(4),
-                                    child: Image.asset(
-                                    subscription[i],
-                                    width: MediaQuery.of(context).size.width/1.12,
-                                    
-                                    fit: BoxFit.cover,
-                              ),
-                                  ),
-                                );
-                              }),
-                  ),
+              // SizedBox(height: 12.0),
+              Container(
+                height: 160,
+                //  width: 180,
+                //  color: Colors.red,
+                margin: EdgeInsets.symmetric(horizontal: 5),
+                child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: subscription.length,
+                    itemBuilder: (context, i) {
+                      return InkWell(
+                        onTap: () {
+                          //  Navigator.of(context).pop();
+                          AppRouter.navigator.pushNamed(
+                            AppRouter.promotionScreen,
+                          );
+                          // AppRouter.navigator.pushNamed(AppRouter.paymentSuccess,arguments: {
+                          //   'cartlist': [],
+                          //   'name': 'sad',
+                          //   'email': 'sad',
+                          //   'paymentid': 'asdnas',
+                          //   'orderid': '1201',
+                          //   'amount': 33,
+                          //   'charges': 22,
+                          //   'shipping': 11,
+                          //   'qty': '1',
+                          //   'type': 'cart'
+                          // });
+                        },
+                        child: Material(
+                          elevation: 6,
+                          borderRadius: BorderRadius.circular(15),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Stack(
+                              children: [
+                                Image.asset(
+                                  subscription[i],
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.12,
+                                  fit: BoxFit.cover,
+                                ),
+                                Positioned(
+                                  right: 10,
+                                  bottom: 10,
+                                  child:
+                                      Text('Subscription Offer!'.toUpperCase(),
+                                          style: TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w900,
+                                            color: Colors.white,
+                                            shadows: [
+                                              Shadow(
+                                                color: Colors.white
+                                                    .withOpacity(0.5),
+                                                offset: Offset(1.0, 1.0),
+                                                blurRadius: 5,
+                                              ),
+                                            ],
+                                          )),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+              ),
               // promolist.length == 0 ? Container() : SizedBox(height: 16.0),
               // promolist.length == 0
               //     ? Container()
@@ -573,8 +619,8 @@ class _HomeScreenState extends State<HomeScreen> {
               //                             ),
               //                           ))),
               //           ),
-             
-              SizedBox(height: 16.0),
+
+              SizedBox(height: 20.0),
               HeadingRow(
                 title: StringConst.CATEGORY,
                 number: StringConst.SEE_ALL_9,
@@ -583,17 +629,68 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(height: 16.0),
               Container(
-                height: 100,
+                height: 200,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: categoryImagePaths.length,
                   itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.only(right: 8.0),
-                      child: FoodyBiteCategoryCard(
-                        imagePath: categoryImagePaths[index],
-                        gradient: gradients[index],
-                        category: category[index],
+                    return InkWell(
+                      onTap: () => AppRouter.navigator.pushNamed(
+                        AppRouter.categoryDetailScreen,
+                        arguments: CategoryDetailScreenArguments(
+                            categoryName: category[index],
+                            imagePath: categoryListImagePaths[index],
+                            selectedCategory: index,
+                            numberOfCategories: categoryListImagePaths.length,
+                            gradient: gradients[index],
+                            restaurantdata: {
+                              'id': '1',
+                              'name': 'boundry Rooftop',
+                              'image':
+                                  'https://www.businesslist.pk/img/cats/restaurants.jpg',
+                              'open': true,
+                              'phone': '+2331232192139',
+                              'ratings': '4.6',
+                              'type': 'Italian',
+                              'distance': '5 Km',
+                              'address': '9122 12 Steward Street',
+                              'city': 'London',
+                              'zipcode': '100013',
+                              'country': 'UK',
+                              'open_time': '9:30',
+                              'close_time': '11:30',
+                              'menu': [
+                                'https://media.architecturaldigest.in/wp-content/uploads/2020/04/Mumbai-restaurant-COVID-19-2-1.jpg',
+                                'https://images.all-free-download.com/images/graphiclarge/food_picture_03_hd_pictures_167556.jpg',
+                                'https://picturecorrect-wpengine.netdna-ssl.com/wp-content/uploads/2016/11/restaurant-food-photography-tips.jpg'
+                              ],
+                              'reviews': []
+                            }),
+                      ),
+                      child: Container(
+                        margin: EdgeInsets.only(right: 12.0, bottom: 12),
+                        child: Material(
+                          elevation: 5,
+                          borderRadius: BorderRadius.circular(15),
+                          child: FoodyBiteCategoryCard(
+                            height: 200,
+                            borderRadius: 15,
+                            width: MediaQuery.of(context).size.width / 2.5,
+                            imagePath: categoryImagePaths[index],
+                            // hasHandle: true,
+                            // gradient: gradients[index],
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: [0.5, 0.8],
+                              colors: [
+                                Colors.black12,
+                                Colors.black87,
+                              ],
+                            ),
+                            category: category[index],
+                          ),
+                        ),
                       ),
                     );
                   },
@@ -612,7 +709,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: createUserProfilePhotos(numberOfProfilePhotos: 6),
               ),
-              SizedBox(height: 16.0),
+              SizedBox(height: 30.0),
             ],
           ),
         ),
@@ -634,8 +731,13 @@ class _HomeScreenState extends State<HomeScreen> {
     List<int> list = List<int>.generate(numberOfProfilePhotos, (i) => i + 1);
 
     list.forEach((i) {
-      profilePhotos
-          .add(CircleAvatar(backgroundImage: AssetImage(imagePaths[i - 1])));
+      profilePhotos.add(Container(
+          margin: EdgeInsets.symmetric(horizontal: 5),
+          child: Material(
+              elevation: 6,
+              borderRadius: BorderRadius.circular(1000),
+              child: CircleAvatar(
+                  backgroundImage: AssetImage(imagePaths[i - 1])))));
     });
     return profilePhotos;
   }
@@ -683,7 +785,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 10,
                   ),
                   InkWell(
-                  onTap: ()=>AppRouter.navigator.pushNamed(AppRouter.googleMap),
+                    onTap: () =>
+                        AppRouter.navigator.pushNamed(AppRouter.googleMap),
                     child: Row(
                       children: [
                         Icon(Icons.location_searching, size: 12.0),

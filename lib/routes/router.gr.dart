@@ -11,6 +11,7 @@ import 'package:potbelly/screens/google_map.dart';
 import 'package:potbelly/screens/Promotionalert.dart';
 import 'package:potbelly/screens/checkoutScreen.dart';
 import 'package:potbelly/screens/login_screen.dart';
+import 'package:potbelly/screens/paymentsuccess.dart';
 import 'package:potbelly/screens/splash_screen.dart';
 import 'package:potbelly/screens/forgot_password_screen.dart';
 import 'package:potbelly/screens/register_screen.dart';
@@ -70,6 +71,7 @@ class AppRouter {
   static const newReviewScreen = '/new-review-screen';
   static const googleMap = '/google-map';
   static const checkoutScreen = '/checkout-screen';
+  static const paymentSuccess = '/paymentsuccess-screen';
   static final navigator = ExtendedNavigator();
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -168,6 +170,11 @@ class AppRouter {
           builder: (_) => CheckoutScreen(checkoutdata: args,),
           settings: settings,
         );
+      case AppRouter.paymentSuccess:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => PaymentSuccess(checkoutdata: args,),
+          settings: settings,
+        );
       case AppRouter.filterScreen:
         return CupertinoPageRoute<dynamic>(
           builder: (_) => FilterScreen(),
@@ -228,7 +235,8 @@ class AppRouter {
               imagePath: typedArgs.imagePath,
               numberOfCategories: typedArgs.numberOfCategories,
               selectedCategory: typedArgs.selectedCategory,
-              gradient: typedArgs.gradient),
+              gradient: typedArgs.gradient,
+              restaurantdata: typedArgs.restaurantdata,),
           settings: settings,
         );
       case AppRouter.findFriendsScreen:
@@ -283,10 +291,12 @@ class CategoryDetailScreenArguments {
   final int numberOfCategories;
   final int selectedCategory;
   final Gradient gradient;
+  var restaurantdata;
   CategoryDetailScreenArguments(
       {@required this.categoryName,
       @required this.imagePath,
       @required this.numberOfCategories,
       @required this.selectedCategory,
+      @required this.restaurantdata,
       @required this.gradient});
 }

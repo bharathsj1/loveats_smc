@@ -5,7 +5,8 @@ import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
 
 final List<String> images = [
-  'assets/images/mainscreen.jpg',
+  // 'assets/images/mainscreen.jpg',
+  'assets/images/main2.png',
   'assets/images/Slide1.jpg',
   'assets/images/Slide2.jpg',
   'assets/images/Slide3.jpg',
@@ -149,7 +150,7 @@ class _PromotionPhotosScreenState extends State<PromotionPhotosScreen> {
                                   'total': 1,
                                   'type': 'promo'
                                 };
-                            AppRouter.navigator.pushNamed(
+                            AppRouter.navigator.pushReplacementNamed(
                               AppRouter.checkoutScreen, arguments: data
                             );
                 },

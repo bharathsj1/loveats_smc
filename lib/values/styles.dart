@@ -24,6 +24,41 @@ class Styles {
     );
   }
 
+  static TextStyle customTitleTextStyle2({
+    Color color = AppColors.secondaryText,
+    String fontFamily = StringConst.FONT_FAMILY,
+    FontWeight fontWeight = FontWeight.w700,
+    double fontSize = Sizes.TEXT_SIZE_40,
+    double letterSpacing = 0,
+  }) {
+    return TextStyle(
+      color: color,
+      fontFamily: fontFamily,
+      fontWeight: fontWeight,
+      fontSize: fontSize,
+      letterSpacing: letterSpacing,
+      // shadows: [
+      //         Shadow(
+      //           color: Colors.blueGrey.withOpacity(0.6),
+      //           offset: Offset(3.0 , 3.0),
+      //           blurRadius: 6,
+      //         ),
+      //       ],
+      // shadows: <Shadow>[
+    //   Shadow(
+    //     offset: Offset(10.0, 10.0),
+    //     blurRadius: 8.0,
+    //     color: Color.fromARGB(255, 0, 0, 0),
+    //   ),
+    //   Shadow(
+    //     offset: Offset(10.0, 10.0),
+    //     blurRadius: 8.0,
+    //     color: Color.fromARGB(125, 0, 0, 255),
+    //   ),
+    // ],
+    );
+  }
+
   static const TextStyle normalTextStyle = TextStyle(
     color: AppColors.secondaryText,
     fontFamily: StringConst.FONT_FAMILY,
@@ -58,8 +93,11 @@ class Styles {
       fontWeight: fontWeight,
       fontSize: fontSize,
       letterSpacing: letterSpacing,
+      
     );
   }
+
+ 
 
   static const TextStyle mediumTextStyle = TextStyle(
     color: AppColors.secondaryText,

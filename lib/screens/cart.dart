@@ -476,7 +476,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                       Expanded(
                         child: this.renderAddList(),
                       ),
-                      Column(
+                   cartlist.length ==0?Container():   Column(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

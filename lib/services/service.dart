@@ -168,6 +168,7 @@ class Service {
 
   Future<void> logout(BuildContext context) async {
     await _auth.signOut();
+    loggedoutr();
     Navigator.pushAndRemoveUntil(context,
         MaterialPageRoute(builder: (_) => BackgroundVideo()), (route) => false);
   }
@@ -268,6 +269,12 @@ class Service {
     final shared = await initializdPrefs();
     String accessToken = shared.get('accessToken');
     return accessToken;
+  }
+
+  Future<String> loggedoutr() async {
+    final shared = await initializdPrefs();
+   shared.clear();
+   return null;
   }
 
   Future<void> clearAllPrefs() async {

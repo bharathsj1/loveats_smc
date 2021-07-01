@@ -41,7 +41,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
   );
 
   TextStyle subHeadingTextStyle = Styles.customTitleTextStyle(
-    color: AppColors.headingText,
+    color: Colors.black87,
     fontWeight: FontWeight.w600,
     fontSize: Sizes.TEXT_SIZE_16,
   );
@@ -248,7 +248,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                                     widget.restaurantDetails.restaurantName,
                                     textAlign: TextAlign.left,
                                     style: Styles.customTitleTextStyle(
-                                      color: AppColors.headingText,
+                                      color: Colors.black87,
                                       fontWeight: FontWeight.w600,
                                       fontSize: Sizes.TEXT_SIZE_20,
                                     ),
@@ -506,6 +506,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
       'id': '5',
     }
   ];
+ 
   List<Widget> itemsListTiles(context) {
     return List.generate(
         fooditems.length,

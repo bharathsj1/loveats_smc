@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:potbelly/models/user.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/paymentservice.dart';
 import 'package:potbelly/values/values.dart';
@@ -16,6 +18,7 @@ class CheckoutScreen extends StatefulWidget {
 class _CheckoutScreenState extends State<CheckoutScreen> {
   int totatqty = 0;
   var _paymentSheetData;
+   PaymentIntent intent;
   double total;
   bool loader= false;
   @override
@@ -43,7 +46,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     this.loader = true;
     setState(() { });
     print(total.floor());
-    var data = {'amount': (total.floor()).toString()+'00', 'currency': 'usd'};
+    var data = {'amount': (total.floor()).toString()+'00', 'currency': 'usd','receipt_email':'miansaadhafeez@gmail.com'};
     PaymentService().getIntent(data).then((value) async {
       print(value);
       this.loader = false;
@@ -55,9 +58,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       _paymentSheetData = value;
       setState(() {});
       try {
+        // intent=await  Stripe.instance.retrievePaymentIntent(_paymentSheetData['client_secret']);
+      //  print(intent);
+      setState(() {});
         await Stripe.instance.initPaymentSheet(
             paymentSheetParameters: SetupPaymentSheetParameters(
-          paymentIntentClientSecret: _paymentSheetData['payment_intent'],
+          paymentIntentClientSecret: _paymentSheetData['client_secret'],
           // customerEphemeralKeySecret: _paymentSheetData['ephemeralKey'],
           // customerId: _paymentSheetData['customer'],
           applePay: true,
@@ -77,12 +83,28 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Future<void> displayPayment() async {
     try {
-      await Stripe.instance.presentPaymentSheet(
+       
+     await Stripe.instance.presentPaymentSheet(
           parameters: PresentPaymentSheetParameters(
               clientSecret: _paymentSheetData['client_secret'],
               confirmPayment: true));
       setState(() {});
+     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+      final user = await firebaseAuth.currentUser();
+       AppRouter.navigator.pushReplacementNamed(AppRouter.paymentSuccess,arguments: {
+                            'cartlist': widget.checkoutdata['cartlist'],
+                            
+                            // 'email': user.email,
+                            'paymentid': _paymentSheetData['id'],
+                            'orderid': '1201',
+                            'amount': total,
+                            'charges': widget.checkoutdata['charges'],
+                            'shipping': widget.checkoutdata['shipping'],
+                            'qty': totatqty,
+                            'type': widget.checkoutdata['type']
+                          });
       Toast.show('Payment Success', context,duration: 3);
+
     } catch (error) {
       print(error);
     }
