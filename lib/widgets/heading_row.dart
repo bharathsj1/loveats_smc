@@ -15,15 +15,9 @@ class HeadingRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          Text(
-            title,
-            textAlign: TextAlign.left,
-            style: Styles.customTitleTextStyle(
-              color: AppColors.headingText,
-              fontWeight: FontWeight.w600,
-              fontSize: Sizes.TEXT_SIZE_20,
-            ),
-          ),
+          Text(title,
+              textAlign: TextAlign.left,
+              style: Styles.customNormalTextStyle(color: Colors.black)),
           InkWell(
             onTap: onTapOfNumber,
             child: Padding(

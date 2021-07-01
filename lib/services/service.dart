@@ -13,6 +13,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:path/path.dart';
 import 'package:potbelly/models/UserModel.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/models/user.dart';
 import 'package:potbelly/screens/login_screen.dart';
 import 'package:potbelly/values/values.dart';
@@ -278,5 +279,14 @@ class Service {
   Future<void> setKeyData(String key, String value) async {
     final shared = await initializdPrefs();
     await shared.setString(key, value);
+  }
+
+  Future<RestaurentsModel> getRestaurentsData() async {
+    print(dio.options.baseUrl);
+    Response response =
+        await dio.request('/get-restaurents', options: Options(method: 'get'));
+    print(response.data);
+
+    return RestaurentsModel.fromJson(response.data);
   }
 }

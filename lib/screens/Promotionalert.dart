@@ -120,8 +120,8 @@ class _PromotionPhotosScreenState extends State<PromotionPhotosScreen> {
                       return Container(
                         width: 8.0,
                         height: 8.0,
-                        margin:
-                            EdgeInsets.symmetric(vertical: 16.0, horizontal: 2.0),
+                        margin: EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: 2.0),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: _current == index
@@ -140,34 +140,31 @@ class _PromotionPhotosScreenState extends State<PromotionPhotosScreen> {
               right: 15,
               child: PotbellyButton(
                 StringConst.SUBSCRIPTION,
-
-                onTap: (){
-                   var data={
-                                  'cartlist': null,
-                                  'charges':0.0,
-                                  'shipping':0.0,
-                                  'total': 1,
-                                  'type': 'promo'
-                                };
-                            AppRouter.navigator.pushNamed(
-                              AppRouter.checkoutScreen, arguments: data
-                            );
+                onTap: () {
+                  var data = {
+                    'cartlist': null,
+                    'charges': 0.0,
+                    'shipping': 0.0,
+                    'total': 1,
+                    'type': 'promo'
+                  };
+                  AppRouter.navigator
+                      .pushNamed(AppRouter.checkoutScreen, arguments: data);
                 },
               ),
             ),
             Positioned(
               top: 40,
               left: 15,
-              
-              child:  InkWell(
-          onTap: () => AppRouter.navigator.pop(context),
-          child: Image.asset(
-            ImagePath.closeIcon,
-            color: AppColors.primaryColor,
-            height: 15,
-            width: 15,
-          ),
-        ),
+              child: InkWell(
+                onTap: () => AppRouter.navigator.pop(context),
+                child: Image.asset(
+                  ImagePath.closeIcon,
+                  color: AppColors.primaryColor,
+                  height: 15,
+                  width: 15,
+                ),
+              ),
             ),
           ],
         ),

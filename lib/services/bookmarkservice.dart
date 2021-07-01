@@ -4,10 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
 class BookmarkService with ChangeNotifier {
-
-    getbookmarklist() async {
+  getbookmarklist() async {
     List<dynamic> temp = [];
-    List localbookmark=[];
+    List localbookmark = [];
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var carts = prefs.getString("bookmarks");
     print(carts);
@@ -15,7 +14,6 @@ class BookmarkService with ChangeNotifier {
       print("Nothing");
       return localbookmark;
     } else {
-
       temp.add(JsonDecoder().convert(carts));
 
       for (var item in temp[0]) {
@@ -25,19 +23,18 @@ class BookmarkService with ChangeNotifier {
     }
   }
 
-    
- Future  addbookmark(context, restaurant) async {
+  Future addbookmark(context, restaurant) async {
     // check array is empty
-   var bookmarklist= await getbookmarklist();
+    var bookmarklist = await getbookmarklist();
     int index = bookmarklist.indexWhere((x) {
       return x['id'] == restaurant['id'];
     });
     if (index == -1) {
       bookmarklist.add(restaurant);
       // also save into sqflite
-       SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('bookmarks', jsonEncode(bookmarklist));
-    
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('bookmarks', jsonEncode(bookmarklist));
+
       notifyListeners();
       Toast.show('restaurant added to bookmarks', context, duration: 3);
       return 'success';
@@ -51,19 +48,17 @@ class BookmarkService with ChangeNotifier {
       Toast.show('restaurant removed from bookmarks', context, duration: 3);
       return 'success';
     }
-   
   }
 
- Future checkbookmark(restaurant) async {
-    var bookmarklist= await getbookmarklist();
+  Future checkbookmark(restaurant) async {
+    var bookmarklist = await getbookmarklist();
     int index = bookmarklist.indexWhere((x) {
-      return x['id'] == restaurant['id'];
+      return x['id'] == restaurant.id;
     });
     if (index == -1) {
       return false;
-  }
-  else{
-    return true;
-  }
+    } else {
+      return true;
+    }
   }
 }

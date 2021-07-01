@@ -33,13 +33,13 @@ class FoodyBiteCard extends StatelessWidget {
     this.address,
     this.width = 340.0,
     this.cardHeight = 280.0,
-    this.imageHeight = 180.0,
+    this.imageHeight = 190.0,
     this.tagRadius = 8.0,
     this.onTap,
     this.isThereStatus = true,
     this.isThereRatings = true,
     this.bookmark = false,
-    this.cardElevation = 4.0,
+    this.cardElevation = 1.0,
     this.ratingsAndStatusCardElevation = 8.0,
     this.followersImagePath,
   });
@@ -95,6 +95,7 @@ class FoodyBiteCard extends StatelessWidget {
                             ),
                     ),
                     Container(
+                     
                       margin: EdgeInsets.symmetric(
                         horizontal: Sizes.MARGIN_16,
                         vertical: Sizes.MARGIN_16,
@@ -106,10 +107,8 @@ class FoodyBiteCard extends StatelessWidget {
                               Text(
                                 cardTitle,
                                 textAlign: TextAlign.left,
-                                style: Styles.customTitleTextStyle(
-                                  color: AppColors.headingText,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: Sizes.TEXT_SIZE_20,
+                                style: Styles.customNormalTextStyle(
+                                  color: Colors.black,
                                 ),
                               ),
                               SizedBox(width: Sizes.WIDTH_4),
@@ -273,7 +272,8 @@ class FoodyBiteCard extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
                           ),
-                          child: Image.asset(ImagePath.activeBookmarksIcon2,color: AppColors.secondaryElement),
+                          child: Image.asset(ImagePath.activeBookmarksIcon2,
+                              color: AppColors.secondaryElement),
                         ),
                       ),
                     )

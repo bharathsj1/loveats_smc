@@ -89,24 +89,24 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                     AppRouter.restaurantDetailsScreen,
                     arguments: RestaurantDetails(
                         imagePath: bookmarks[index]['image'],
-                        restaurantName: bookmarks[index]['name'],
+                        restaurantName: bookmarks[index]['name']??'',
                         restaurantAddress: bookmarks[index]['address'] +
                             ' ' +
                             bookmarks[index]['city'] +
                             ' ' +
                             bookmarks[index]['country'],
-                        rating: bookmarks[index]['ratings'],
-                        category: bookmarks[index]['type'],
-                        distance: bookmarks[index]['distance'],
+                        rating: bookmarks[index]['ratings']??'0.0',
+                        category: bookmarks[index]['type']??'',
+                        distance: bookmarks[index]['distance'] ?? '0',
                         data: bookmarks[index]),
                   ),
                   bookmark: true,
                   imagePath: bookmarks[index]['image'],
-                  status: bookmarks[index]['open'] ? "OPEN" : "CLOSE",
+                  status: bookmarks[index]['open']==1 ? "OPEN" : "CLOSE",
                   cardTitle: bookmarks[index]['name'],
-                  rating: bookmarks[index]['ratings'],
+                  rating: bookmarks[index]['ratings'] ?? '0',
                   category: bookmarks[index]['type'],
-                  distance: bookmarks[index]['distance'],
+                  distance: bookmarks[index]['distance'] ?? '0',
                   address: bookmarks[index]['address'] +
                       ' ' +
                       bookmarks[index]['city'] +

@@ -27,9 +27,8 @@ class RestaurantDetailsScreen extends StatefulWidget {
 }
 
 class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
+  bool bookmark = false;
 
-  bool bookmark =false;
-  
   TextStyle addressTextStyle = Styles.customNormalTextStyle(
     color: AppColors.accentText,
     fontSize: Sizes.TEXT_SIZE_12,
@@ -69,20 +68,21 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
   );
 
   @override
-    void initState() {
-      checkbookmark();
-      for (var item in fooditems) {
-        item['restaurantId']= widget.restaurantDetails.data['id'];
-        print(item);
-      }
-      super.initState();
+  void initState() {
+    checkbookmark();
+    for (var item in fooditems) {
+      item['restaurantId'] = widget.restaurantDetails.data.id.toString();
+      print(item);
     }
+    super.initState();
+  }
 
   checkbookmark() async {
-   bookmark = await  BookmarkService().checkbookmark(widget.restaurantDetails.data);
-   print(bookmark);
-   setState(() { });
-    }
+    bookmark =
+        await BookmarkService().checkbookmark(widget.restaurantDetails.data);
+    print(bookmark);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +126,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                               top: Sizes.MARGIN_16,
                             ),
                             child: Row(
-                              children: <Widget>[
+                              children: [
                                 InkWell(
                                   onTap: () => AppRouter.navigator.pop(),
                                   child: Padding(
@@ -146,17 +146,25 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                                 ),
                                 SpaceW20(),
                                 InkWell(
-                                  onTap: (){
-                                    BookmarkService().addbookmark(context, widget.restaurantDetails.data).then((value) {
+                                  onTap: () {
+                                    BookmarkService()
+                                        .addbookmark(context,
+                                            widget.restaurantDetails.data)
+                                        .then((value) {
                                       print(value);
-                                      if(value == 'success'){
-                                      bookmark = !bookmark;
-                                      setState(() {});
+                                      if (value == 'success') {
+                                        bookmark = !bookmark;
+                                        setState(() {});
                                       }
                                     });
                                   },
-                                  child: Image.asset( bookmark? ImagePath.activeBookmarksIcon3: ImagePath.bookmarksIcon,
-                                      color:  bookmark? AppColors.secondaryElement: Colors.white),
+                                  child: Image.asset(
+                                      bookmark
+                                          ? ImagePath.activeBookmarksIcon3
+                                          : ImagePath.bookmarksIcon,
+                                      color: bookmark
+                                          ? AppColors.secondaryElement
+                                          : Colors.white),
                                 ),
                               ],
                             ),
@@ -184,13 +192,12 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                                               24,
 //                                      decoration: leftSideDecorations,
                                       child: Row(
-                                        children: <Widget>[
+                                        children: [
                                           SizedBox(width: 4.0),
                                           Image.asset(ImagePath.callIcon),
                                           SizedBox(width: 8.0),
                                           Text(
-                                            widget.restaurantDetails
-                                                .data['phone'],
+                                            widget.restaurantDetails.data.phone,
                                             style: Styles.normalTextStyle,
                                           )
                                         ],
@@ -217,7 +224,10 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                                       child: Row(
                                         children: <Widget>[
                                           SizedBox(width: 4.0),
-                                          Image.asset(ImagePath.directionIcon,color: AppColors.secondaryElement,),
+                                          Image.asset(
+                                            ImagePath.directionIcon,
+                                            color: AppColors.secondaryElement,
+                                          ),
                                           SizedBox(width: 8.0),
                                           Text(
                                             'Direction',
@@ -294,11 +304,11 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                                         text: "daily time ",
                                         style: addressTextStyle),
                                     TextSpan(
-                                        text: widget.restaurantDetails
-                                                .data['open_time'] +
+                                        text: widget.restaurantDetails.data
+                                                .openTime +
                                             " am to " +
-                                            widget.restaurantDetails
-                                                .data['close_time'] +
+                                            widget.restaurantDetails.data
+                                                .closeTime +
                                             " am "),
                                   ],
                                 ),
@@ -315,59 +325,59 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                                     widget.restaurantDetails.data['menu']),
                           ),
                           SizedBox(height: 16.0),
-                          Container(
-                            height: 120,
-                            width: MediaQuery.of(context).size.width,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount:
-                                  widget.restaurantDetails.data['menu'].length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  margin: EdgeInsets.only(right: 12.0),
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(8))),
-                                  child: widget.restaurantDetails.imagePath
-                                              .substring(0, 4) ==
-                                          'http'
-                                      ? Image.network(
-                                          widget.restaurantDetails.data['menu']
-                                              [index],
-                                          fit: BoxFit.fill,
-                                          loadingBuilder: (BuildContext ctx,
-                                              Widget child,
-                                              ImageChunkEvent loadingProgress) {
-                                            if (loadingProgress == null) {
-                                              return child;
-                                            } else {
-                                              return Container(
-                                                // height: ,
-                                                width: 160,
-                                                child: Center(
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    valueColor:
-                                                        AlwaysStoppedAnimation<
-                                                                Color>(
-                                                            AppColors
-                                                                .secondaryElement),
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          width: 160,
-                                        )
-                                      : Image.asset(
-                                          menuPhotosImagePaths[index],
-                                          fit: BoxFit.fill,
-                                          width: 160,
-                                        ),
-                                );
-                              },
-                            ),
-                          ),
+                          // Container(
+                          //   height: 120,
+                          //   width: MediaQuery.of(context).size.width,
+                          //   child: ListView.builder(
+                          //     scrollDirection: Axis.horizontal,
+                          //     itemCount:
+                          //         widget.restaurantDetails.data['menu'].length,
+                          //     itemBuilder: (context, index) {
+                          //       return Container(
+                          //         margin: EdgeInsets.only(right: 12.0),
+                          //         decoration: BoxDecoration(
+                          //             borderRadius:
+                          //                 BorderRadius.all(Radius.circular(8))),
+                          //         child: widget.restaurantDetails.imagePath
+                          //                     .substring(0, 4) ==
+                          //                 'http'
+                          //             ? Image.network(
+                          //                 widget.restaurantDetails.data['menu']
+                          //                     [index],
+                          //                 fit: BoxFit.fill,
+                          //                 loadingBuilder: (BuildContext ctx,
+                          //                     Widget child,
+                          //                     ImageChunkEvent loadingProgress) {
+                          //                   if (loadingProgress == null) {
+                          //                     return child;
+                          //                   } else {
+                          //                     return Container(
+                          //                       // height: ,
+                          //                       width: 160,
+                          //                       child: Center(
+                          //                         child:
+                          //                             CircularProgressIndicator(
+                          //                           valueColor:
+                          //                               AlwaysStoppedAnimation<
+                          //                                       Color>(
+                          //                                   AppColors
+                          //                                       .secondaryElement),
+                          //                         ),
+                          //                       ),
+                          //                     );
+                          //                   }
+                          //                 },
+                          //                 width: 160,
+                          //               )
+                          //             : Image.asset(
+                          //                 menuPhotosImagePaths[index],
+                          //                 fit: BoxFit.fill,
+                          //                 width: 160,
+                          //               ),
+                          //       );
+                          //     },
+                          //   ),
+                          // ),
                           // SpaceH24(),
                           // HeadingRow(
                           //   title: StringConst.REVIEWS_AND_RATINGS,
@@ -561,7 +571,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                             print(fooditems[i]['qty']);
                             setState(() {});
 
-                            
                             // Provider.of<CartProvider>(context, listen: false)
                             //     .addToCart(context, data);
                           },
@@ -592,22 +601,22 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                       icon: Icons.add_shopping_cart,
                       onTap: () {
                         if (int.parse(fooditems[i]['qty']) >= 1) {
-                              // disabled = true;
-                            }
-                            setState(() {});
-                            Map<String, dynamic> data = {
-                              'id': fooditems[i]['id'],
-                              'restaurantId': fooditems[i]['restaurantId'],
-                              'image': fooditems[i]['image'],
-                              'details': fooditems[i]['details'],
-                              'name': fooditems[i]['name'],
-                              'price': fooditems[i]['price'],
-                              'payableAmount': fooditems[i]['price'],
-                              'qty': fooditems[i]['qty'],
-                              'data': fooditems[i],
-                              'restaurantdata': widget.restaurantDetails.data
-                            };
-                            CartProvider().addToCart(context, data);
+                          // disabled = true;
+                        }
+                        setState(() {});
+                        Map<String, dynamic> data = {
+                          'id': fooditems[i]['id'],
+                          'restaurantId': fooditems[i]['restaurantId'],
+                          'image': fooditems[i]['image'],
+                          'details': fooditems[i]['details'],
+                          'name': fooditems[i]['name'],
+                          'price': fooditems[i]['price'],
+                          'payableAmount': fooditems[i]['price'],
+                          'qty': fooditems[i]['qty'],
+                          'data': fooditems[i],
+                          'restaurantdata': widget.restaurantDetails.data
+                        };
+                        CartProvider().addToCart(context, data);
                       },
                     ),
                   ),

@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/data.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/foody_bite_card.dart';
@@ -16,15 +18,14 @@ class TrendingRestaurantsScreen extends StatefulWidget {
 
 class _TrendingRestaurantsScreenState extends State<TrendingRestaurantsScreen> {
   List records = [];
-  List search = [];
+  RestaurentsModel search;
   bool searching = false;
   var controller = TextEditingController();
 
   searchfromlist() {
-    records = search
-        .where((product) => product['name']
-            .toLowerCase()
-            .contains(controller.text.toLowerCase()))
+    records = search.data
+        .where((product) =>
+            product.name.toLowerCase().contains(controller.text.toLowerCase()))
         .toList();
   }
 
@@ -69,8 +70,12 @@ class _TrendingRestaurantsScreenState extends State<TrendingRestaurantsScreen> {
                   controller: controller,
                   onChanged: (value) {
                     setState(() {
-                      this.searching = true;
-                      searchfromlist();
+                      if (value.isEmpty) {
+                        this.searching = false;
+                      } else {
+                        this.searching = true;
+                        searchfromlist();
+                      }
                     });
                   },
                   textFormFieldStyle:
@@ -84,10 +89,8 @@ class _TrendingRestaurantsScreenState extends State<TrendingRestaurantsScreen> {
                 ),
                 SizedBox(height: Sizes.WIDTH_16),
                 Expanded(
-                  child: StreamBuilder(
-                      stream: Firestore.instance
-                          .collection('Restaurants')
-                          .snapshots(),
+                  child: FutureBuilder<RestaurentsModel>(
+                      future: Service().getRestaurentsData(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Center(
@@ -98,57 +101,58 @@ class _TrendingRestaurantsScreenState extends State<TrendingRestaurantsScreen> {
                             ),
                           );
                         } else {
-                          List<DocumentSnapshot> items =
-                              snapshot.data.documents;
+                          var items = snapshot.data.data;
                           // if (searching == true) {
                           // } else {
                           records.clear();
                           items.forEach((e) {
-                            records.add(e.data);
-                            // print(e.data());
+                            records.add(e);
                           });
-                          search = records;
+                          search = snapshot.data;
                           // }
                           if (searching == true) {
                             searchfromlist();
                           }
                           return ListView.separated(
                             scrollDirection: Axis.vertical,
-                            itemCount: records.length,
+                            itemCount: searching
+                                ? records.length
+                                : snapshot.data.data.length,
                             separatorBuilder: (context, index) {
                               return SpaceH8();
                             },
                             itemBuilder: (context, index) {
+                              var rec = searching
+                                  ? records[index]
+                                  : snapshot.data.data[index];
                               return Container(
                                 child: FoodyBiteCard(
                                   onTap: () => AppRouter.navigator.pushNamed(
                                     AppRouter.restaurantDetailsScreen,
                                     arguments: RestaurantDetails(
-                                        imagePath: records[index]['image'],
-                                        restaurantName: records[index]['name'],
-                                        restaurantAddress: records[index]
-                                                ['address'] +
+                                        imagePath: rec.image,
+                                        restaurantName: rec.name,
+                                        restaurantAddress: rec.address +
                                             ' ' +
-                                            records[index]['city'] +
+                                            rec.city +
                                             ' ' +
-                                            records[index]['country'],
-                                        rating: records[index]['ratings'],
-                                        category: records[index]['type'],
-                                        distance: records[index]['distance'],
-                                        data: records[index]),
+                                            rec.country,
+                                        rating: '0.0',
+                                        category: rec.type,
+                                        distance: '0',
+                                        data: rec),
                                   ),
-                                  imagePath: records[index]['image'],
-                                  status:
-                                      records[index]['open'] ? "OPEN" : "CLOSE",
-                                  cardTitle: records[index]['name'],
-                                  rating: records[index]['ratings'],
-                                  category: records[index]['type'],
-                                  distance: records[index]['distance'],
-                                  address: records[index]['address'] +
+                                  imagePath: rec.image,
+                                  status: rec.open == 1 ? "OPEN" : "CLOSE",
+                                  cardTitle: rec.name,
+                                  rating: '0.0',
+                                  category: rec.type,
+                                  distance: '0 KM',
+                                  address: rec.address +
                                       ' ' +
-                                      records[index]['city'] +
+                                      rec.city +
                                       ' ' +
-                                      records[index]['country'],
+                                      rec.country,
                                 ),
                               );
                             },

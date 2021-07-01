@@ -3,8 +3,11 @@ part of values;
 class StringConst {
   //strings
   static const String APP_NAME = "Loveats";
-  static const String BASE_URL = "http://love.signaturemediachannel.com/api/";
-  static const String LOCAL_URL = 'http://loveats.test/';
+  static const String BASE_URL = "https://love.signaturemediachannel.com/api/";
+  static const String LOCAL_URL = 'http://loveats.test/api';
+
+  static const String LOCAL_PICTURE_URL = 'http://loveats.test/';
+  static const String LIVE_PICTURE_URL = 'http://love.signaturemediachannel.com/';
 
   static const String PROMOTIONS = "Promotions";
   static const String FOODY_BITE = "Loveats";
