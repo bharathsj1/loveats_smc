@@ -315,7 +315,7 @@ PODS:
     - Flutter
   - google_maps_flutter (0.0.1):
     - Flutter
-    - GoogleMaps (< 3.10)
+    - GoogleMaps
   - google_sign_in (0.0.1):
     - Flutter
     - GoogleSignIn (~> 5.0)
@@ -409,6 +409,12 @@ PODS:
     - Flutter
   - sign_in_with_apple (0.0.1):
     - Flutter
+  - Stripe (21.5.1):
+    - Stripe/Stripe3DS2 (= 21.5.1)
+  - Stripe/Stripe3DS2 (21.5.1)
+  - stripe_ios (0.0.1):
+    - Flutter
+    - Stripe (~> 21.5.1)
   - Toast (4.0.0)
   - video_player (0.0.1):
     - Flutter
@@ -434,6 +440,7 @@ DEPENDENCIES:
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
+  - stripe_ios (from `.symlinks/plugins/stripe_ios/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
   - video_thumbnail (from `.symlinks/plugins/video_thumbnail/ios`)
 
@@ -464,6 +471,7 @@ SPEC REPOS:
     - libwebp
     - nanopb
     - PromisesObjC
+    - Stripe
     - Toast
 
 EXTERNAL SOURCES:
@@ -501,6 +509,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences/ios"
   sign_in_with_apple:
     :path: ".symlinks/plugins/sign_in_with_apple/ios"
+  stripe_ios:
+    :path: ".symlinks/plugins/stripe_ios/ios"
   video_player:
     :path: ".symlinks/plugins/video_player/ios"
   video_thumbnail:
@@ -511,10 +521,10 @@ SPEC CHECKSUMS:
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
   apple_sign_in: 7716c7ddfa195aeab7dec0dc374ef4ff45d1adb4
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
-  cloud_firestore: 2a4f8f802fb0b701cf809b283b6bec7477ebaa6f
+  cloud_firestore: c5d1e4d114eecb1dfb535f008435685bcf6063f1
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   Firebase: c23a36d9e4cdf7877dfcba8dd0c58add66358999
-  firebase_auth: 4ee3a54d3f09434c508c284a62f895a741a30637
+  firebase_auth: 1f46484071219159ad6c64d304af425ad7373052
   firebase_core: dc539d4bdc69894823e4a6e557034a9e48960f21
   firebase_database: 88085c38a41ad0b5c3c611ede7205831a2ece844
   firebase_storage: 22966fce4aa6e8848cbaa017df62107cee29f327
@@ -529,7 +539,7 @@ SPEC CHECKSUMS:
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
   geolocator: f5e3de65e241caba7ce3e8a618803387bda73384
-  google_maps_flutter: c7f9c73576de1fbe152a227bfd6e6c4ae8088619
+  google_maps_flutter: df4e7de95264aa0a2f11aac0fc7e313acb8ffc7e
   google_sign_in: 6bd214b9c154f881422f5fe27b66aaa7bbd580cc
   GoogleAppMeasurement: a6a3a066369828db64eda428cb2856dc1cdc7c4e
   GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833
@@ -540,19 +550,21 @@ SPEC CHECKSUMS:
   gRPC-Core: 4afa11bfbedf7cdecd04de535a9e046893404ed5
   GTMAppAuth: ad5c2b70b9a8689e1a04033c9369c4915bfcbe89
   GTMSessionFetcher: 36689134877faeb055b27dfa4ccc9ceaa42e029e
-  image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
+  image_picker: 66aa71bc96850a90590a35d4c4a2907b0d823109
   image_viewer: 3ff6248139d02dd4e15d4329bb36c69f00e615e2
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
-  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+  path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sign_in_with_apple: 34f3f5456a45fd7ac5fb42905e2ad31dae061b4a
+  Stripe: 515db5536fd659b5d79a0898ce1b882b61ab597e
+  stripe_ios: ce035050135b58a5a838e0d410d53b26f1dc026a
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
 
-PODFILE CHECKSUM: c0fd4c8971d296d1948207ef9a5c4aa4d478b432
+PODFILE CHECKSUM: 31d181a9fe99c77e932d41796b9f7c1bc3246bb8
 
 COCOAPODS: 1.10.0

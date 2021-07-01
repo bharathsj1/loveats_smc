@@ -1,11 +1,12 @@
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:potbelly/models/promotions.dart';
+import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/DatabaseManager.dart';
+import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/values/data.dart';
 import 'package:potbelly/widgets/category_card.dart';
@@ -35,28 +36,37 @@ class _HomeScreenState extends State<HomeScreen> {
   int active_video = 0;
   bool loader = true;
   List records = [];
-  List subscription=[
-    'assets/images/mainscreen.jpg'
-  ];
+    int totalRestaurent = 0;
+
+  List subscription = ['assets/images/mainscreen.jpg'];
+
+  RestaurentsModel _restaurentsModel;
 
   @override
   void initState() {
     // getlocalpromos();
-        //  var localdate= jsonDecode(promodate);
+    //  var localdate= jsonDecode(promodate);
     checkpromo();
+    getAllRestaurents();
+
     super.initState();
   }
 
   checkpromo() async {
-    var show= await Promotion().checkpromo();
+    var show = await Promotion().checkpromo();
     print(show);
-    if(show){
-       AppRouter.navigator.pushNamed(AppRouter.promotionScreen);
-       Promotion().setpromo();
-    }
-    else{
+    if (show) {
+      AppRouter.navigator.pushNamed(AppRouter.promotionScreen);
+      Promotion().setpromo();
+    } else {
       print('promo already viewed');
     }
+  }
+
+  Future<RestaurentsModel> getAllRestaurents() async {
+    _restaurentsModel = await Service().getRestaurentsData();
+
+    return _restaurentsModel;
   }
 
   getpromos() async {
@@ -156,7 +166,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -173,7 +182,6 @@ class _HomeScreenState extends State<HomeScreen> {
             vertical: Sizes.MARGIN_8,
           ),
           child: ListView(
-            
             children: <Widget>[
               InkWell(
                 onTap: () => bottomSheetForLocation(context),
@@ -183,9 +191,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 5.0),
                       child: Icon(Icons.location_on,
-                          size: Sizes.HEIGHT_22, color: AppColors.indigo),),
-              
-                 Container(
+                          size: Sizes.HEIGHT_22, color: AppColors.indigo),
+                    ),
+                    Container(
                       padding: EdgeInsets.only(
                         bottom: 5,
                       ),
@@ -239,11 +247,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     .then((value) => resumevideo());
               }, borderStyle: BorderStyle.solid),
               SizedBox(height: 16.0),
-              HeadingRow(
+ HeadingRow(
                   title: StringConst.TRENDING_RESTAURANTS,
-                  number: StringConst.SEE_ALL_45,
+                  number: totalRestaurent.toString(),
                   onTapOfNumber: () {
-                  
                     pausevideo();
                     AppRouter.navigator
                         .pushNamed(AppRouter.trendingRestaurantsScreen)
@@ -252,110 +259,179 @@ class _HomeScreenState extends State<HomeScreen> {
                     });
                   }),
               SizedBox(height: 16.0),
-              StreamBuilder(
-                  stream:
-                      Firestore.instance.collection('Restaurants').snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            AppColors.secondaryElement,
+               FutureBuilder<RestaurentsModel>(
+                future: getAllRestaurents(),
+                builder: (context, AsyncSnapshot<RestaurentsModel> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppColors.secondaryElement,
+                        ),
+                      ),
+                    );
+                  } else {
+                    totalRestaurent = _restaurentsModel.data.length;
+
+                    return Container(
+                      height: 280,
+                      width: MediaQuery.of(context).size.width,
+                      child: ListView.builder(
+                          physics: BouncingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: snapshot.data.data.length,
+                          itemBuilder: (context, index) {
+                            var res = snapshot.data.data[index];
+                            return Container(
+                              margin: EdgeInsets.only(right: 4.0),
+                              child: FoodyBiteCard(
+                                onTap: () {
+                                  if (_controller != null) {
+                                    _controller.pause();
+                                  }
+                                  AppRouter.navigator
+                                      .pushNamed(
+                                    AppRouter.restaurantDetailsScreen,
+                                    arguments: RestaurantDetails(
+                                        imagePath: res.image,
+                                        restaurantName: res.name,
+                                        restaurantAddress: res.address +
+                                            res.city +
+                                            ' ' +
+                                            res.country,
+                                        rating: '0.0',
+                                        category: res.type,
+                                        distance: '0 Km',
+                                        data: res),
+                                  )
+                                      .then((value) {
+                                    if (_controller != null) {
+                                      _controller.play();
+                                    }
+                                  });
+                                },
+                                imagePath: res.image,
+                                status: res.open == 1 ? "OPEN" : "CLOSE",
+                                cardTitle: res.name,
+                                rating: '0.0',
+                                category: res.type,
+                                distance: '8 KM',
+                                address: res.address +
+                                    ' ' +
+                                    res.city +
+                                    ' ' +
+                                    res.country,
+                              ),
+                            );
+                          }),
+                    );
+                  }
+                },
+              ),
+              // StreamBuilder(
+              //     stream:
+              //         Firestore.instance.collection('Restaurants').snapshots(),
+              //     builder: (context, snapshot) {
+              //       if (!snapshot.hasData) {
+              //         return Center(
+              //           child: CircularProgressIndicator(
+              //             valueColor: AlwaysStoppedAnimation<Color>(
+              //               AppColors.secondaryElement,
+              //             ),
+              //           ),
+              //         );
+              //       } else {
+              //         List<DocumentSnapshot> items = snapshot.data.documents;
+              //         records.clear();
+              //         items.forEach((e) {
+              //           records.add(e.data);
+              //           // print(e.data());
+              //         });
+
+              //         return Container(
+              //           height: 280,
+              //           width: MediaQuery.of(context).size.width,
+              //           child: ListView.builder(
+              //               physics: BouncingScrollPhysics(),
+              //               scrollDirection: Axis.horizontal,
+              //               itemCount: records.length,
+              //               itemBuilder: (context, index) {
+              //                 return Container(
+              //                   margin: EdgeInsets.only(right: 4.0),
+              //                   child: FoodyBiteCard(
+              //                     onTap: () {
+              //                       if (_controller != null) {
+              //                         _controller.pause();
+              //                       }
+              //                       AppRouter.navigator
+              //                           .pushNamed(
+              //                         AppRouter.restaurantDetailsScreen,
+              //                         arguments: RestaurantDetails(
+              //                             imagePath: records[index]['image'],
+              //                             restaurantName: records[index]
+              //                                 ['name'],
+              //                             restaurantAddress: records[index]
+              //                                     ['address'] +
+              //                                 ' ' +
+              //                                 records[index]['city'] +
+              //                                 ' ' +
+              //                                 records[index]['country'],
+              //                             rating: records[index]['ratings'],
+              //                             category: records[index]['type'],
+              //                             distance: records[index]['distance'],
+              //                             data: records[index]),
+              //                       )
+              //                           .then((value) {
+              //                         if (_controller != null) {
+              //                           _controller.play();
+              //                         }
+              //                       });
+              //                     },
+              //                     imagePath: records[index]['image'],
+              //                     status:
+              //                         records[index]['open'] ? "OPEN" : "CLOSE",
+              //                     cardTitle: records[index]['name'],
+              //                     rating: records[index]['ratings'],
+              //                     category: records[index]['type'],
+              //                     distance: records[index]['distance'],
+              //                     address: records[index]['address'] +
+              //                         ' ' +
+              //                         records[index]['city'] +
+              //                         ' ' +
+              //                         records[index]['country'],
+              //                   ),
+              //                 );
+              //               }),
+              //         );
+              //       }
+              //     }),
+              SizedBox(height: 12.0),
+              Container(
+                height: 160,
+                //  width: 180,
+                //  color: Colors.red,
+                margin: EdgeInsets.symmetric(horizontal: 5),
+                child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: subscription.length,
+                    itemBuilder: (context, i) {
+                      return InkWell(
+                        onTap: () {
+                          AppRouter.navigator
+                              .pushNamed(AppRouter.promotionScreen);
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: Image.asset(
+                            subscription[i],
+                            width: MediaQuery.of(context).size.width / 1.12,
+                            fit: BoxFit.cover,
                           ),
                         ),
                       );
-                    } else {
-                      List<DocumentSnapshot> items = snapshot.data.documents;
-                      records.clear();
-                      items.forEach((e) {
-                        records.add(e.data);
-                        // print(e.data());
-                      });
-
-                      return Container(
-                        height: 280,
-                        width: MediaQuery.of(context).size.width,
-                        child: ListView.builder(
-                          physics: BouncingScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            itemCount: records.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                margin: EdgeInsets.only(right: 4.0),
-                                child: FoodyBiteCard(
-                                  onTap: () {
-                                    if (_controller != null) {
-                                      _controller.pause();
-                                    }
-                                    AppRouter.navigator
-                                        .pushNamed(
-                                      AppRouter.restaurantDetailsScreen,
-                                      arguments: RestaurantDetails(
-                                          imagePath: records[index]['image'],
-                                          restaurantName: records[index]
-                                              ['name'],
-                                          restaurantAddress: records[index]
-                                                  ['address'] +
-                                              ' ' +
-                                              records[index]['city'] +
-                                              ' ' +
-                                              records[index]['country'],
-                                          rating: records[index]['ratings'],
-                                          category: records[index]['type'],
-                                          distance: records[index]['distance'],
-                                          data: records[index]),
-                                    )
-                                        .then((value) {
-                                      if (_controller != null) {
-                                        _controller.play();
-                                      }
-                                    });
-                                  },
-                                  imagePath: records[index]['image'],
-                                  status:
-                                      records[index]['open'] ? "OPEN" : "CLOSE",
-                                  cardTitle: records[index]['name'],
-                                  rating: records[index]['ratings'],
-                                  category: records[index]['type'],
-                                  distance: records[index]['distance'],
-                                  address: records[index]['address'] +
-                                      ' ' +
-                                      records[index]['city'] +
-                                      ' ' +
-                                      records[index]['country'],
-                                ),
-                              );
-                            }),
-                      );
-                    }
-                  }),
-                   SizedBox(height: 12.0),
-                  Container(
-                     height: 160,
-                    //  width: 180,
-                    //  color: Colors.red,
-                     margin: EdgeInsets.symmetric(horizontal: 5),
-                    child: ListView.builder(
-                            physics: BouncingScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              itemCount: subscription.length,
-                              itemBuilder: (context, i) {
-                                return InkWell(
-                                  onTap: (){
-                                     AppRouter.navigator.pushNamed(AppRouter.promotionScreen);
-                                  },
-                                  child: ClipRRect(
-                                     borderRadius: BorderRadius.circular(4),
-                                    child: Image.asset(
-                                    subscription[i],
-                                    width: MediaQuery.of(context).size.width/1.12,
-                                    
-                                    fit: BoxFit.cover,
-                              ),
-                                  ),
-                                );
-                              }),
-                  ),
+                    }),
+              ),
               // promolist.length == 0 ? Container() : SizedBox(height: 16.0),
               // promolist.length == 0
               //     ? Container()
@@ -573,7 +649,7 @@ class _HomeScreenState extends State<HomeScreen> {
               //                             ),
               //                           ))),
               //           ),
-             
+
               SizedBox(height: 16.0),
               HeadingRow(
                 title: StringConst.CATEGORY,
@@ -683,7 +759,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 10,
                   ),
                   InkWell(
-                  onTap: ()=>AppRouter.navigator.pushNamed(AppRouter.googleMap),
+                    onTap: () =>
+                        AppRouter.navigator.pushNamed(AppRouter.googleMap),
                     child: Row(
                       children: [
                         Icon(Icons.location_searching, size: 12.0),

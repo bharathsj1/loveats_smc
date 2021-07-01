@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/values/data.dart';
@@ -16,15 +17,14 @@ class TrendingRestaurantsScreen extends StatefulWidget {
 
 class _TrendingRestaurantsScreenState extends State<TrendingRestaurantsScreen> {
   List records = [];
-  List search = [];
+  RestaurentsModel search;
   bool searching = false;
   var controller = TextEditingController();
 
   searchfromlist() {
-    records = search
-        .where((product) => product['name']
-            .toLowerCase()
-            .contains(controller.text.toLowerCase()))
+    records = search.data
+        .where((product) =>
+            product.name.toLowerCase().contains(controller.text.toLowerCase()))
         .toList();
   }
 
@@ -107,8 +107,7 @@ class _TrendingRestaurantsScreenState extends State<TrendingRestaurantsScreen> {
                             records.add(e.data);
                             // print(e.data());
                           });
-                          search = records;
-                          // }
+                          search = snapshot.data; // }
                           if (searching == true) {
                             searchfromlist();
                           }

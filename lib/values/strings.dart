@@ -6,6 +6,12 @@ class StringConst {
   static const String BASE_URL = "http://love.signaturemediachannel.com/api/";
   static const String LOCAL_URL = 'http://loveats.test/';
 
+
+  static const String LOCAL_PICTURE_URL = 'http://loveats.test/';
+  static const String LIVE_PICTURE_URL =
+      'http://love.signaturemediachannel.com/';
+      
+
   static const String PROMOTIONS = "Promotions";
   static const String FOODY_BITE = "Loveats";
   static const String FORGOT_PASSWORD_QUESTION = "Forgot Password?";
