@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:potbelly/models/menu_types_model.dart';
 import 'package:potbelly/models/promotions.dart';
 import 'package:potbelly/models/restaurent_model.dart';
+import 'package:potbelly/models/user_address_model.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/DatabaseManager.dart';
@@ -31,7 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool loader = true;
   List records = [];
   int totalRestaurent = 0;
-
+  String userLocation = '';
+  UserAddressModel _userAddressModel;
   List subscription = ['assets/images/mainscreen.jpg'];
 
   RestaurentsModel _restaurentsModel;
@@ -41,6 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
     // getlocalpromos();
     //  var localdate= jsonDecode(promodate);
     checkpromo();
+
+    getLocations();
 
     super.initState();
   }
@@ -196,10 +200,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: 1.0,
                       ))),
                       child: Text(
-                        "Preston",
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
+                        userLocation ?? '',
+                        style: TextStyle(color: Colors.black, fontSize: 13.0),
                       ),
                     )
                   ],
@@ -773,27 +775,44 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: Styles.customNormalTextStyle(color: Colors.black),
                   ),
                   Divider(),
-                  TextField(
-                    decoration: InputDecoration(
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child: Image.asset(
-                            ImagePath.searchIcon,
+                  GestureDetector(
+                    onTap: () async {
+                      Navigator.pop(context);
+                      var result = await AppRouter.navigator
+                          .pushNamed(AppRouter.googleMap);
+                      setState(() {
+                        userLocation = result;
+                      });
+                    },
+                    child: TextField(
+                      decoration: InputDecoration(
+                          enabled: false,
+                          prefixIcon: Padding(
+                            padding: const EdgeInsets.all(0.0),
+                            child: Image.asset(
+                              ImagePath.searchIcon,
+                            ),
                           ),
-                        ),
-                        hintText: 'Search for your location',
-                        hintStyle: TextStyle(
-                          color: Colors.black26,
-                          fontSize: 16,
-                        ),
-                        border: InputBorder.none),
+                          hintText: 'Search for your location',
+                          hintStyle: TextStyle(
+                            color: Colors.black26,
+                            fontSize: 16,
+                          ),
+                          border: InputBorder.none),
+                    ),
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   InkWell(
-                    onTap: () =>
-                        AppRouter.navigator.pushNamed(AppRouter.googleMap),
+                    onTap: () async {
+                      Navigator.pop(context);
+                      var result = await AppRouter.navigator
+                          .pushNamed(AppRouter.googleMap);
+                      setState(() {
+                        userLocation = result;
+                      });
+                    },
                     child: Row(
                       children: [
                         Icon(Icons.location_searching, size: 12.0),
@@ -814,19 +833,58 @@ class _HomeScreenState extends State<HomeScreen> {
                     'Saved Addresses',
                     style: Styles.customNormalTextStyle(color: Colors.black),
                   ),
-                  ListTile(
-                    leading: Icon(Icons.home),
-                    title: Text('Home'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    subtitle: Text('Habib Street, Banigala'),
-                  ),
-                  Divider(),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: _userAddressModel.data.length,
+                      itemBuilder: (context, index) {
+                        var data = _userAddressModel.data[index];
+                        return Column(
+                          children: [
+                            ListTile(
+                              leading: Icon(data.addressType == 0
+                                  ? Icons.home
+                                  : Icons.work),
+                              title: Text(
+                                data.addressType == 0
+                                    ? 'Home'
+                                    : data.addressType == 1
+                                        ? 'Work'
+                                        : data.addressType == 2
+                                            ? 'Host'
+                                            : 'Other',
+                                style: Styles.customNormalTextStyle(
+                                  fontSize: 12.0,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  userLocation = data.city;
+                                });
+                                Navigator.pop(context);
+                              },
+                              subtitle: Text(
+                                data.address,
+                                style: Styles.customNormalTextStyle(
+                                  fontSize: 12.0,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                            Divider(),
+                          ],
+                        );
+                      },
+                    ),
+                  )
                 ],
               ),
             ),
           );
         });
+  }
+
+  void getLocations() async {
+    _userAddressModel = await Service().getUserAddress();
   }
 }

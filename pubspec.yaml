@@ -16,11 +16,10 @@ dependencies:
   flutter:
     sdk: flutter
   animations: ^1.1.2
- 
   auth_buttons: ^1.0.1+4
   auto_route: ^0.3.1
   carousel_slider: ^4.0.0
-  cloud_firestore: 
+  cloud_firestore: null
   cupertino_icons: ^1.0.0
   device_info: ^2.0.2
   dio: null
@@ -35,6 +34,7 @@ dependencies:
   flutter_stripe: ^1.0.2
   flutter_svg: ^0.17.1
   fluttertoast: ^8.0.7
+  geocoder: ^0.2.1
   geolocator: null
   google_fonts: null
   google_maps_flutter: null

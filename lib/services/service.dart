@@ -17,6 +17,7 @@ import 'package:potbelly/models/menu_types_model.dart';
 import 'package:potbelly/models/restaurent_menu_model.dart';
 import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/models/user.dart';
+import 'package:potbelly/models/user_address_model.dart';
 import 'package:potbelly/screens/login_screen.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,7 +29,7 @@ class Service {
   String accessToken;
   Dio dio = Dio(
     BaseOptions(
-      baseUrl: StringConst.BASE_URL,
+      baseUrl: StringConst.LOCAL_URL,
       connectTimeout: 5000,
       receiveTimeout: 3000,
     ),
@@ -387,5 +388,45 @@ class Service {
     });
 
     return isPaymentStored;
+  }
+
+  Future<bool> saveAddress(FormData data) async {
+    accessToken = await getAccessToken();
+    bool isOk = false;
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    await dio
+        .request('/addUserAddress',
+            data: data, options: Options(method: 'post'))
+        .then((value) {
+      if (value.data['success'] == true)
+        isOk = true;
+      else
+        isOk = false;
+    }).catchError((onError) {
+      print(onError.toString());
+      isOk = false;
+    });
+
+    return isOk;
+  }
+
+  Future<UserAddressModel> getUserAddress() async {
+    accessToken = await getAccessToken();
+    bool isOk = false;
+    var data;
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    await dio.request('/get-user-address').then((value) {
+      if (value.data['success'] == true) {
+        isOk = true;
+        data = value.data;
+      } else {
+        isOk = false;
+      }
+    }).catchError((onError) {
+      print(onError.toString());
+      isOk = false;
+    });
+
+    return UserAddressModel.fromJson(data);
   }
 }
