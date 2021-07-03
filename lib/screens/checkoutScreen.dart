@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/services/cartservice.dart';
 import 'package:potbelly/services/paymentservice.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
@@ -95,8 +96,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             confirmPayment: true),
       );
       setState(() {});
+      CartProvider().clearcart();
       bool isPaymentStored =
-          await Service().paymentStored(_paymentSheetData['amount']);
+          await Service().paymentStored((_paymentSheetData['amount'] / 100));
       if (isPaymentStored)
         Toast.show('Payment Success', context, duration: 3);
       else

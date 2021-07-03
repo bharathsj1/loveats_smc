@@ -253,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     } else if (snapshot.hasError) {
                       return Center(
                         child: Text(
-                          snapshot.error.toString() ,
+                          snapshot.error.toString(),
                         ),
                       );
                     } else {

@@ -28,7 +28,7 @@ class Service {
   String accessToken;
   Dio dio = Dio(
     BaseOptions(
-      baseUrl: StringConst.LOCAL_URL,
+      baseUrl: StringConst.BASE_URL,
       connectTimeout: 5000,
       receiveTimeout: 3000,
     ),
