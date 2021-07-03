@@ -35,51 +35,71 @@ class User {
 class Data {
   Data({
     this.id,
-    this.name,
+    this.custFirstName,
+    this.custLastName,
+    this.custMiddleName,
     this.email,
     this.emailVerifiedAt,
-    this.photo,
-    this.phoneNumber,
-    this.type,
-    this.uId,
+    this.custProfileImage,
+    this.custPhoneNumber,
+    this.custAccountStatus,
+    this.custRegistrationType,
+    this.custAccountType,
+    this.custUid,
     this.createdAt,
     this.updatedAt,
+    this.deviceId,
   });
 
   int id;
-  String name;
+  String custFirstName;
+  dynamic custLastName;
+  dynamic custMiddleName;
   String email;
   dynamic emailVerifiedAt;
-  String photo;
-  String phoneNumber;
-  int type;
-  dynamic uId;
+  dynamic custProfileImage;
+  String custPhoneNumber;
+  int custAccountStatus;
+  int custRegistrationType;
+  int custAccountType;
+  dynamic custUid;
   DateTime createdAt;
   DateTime updatedAt;
+  dynamic deviceId;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         id: json["id"],
-        name: json["name"],
+        custFirstName: json["cust_first_name"],
+        custLastName: json["cust_last_name"],
+        custMiddleName: json["cust_middle_name"],
         email: json["email"],
         emailVerifiedAt: json["email_verified_at"],
-        photo: json["photo"],
-        phoneNumber: json["phone_number"],
-        type: json["type"],
-        uId: json["uID"],
+        custProfileImage: json["cust_profile_image"],
+        custPhoneNumber: json["cust_phone_number"],
+        custAccountStatus: json["cust_account_status"],
+        custRegistrationType: json["cust_registration_type"],
+        custAccountType: json["cust_account_type"],
+        custUid: json["cust_uid"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
+        deviceId: json["device_id"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "name": name,
+        "cust_first_name": custFirstName,
+        "cust_last_name": custLastName,
+        "cust_middle_name": custMiddleName,
         "email": email,
         "email_verified_at": emailVerifiedAt,
-        "photo": photo,
-        "phone_number": phoneNumber,
-        "type": type,
-        "uID": uId,
+        "cust_profile_image": custProfileImage,
+        "cust_phone_number": custPhoneNumber,
+        "cust_account_status": custAccountStatus,
+        "cust_registration_type": custRegistrationType,
+        "cust_account_type": custAccountType,
+        "cust_uid": custUid,
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
+        "device_id": deviceId,
       };
 }

@@ -4,7 +4,7 @@ class StringConst {
   //strings
   static const String APP_NAME = "Loveats";
   static const String BASE_URL = "http://love.signaturemediachannel.com/api/";
-  static const String LOCAL_URL = 'http://loveats.test/';
+  static const String LOCAL_URL = 'http://loveats.test/api';
 
 
   static const String LOCAL_PICTURE_URL = 'http://loveats.test/';

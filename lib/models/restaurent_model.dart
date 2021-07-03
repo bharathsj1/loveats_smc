@@ -38,83 +38,87 @@ class RestaurentsModel {
 class Datum {
   Datum({
     this.id,
-    this.address,
-    this.name,
-    this.lat,
-    this.lng,
-    this.isTrending,
-    this.status,
-    this.image,
-    this.type,
-    this.zipcode,
-    this.open,
-    this.openTime,
-    this.closeTime,
-    this.phone,
-    this.country,
-    this.city,
+    this.restAddress,
+    this.restName,
+    this.restLatitude,
+    this.restLongitude,
+    this.restIsTrending,
+    this.restStatus,
+    this.restImage,
+    this.restType,
+    this.restZipCode,
+    this.restIsOpen,
+    this.restOpenTime,
+    this.restCloseTime,
+    this.restPhone,
+    this.restCountry,
+    this.restMenuId,
+    this.restCity,
     this.createdAt,
     this.updatedAt,
   });
 
   int id;
-  String address;
-  String name;
-  int lat;
-  int lng;
-  int isTrending;
-  String status;
-  String image;
-  String type;
-  String zipcode;
-  int open;
-  String openTime;
-  String closeTime;
-  String phone;
-  String country;
-  String city;
-  DateTime createdAt;
-  DateTime updatedAt;
+  String restAddress;
+  String restName;
+  double restLatitude;
+  double restLongitude;
+  int restIsTrending;
+  String restStatus;
+  String restImage;
+  String restType;
+  String restZipCode;
+  int restIsOpen;
+  String restOpenTime;
+  String restCloseTime;
+  String restPhone;
+  String restCountry;
+  int restMenuId;
+  String restCity;
+  dynamic createdAt;
+  dynamic updatedAt;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
-        address: json["address"],
-        name: json["name"],
-        lat: json["lat"],
-        lng: json["lng"],
-        isTrending: json["is_trending"],
-        status: json["status"],
-        image: json["image"],
-        type: json["type"],
-        zipcode: json["zipcode"],
-        open: json["open"],
-        openTime: json["open_time"],
-        closeTime: json["close_time"],
-        phone: json["phone"],
-        country: json["country"],
-        city: json["city"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        restAddress: json["rest_address"],
+        restName: json["rest_name"],
+        restLatitude: json["rest_latitude"].toDouble(),
+        restLongitude: json["rest_longitude"].toDouble(),
+        restIsTrending: json["rest_isTrending"],
+        restStatus: json["rest_status"],
+        restImage: json["rest_image"],
+        restType: json["rest_type"],
+        restZipCode: json["rest_zipCode"],
+        restIsOpen: json["rest_isOpen"],
+        restOpenTime: json["rest_openTime"],
+        restCloseTime: json["rest_close_time"],
+        restPhone: json["rest_phone"],
+        restCountry: json["rest_country"],
+        restMenuId: json["rest_menuId"],
+        restCity: json["rest_city"],
+        createdAt: json["created_at"],
+        updatedAt: json["updated_at"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "address": address,
-        "name": name,
-        "lat": lat,
-        "lng": lng,
-        "is_trending": isTrending,
-        "status": status,
-        "image": image,
-        "type": type,
-        "zipcode": zipcode,
-        "open": open,
-        "open_time": openTime,
-        "close_time": closeTime,
-        "phone": phone,
-        "country": country,
-        "city": city,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
+        "rest_address": restAddress,
+        "rest_name": restName,
+        "rest_latitude": restLatitude,
+        "rest_longitude": restLongitude,
+        "rest_isTrending": restIsTrending,
+        "rest_status": restStatus,
+        "rest_image": restImage,
+        "rest_type": restType,
+        "rest_zipCode": restZipCode,
+        "rest_isOpen": restIsOpen,
+        "rest_openTime": restOpenTime,
+        "rest_close_time": restCloseTime,
+        "rest_phone": restPhone,
+        "rest_country": restCountry,
+        "rest_menuId": restMenuId,
+        "rest_city": restCity,
+        "created_at": createdAt,
+        "updated_at": updatedAt,
       };
 }

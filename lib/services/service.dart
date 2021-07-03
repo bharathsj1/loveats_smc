@@ -1,8 +1,8 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:io' show Platform;
 
-import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
 import 'package:dio/dio.dart';
@@ -13,11 +13,14 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:path/path.dart';
 import 'package:potbelly/models/UserModel.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:potbelly/models/menu_types_model.dart';
+import 'package:potbelly/models/restaurent_menu_model.dart';
 import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/models/user.dart';
 import 'package:potbelly/screens/login_screen.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 
 class Service {
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -25,9 +28,10 @@ class Service {
   String accessToken;
   Dio dio = Dio(
     BaseOptions(
-        baseUrl: StringConst.BASE_URL,
-        connectTimeout: 5000,
-        receiveTimeout: 3000),
+      baseUrl: StringConst.LOCAL_URL,
+      connectTimeout: 5000,
+      receiveTimeout: 3000,
+    ),
   );
 
   Future<SharedPreferences> initializdPrefs() async {
@@ -39,7 +43,6 @@ class Service {
       UserModel userModel, File image, String uid, int type) async {
     print('In Register WIth Email Function');
     bool _isEverthingFine = false;
-    print('this is type $type');
     String message;
     String udid;
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -52,25 +55,25 @@ class Service {
     }
 
     FormData _data = FormData.fromMap({
-      'name': userModel.name,
+      'cust_first_name': userModel.name,
       'email': userModel.email,
       'password': userModel.password,
-      'phone_number': userModel.phoneNo,
-      'type': type,
-      'device_id': udid,
+      'cust_phone_number': userModel.phoneNo,
+      'cust_registration_type': type,
+      'cust_account_status': 0,
       // ignore: sdk_version_ui_as_code
-      if (uid != null) 'uid': uid,
+      if (uid != null) 'cust_uid': uid,
       // ignore: sdk_version_ui_as_code
       if (image != null)
-        'photo': await MultipartFile.fromFile(image.path,
+        'cust_profile_image': await MultipartFile.fromFile(image.path,
             filename: image.path.split('/').last)
     });
-    print(StringConst.BASE_URL);
     print(dio.options.baseUrl);
     await dio
         .request('/register_user',
             data: _data, options: Options(method: 'POST'))
         .then((value) async {
+      print(value.data);
       if (value.data['success'] == true) {
         print('success');
         _isEverthingFine = true;
@@ -84,6 +87,7 @@ class Service {
         print(message);
       }
     }).catchError((onError) {
+      print(onError.toString());
       message = 'server error';
     }).timeout(
       Duration(seconds: 15),
@@ -120,7 +124,7 @@ class Service {
   }
 
   Future<String> signInWithApple() async {
-    final result = await AppleSignIn.performRequests([
+    final result = await TheAppleSignIn.performRequests([
       AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
     ]);
 
@@ -207,9 +211,9 @@ class Service {
         message = 'success';
         _user = User.fromJson(value.data);
         await setKeyData('accessToken', _user.accessToken);
-        await setKeyData('name', _user.data.name);
+        await setKeyData('name', _user.data.custFirstName);
         await setKeyData('email', _user.data.email);
-        await setKeyData('photo', _user.data.photo);
+        await setKeyData('photo', _user.data.custProfileImage);
       }
     }).catchError((onError) {
       print('Here it is');
@@ -281,12 +285,107 @@ class Service {
     await shared.setString(key, value);
   }
 
-    Future<RestaurentsModel> getRestaurentsData() async {
+  Future<RestaurentsModel> getRestaurentsData() async {
     print(dio.options.baseUrl);
     Response response =
         await dio.request('/get-restaurents', options: Options(method: 'get'));
+    print('hello g');
     print(response.data);
 
     return RestaurentsModel.fromJson(response.data);
+  }
+
+  Future<MenuTypesModel> getMenuTypes() async {
+    print(dio.options.baseUrl);
+    Response response = await dio.request(
+      '/get-menu-types',
+    );
+    return MenuTypesModel.fromJson(response.data);
+  }
+
+  Future<RestaurentMenuModel> getMenus(int restId) async {
+    Response response = await dio.request(
+      '/get-menus/$restId',
+    );
+    return RestaurentMenuModel.fromJson(response.data);
+  }
+
+  Future<String> getAccessToken() async {
+    final shared = await initializdPrefs();
+    return shared.getString('accessToken');
+  }
+
+  Future<bool> makeOrder(int total) async {
+    accessToken = await getAccessToken();
+    print('make Order functon');
+    print(accessToken);
+
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    FormData formData = FormData.fromMap({
+      'total_amount': total,
+      'payment_id': -1,
+    });
+    bool isOk = false;
+    await dio
+        .request('/make-order',
+            data: formData, options: Options(method: 'post'))
+        .then((value) {
+      print(value);
+      if (value.data['success'] == true) {
+        isOk = true;
+      }
+    }).catchError((onError) {
+      print(onError.toString());
+      isOk = false;
+    });
+
+    return isOk;
+  }
+
+  Future addOrderItems(var data) async {
+    print('sfs');
+    accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    FormData formData = FormData.fromMap({
+      'data': data,
+    });
+    bool isOk = false;
+    await dio
+        .request('/addOrderTime',
+            data: formData, options: Options(method: 'post'))
+        .then((value) {
+      print(value);
+      if (value.data['success'] == true) {
+        isOk = true;
+      }
+    }).catchError((onError) {
+      isOk = false;
+    });
+
+    return isOk;
+  }
+
+  Future<bool> paymentStored(data) async {
+    FormData formData = FormData.fromMap({
+      'amount': data,
+    });
+    accessToken = await getAccessToken();
+
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    bool isPaymentStored = false;
+
+    await dio
+        .request('/make-payment',
+            data: formData, options: Options(method: 'post'))
+        .then((value) {
+      if (value.data['success'] == true)
+        isPaymentStored = true;
+      else if (value.data['success'] == false) isPaymentStored = false;
+    }).catchError((onError) {
+      print(onError.toString());
+      isPaymentStored = false;
+    });
+
+    return isPaymentStored;
   }
 }

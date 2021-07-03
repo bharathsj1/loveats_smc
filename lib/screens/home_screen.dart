@@ -1,6 +1,5 @@
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:potbelly/models/menu_types_model.dart';
 import 'package:potbelly/models/promotions.dart';
 import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/routes/router.dart';
@@ -14,11 +13,6 @@ import 'package:potbelly/widgets/foody_bite_card.dart';
 import 'package:potbelly/widgets/heading_row.dart';
 import 'package:potbelly/widgets/search_input_field.dart';
 import 'package:video_player/video_player.dart';
-import 'package:skeleton_text/skeleton_text.dart';
-import 'package:popup_card/popup_card.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
-
-import 'google_map.dart';
 
 class HomeScreen extends StatefulWidget {
   static const int TAB_NO = 0;
@@ -36,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int active_video = 0;
   bool loader = true;
   List records = [];
-    int totalRestaurent = 0;
+  int totalRestaurent = 0;
 
   List subscription = ['assets/images/mainscreen.jpg'];
 
@@ -47,7 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // getlocalpromos();
     //  var localdate= jsonDecode(promodate);
     checkpromo();
-    getAllRestaurents();
 
     super.initState();
   }
@@ -65,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<RestaurentsModel> getAllRestaurents() async {
     _restaurentsModel = await Service().getRestaurentsData();
-
     return _restaurentsModel;
   }
 
@@ -247,19 +239,39 @@ class _HomeScreenState extends State<HomeScreen> {
                     .then((value) => resumevideo());
               }, borderStyle: BorderStyle.solid),
               SizedBox(height: 16.0),
- HeadingRow(
-                  title: StringConst.TRENDING_RESTAURANTS,
-                  number: totalRestaurent.toString(),
-                  onTapOfNumber: () {
-                    pausevideo();
-                    AppRouter.navigator
-                        .pushNamed(AppRouter.trendingRestaurantsScreen)
-                        .then((value) {
-                      resumevideo();
-                    });
+              FutureBuilder<RestaurentsModel>(
+                  future: getAllRestaurents(),
+                  builder: (context, AsyncSnapshot<RestaurentsModel> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.secondaryElement,
+                          ),
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          snapshot.error.toString() ,
+                        ),
+                      );
+                    } else {
+                      return HeadingRow(
+                          title: StringConst.TRENDING_RESTAURANTS,
+                          number: snapshot.data.data.length.toString(),
+                          onTapOfNumber: () {
+                            pausevideo();
+                            AppRouter.navigator
+                                .pushNamed(AppRouter.trendingRestaurantsScreen)
+                                .then((value) {
+                              resumevideo();
+                            });
+                          });
+                    }
                   }),
               SizedBox(height: 16.0),
-               FutureBuilder<RestaurentsModel>(
+              FutureBuilder<RestaurentsModel>(
                 future: getAllRestaurents(),
                 builder: (context, AsyncSnapshot<RestaurentsModel> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -270,6 +282,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(snapshot.error.toString()),
+                    );
                   } else {
                     totalRestaurent = _restaurentsModel.data.length;
 
@@ -277,53 +293,53 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 280,
                       width: MediaQuery.of(context).size.width,
                       child: ListView.builder(
-                          physics: BouncingScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          itemCount: snapshot.data.data.length,
-                          itemBuilder: (context, index) {
-                            var res = snapshot.data.data[index];
-                            return Container(
-                              margin: EdgeInsets.only(right: 4.0),
-                              child: FoodyBiteCard(
-                                onTap: () {
+                        physics: BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: snapshot.data.data.length,
+                        itemBuilder: (context, index) {
+                          var res = snapshot.data.data[index];
+                          return Container(
+                            margin: EdgeInsets.only(right: 4.0),
+                            child: FoodyBiteCard(
+                              onTap: () {
+                                if (_controller != null) {
+                                  _controller.pause();
+                                }
+                                AppRouter.navigator
+                                    .pushNamed(
+                                  AppRouter.restaurantDetailsScreen,
+                                  arguments: RestaurantDetails(
+                                      imagePath: res.restImage,
+                                      restaurantName: res.restName,
+                                      restaurantAddress: res.restAddress +
+                                          res.restCity +
+                                          ' ' +
+                                          res.restCountry,
+                                      rating: '0.0',
+                                      category: res.restType,
+                                      distance: '0 Km',
+                                      data: res),
+                                )
+                                    .then((value) {
                                   if (_controller != null) {
-                                    _controller.pause();
+                                    _controller.play();
                                   }
-                                  AppRouter.navigator
-                                      .pushNamed(
-                                    AppRouter.restaurantDetailsScreen,
-                                    arguments: RestaurantDetails(
-                                        imagePath: res.image,
-                                        restaurantName: res.name,
-                                        restaurantAddress: res.address +
-                                            res.city +
-                                            ' ' +
-                                            res.country,
-                                        rating: '0.0',
-                                        category: res.type,
-                                        distance: '0 Km',
-                                        data: res),
-                                  )
-                                      .then((value) {
-                                    if (_controller != null) {
-                                      _controller.play();
-                                    }
-                                  });
-                                },
-                                imagePath: res.image,
-                                status: res.open == 1 ? "OPEN" : "CLOSE",
-                                cardTitle: res.name,
-                                rating: '0.0',
-                                category: res.type,
-                                distance: '8 KM',
-                                address: res.address +
-                                    ' ' +
-                                    res.city +
-                                    ' ' +
-                                    res.country,
-                              ),
-                            );
-                          }),
+                                });
+                              },
+                              imagePath: res.restImage,
+                              status: res.restIsOpen == 1 ? "OPEN" : "CLOSE",
+                              cardTitle: res.restName,
+                              rating: '0.0',
+                              category: res.restType ?? 'Not Found',
+                              distance: '8 KM',
+                              address: res.restAddress ??
+                                  'Not Found' + ' ' + res.restCity ??
+                                  'Not Found' + ' ' + res.restCountry ??
+                                  'Not Available',
+                            ),
+                          );
+                        },
+                      ),
                     );
                   }
                 },
@@ -432,15 +448,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }),
               ),
-              // promolist.length == 0 ? Container() : SizedBox(height: 16.0),
-              // promolist.length == 0
-              //     ? Container()
-              //     : HeadingRow(
-              //         title: StringConst.PROMOTIONS,
-              //         number: StringConst.SEE_ALL_45,
-              //         onTapOfNumber: () => AppRouter.navigator
-              //             .pushNamed(AppRouter.trendingRestaurantsScreen),
-              //       ),
+
               promolist.length == 0 ? Container() : SizedBox(height: 16.0),
               // promolist.length == 0
               //     ? Container()
@@ -651,27 +659,52 @@ class _HomeScreenState extends State<HomeScreen> {
               //           ),
 
               SizedBox(height: 16.0),
-              HeadingRow(
-                title: StringConst.CATEGORY,
-                number: StringConst.SEE_ALL_9,
-                onTapOfNumber: () =>
-                    AppRouter.navigator.pushNamed(AppRouter.categoriesScreen),
-              ),
+              FutureBuilder<MenuTypesModel>(
+                  future: Service().getMenuTypes(),
+                  builder: (context, AsyncSnapshot<MenuTypesModel> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text(snapshot.error));
+                    } else {
+                      return HeadingRow(
+                        title: StringConst.CATEGORY,
+                        number: 'See all (' +
+                            snapshot.data.data.length.toString() +
+                            ')',
+                        onTapOfNumber: () => AppRouter.navigator
+                            .pushNamed(AppRouter.categoriesScreen),
+                      );
+                    }
+                  }),
+
               SizedBox(height: 16.0),
               Container(
                 height: 100,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: categoryImagePaths.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.only(right: 8.0),
-                      child: FoodyBiteCategoryCard(
-                        imagePath: categoryImagePaths[index],
-                        gradient: gradients[index],
-                        category: category[index],
-                      ),
-                    );
+                child: FutureBuilder<MenuTypesModel>(
+                  future: Service().getMenuTypes(),
+                  builder: (context, AsyncSnapshot<MenuTypesModel> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text(snapshot.error));
+                    } else {
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: snapshot.data.data.length,
+                        itemBuilder: (context, index) {
+                          var data = snapshot.data.data[index];
+                          return Container(
+                            margin: EdgeInsets.only(right: 8.0),
+                            child: FoodyBiteCategoryCard(
+                              imagePath: data.menuTypeImage,
+                              gradient: gradients[index],
+                              category: data.menuName,
+                            ),
+                          );
+                        },
+                      );
+                    }
                   },
                 ),
               ),

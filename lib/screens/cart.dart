@@ -34,7 +34,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
   calculate() {
     double total = 0;
     cartlist.forEach((f) {
-      total += double.parse(f['price']) * double.parse(f['qty']);
+      total += (f['price']) * double.parse(f['qty']);
     });
     totalAmount = total;
     print('total');
@@ -73,9 +73,9 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
     cartlist[index]['qty'] = type == 'add'
         ? (int.parse(cartlist[index]['qty']) + 1).toString()
         : (int.parse(cartlist[index]['qty']) - 1).toString();
-    cartlist[index]['payableAmount'] = (double.parse(cartlist[index]['price']) *
-            double.parse(cartlist[index]['qty']))
-        .toString();
+    cartlist[index]['payableAmount'] =
+        ((cartlist[index]['price']) * double.parse(cartlist[index]['qty']))
+            .toString();
   }
 
   Widget renderAddList() {
@@ -144,133 +144,126 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                     }
                                   },
                                 ),
-                                // ),
-                                // ),
                               ),
                               Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: <Widget>[
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.53,
-                                              child: Text(
-                                                cartlist[index]['name'],
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                              )),
-                                          InkWell(
-                                              onTap: () async {
-                                                print('here');
-                                                await CartProvider()
-                                                    .removeToCart(
-                                                        cartlist[index]);
-                                                getcartlist();
-                                              },
-                                              child: Icon(
-                                                Icons.delete_outline,
-                                                color:
-                                                    AppColors.secondaryElement,
-                                              ))
-                                        ],
-                                      ),
-                                      // SizedBox(
-                                      //   height: 4,
-                                      // ),
-                                      // Text('x' + cartlist[index]['qty']),
-                                      SizedBox(
-                                        height: 6,
-                                      ),
-                                      Text('\$' +
-                                          cartlist[index]['payableAmount']
-                                              .toString()),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: <Widget>[
-                                          InkWell(
-                                            onTap: () async {
-                                              if (int.parse(
-                                                      cartlist[index]['qty']) >
-                                                  1) {
-                                                // cartlist[index]['qty'] =
-                                                //     (int.parse(cartlist[index]
-                                                //                 ['qty']) -
-                                                //             1)
-                                                //         .toString();
-                                                await calculateprice(
-                                                    0, 'minus');
-                                                calculate();
-                                                setState(() {});
-                                                if (int.parse(cartlist[index]
-                                                        ['qty']) ==
-                                                    1) {
-                                                  setState(() {});
-                                                }
-                                                setState(() {});
-                                              }
-                                            },
-                                            child: Container(
-                                                alignment: Alignment.center,
-                                                padding: EdgeInsets.zero,
-                                                width: 40,
-                                                child: Text(
-                                                  "-",
-                                                  style: TextStyle(
-                                                      color: AppColors
-                                                          .secondaryElement,
-                                                      fontSize: 50),
-                                                )),
-                                          ),
-                                          Text(
-                                            cartlist[index]['qty'],
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          InkWell(
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: <Widget>[
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Container(
+                                            margin: EdgeInsets.only(left: 5),
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.53,
+                                            child: Text(
+                                              cartlist[index]['name'],
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            )),
+                                        InkWell(
                                             onTap: () async {
                                               print('here');
+                                              await CartProvider().removeToCart(
+                                                  cartlist[index]);
+                                              getcartlist();
+                                            },
+                                            child: Icon(
+                                              Icons.delete_outline,
+                                              color: AppColors.secondaryElement,
+                                            ))
+                                      ],
+                                    ),
+                                    // SizedBox(
+                                    //   height: 4,
+                                    // ),
+                                    // Text('x' + cartlist[index]['qty']),
+                                    SizedBox(
+                                      height: 6,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 5),
+                                      child: Text('\$' +
+                                          cartlist[index]['payableAmount']
+                                              .toString()),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: <Widget>[
+                                        InkWell(
+                                          onTap: () async {
+                                            if (int.parse(
+                                                    cartlist[index]['qty']) >
+                                                1) {
                                               // cartlist[index]['qty'] =
                                               //     (int.parse(cartlist[index]
-                                              //                 ['qty']) +
+                                              //                 ['qty']) -
                                               //             1)
                                               //         .toString();
-                                              print(cartlist[index]['qty']);
-                                              await calculateprice(0, 'add');
+                                              await calculateprice(0, 'minus');
                                               calculate();
                                               setState(() {});
+                                              if (int.parse(
+                                                      cartlist[index]['qty']) ==
+                                                  1) {
+                                                setState(() {});
+                                              }
+                                              setState(() {});
+                                            }
+                                          },
+                                          child: Container(
+                                              alignment: Alignment.center,
+                                              padding: EdgeInsets.zero,
+                                              width: 40,
+                                              child: Text(
+                                                "-",
+                                                style: TextStyle(
+                                                    color: AppColors
+                                                        .secondaryElement,
+                                                    fontSize: 50),
+                                              )),
+                                        ),
+                                        Text(
+                                          cartlist[index]['qty'],
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                        InkWell(
+                                          onTap: () async {
+                                            print('here');
+                                            // cartlist[index]['qty'] =
+                                            //     (int.parse(cartlist[index]
+                                            //                 ['qty']) +
+                                            //             1)
+                                            //         .toString();
+                                            print(cartlist[index]['qty']);
+                                            await calculateprice(0, 'add');
+                                            calculate();
+                                            setState(() {});
 
-                                              // Provider.of<CartProvider>(context, listen: false)
-                                              //     .addToCart(context, data);
-                                            },
-                                            child: Container(
-                                                alignment: Alignment.center,
-                                                padding:
-                                                    EdgeInsets.only(top: 2),
-                                                width: 40,
-                                                child: Text(
-                                                  "+",
-                                                  style: TextStyle(
-                                                      color: AppColors
-                                                          .secondaryElement,
-                                                      fontSize: 32),
-                                                )),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                            // Provider.of<CartProvider>(context, listen: false)
+                                            //     .addToCart(context, data);
+                                          },
+                                          child: Container(
+                                              alignment: Alignment.center,
+                                              padding: EdgeInsets.only(top: 2),
+                                              width: 40,
+                                              child: Text(
+                                                "+",
+                                                style: TextStyle(
+                                                    color: AppColors
+                                                        .secondaryElement,
+                                                    fontSize: 32),
+                                              )),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -532,16 +525,17 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                           ),
                           PotbellyButton(StringConst.CHECKOUT, buttonHeight: 50,
                               onTap: () {
-                                var data={
-                                  'cartlist': cartlist,
-                                  'charges':charges,
-                                  'shipping':shipping,
-                                  'total': totalAmount,
-                                  'type': 'cart'
-                                };
+                            var data = {
+                              'cartlist': cartlist,
+                              'charges': charges,
+                              'shipping': shipping,
+                              'total': totalAmount,
+                              'type': 'cart'
+                              // 'rest_id':widget.
+                            };
                             AppRouter.navigator.pushNamed(
-                              AppRouter.checkoutScreen, arguments: data
-                            );
+                                AppRouter.checkoutScreen,
+                                arguments: data);
                           }),
                           SizedBox(
                             height: 30,

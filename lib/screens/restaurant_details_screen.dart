@@ -1,17 +1,16 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:potbelly/models/restaurent_menu_model.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/bookmarkservice.dart';
 import 'package:potbelly/services/cartservice.dart';
-import 'package:potbelly/values/data.dart';
+import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/card_tags.dart';
 import 'package:potbelly/widgets/dark_overlay.dart';
 import 'package:potbelly/widgets/heading_row.dart';
-import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:potbelly/widgets/ratings_widget.dart';
 import 'package:potbelly/widgets/spaces.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -28,6 +27,8 @@ class RestaurantDetailsScreen extends StatefulWidget {
 
 class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
   bool bookmark = false;
+  bool _isLoading = true;
+  RestaurentMenuModel _restaurentMenuModel;
 
   TextStyle addressTextStyle = Styles.customNormalTextStyle(
     color: AppColors.accentText,
@@ -74,6 +75,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
       item['restaurantId'] = widget.restaurantDetails.data.id.toString();
       print(item);
     }
+    getProducts();
     super.initState();
   }
 
@@ -81,6 +83,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
     bookmark =
         await BookmarkService().checkbookmark(widget.restaurantDetails.data);
     print(bookmark);
+    print('boosss');
     setState(() {});
   }
 
@@ -91,331 +94,345 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
     var aPieceOfTheHeightOfStack = heightOfStack - heightOfStack / 3.5;
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: ListView(
-                  shrinkWrap: true,
+        child: _isLoading
+            ? Center(child: CircularProgressIndicator())
+            : Container(
+                child: Column(
                   children: <Widget>[
-                    Stack(
-                      children: <Widget>[
-                        Positioned(
-                          child: widget.restaurantDetails.imagePath
-                                      .substring(0, 4) ==
-                                  'http'
-                              ? Image.network(
-                                  widget.restaurantDetails.imagePath,
-                                  width: MediaQuery.of(context).size.width,
-                                  height: heightOfStack,
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.asset(
-                                  widget.restaurantDetails.imagePath,
-                                  width: MediaQuery.of(context).size.width,
-                                  height: heightOfStack,
-                                  fit: BoxFit.cover,
-                                ),
-                        ),
-                        DarkOverLay(
-                            gradient: Gradients.restaurantDetailsGradient),
-                        Positioned(
-                          child: Container(
-                            padding: EdgeInsets.only(
-                              right: Sizes.MARGIN_16,
-                              top: Sizes.MARGIN_16,
-                            ),
-                            child: Row(
-                              children: [
-                                InkWell(
-                                  onTap: () => AppRouter.navigator.pop(),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: Sizes.MARGIN_16,
-                                      right: Sizes.MARGIN_16,
-                                    ),
-                                    child: Image.asset(ImagePath.arrowBackIcon),
+                    Expanded(
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: <Widget>[
+                          Stack(
+                            children: <Widget>[
+                              Positioned(
+                                child: widget.restaurantDetails.imagePath
+                                            .substring(0, 4) ==
+                                        'http'
+                                    ? Image.network(
+                                        widget.restaurantDetails.imagePath,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: heightOfStack,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Image.asset(
+                                        widget.restaurantDetails.imagePath,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: heightOfStack,
+                                        fit: BoxFit.cover,
+                                      ),
+                              ),
+                              DarkOverLay(
+                                  gradient:
+                                      Gradients.restaurantDetailsGradient),
+                              Positioned(
+                                child: Container(
+                                  padding: EdgeInsets.only(
+                                    right: Sizes.MARGIN_16,
+                                    top: Sizes.MARGIN_16,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () => AppRouter.navigator.pop(),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: Sizes.MARGIN_16,
+                                            right: Sizes.MARGIN_16,
+                                          ),
+                                          child: Image.asset(
+                                              ImagePath.arrowBackIcon),
+                                        ),
+                                      ),
+                                      Spacer(flex: 1),
+                                      InkWell(
+                                        child: Icon(
+                                          FeatherIcons.share2,
+                                          color: AppColors.white,
+                                        ),
+                                      ),
+                                      SpaceW20(),
+                                      InkWell(
+                                        onTap: () {
+                                          BookmarkService()
+                                              .addbookmark(context,
+                                                  widget.restaurantDetails.data)
+                                              .then((value) {
+                                            print(value);
+                                            if (value == 'success') {
+                                              bookmark = !bookmark;
+                                              setState(() {});
+                                            }
+                                          });
+                                        },
+                                        child: Image.asset(
+                                            bookmark
+                                                ? ImagePath.activeBookmarksIcon3
+                                                : ImagePath.bookmarksIcon,
+                                            color: bookmark
+                                                ? AppColors.secondaryElement
+                                                : Colors.white),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Spacer(flex: 1),
-                                InkWell(
-                                  child: Icon(
-                                    FeatherIcons.share2,
-                                    color: AppColors.white,
-                                  ),
-                                ),
-                                SpaceW20(),
-                                InkWell(
-                                  onTap: () {
-                                    BookmarkService()
-                                        .addbookmark(context,
-                                            widget.restaurantDetails.data)
-                                        .then((value) {
-                                      print(value);
-                                      if (value == 'success') {
-                                        bookmark = !bookmark;
-                                        setState(() {});
-                                      }
-                                    });
-                                  },
-                                  child: Image.asset(
-                                      bookmark
-                                          ? ImagePath.activeBookmarksIcon3
-                                          : ImagePath.bookmarksIcon,
-                                      color: bookmark
-                                          ? AppColors.secondaryElement
-                                          : Colors.white),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: aPieceOfTheHeightOfStack,
-                          left: 24,
-                          right: 24 - 0.5,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(24.0),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(vertical: 4.0),
-                                decoration: fullDecorations,
-                                child: Row(
-                                  children: <Widget>[
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 8.0, vertical: 8.0),
-                                      width:
-                                          (MediaQuery.of(context).size.width /
-                                                  2) -
-                                              24,
-//                                      decoration: leftSideDecorations,
-                                      child: Row(
-                                        children: [
-                                          SizedBox(width: 4.0),
-                                          Image.asset(ImagePath.callIcon),
-                                          SizedBox(width: 8.0),
-                                          Text(
-                                            widget.restaurantDetails.data.phone,
-                                            style: Styles.normalTextStyle,
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    IntrinsicHeight(
-                                      child: VerticalDivider(
-                                        width: 0.5,
-                                        thickness: 3.0,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 8.0, vertical: 8.0),
-//                                      width:
-//                                      (MediaQuery
-//                                          .of(context)
-//                                          .size
-//                                          .width /
-//                                          2) -
-//                                          24,
-//                                      decoration: rightSideDecorations,
+                              ),
+                              Positioned(
+                                top: aPieceOfTheHeightOfStack,
+                                left: 24,
+                                right: 24 - 0.5,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(24.0),
+                                  child: BackdropFilter(
+                                    filter:
+                                        ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 4.0),
+                                      decoration: fullDecorations,
                                       child: Row(
                                         children: <Widget>[
-                                          SizedBox(width: 4.0),
-                                          Image.asset(
-                                            ImagePath.directionIcon,
-                                            color: AppColors.secondaryElement,
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8.0, vertical: 8.0),
+                                            width: (MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2) -
+                                                24,
+//                                      decoration: leftSideDecorations,
+                                            child: Row(
+                                              children: [
+                                                SizedBox(width: 4.0),
+                                                Image.asset(ImagePath.callIcon),
+                                                SizedBox(width: 8.0),
+                                                Text(
+                                                  widget.restaurantDetails.data
+                                                      .restPhone,
+                                                  style: Styles.normalTextStyle,
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                          SizedBox(width: 8.0),
-                                          Text(
-                                            'Direction',
-                                            style: Styles.normalTextStyle,
-                                          )
+                                          IntrinsicHeight(
+                                            child: VerticalDivider(
+                                              width: 0.5,
+                                              thickness: 3.0,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8.0, vertical: 8.0),
+                                            child: Row(
+                                              children: <Widget>[
+                                                SizedBox(width: 4.0),
+                                                Image.asset(
+                                                  ImagePath.directionIcon,
+                                                  color: AppColors
+                                                      .secondaryElement,
+                                                ),
+                                                SizedBox(width: 8.0),
+                                                Text(
+                                                  'Direction',
+                                                  style: Styles.normalTextStyle,
+                                                )
+                                              ],
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 16.0),
-                      child: Column(
-                        children: <Widget>[
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Text(
-                                    widget.restaurantDetails.restaurantName,
-                                    textAlign: TextAlign.left,
-                                    style: Styles.customTitleTextStyle(
-                                      color: AppColors.headingText,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: Sizes.TEXT_SIZE_20,
-                                    ),
                                   ),
-                                  SizedBox(width: 4.0),
-                                  CardTags(
-                                    title: widget.restaurantDetails.category,
-                                    decoration: BoxDecoration(
-                                      gradient: Gradients.secondaryGradient,
-                                      boxShadow: [
-                                        Shadows.secondaryShadow,
-                                      ],
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(8.0)),
-                                    ),
-                                  ),
-                                  SizedBox(width: 4.0),
-                                  CardTags(
-                                    title: widget.restaurantDetails.distance,
-                                    decoration: BoxDecoration(
-                                      // color: Color.fromARGB(255, 132, 141, 255),
-                                      color: AppColors.secondaryElement,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(8.0)),
-                                    ),
-                                  ),
-                                  Spacer(flex: 1),
-                                  Ratings(widget.restaurantDetails.rating)
-                                ],
-                              ),
-                              SizedBox(height: 16.0),
-                              Text(
-                                widget.restaurantDetails.restaurantAddress,
-                                style: addressTextStyle,
-                              ),
-                              SizedBox(height: 8.0),
-                              RichText(
-                                text: TextSpan(
-                                  style: openingTimeTextStyle,
-                                  children: [
-                                    TextSpan(text: "Open Now "),
-                                    TextSpan(
-                                        text: "daily time ",
-                                        style: addressTextStyle),
-                                    TextSpan(
-                                        text: widget.restaurantDetails.data
-                                                .openTime +
-                                            " am to " +
-                                            widget.restaurantDetails.data
-                                                .closeTime +
-                                            " am "),
-                                  ],
                                 ),
                               )
                             ],
                           ),
-                          SpaceH24(),
-                          HeadingRow(
-                            title: StringConst.MENU_AND_PHOTOS,
-                            number: StringConst.SEE_ALL_32,
-                            onTapOfNumber: () => AppRouter.navigator.pushNamed(
-                                AppRouter.menuPhotosScreen,
-                                arguments:
-                                    widget.restaurantDetails.data['menu']),
-                          ),
-                          SizedBox(height: 16.0),
-                          // Container(
-                          //   height: 120,
-                          //   width: MediaQuery.of(context).size.width,
-                          //   child: ListView.builder(
-                          //     scrollDirection: Axis.horizontal,
-                          //     itemCount:
-                          //         widget.restaurantDetails.data['menu'].length,
-                          //     itemBuilder: (context, index) {
-                          //       return Container(
-                          //         margin: EdgeInsets.only(right: 12.0),
-                          //         decoration: BoxDecoration(
-                          //             borderRadius:
-                          //                 BorderRadius.all(Radius.circular(8))),
-                          //         child: widget.restaurantDetails.imagePath
-                          //                     .substring(0, 4) ==
-                          //                 'http'
-                          //             ? Image.network(
-                          //                 widget.restaurantDetails.data['menu']
-                          //                     [index],
-                          //                 fit: BoxFit.fill,
-                          //                 loadingBuilder: (BuildContext ctx,
-                          //                     Widget child,
-                          //                     ImageChunkEvent loadingProgress) {
-                          //                   if (loadingProgress == null) {
-                          //                     return child;
-                          //                   } else {
-                          //                     return Container(
-                          //                       // height: ,
-                          //                       width: 160,
-                          //                       child: Center(
-                          //                         child:
-                          //                             CircularProgressIndicator(
-                          //                           valueColor:
-                          //                               AlwaysStoppedAnimation<
-                          //                                       Color>(
-                          //                                   AppColors
-                          //                                       .secondaryElement),
-                          //                         ),
-                          //                       ),
-                          //                     );
-                          //                   }
-                          //                 },
-                          //                 width: 160,
-                          //               )
-                          //             : Image.asset(
-                          //                 menuPhotosImagePaths[index],
-                          //                 fit: BoxFit.fill,
-                          //                 width: 160,
-                          //               ),
-                          //       );
-                          //     },
-                          //   ),
-                          // ),
-                          // SpaceH24(),
-                          // HeadingRow(
-                          //   title: StringConst.REVIEWS_AND_RATINGS,
-                          //   number: StringConst.SEE_ALL_32,
-                          //   onTapOfNumber: () => AppRouter.navigator
-                          //       .pushNamed(AppRouter.reviewRatingScreen),
-                          // ),
-                          SpaceH24(),
-                          HeadingRow(
-                            title: StringConst.Food_Items.toUpperCase(),
-                            number: '',
-                          ),
-                          SizedBox(height: 16.0),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: itemsListTiles(context),
+                          Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 16.0),
+                            child: Column(
+                              children: <Widget>[
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          widget
+                                              .restaurantDetails.restaurantName,
+                                          textAlign: TextAlign.left,
+                                          style: Styles.customTitleTextStyle(
+                                            color: AppColors.headingText,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: Sizes.TEXT_SIZE_20,
+                                          ),
+                                        ),
+                                        SizedBox(width: 4.0),
+                                        CardTags(
+                                          title:
+                                              widget.restaurantDetails.category,
+                                          decoration: BoxDecoration(
+                                            gradient:
+                                                Gradients.secondaryGradient,
+                                            boxShadow: [
+                                              Shadows.secondaryShadow,
+                                            ],
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8.0)),
+                                          ),
+                                        ),
+                                        SizedBox(width: 4.0),
+                                        CardTags(
+                                          title:
+                                              widget.restaurantDetails.distance,
+                                          decoration: BoxDecoration(
+                                            // color: Color.fromARGB(255, 132, 141, 255),
+                                            color: AppColors.secondaryElement,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8.0)),
+                                          ),
+                                        ),
+                                        Spacer(flex: 1),
+                                        Ratings(widget.restaurantDetails.rating)
+                                      ],
+                                    ),
+                                    SizedBox(height: 16.0),
+                                    Text(
+                                      widget
+                                          .restaurantDetails.restaurantAddress,
+                                      style: addressTextStyle,
+                                    ),
+                                    SizedBox(height: 8.0),
+                                    RichText(
+                                      text: TextSpan(
+                                        style: openingTimeTextStyle,
+                                        children: [
+                                          TextSpan(text: "Open Now "),
+                                          TextSpan(
+                                              text: "daily time ",
+                                              style: addressTextStyle),
+                                          TextSpan(
+                                              text: widget.restaurantDetails
+                                                      .data.restOpenTime +
+                                                  " am to " +
+                                                  widget.restaurantDetails.data
+                                                      .restCloseTime +
+                                                  " am "),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                SpaceH24(),
+                                HeadingRow(
+                                  title: StringConst.MENU_AND_PHOTOS,
+                                  number: _restaurentMenuModel.data.length
+                                      .toString(),
+                                  onTapOfNumber: () => AppRouter.navigator
+                                      .pushNamed(AppRouter.menuPhotosScreen,
+                                          arguments: _restaurentMenuModel.data),
+                                ),
+                                SizedBox(height: 16.0),
+                                fooditems.length == 0
+                                    ? Center(
+                                        child: Text('Not Available'),
+                                      )
+                                    : Container(
+                                        height: 120,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount:
+                                              _restaurentMenuModel.data.length,
+                                          itemBuilder: (context, index) {
+                                            var data = _restaurentMenuModel
+                                                .data[index];
+                                            return Container(
+                                                margin: EdgeInsets.only(
+                                                    right: 12.0),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                8))),
+                                                child: Image.network(
+                                                  data.menuImage,
+                                                  fit: BoxFit.fill,
+                                                  loadingBuilder:
+                                                      (BuildContext ctx,
+                                                          Widget child,
+                                                          ImageChunkEvent
+                                                              loadingProgress) {
+                                                    if (loadingProgress ==
+                                                        null) {
+                                                      return child;
+                                                    } else {
+                                                      return Container(
+                                                        // height: ,
+                                                        width: 160,
+                                                        child: Center(
+                                                          child:
+                                                              CircularProgressIndicator(
+                                                            valueColor:
+                                                                AlwaysStoppedAnimation<
+                                                                        Color>(
+                                                                    AppColors
+                                                                        .secondaryElement),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                  width: 160,
+                                                ));
+                                          },
+                                        ),
+                                      ),
+                                SpaceH24(),
+                                HeadingRow(
+                                  title: StringConst.REVIEWS_AND_RATINGS,
+                                  number: StringConst.SEE_ALL_32,
+                                  onTapOfNumber: () => AppRouter.navigator
+                                      .pushNamed(AppRouter.reviewRatingScreen),
+                                ),
+                                SpaceH24(),
+                                HeadingRow(
+                                  title: StringConst.Food_Items.toUpperCase(),
+                                  number: fooditems.length.toString(),
+                                ),
+                                SizedBox(height: 16.0),
+                                fooditems.length > 0
+                                    ? Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: itemsListTiles(context),
+                                      )
+                                    : Text('No Items Avaialble Right Now')
+                              ],
+                            ),
                           )
                         ],
                       ),
-                    )
+                    ),
+                    // PotbellyButton(
+                    //   'Rate Your Experience ',
+                    //   onTap: () => AppRouter.navigator.pushNamed(
+                    //       AppRouter.addRatingsScreen,
+                    //       arguments: restaurantDetails.data['id']),
+                    //   buttonHeight: 65,
+                    //   buttonWidth: MediaQuery.of(context).size.width,
+                    //   decoration: Decorations.customHalfCurvedButtonDecoration(
+                    //     topleftRadius: Sizes.RADIUS_24,
+                    //     topRightRadius: Sizes.RADIUS_24,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
-              // PotbellyButton(
-              //   'Rate Your Experience ',
-              //   onTap: () => AppRouter.navigator.pushNamed(
-              //       AppRouter.addRatingsScreen,
-              //       arguments: restaurantDetails.data['id']),
-              //   buttonHeight: 65,
-              //   buttonWidth: MediaQuery.of(context).size.width,
-              //   decoration: Decorations.customHalfCurvedButtonDecoration(
-              //     topleftRadius: Sizes.RADIUS_24,
-              //     topRightRadius: Sizes.RADIUS_24,
-              //   ),
-              // ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -476,47 +493,10 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
     return userListTiles;
   }
 
-  List fooditems = [
-    {
-      'name': 'Turkey Burgers',
-      'image':
-          'https://www.thespruceeats.com/thmb/oY67Fvga3ptpwQvOjpZNE87u6mo=/3429x2572/smart/filters:no_upscale()/juicy-baked-turkey-burgers-with-garlic-3057268-hero-01-ceea8ae8e9914a0788b9acd14e821eb3.jpg',
-      'details':
-          'Ground turkey, bread crumbs, egg whites, garlic, black pepper',
-      'price': '20',
-      'qty': '1',
-      'id': '1',
-    },
-    {
-      'name': 'Margherita Pizza',
-      'image':
-          'https://www.abeautifulplate.com/wp-content/uploads/2015/08/the-best-homemade-margherita-pizza-1-4-480x480.jpg',
-      'details':
-          'San marzano, fresh mozzarella cheese, red pepper flakes, olive',
-      'price': '24',
-      'qty': '1',
-      'id': '2',
-    },
-    {
-      'name': 'Portobello Mushroom Burgers',
-      'image':
-          'https://www.wellplated.com/wp-content/uploads/2019/07/Stuffed-Portobello-Mushroom-Burger.jpg',
-      'details': 'Portobello mushroom caps, balsamic vinegar, provolone',
-      'price': '14',
-      'qty': '1',
-      'id': '4',
-    },
-    {
-      'name': 'York-​Style Pizza',
-      'image':
-          'https://feelingfoodish.com/wp-content/uploads/2013/06/Pizza-sauce.jpg',
-      'details': 'Olive oil, sugar, dry yeast, all purpose',
-      'price': '26',
-      'qty': '1',
-      'id': '5',
-    }
-  ];
-  List<Widget> itemsListTiles(context) {
+  List fooditems = [];
+  List<Widget> itemsListTiles(
+    context,
+  ) {
     return List.generate(
         fooditems.length,
         (i) => Slidable(
@@ -616,6 +596,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                           'data': fooditems[i],
                           'restaurantdata': widget.restaurantDetails.data
                         };
+                        print(fooditems[i]['qty']);
                         CartProvider().addToCart(context, data);
                       },
                     ),
@@ -665,7 +646,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                     Row(
                       children: [
                         Text(
-                          '\$' + fooditems[i]['price'],
+                          '\$' + fooditems[i]['price'].toString(),
                           style: subHeadingTextStyle,
                         ),
                         SizedBox(
@@ -685,5 +666,28 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                 ),
               ),
             ));
+  }
+
+  void getProducts() async {
+    _restaurentMenuModel =
+        await Service().getMenus(widget.restaurantDetails.data.id);
+    print('this is a data');
+    print(_restaurentMenuModel.data);
+    _restaurentMenuModel.data.forEach((element) {
+      fooditems.add({
+        'name': element.menuName,
+        'image': element.menuImage,
+        'details': element.menuDetails,
+        'price': element.menuPrice,
+        'qty': '1',
+        'id': element.id,
+        'restaurantId': element.restId,
+        'restaurantdata': widget.restaurantDetails.data
+      });
+    });
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 }

@@ -24,7 +24,7 @@ class _TrendingRestaurantsScreenState extends State<TrendingRestaurantsScreen> {
   searchfromlist() {
     records = search.data
         .where((product) =>
-            product.name.toLowerCase().contains(controller.text.toLowerCase()))
+            product.restName.toLowerCase().contains(controller.text.toLowerCase()))
         .toList();
   }
 

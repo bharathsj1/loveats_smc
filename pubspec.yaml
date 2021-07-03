@@ -16,14 +16,14 @@ dependencies:
   flutter:
     sdk: flutter
   animations: ^1.1.2
-  apple_sign_in: ^0.1.0
+ 
   auth_buttons: ^1.0.1+4
   auto_route: ^0.3.1
   carousel_slider: ^4.0.0
-  cloud_firestore: null
+  cloud_firestore: 
   cupertino_icons: ^1.0.0
   device_info: ^2.0.2
-  dio:
+  dio: null
   firebase_auth: ^0.15.3
   firebase_core: ^0.4.0
   firebase_database: ^3.0.0
@@ -32,28 +32,27 @@ dependencies:
   flutter_rating_bar: ^3.0.1+1
   flutter_signin_button: ^2.0.0
   flutter_slidable: ^0.6.0
+  flutter_stripe: ^1.0.2
   flutter_svg: ^0.17.1
   fluttertoast: ^8.0.7
   geolocator: null
   google_fonts: null
-  google_maps_flutter: 
+  google_maps_flutter: null
   google_sign_in: ^5.0.4
   image_picker: ^0.6.2
   image_viewer: ^1.5.0
+  intro_slider: ^3.0.2
   path_provider: null
+  popup_card: ^0.1.0
   provider: ^4.3.2+2
+  rflutter_alert: ^2.0.2
   shared_preferences: null
   sign_in_with_apple: ^3.0.0
   skeleton_text: ^3.0.0
+  the_apple_sign_in: ^1.1.1
   toast: null
   video_player: ^1.0.1
   video_thumbnail: null
-  intro_slider: ^3.0.2
-  popup_card: ^0.1.0
-  rflutter_alert: ^2.0.2
-  flutter_stripe: ^1.0.2
-
-
 
 #  flutter_launcher_icons: ^0.8.1
 dev_dependencies:
