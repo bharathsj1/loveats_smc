@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/values/data.dart';
 import 'package:potbelly/values/values.dart';
@@ -12,6 +13,7 @@ class CategoryDetailScreen extends StatelessWidget {
     @required this.numberOfCategories,
     @required this.selectedCategory,
     @required this.gradient,
+    @required this.restaurantdata,
   });
 
   final String categoryName;
@@ -19,6 +21,81 @@ class CategoryDetailScreen extends StatelessWidget {
   final int selectedCategory;
   final String imagePath;
   final Gradient gradient;
+  var restaurantdata;
+
+  List fooditems = [
+    {
+      'name': 'Turkey Burgers',
+      'image':
+          'https://www.thespruceeats.com/thmb/oY67Fvga3ptpwQvOjpZNE87u6mo=/3429x2572/smart/filters:no_upscale()/juicy-baked-turkey-burgers-with-garlic-3057268-hero-01-ceea8ae8e9914a0788b9acd14e821eb3.jpg',
+      'details':
+          'Ground turkey, bread crumbs, egg whites, garlic, black pepper',
+      'price': '20',
+      'qty': '1',
+      'id': '1',
+      'restaurant': {
+        'id': '1',
+        'name': 'boundry Rooftop',
+        'image': 'https://www.businesslist.pk/img/cats/restaurants.jpg',
+        'open': true,
+        'phone': '+2331232192139',
+        'ratings': '4.6',
+        'type': 'Italian',
+        'distance': '5 Km',
+        'address': '9122 12 Steward Street',
+        'city': 'London',
+        'zipcode': '100013',
+        'country': 'UK',
+        'open_time': '9:30',
+        'close_time': '11:30',
+        'menu': [
+          'https://media.architecturaldigest.in/wp-content/uploads/2020/04/Mumbai-restaurant-COVID-19-2-1.jpg',
+          'https://images.all-free-download.com/images/graphiclarge/food_picture_03_hd_pictures_167556.jpg',
+          'https://picturecorrect-wpengine.netdna-ssl.com/wp-content/uploads/2016/11/restaurant-food-photography-tips.jpg'
+        ],
+        'reviews': []
+      }
+    },
+    {
+      'name': 'Margherita Pizza',
+      'image':
+          'https://www.abeautifulplate.com/wp-content/uploads/2015/08/the-best-homemade-margherita-pizza-1-4-480x480.jpg',
+      'details':
+          'San marzano, fresh mozzarella cheese, red pepper flakes, olive',
+      'price': '24',
+      'qty': '1',
+      'id': '2',
+    },
+    {
+      'name': 'Portobello Mushroom Burgers',
+      'image':
+          'https://www.wellplated.com/wp-content/uploads/2019/07/Stuffed-Portobello-Mushroom-Burger.jpg',
+      'details': 'Portobello mushroom caps, balsamic vinegar, provolone',
+      'price': '14',
+      'qty': '1',
+      'id': '4',
+    },
+    {
+      'name': 'York-​Style Pizza',
+      'image':
+          'https://feelingfoodish.com/wp-content/uploads/2013/06/Pizza-sauce.jpg',
+      'details': 'Olive oil, sugar, dry yeast, all purpose',
+      'price': '26',
+      'qty': '1',
+      'id': '5',
+    }
+  ];
+
+  TextStyle subHeadingTextStyle = Styles.customTitleTextStyle(
+    color: AppColors.headingText,
+    fontWeight: FontWeight.w600,
+    fontSize: Sizes.TEXT_SIZE_16,
+  );
+
+  TextStyle addressTextStyle = Styles.customNormalTextStyle(
+    color: AppColors.accentText,
+    fontSize: Sizes.TEXT_SIZE_12,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -109,28 +186,97 @@ class CategoryDetailScreen extends StatelessWidget {
         ),
         child: Column(
           children: <Widget>[
-            Expanded(
-              child: ListView.separated(
-                itemCount: categoryDetailImagePaths.length,
-                separatorBuilder: (context, index) {
-                  return SpaceH8();
-                },
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.only(right: 4.0),
-                    child: FoodyBiteCard(
-                      imagePath: categoryDetailImagePaths[index],
-                      status: status[index],
-                      cardTitle: restaurantNames[index],
-                      rating: ratings[index],
-                      category: category[index],
-                      distance: distance[index],
-                      address: addresses[index],
+            Column(
+                children: List.generate(
+              fooditems.length,
+              (i) => Card(
+                margin: EdgeInsets.symmetric(vertical: 6),
+                child: InkWell(
+                  onTap: () {
+                    AppRouter.navigator.pushNamed(
+                      AppRouter.restaurantDetailsScreen,
+                      arguments: RestaurantDetails(
+                          imagePath: restaurantdata['image'],
+                          restaurantName: restaurantdata['name'],
+                          restaurantAddress: restaurantdata['address'] +
+                              ' ' +
+                              restaurantdata['city'] +
+                              ' ' +
+                              restaurantdata['country'],
+                          rating: restaurantdata['ratings'],
+                          category: restaurantdata['type'],
+                          distance: restaurantdata['distance'],
+                          data: restaurantdata),
+                    );
+                  },
+                  child: ListTile(
+                    leading: Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Image.network(
+                            fooditems[i]['image'],
+                            loadingBuilder: (BuildContext ctx, Widget child,
+                                ImageChunkEvent loadingProgress) {
+                              if (loadingProgress == null) {
+                                return child;
+                              } else {
+                                return Container(
+                                  // height: ,
+                                  width: 50,
+                                  height: 50,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          AppColors.secondaryElement),
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            fit: BoxFit.cover,
+                            height: 50,
+                            width: 50,
+                          )),
                     ),
-                  );
-                },
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          // color: Colors.red,
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          child: Text(
+                            fooditems[i]['name'],
+                            style: subHeadingTextStyle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              '\$' + fooditems[i]['price'],
+                              style: subHeadingTextStyle,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            // Ratings(ratings[i]),
+                          ],
+                        ),
+                      ],
+                    ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                    subtitle: Text(
+                      fooditems[i]['details'],
+                      style: addressTextStyle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
               ),
-            ),
+            )),
           ],
         ),
       ),

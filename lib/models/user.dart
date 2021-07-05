@@ -59,9 +59,9 @@ class Data {
   dynamic emailVerifiedAt;
   dynamic custProfileImage;
   String custPhoneNumber;
-  int custAccountStatus;
-  int custRegistrationType;
-  int custAccountType;
+  String custAccountStatus;
+  String custRegistrationType;
+  String custAccountType;
   dynamic custUid;
   DateTime createdAt;
   DateTime updatedAt;
@@ -81,7 +81,7 @@ class Data {
         custAccountType: json["cust_account_type"],
         custUid: json["cust_uid"],
         createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        // updatedAt: DateTime.parse(json["updated_at"]),
         deviceId: json["device_id"],
       );
 

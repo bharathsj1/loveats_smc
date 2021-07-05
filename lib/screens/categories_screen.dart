@@ -23,7 +23,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           onTap: () => AppRouter.navigator.pop(),
           child: Image.asset(
             ImagePath.arrowBackIcon,
-            color: AppColors.headingText,
+            color: AppColors.secondaryElement,
           ),
         ),
         centerTitle: true,
@@ -35,15 +35,15 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             fontSize: Sizes.TEXT_SIZE_20,
           ),
         ),
-        actions: <Widget>[
-          InkWell(
-            onTap: () {},
-            child: Image.asset(
-              ImagePath.searchIcon,
-              color: AppColors.headingText,
-            ),
-          )
-        ],
+        // actions: <Widget>[
+        //   InkWell(
+        //     onTap: () {},
+        //     child: Image.asset(
+        //       ImagePath.searchIcon,
+        //       color: AppColors.headingText,
+        //     ),
+        //   )
+        // ],
       ),
       body: FutureBuilder<MenuTypesModel>(
         future: Service().getMenuTypes(),
@@ -76,7 +76,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           imagePath: res.menuTypeImage,
                           selectedCategory: index,
                           numberOfCategories: snapshot.data.data.length,
-                          gradient: gradients[index],
+                          gradient: gradients[index], restaurantdata: res,
                         ),
                       ),
                       width: MediaQuery.of(context).size.width,

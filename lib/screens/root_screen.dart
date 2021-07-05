@@ -8,6 +8,7 @@ import 'dart:math' as math;
 
 import 'bookmarks_screen.dart';
 import 'cart.dart';
+import 'cart_screen.dart';
 import 'home_screen.dart';
 import 'notification_screen.dart';
 
@@ -116,18 +117,21 @@ class _RootScreenState extends State<RootScreen>
         backgroundColor: AppColors.secondaryElement,
         elevation: 8.0,
         onPressed: () {
-          changeAngle();
-          _isPanelVisible ? _controller.forward() : _controller.reverse();
-          _isPanelVisible
-              ? changeScreen(
-                  // currentScreen: NewReviewScreen(),
-                  currentScreen: Cart(),
-                  currentTab: NewReviewScreen.TAB_NO,
-                )
-              : changeScreen(
-                  currentScreen: HomeScreen(),
-                  currentTab: HomeScreen.TAB_NO,
-                );
+          // changeAngle();
+          // _isPanelVisible ? _controller.forward() : _controller.reverse();
+          // _isPanelVisible
+          //     ? changeScreen(
+          //         // currentScreen: NewReviewScreen(),
+          //         // currentScreen: Cart(),
+          //         currentScreen: CartScreen(),
+          //         currentTab: NewReviewScreen.TAB_NO,
+          //       )
+          //     : changeScreen(
+          //         currentScreen: HomeScreen(),
+          //         currentTab: HomeScreen.TAB_NO,
+          //       );
+          AppRouter.navigator
+                        .pushNamed(AppRouter.cart_Screen);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

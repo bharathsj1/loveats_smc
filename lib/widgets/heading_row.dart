@@ -18,8 +18,8 @@ class HeadingRow extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.left,
-            style: Styles.customTitleTextStyle(
-              color: AppColors.headingText,
+            style: Styles.customTitleTextStyle2(
+              color: Colors.black87,
               fontWeight: FontWeight.w600,
               fontSize: Sizes.TEXT_SIZE_20,
             ),
@@ -32,7 +32,7 @@ class HeadingRow extends StatelessWidget {
                 number,
                 textAlign: TextAlign.right,
                 style: Styles.customNormalTextStyle(
-                  color: AppColors.accentText,
+                  color: AppColors.secondaryElement,
                   fontSize: Sizes.TEXT_SIZE_14,
                 ),
               ),

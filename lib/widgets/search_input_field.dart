@@ -55,21 +55,25 @@ class FoodyBiteSearchInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 45,
       child: TextFormField(
         controller: controller,
         style: textFormFieldStyle,
         decoration: InputDecoration(
+          
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: borderColor, width: borderWidth),
+            borderSide: BorderSide(color: Colors.transparent, width: 0),
+            borderRadius: BorderRadius.circular(borderRadius)
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: borderColor, width: borderWidth),
+            borderSide: BorderSide(color: Colors.transparent, width: 0),
+            borderRadius: BorderRadius.circular(borderRadius)
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(borderRadius),
             borderSide: BorderSide(
-              color: borderColor,
-              width: borderWidth,
+              color: Colors.transparent,
+              width: 0,
               style: borderStyle,
             ),
           ),
@@ -101,14 +105,14 @@ class FoodyBiteSearchInputField extends StatelessWidget {
   Widget defaultSuffixIcon() {
     return ImageIcon(
       AssetImage(suffixIconImagePath),
-      color: suffixIconColor,
+      color: AppColors.secondaryElement,
     );
   }
 
   Widget defaultPrefixIcon() {
     return ImageIcon(
       AssetImage(prefixIconImagePath),
-      color: prefixIconColor,
+      color: AppColors.secondaryElement,
     );
   }
 }

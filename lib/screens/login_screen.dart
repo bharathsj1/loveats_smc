@@ -2,9 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
+import 'package:potbelly/models/user.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/register_screen.dart';
 import 'package:potbelly/screens/root_screen.dart';
+import 'package:potbelly/screens/root_screen2.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/custom_text_form_field.dart';
@@ -43,7 +45,7 @@ class _BackgroundVideoState extends State<BackgroundVideo>
   void initState() {
     super.initState();
     // Pointing the video controller to our local asset.
-    _controller = VideoPlayerController.asset("assets/loveats.mp4")
+    _controller = VideoPlayerController.asset("assets/loveats2.mp4")
       ..initialize().then((_) {
         _controller.setVolume(0.0);
         // Once the video has been loaded we play the video and set looping to true.
@@ -119,28 +121,25 @@ class _BackgroundVideoState extends State<BackgroundVideo>
                 ),
               ),
               !isSignIn && !isLogin
-                  ? Positioned(
+                  ?  Positioned(
                       bottom: 90,
                       left: 20,
                       right: 20,
-                      child: InkWell(
-                        onTap: () => Navigator.push(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 30),
+                        child: PotbellyButton(
+                          // StringConst.SUBSCRIPTION,
+                          'Create Account',
+                          buttonHeight: 50,
+                           buttonTextStyle: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),color: AppColors.secondaryElement),
+                          onTap: () => Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (_) => RegisterScreen())),
-                        child: Container(
-                          height: 50.0,
-                          decoration: BoxDecoration(
-                            // color: Decorations.primaryButtonDecoration
-                            border: Border.all(color: Colors.white, width: 2.0),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Create Account',
-                              style: TextStyle(
-                                  fontSize: 18.0, color: Colors.white),
-                            ),
+                            MaterialPageRoute(builder: (_) => RegisterScreen()
+
+                                // style: TextStyle(
+                                //     fontSize: 18.0, color: Colors.white),
+                                ),
                           ),
                         ),
                       ),
@@ -148,25 +147,24 @@ class _BackgroundVideoState extends State<BackgroundVideo>
                   : Container(),
               !isSignIn && !isLogin
                   ? Positioned(
-                      bottom: 20,
+                      bottom: 30,
                       left: 20,
                       right: 20,
                       child: InkWell(
                         onTap: () => _signIn(),
                         child: Container(
-                          height: 50.0,
-                          decoration: BoxDecoration(
-                            // color: Decorations.primaryButtonDecoration
-                            border: Border.all(color: Colors.white, width: 2.0),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Sign in',
-                              style: TextStyle(
-                                  fontSize: 18.0, color: Colors.white),
-                            ),
-                          ),
+                           margin: EdgeInsets.symmetric(horizontal: 30),
+                          child: PotbellyButton('Sign in',
+                          buttonHeight: 50,
+                          buttonTextStyle: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(100)),
+
+                           onTap: () => _signIn()
+
+                              // style: TextStyle(
+                              //     fontSize: 18.0, color: Colors.white),
+
+                              ),
                         ),
                       ),
                     )
@@ -211,7 +209,7 @@ class _BackgroundVideoState extends State<BackgroundVideo>
                             InkWell(
                                 onTap: () => _signIn(),
                                 child: Text('Back',
-                                    style: Styles.customNormalTextStyle()))
+                                     style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white)))
                           ],
                         ),
                       ),
@@ -250,13 +248,14 @@ class _BackgroundVideoState extends State<BackgroundVideo>
 _signInWithEmail(BuildContext context, TextEditingController emailCont,
     TextEditingController passwordCont, key) async {
   if (key.currentState.validate()) {
-    String message = await Service()
+    var response = await Service()
         .signInWithEmail(context, emailCont.text, passwordCont.text);
-    if (message.contains('success')) {
+    if (response['message'].contains('success')) {
+      print(response['user']);
       Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (_) => RootScreen()), (route) => false);
+          MaterialPageRoute(builder: (_) => response['user'].data.custAccountType =='2'? RootScreen():RootScreen2()), (route) => false);
     } else
-      showSnackBar(context, message);
+      showSnackBar(context, response['message']);
   }
 }
 

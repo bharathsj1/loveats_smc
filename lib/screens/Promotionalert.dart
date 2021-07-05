@@ -1,11 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/services/paymentservice.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
+import 'package:toast/toast.dart';
 
 final List<String> images = [
-  'assets/images/mainscreen.jpg',
+  // 'assets/images/mainscreen.jpg',
+  'assets/images/main2.png',
   'assets/images/Slide1.jpg',
   'assets/images/Slide2.jpg',
   'assets/images/Slide3.jpg',
@@ -41,6 +46,70 @@ class PromotionPhotosScreen extends StatefulWidget {
 
 class _PromotionPhotosScreenState extends State<PromotionPhotosScreen> {
   int _current = 0;
+    bool loader=false;
+  var _paymentSheetData;
+
+
+    paynow() async {
+    this.loader = true;
+    setState(() {});
+    var data = {
+      'amount': '1'+ '00',
+      'currency': 'usd',
+      // 'receipt_email': 'miansaadhafeez@gmail.com'
+    };
+    PaymentService().getIntent(data).then((value) async {
+      print(value);
+      this.loader = false;
+      setState(() {});
+      if (value == 'Error in payment') {
+        Toast.show('Error in payment', context, duration: 3);
+      } else {
+        _paymentSheetData = value;
+        setState(() {});
+        try {
+          // intent=await  Stripe.instance.retrievePaymentIntent(_paymentSheetData['client_secret']);
+          //  print(intent);
+          setState(() {});
+          await Stripe.instance.initPaymentSheet(
+              paymentSheetParameters: SetupPaymentSheetParameters(
+            paymentIntentClientSecret: _paymentSheetData['client_secret'],
+            // customerEphemeralKeySecret: _paymentSheetData['ephemeralKey'],
+            // customerId: _paymentSheetData['customer'],
+            applePay: true,
+            googlePay: true,
+            merchantCountryCode: 'US',
+            // merchantDisplayName: 'saad',
+            // style:  ThemeMode.dark,
+          ));
+          setState(() {});
+          displayPayment();
+        } catch (error) {
+          print(error);
+        }
+      }
+    });
+  }
+
+  Future<void> displayPayment() async {
+    try {
+      await Stripe.instance.presentPaymentSheet(
+          parameters: PresentPaymentSheetParameters(
+              clientSecret: _paymentSheetData['client_secret'],
+              confirmPayment: true));
+      setState(() {});
+      FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+      final user = await firebaseAuth.currentUser();
+      AppRouter.navigator.pushNamed(AppRouter.CheckOut3, arguments: {
+        'type': 'subscription',
+        // 'orderId': DateTime.now().millisecondsSinceEpoch
+      });
+      Toast.show('Payment Success', context, duration: 3);
+    } catch (error) {
+      print(error);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -138,20 +207,29 @@ class _PromotionPhotosScreenState extends State<PromotionPhotosScreen> {
               bottom: 20,
               left: 15,
               right: 15,
-              child: PotbellyButton(
+              child:  loader?  Padding(
+          padding: const EdgeInsets.only(bottom:8.0),
+          child: Center(
+              child: CircularProgressIndicator(
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
+              ),
+            ),
+        ): PotbellyButton(
                 StringConst.SUBSCRIPTION,
 
                 onTap: (){
-                   var data={
-                                  'cartlist': null,
-                                  'charges':0.0,
-                                  'shipping':0.0,
-                                  'total': 1,
-                                  'type': 'promo'
-                                };
-                            AppRouter.navigator.pushNamed(
-                              AppRouter.checkoutScreen, arguments: data
-                            );
+                  //  var data={
+                  //                 'cartlist': null,
+                  //                 'charges':0.0,
+                  //                 'shipping':0.0,
+                  //                 'total': 1,
+                  //                 'type': 'promo'
+                  //               };
+                  //           AppRouter.navigator.pushReplacementNamed(
+                  //             AppRouter.checkoutScreen, arguments: data
+                  //           );
+                  paynow();
                 },
               ),
             ),
@@ -167,7 +245,7 @@ class _PromotionPhotosScreenState extends State<PromotionPhotosScreen> {
             height: 15,
             width: 15,
           ),
-        ),
+        ), 
             ),
           ],
         ),

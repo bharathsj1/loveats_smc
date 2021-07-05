@@ -54,7 +54,7 @@ class Datum {
   int menuPrice;
   String menuName;
   String menuDetails;
-  int menuQuantity;
+  String menuQuantity;
   int restId;
   int menuTypeId;
   dynamic createdAt;
@@ -63,7 +63,7 @@ class Datum {
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
         menuImage: json["menu_image"],
-        menuPrice: json["menu_price"],
+        menuPrice: int.parse(json["menu_price"]),
         menuName: json["menu_name"],
         menuDetails: json["menu_details"],
         menuQuantity: json["menu_quantity"],

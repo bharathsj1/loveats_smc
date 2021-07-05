@@ -10,6 +10,7 @@ class CustomTextFormField extends StatelessWidget {
   final double contentPaddingHorizontal;
   final double contentPaddingVertical;
   final String prefixIconImagePath;
+  final IconData prefixIcon;
   final String hintText;
   final Color prefixIconColor;
   final Color borderColor;
@@ -26,6 +27,7 @@ class CustomTextFormField extends StatelessWidget {
   CustomTextFormField(
       {this.hasPrefixIcon = false,
       this.prefixIconImagePath,
+      this.prefixIcon,
       this.maxLines = 1,
       this.textFormFieldStyle = Styles.normalTextStyle,
       this.hintTextStyle = Styles.normalTextStyle,
@@ -80,7 +82,8 @@ class CustomTextFormField extends StatelessWidget {
             ),
           ),
           prefixIcon: hasPrefixIcon
-              ? ImageIcon(
+              ? prefixIcon !=null? Icon(prefixIcon, color: prefixIconColor,):
+                ImageIcon(
                   AssetImage(prefixIconImagePath),
                   color: prefixIconColor,
                 )

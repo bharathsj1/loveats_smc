@@ -63,12 +63,12 @@ class Datum {
   String restName;
   double restLatitude;
   double restLongitude;
-  int restIsTrending;
+  String restIsTrending;
   String restStatus;
   String restImage;
   String restType;
   String restZipCode;
-  int restIsOpen;
+  String restIsOpen;
   String restOpenTime;
   String restCloseTime;
   String restPhone;
@@ -82,8 +82,10 @@ class Datum {
         id: json["id"],
         restAddress: json["rest_address"],
         restName: json["rest_name"],
-        restLatitude: json["rest_latitude"].toDouble(),
-        restLongitude: json["rest_longitude"].toDouble(),
+        restLatitude: double.parse(json["rest_latitude"]),
+        // restLatitude: json["rest_latitude"].toDouble(),
+        // restLongitude: json["rest_longitude"].toDouble(),
+        restLongitude: double.parse(json["rest_longitude"]),
         restIsTrending: json["rest_isTrending"],
         restStatus: json["rest_status"],
         restImage: json["rest_image"],

@@ -30,6 +30,8 @@ class StringConst {
   static const String LOGIN = "Login";
   static const String SKIP = "Skip";
   static const String REGISTER = "Register";
+  static const String Home = "Home";
+  static const String CONTINUE = "Continue";
   static const String SUBSCRIPTION = "BUY SUBSCRIPTION";
   static const String CHECKOUT = "CHECK OUT";
   static const String PAYNOW = "PAY NOW";
@@ -42,6 +44,7 @@ class StringConst {
   static const String SEND = "Send";
   static const String TRENDING_RESTAURANTS = "Trending Restaurants";
   static const String CATEGORY = "Category";
+  static const String CATEGORYITEMS = "Category Items";
   static const String FRIENDS = "Friends";
   static const String MENU_AND_PHOTOS = "Menu & Photos";
   static const String PREVIEW = "Preview";

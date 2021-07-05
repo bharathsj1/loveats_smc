@@ -11,12 +11,14 @@ import 'package:potbelly/screens/google_map.dart';
 import 'package:potbelly/screens/Promotionalert.dart';
 import 'package:potbelly/screens/checkoutScreen.dart';
 import 'package:potbelly/screens/login_screen.dart';
+import 'package:potbelly/screens/paymentsuccess.dart';
 import 'package:potbelly/screens/splash_screen.dart';
 import 'package:potbelly/screens/forgot_password_screen.dart';
 import 'package:potbelly/screens/register_screen.dart';
 import 'package:potbelly/screens/set_location_screen.dart';
 import 'package:potbelly/screens/home_screen.dart';
 import 'package:potbelly/screens/root_screen.dart';
+import 'package:potbelly/screens/root_screen2.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/screens/profile_screen.dart';
 import 'package:potbelly/screens/notification_screen.dart';
@@ -34,10 +36,16 @@ import 'package:potbelly/screens/categories_screen.dart';
 import 'package:potbelly/screens/category_detail_screen.dart';
 import 'package:potbelly/screens/find_friends_screen.dart';
 import 'package:potbelly/screens/settings_screen.dart';
+import 'package:potbelly/screens/cart_screen.dart';
 import 'package:potbelly/screens/change_password_screen.dart';
 import 'package:potbelly/screens/change_language_screen.dart';
 import 'package:potbelly/screens/edit_profile_screen.dart';
 import 'package:potbelly/screens/new_review_screen.dart';
+import 'package:potbelly/Checkout_Screens/Checkout1.dart';
+import 'package:potbelly/Checkout_Screens/Checkout2.dart';
+import 'package:potbelly/Checkout_Screens/Checkout3.dart';
+import 'package:potbelly/vendor_screens.dart/vendor_notifications.dart';
+import 'package:potbelly/vendor_screens.dart/orders_detail.dart';
 
 class AppRouter {
   static const loginScreen = '/';
@@ -47,8 +55,10 @@ class AppRouter {
   static const setLocationScreen = '/set-location-screen';
   static const homeScreen = '/home-screen';
   static const rootScreen = '/root-screen';
+  static const rootScreen2 = '/root-screen2';
   static const profileScreen = '/profile-screen';
   static const notificationsScreen = '/notifications-screen';
+  static const vendornotificationsScreen = '/vendornotifications-screen';
   static const trendingRestaurantsScreen = '/trending-restaurants-screen';
   static const restaurantDetailsScreen = '/restaurant-details-screen';
   static const promotionDetailsScreen = '/promotion-details-screen';
@@ -70,6 +80,12 @@ class AppRouter {
   static const newReviewScreen = '/new-review-screen';
   static const googleMap = '/google-map';
   static const checkoutScreen = '/checkout-screen';
+  static const cart_Screen = '/cart_screen';
+  static const paymentSuccess = '/paymentsuccess-screen';
+  static const OrdersDetailScreen = '/OrdersDetails-screen';
+  static const CheckOut1 = '/CheckOutScreen1';
+  static const CheckOut2 = '/CheckOutScreen2';
+  static const CheckOut3 = '/CheckOutScreen3';
   static final navigator = ExtendedNavigator();
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -117,6 +133,15 @@ class AppRouter {
           builder: (_) => RootScreen(currentScreen: typedArgs),
           settings: settings,
         );
+      case AppRouter.rootScreen2:
+        if (hasInvalidArgs<CurrentScreen>(args)) {
+          return misTypedArgsRoute<CurrentScreen>(args);
+        }
+        final typedArgs = args as CurrentScreen;
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => RootScreen(currentScreen: typedArgs),
+          settings: settings,
+        );
       case AppRouter.profileScreen:
         if (hasInvalidArgs<Key>(args)) {
           return misTypedArgsRoute<Key>(args);
@@ -135,9 +160,38 @@ class AppRouter {
           builder: (_) => NotificationsScreen(key: typedArgs),
           settings: settings,
         );
+      case AppRouter.vendornotificationsScreen:
+        if (hasInvalidArgs<Key>(args)) {
+          return misTypedArgsRoute<Key>(args);
+        }
+        final typedArgs = args as Key;
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => VendorNotificationsScreen(key: typedArgs),
+          settings: settings,
+        );
       case AppRouter.trendingRestaurantsScreen:
         return CupertinoPageRoute<dynamic>(
           builder: (_) => TrendingRestaurantsScreen(),
+          settings: settings,
+        );
+      case AppRouter.OrdersDetailScreen:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => OrdersDetails(),
+          settings: settings,
+        );
+      case AppRouter.CheckOut1:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => CheckOutScreen1(checkoutdata: args,),
+          settings: settings,
+        );
+      case AppRouter.CheckOut2:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => CheckOutScreen2(checkoutdata: args,),
+          settings: settings,
+        );
+      case AppRouter.CheckOut3:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => CheckOutScreen3(checkoutdata: args,),
           settings: settings,
         );
       case AppRouter.restaurantDetailsScreen:
@@ -163,9 +217,19 @@ class AppRouter {
           builder: (_) => BookmarksScreen(),
           settings: settings,
         );
+      case AppRouter.cart_Screen:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => CartScreen(),
+          settings: settings,
+        );
       case AppRouter.checkoutScreen:
         return CupertinoPageRoute<dynamic>(
           builder: (_) => CheckoutScreen(checkoutdata: args,),
+          settings: settings,
+        );
+         case AppRouter.paymentSuccess:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => PaymentSuccess(checkoutdata: args,),
           settings: settings,
         );
       case AppRouter.filterScreen:
@@ -228,7 +292,8 @@ class AppRouter {
               imagePath: typedArgs.imagePath,
               numberOfCategories: typedArgs.numberOfCategories,
               selectedCategory: typedArgs.selectedCategory,
-              gradient: typedArgs.gradient),
+              gradient: typedArgs.gradient,
+             restaurantdata: typedArgs.restaurantdata,),
           settings: settings,
         );
       case AppRouter.findFriendsScreen:
@@ -283,10 +348,12 @@ class CategoryDetailScreenArguments {
   final int numberOfCategories;
   final int selectedCategory;
   final Gradient gradient;
+   var restaurantdata;
   CategoryDetailScreenArguments(
       {@required this.categoryName,
       @required this.imagePath,
       @required this.numberOfCategories,
       @required this.selectedCategory,
+      @required this.restaurantdata,
       @required this.gradient});
 }

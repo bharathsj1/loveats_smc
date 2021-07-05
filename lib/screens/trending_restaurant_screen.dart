@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/data.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/foody_bite_card.dart';
@@ -20,6 +21,14 @@ class _TrendingRestaurantsScreenState extends State<TrendingRestaurantsScreen> {
   RestaurentsModel search;
   bool searching = false;
   var controller = TextEditingController();
+  int totalRestaurent = 0;
+  RestaurentsModel _restaurentsModel;
+
+  Future<RestaurentsModel> getAllRestaurents() async {
+    _restaurentsModel = await Service().getRestaurentsData();
+    search = await Service().getRestaurentsData();
+    return _restaurentsModel;
+  }
 
   searchfromlist() {
     records = search.data
@@ -83,78 +92,82 @@ class _TrendingRestaurantsScreenState extends State<TrendingRestaurantsScreen> {
                   borderStyle: BorderStyle.solid,
                 ),
                 SizedBox(height: Sizes.WIDTH_16),
-                Expanded(
-                  child: StreamBuilder(
-                      stream: Firestore.instance
-                          .collection('Restaurants')
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                AppColors.secondaryElement,
-                              ),
+                FutureBuilder<RestaurentsModel>(
+                    future: getAllRestaurents(),
+                    // builder: (context, snapshot) {
+                    //   if (!snapshot.hasData) {
+                    builder:
+                        (context, AsyncSnapshot<RestaurentsModel> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              AppColors.secondaryElement,
                             ),
-                          );
-                        } else {
-                          List<DocumentSnapshot> items =
-                              snapshot.data.documents;
-                          // if (searching == true) {
-                          // } else {
-                          records.clear();
-                          items.forEach((e) {
-                            records.add(e.data);
-                            // print(e.data());
-                          });
-                          search = snapshot.data; // }
-                          if (searching == true) {
-                            searchfromlist();
-                          }
-                          return ListView.separated(
-                            scrollDirection: Axis.vertical,
-                            itemCount: records.length,
-                            separatorBuilder: (context, index) {
-                              return SpaceH8();
-                            },
+                          ),
+                        );
+                      } else {
+                        // List<DocumentSnapshot> items =
+                        //     snapshot.data.documents;
+                        // // if (searching == true) {
+                        // // } else {
+                        // records.clear();
+                        // items.forEach((e) {
+                        //   records.add(e.data);
+                        //   // print(e.data());
+                        // });
+                        totalRestaurent = _restaurentsModel.data.length;
+                        // search = snapshot.data;
+                        // }
+                        if (searching == true) {
+                          searchfromlist();
+                        }
+                        return Container(
+                          height: 300,
+                          // color: Colors.red,
+                          child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: snapshot.data.data.length,
                             itemBuilder: (context, index) {
+                              var res = snapshot.data.data[index];
                               return Container(
+                                height: 300,
+                                width: MediaQuery.of(context).size.width * 0.92,
                                 child: FoodyBiteCard(
+                                  cardElevation: 1,
                                   onTap: () => AppRouter.navigator.pushNamed(
                                     AppRouter.restaurantDetailsScreen,
                                     arguments: RestaurantDetails(
-                                        imagePath: records[index]['image'],
-                                        restaurantName: records[index]['name'],
-                                        restaurantAddress: records[index]
-                                                ['address'] +
+                                        imagePath: res.restImage,
+                                        restaurantName: res.restName,
+                                        restaurantAddress: res.restAddress +
+                                            res.restCity +
                                             ' ' +
-                                            records[index]['city'] +
-                                            ' ' +
-                                            records[index]['country'],
-                                        rating: records[index]['ratings'],
-                                        category: records[index]['type'],
-                                        distance: records[index]['distance'],
-                                        data: records[index]),
+                                            res.restCountry,
+                                        rating: '0.0',
+                                        category: res.restType,
+                                        distance: '0 Km',
+                                        data: res),
                                   ),
-                                  imagePath: records[index]['image'],
-                                  status:
-                                      records[index]['open'] ? "OPEN" : "CLOSE",
-                                  cardTitle: records[index]['name'],
-                                  rating: records[index]['ratings'],
-                                  category: records[index]['type'],
-                                  distance: records[index]['distance'],
-                                  address: records[index]['address'] +
+                                  imagePath: res.restImage,
+                                  status: res.restIsOpen == 1 ? "OPEN" : "CLOSE",
+                                  cardTitle: res.restName,
+                                  rating: '0.0',
+                                  category: res.restType,
+                                  distance: '8 KM',
+                                  address: res.restAddress +
                                       ' ' +
-                                      records[index]['city'] +
+                                      res.restCity +
                                       ' ' +
-                                      records[index]['country'],
+                                      res.restCountry,
                                 ),
                               );
                             },
-                          );
-                        }
-                      }),
-                ),
+                          ),
+                        );
+                      }
+                    }),
               ],
             ),
           )),

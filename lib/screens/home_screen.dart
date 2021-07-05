@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:potbelly/models/menu_types_model.dart';
 import 'package:potbelly/models/promotions.dart';
@@ -12,6 +13,7 @@ import 'package:potbelly/widgets/category_card.dart';
 import 'package:potbelly/widgets/foody_bite_card.dart';
 import 'package:potbelly/widgets/heading_row.dart';
 import 'package:potbelly/widgets/search_input_field.dart';
+import 'package:skeleton_text/skeleton_text.dart';
 import 'package:video_player/video_player.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -29,8 +31,10 @@ class _HomeScreenState extends State<HomeScreen> {
   VideoPlayerController _controller;
   int active_video = 0;
   bool loader = true;
-  List records = [];
+  bool loader2 = true;
   int totalRestaurent = 0;
+  List resturants = [];
+  List categories = [];
 
   List subscription = ['assets/images/mainscreen.jpg'];
 
@@ -38,10 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // getlocalpromos();
-    //  var localdate= jsonDecode(promodate);
     checkpromo();
-
+    getRestaurent();
+    getcateory();
     super.initState();
   }
 
@@ -58,7 +61,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<RestaurentsModel> getAllRestaurents() async {
     _restaurentsModel = await Service().getRestaurentsData();
+    totalRestaurent = _restaurentsModel.data.length;
     return _restaurentsModel;
+  }
+
+  getRestaurent() async {
+    var response = await Service().getRestaurentsData();
+    resturants = response.data;
+    totalRestaurent = response.data.length;
+    loader = false;
+    print(response);
+    setState(() {});
+  }
+
+  getcateory() async {
+    var response = await Service().getMenuTypes();
+    categories = response.data;
+    loader2 = false;
+    setState(() {});
+    print(resturants);
   }
 
   getpromos() async {
@@ -183,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 5.0),
                       child: Icon(Icons.location_on,
-                          size: Sizes.HEIGHT_22, color: AppColors.indigo),
+                          color: AppColors.secondaryElement),
                     ),
                     Container(
                       padding: EdgeInsets.only(
@@ -208,96 +229,88 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: Sizes.MARGIN_14,
               ),
-              FoodyBiteSearchInputField(ImagePath.searchIcon,
-                  controller: searchcontroller,
-                  textFormFieldStyle:
-                      Styles.customNormalTextStyle(color: AppColors.accentText),
-                  hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
-                  hintTextStyle:
-                      Styles.customNormalTextStyle(color: AppColors.accentText),
-                  suffixIconImagePath: ImagePath.settingsIcon,
-                  borderWidth: 0.0, onTapOfLeadingIcon: () {
-                pausevideo();
-                FocusScope.of(context).unfocus();
-                AppRouter.navigator
-                    .pushNamed(
-                  AppRouter.searchResultsScreen,
-                  arguments: SearchValue(
-                    searchcontroller.text,
-                  ),
-                )
-                    .then((value) {
-                  this.searchcontroller.text = '';
-                  FocusScope.of(context).unfocus();
-                  setState(() {});
-                  resumevideo();
-                });
-              }, onTapOfSuffixIcon: () {
-                pausevideo();
-                AppRouter.navigator
-                    .pushNamed(AppRouter.filterScreen)
-                    .then((value) => resumevideo());
-              }, borderStyle: BorderStyle.solid),
-              SizedBox(height: 16.0),
-              FutureBuilder<RestaurentsModel>(
-                  future: getAllRestaurents(),
-                  builder: (context, AsyncSnapshot<RestaurentsModel> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            AppColors.secondaryElement,
-                          ),
-                        ),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text(
-                          snapshot.error.toString(),
-                        ),
-                      );
-                    } else {
-                      return HeadingRow(
-                          title: StringConst.TRENDING_RESTAURANTS,
-                          number: snapshot.data.data.length.toString(),
-                          onTapOfNumber: () {
-                            pausevideo();
-                            AppRouter.navigator
-                                .pushNamed(AppRouter.trendingRestaurantsScreen)
-                                .then((value) {
-                              resumevideo();
-                            });
-                          });
-                    }
-                  }),
-              SizedBox(height: 16.0),
-              FutureBuilder<RestaurentsModel>(
-                future: getAllRestaurents(),
-                builder: (context, AsyncSnapshot<RestaurentsModel> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          AppColors.secondaryElement,
-                        ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Material(
+                  elevation: 5,
+                  borderRadius: BorderRadius.circular(20),
+                  child: FoodyBiteSearchInputField(ImagePath.searchIcon,
+                      borderRadius: 20,
+                      controller: searchcontroller,
+                      contentPaddingVertical: 6,
+                      textFormFieldStyle:
+                          Styles.customNormalTextStyle(color: Colors.black54),
+                      hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
+                      hintTextStyle:
+                          Styles.customNormalTextStyle(color: Colors.black54),
+                      suffixIconImagePath: ImagePath.settingsIcon,
+                      borderWidth: 0.0, onTapOfLeadingIcon: () {
+                    pausevideo();
+                    FocusScope.of(context).unfocus();
+                    AppRouter.navigator
+                        .pushNamed(
+                      AppRouter.searchResultsScreen,
+                      arguments: SearchValue(
+                        searchcontroller.text,
                       ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text(snapshot.error.toString()),
-                    );
-                  } else {
-                    totalRestaurent = _restaurentsModel.data.length;
+                    )
+                        .then((value) {
+                      this.searchcontroller.text = '';
+                      FocusScope.of(context).unfocus();
+                      setState(() {});
+                      resumevideo();
+                    });
+                  }, onTapOfSuffixIcon: () {
+                    pausevideo();
+                    AppRouter.navigator
+                        .pushNamed(AppRouter.filterScreen)
+                        .then((value) => resumevideo());
+                  }, borderStyle: BorderStyle.solid),
+                ),
+              ),
+              SizedBox(height: 16.0),
+              HeadingRow(
+                  title: StringConst.TRENDING_RESTAURANTS,
+                  number: 'See all (' + resturants.length.toString() + ')',
+                  onTapOfNumber: () {
+                    pausevideo();
+                    AppRouter.navigator
+                        .pushNamed(AppRouter.trendingRestaurantsScreen)
+                        .then((value) {
+                      resumevideo();
+                    });
+                  }),
 
-                    return Container(
+              // SizedBox(height: 16.0),
+              loader
+                  ? Container(
+                      height: 280,
+                      child: CarouselSlider(
+                          options: CarouselOptions(
+                              enableInfiniteScroll: true, height: 260),
+                          items: List.generate(
+                            1,
+                            (ind) => SkeletonAnimation(
+                              shimmerColor: Colors.grey[350],
+                              shimmerDuration: 1100,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 4),
+                              ),
+                            ),
+                          )),
+                    )
+                  : Container(
                       height: 280,
                       width: MediaQuery.of(context).size.width,
                       child: ListView.builder(
                         physics: BouncingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
-                        itemCount: snapshot.data.data.length,
+                        itemCount: resturants.length,
                         itemBuilder: (context, index) {
-                          var res = snapshot.data.data[index];
+                          var res = resturants[index];
                           return Container(
                             margin: EdgeInsets.only(right: 4.0),
                             child: FoodyBiteCard(
@@ -340,10 +353,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ),
-                    );
-                  }
-                },
-              ),
+                    ),
+
               // StreamBuilder(
               //     stream:
               //         Firestore.instance.collection('Restaurants').snapshots(),
@@ -426,7 +437,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 160,
                 //  width: 180,
                 //  color: Colors.red,
-                margin: EdgeInsets.symmetric(horizontal: 5),
+                margin: EdgeInsets.symmetric(horizontal: 4),
                 child: ListView.builder(
                     physics: BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
@@ -437,12 +448,40 @@ class _HomeScreenState extends State<HomeScreen> {
                           AppRouter.navigator
                               .pushNamed(AppRouter.promotionScreen);
                         },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: Image.asset(
-                            subscription[i],
-                            width: MediaQuery.of(context).size.width / 1.12,
-                            fit: BoxFit.cover,
+                        child: Material(
+                          elevation: 6,
+                          borderRadius: BorderRadius.circular(15),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Stack(
+                              children: [
+                                Image.asset(
+                                  subscription[i],
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.12,
+                                  fit: BoxFit.cover,
+                                ),
+                                Positioned(
+                                  right: 10,
+                                  bottom: 10,
+                                  child:
+                                      Text('Subscription Offer!'.toUpperCase(),
+                                          style: TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w900,
+                                            color: Colors.white,
+                                            shadows: [
+                                              Shadow(
+                                                color: Colors.white
+                                                    .withOpacity(0.5),
+                                                offset: Offset(1.0, 1.0),
+                                                blurRadius: 5,
+                                              ),
+                                            ],
+                                          )),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -658,56 +697,84 @@ class _HomeScreenState extends State<HomeScreen> {
               //                           ))),
               //           ),
 
-              SizedBox(height: 16.0),
-              FutureBuilder<MenuTypesModel>(
-                  future: Service().getMenuTypes(),
-                  builder: (context, AsyncSnapshot<MenuTypesModel> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text(snapshot.error));
-                    } else {
-                      return HeadingRow(
-                        title: StringConst.CATEGORY,
-                        number: 'See all (' +
-                            snapshot.data.data.length.toString() +
-                            ')',
-                        onTapOfNumber: () => AppRouter.navigator
-                            .pushNamed(AppRouter.categoriesScreen),
-                      );
-                    }
-                  }),
+              SizedBox(height: 20.0),
+              HeadingRow(
+                title: StringConst.CATEGORY,
+                number: 'See all (' + categories.length.toString() + ')',
+                onTapOfNumber: () =>
+                    AppRouter.navigator.pushNamed(AppRouter.categoriesScreen),
+              ),
 
               SizedBox(height: 16.0),
-              Container(
-                height: 100,
-                child: FutureBuilder<MenuTypesModel>(
-                  future: Service().getMenuTypes(),
-                  builder: (context, AsyncSnapshot<MenuTypesModel> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text(snapshot.error));
-                    } else {
-                      return ListView.builder(
+              loader2
+                  ? Container(
+                      height: 200,
+                      child: CarouselSlider(
+                          options: CarouselOptions(
+                              // viewportFraction: 1.2,
+                              enableInfiniteScroll: true,
+                              height: 200),
+                          items: List.generate(
+                            2,
+                            (ind) => SkeletonAnimation(
+                              shimmerColor: Colors.grey[350],
+                              shimmerDuration: 1100,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 4),
+                              ),
+                            ),
+                          )),
+                    )
+                  : Container(
+                      height: 200,
+                      child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: snapshot.data.data.length,
+                        itemCount: categories.length,
                         itemBuilder: (context, index) {
-                          var data = snapshot.data.data[index];
-                          return Container(
-                            margin: EdgeInsets.only(right: 8.0),
-                            child: FoodyBiteCategoryCard(
-                              imagePath: data.menuTypeImage,
-                              gradient: gradients[index],
-                              category: data.menuName,
+                          var data = categories[index];
+                          return InkWell(
+                            onTap: () => AppRouter.navigator.pushNamed(
+                              AppRouter.categoryDetailScreen,
+                              arguments: CategoryDetailScreenArguments(
+                                  categoryName: data.menuName,
+                                  imagePath: data.menuTypeImage,
+                                  selectedCategory: index,
+                                  numberOfCategories: categories.length,
+                                  gradient: gradients[index],
+                                  restaurantdata: data),
+                            ),
+                            child: Container(
+                              margin: EdgeInsets.only(right: 12.0, bottom: 12),
+                              child: Material(
+                                elevation: 5,
+                                borderRadius: BorderRadius.circular(15),
+                                child: FoodyBiteCategoryCard(
+                                  height: 200,
+                                  borderRadius: 15,
+                                  width:
+                                      MediaQuery.of(context).size.width / 2.5,
+                                  imagePath: data.menuTypeImage,
+                                  // hasHandle: true,
+                                  // gradient: gradients[index],
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    stops: [0.5, 0.8],
+                                    colors: [
+                                      Colors.black12,
+                                      Colors.black87,
+                                    ],
+                                  ),
+                                  category: data.menuName,
+                                ),
+                              ),
                             ),
                           );
                         },
-                      );
-                    }
-                  },
-                ),
-              ),
+                      )),
               SizedBox(height: 16.0),
               HeadingRow(
                 title: StringConst.FRIENDS,
@@ -721,7 +788,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: createUserProfilePhotos(numberOfProfilePhotos: 6),
               ),
-              SizedBox(height: 16.0),
+              SizedBox(height: 30.0),
             ],
           ),
         ),
@@ -743,8 +810,13 @@ class _HomeScreenState extends State<HomeScreen> {
     List<int> list = List<int>.generate(numberOfProfilePhotos, (i) => i + 1);
 
     list.forEach((i) {
-      profilePhotos
-          .add(CircleAvatar(backgroundImage: AssetImage(imagePaths[i - 1])));
+      profilePhotos.add(Container(
+          margin: EdgeInsets.symmetric(horizontal: 5),
+          child: Material(
+              elevation: 6,
+              borderRadius: BorderRadius.circular(1000),
+              child: CircleAvatar(
+                  backgroundImage: AssetImage(imagePaths[i - 1])))));
     });
     return profilePhotos;
   }

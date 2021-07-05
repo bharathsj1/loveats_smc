@@ -173,6 +173,7 @@ class Service {
 
   Future<void> logout(BuildContext context) async {
     await _auth.signOut();
+    loggedoutr();
     Navigator.pushAndRemoveUntil(context,
         MaterialPageRoute(builder: (_) => BackgroundVideo()), (route) => false);
   }
@@ -190,7 +191,7 @@ class Service {
     return userClass[0];
   }
 
-  Future<String> signInWithEmail(
+  Future signInWithEmail(
       BuildContext context, String email, String password) async {
     print('SIGNIN_WITH_EMAIL');
     String message;
@@ -213,14 +214,16 @@ class Service {
         await setKeyData('accessToken', _user.accessToken);
         await setKeyData('name', _user.data.custFirstName);
         await setKeyData('email', _user.data.email);
+        await setKeyData('accounttype', _user.data.custAccountType);
         await setKeyData('photo', _user.data.custProfileImage);
+        await setKeyData('userdata', jsonEncode(value.data['data']));
       }
     }).catchError((onError) {
       print('Here it is');
       print(onError.toString());
     });
 
-    return message;
+    return {'message':message,'user':_user};
   }
 
   Future<String> uploadImageToServer(File image) async {
@@ -269,10 +272,17 @@ class Service {
     return 'successfully';
   }
 
+  Future<String> loggedoutr() async {
+    final shared = await initializdPrefs();
+   shared.clear();
+   return null;
+  }
+
   Future<String> loggedUser() async {
     final shared = await initializdPrefs();
-    String accessToken = shared.get('accessToken');
-    return accessToken;
+    // String accessToken = shared.get('accessToken');
+    String accounttype = shared.get('accounttype');
+    return accounttype;
   }
 
   Future<void> clearAllPrefs() async {
