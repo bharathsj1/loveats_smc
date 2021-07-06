@@ -44,6 +44,7 @@ class Service {
     print('In Register WIth Email Function');
     bool _isEverthingFine = false;
     String message;
+    User _user;
     String udid;
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {
@@ -53,14 +54,15 @@ class Service {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       udid = iosInfo.identifierForVendor;
     }
-
+    print(uid);
     FormData _data = FormData.fromMap({
       'cust_first_name': userModel.name,
       'email': userModel.email,
       'password': userModel.password,
       'cust_phone_number': userModel.phoneNo,
       'cust_registration_type': type,
-      'cust_account_status': 0,
+      'cust_account_status': '0',
+      'cust_account_type': '2',
       // ignore: sdk_version_ui_as_code
       if (uid != null) 'cust_uid': uid,
       // ignore: sdk_version_ui_as_code
@@ -79,7 +81,11 @@ class Service {
         _isEverthingFine = true;
         accessToken = value.data['access_token'];
         message = 'success';
+        _user = User.fromJson(value.data);
         await setKeyData('accessToken', accessToken);
+        await setKeyData('accounttype', _user.data.custAccountType);
+        await setKeyData('photo', _user.data.custProfileImage);
+        await setKeyData('userdata', jsonEncode(value.data['data']));
       } else {
         print(value.data['message']);
         _isEverthingFine = false;
@@ -250,15 +256,24 @@ class Service {
     FormData _data = FormData.fromMap({
       'uid': uid,
     });
-    bool _isAvailable = true;
+    bool _isAvailable = false;
     await dio
         .request('/check-uid', data: _data, options: Options(method: 'POST'))
-        .then((value) {
+        .then((value) async {
       print(value.data);
       if (value.data['status'] == 1)
         _isAvailable = false;
-      else
+      else{
         _isAvailable = true;
+    User _user;
+    _user = User.fromJson(value.data);
+        await setKeyData('accessToken', _user.accessToken);
+        await setKeyData('name', _user.data.custFirstName);
+        await setKeyData('email', _user.data.email);
+        await setKeyData('accounttype', _user.data.custAccountType);
+        await setKeyData('photo', _user.data.custProfileImage);
+        await setKeyData('userdata', jsonEncode(value.data['data']));
+      }
     }).catchError((onError) {
       print(onError.toString());
       print('Error in ( CheckIfUSERAvailable )');

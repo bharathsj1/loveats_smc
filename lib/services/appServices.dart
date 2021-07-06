@@ -29,13 +29,18 @@ class AppService {
      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString('accessToken');
   }
+  Future<String> gettype() async {
+     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString('accounttype');
+  }
 
   
-  Future<dynamic> getOrdersForSpecificOwnerRestaurent() async {
+  Future<dynamic> getOrdersRestaurent() async {
     String accessToken = await getAccessToken();
+    String accounttype = await gettype();
      dio.options.headers['Authorization'] = "Bearer " + accessToken;
        try{
-    var resp = await this.dio.get("/getOrdersForSpecificOwnerRestaurent",);
+    var resp = await this.dio.get( accounttype == '0'? "/get-all-orders": "/getOrdersForSpecificOwnerRestaurent",);
     print(resp);
     return resp.data;
   }catch(e){
@@ -70,6 +75,35 @@ class AppService {
        return null;
      }
   }
+
+  Future<dynamic> setsuperadmin(data) async {
+    String accessToken = await getAccessToken();
+     dio.options.headers['Authorization'] = "Bearer " + accessToken;
+       try{
+     FormData formData = new FormData.fromMap(data);
+    var resp = await this.dio.post("/change-super-admin",data: formData);
+    print(resp);
+    return resp.data;
+  }catch(e){
+       print(e);
+       return null;
+     }
+  }
+
+  Future<dynamic> setorderstatus(data) async {
+    String accessToken = await getAccessToken();
+     dio.options.headers['Authorization'] = "Bearer " + accessToken;
+       try{
+     FormData formData = new FormData.fromMap(data);
+    var resp = await this.dio.post("/change-order-status",data: formData);
+    print(resp);
+    return resp.data;
+  }catch(e){
+       print(e);
+       return null;
+     }
+  }
+
   Future<dynamic> addeorder(data) async {
     String accessToken = await getAccessToken();
      dio.options.headers['Authorization'] = "Bearer " + accessToken;
@@ -89,7 +123,7 @@ class AppService {
      dio.options.headers['Authorization'] = "Bearer " + accessToken;
        try{
      FormData formData = new FormData.fromMap(data);
-    var resp = await this.dio.post("/addOrderItem",data: formData);
+    var resp = await this.dio.post("/addOrderDetails",data: formData);
     print(resp);
     return resp.data;
   }catch(e){

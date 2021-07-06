@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/values/values.dart';
@@ -12,7 +13,9 @@ class Vendor_Home_screen extends StatefulWidget {
 }
 
 class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
-  List orders=[];
+  List orderslist=[];
+  bool loader = true;
+  bool reloader = true;
   TextStyle subHeadingTextStyle = Styles.customTitleTextStyle(
     color: Colors.black87,
     fontWeight: FontWeight.w600,
@@ -30,17 +33,27 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
     }
 
     getorders() async {
-    var orders= await AppService().getOrdersForSpecificOwnerRestaurent();
+    
+    var orders= await AppService().getOrdersRestaurent();
     print(orders);
+    orderslist= orders['data'];
+    loader= false;
+    reloader= false;
+    setState(() {});
     }
 
   List<Widget> card() {
     return List.generate(
-        5,
-        (index) => InkWell(
+        orderslist.length,
+        (i) => InkWell(
               onTap: () {
                 AppRouter.navigator
-                    .pushNamed(AppRouter.OrdersDetailScreen);
+                    .pushNamed(AppRouter.OrdersDetailScreen,arguments: orderslist[i]).then((value) {
+                      setState(() {
+                        reloader=true;
+                        getorders();
+                      });
+                    });
               },
               child: Card(
                 margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -50,7 +63,7 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
                         child: Image.network(
-                          'https://www.businesslist.pk/img/cats/restaurants.jpg',
+                          orderslist[i]['order_detail'][0]['rest_menu']['menu_image'],
                           loadingBuilder: (BuildContext ctx, Widget child,
                               ImageChunkEvent loadingProgress) {
                             if (loadingProgress == null) {
@@ -81,7 +94,7 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                         // color: Colors.red,
                         width: MediaQuery.of(context).size.width * 0.55,
                         child: Text(
-                          'Pizza burger',
+                           orderslist[i]['order_detail'][0]['rest_menu']['menu_name'],
                           style: subHeadingTextStyle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -90,7 +103,7 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                       Row(
                         children: [
                           Text(
-                            '\$' + '299.00',
+                            '\$' + orderslist[i]['order_detail'][0]['total_price'],
                             style: TextStyle(
                               color: AppColors.secondaryElement,
                               fontWeight: FontWeight.bold,
@@ -109,14 +122,18 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Home cooking experience',
-                            style: addressTextStyle,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.54,
+                            child: Text(
+                               orderslist[i]['order_detail'][0]['rest_menu']['menu_details'],
+                              style: addressTextStyle,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                           Text(
-                            '2019-12-11',
+                            DateFormat.yMMMMd('en_US')
+                                    .format(DateTime.parse(orderslist[i]['created_at'])).toString(),
                             style: addressTextStyle,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -129,13 +146,14 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Quantity: ' + '2',
+                              'Quantity: ' + orderslist[i]['order_detail'][0]['quantity'],
                               style: addressTextStyle,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              '12:15',
+                              DateFormat.Hm()
+                                    .format(DateTime.parse(orderslist[i]['created_at'])).toString(),
                               style: addressTextStyle,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -165,7 +183,40 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
               color: AppColors.secondaryElement),
         ),
       ),
-      body: SingleChildScrollView(
+      body: loader
+        ? Center(
+            child: CircularProgressIndicator(
+              valueColor:
+                  AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
+            ),
+          ): reloader
+        ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
+                ),
+                SizedBox(height: 40,),
+                 Text(
+          'Reloading...',
+          style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'roboto',
+              color: AppColors.secondaryElement),
+        ),
+              ],
+            ),
+          )
+        :orderslist.length == 0
+            ? Center(
+                child: Container(
+                  child: Text('No order available'),
+                ),
+              )
+            :  SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(

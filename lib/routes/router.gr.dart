@@ -44,6 +44,8 @@ import 'package:potbelly/screens/new_review_screen.dart';
 import 'package:potbelly/Checkout_Screens/Checkout1.dart';
 import 'package:potbelly/Checkout_Screens/Checkout2.dart';
 import 'package:potbelly/Checkout_Screens/Checkout3.dart';
+import 'package:potbelly/vendor_screens.dart/open_direction.dart';
+import 'package:potbelly/vendor_screens.dart/open_map.dart';
 import 'package:potbelly/vendor_screens.dart/vendor_notifications.dart';
 import 'package:potbelly/vendor_screens.dart/orders_detail.dart';
 
@@ -86,6 +88,8 @@ class AppRouter {
   static const CheckOut1 = '/CheckOutScreen1';
   static const CheckOut2 = '/CheckOutScreen2';
   static const CheckOut3 = '/CheckOutScreen3';
+  static const Opendirection = '/opendirection';
+  static const Open_maps = '/open_maps';
   static final navigator = ExtendedNavigator();
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -174,9 +178,19 @@ class AppRouter {
           builder: (_) => TrendingRestaurantsScreen(),
           settings: settings,
         );
+      case AppRouter.Opendirection:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => Open_direction(desdirection: args,),
+          settings: settings,
+        );
       case AppRouter.OrdersDetailScreen:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => OrdersDetails(),
+          builder: (_) => OrdersDetails(orderdata: args,),
+          settings: settings,
+        );
+      case AppRouter.Open_maps:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => Open_map(desdirection: args),
           settings: settings,
         );
       case AppRouter.CheckOut1:

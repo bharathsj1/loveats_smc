@@ -103,16 +103,27 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
         'total_price':  widget.checkoutdata['cartlist'][i][j]['payableAmount'],
         'order_id': value['data']['id'],
         'rest_menuId': widget.checkoutdata['cartlist'][i][j]['id'],
+        'rest_Id': widget.checkoutdata['cartlist'][i][j]['restaurantId'],
       };
        AppService().addorderdetails(data2).then((value) {
          print(value);
-       });
-          }
-        }
-         AppRouter.navigator.pushNamed(AppRouter.CheckOut3, arguments: {
+          if(i ==  widget.checkoutdata['cartlist'].length-1 && j == widget.checkoutdata['cartlist'][i].length-1){
+             Navigator.of(context).pop();
+           Navigator.of(context).pop();
+             this.loader = false;
+      setState(() {});
+           AppRouter.navigator.pushNamed(AppRouter.CheckOut3, arguments: {
         'type': widget.checkoutdata['type'],
         'orderId': orderId
       });
+         }
+       });
+          }
+        }
+      //    AppRouter.navigator.pushNamed(AppRouter.CheckOut3, arguments: {
+      //   'type': widget.checkoutdata['type'],
+      //   'orderId': orderId
+      // });
         });
       }
       else{
@@ -124,7 +135,7 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
         'customer_addressId': widget.checkoutdata['customer_addressId'],
       };
       AppService().addeorder(data).then((value) {
-        orderId= value['data']['id'].toString() +'2021';
+        orderId= value['data']['id'].toString() ;
         print(orderId);
           for (var j = 0; j < widget.checkoutdata['cartlist'][i].length; j++) {
             print(widget.checkoutdata['cartlist'][i][j]);
@@ -133,21 +144,29 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
         'total_price':  widget.checkoutdata['cartlist'][i][j]['payableAmount'],
         'order_id': value['data']['id'],
         'rest_menuId': widget.checkoutdata['cartlist'][i][j]['id'],
+        'rest_Id': widget.checkoutdata['cartlist'][i][j]['restaurantId'],
+
       };
       print(data2);
        AppService().addorderdetails(data2).then((value) {
          print(value);
+         if(i ==  widget.checkoutdata['cartlist'].length-1 && j == widget.checkoutdata['cartlist'][i].length-1){
+           Navigator.of(context).pop();
+           Navigator.of(context).pop();
+            this.loader = false;
+      setState(() {});
+           AppRouter.navigator.pushNamed(AppRouter.CheckOut3, arguments: {
+        'type': widget.checkoutdata['type'],
+        'orderId': orderId
+      });
+         }
        });
           }
           });
         }
-          AppRouter.navigator.pushNamed(AppRouter.CheckOut3, arguments: {
-        'type': widget.checkoutdata['type'],
-        'orderId': orderId
-      });
+        
       }
-      this.loader = false;
-      setState(() {});
+     
       Toast.show('Payment Success', context, duration: 3);
     } catch (error) {
       print(error);

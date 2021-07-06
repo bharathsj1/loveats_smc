@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:location/location.dart';
+import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/values/values.dart';
+import 'package:potbelly/vendor_screens.dart/open_direction.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:toast/toast.dart';
 
 class OrdersDetails extends StatefulWidget {
-  const OrdersDetails({Key key}) : super(key: key);
+  var orderdata;
+  OrdersDetails({@required this.orderdata});
 
   @override
   _OrdersDetailsState createState() => _OrdersDetailsState();
@@ -20,123 +30,253 @@ class _OrdersDetailsState extends State<OrdersDetails> {
     fontSize: Sizes.TEXT_SIZE_14,
   );
 
+  String accounttype = '';
+  bool loader = false;
+
+  @override
+  void initState() {
+    gettype();
+    super.initState();
+  }
+
+  gettype() async {
+    accounttype = await AppService().gettype();
+    print(accounttype);
+    setState(() {});
+  }
+
   List<Widget> card() {
     return List.generate(
-        2,
-        (index) => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 5),
-          margin: EdgeInsets.only(bottom: 10),
-          decoration: BoxDecoration(
-            border: Border(
-          bottom: BorderSide(
-            color: Colors.grey[300],
-            width: 0.5,
-          ),
-        )),
-          child: ListTile(
-            contentPadding: EdgeInsets.zero,
-            leading: Padding(
-              padding: EdgeInsets.only(top: 8),
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Image.network(
-                    'https://cheetay-prod-media.s3.amazonaws.com/production/media/images/partners/2020/12/close-up-photo-of-burger-3915906-scaled.jpg',
-                    loadingBuilder: (BuildContext ctx, Widget child,
-                        ImageChunkEvent loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      } else {
-                        return Container(
-                          // height: ,
-                          width: 50,
-                          height: 50,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  AppColors.secondaryElement),
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                    fit: BoxFit.cover,
-                    height: 50,
-                    width: 50,
-                  )),
-            ),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  // color: Colors.red,
-                  width: MediaQuery.of(context).size.width * 0.55,
-                  child: Text(
-                    'Pizza burger',
-                    style: subHeadingTextStyle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+        widget.orderdata['order_detail'].length,
+        (i) => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 5),
+              margin: EdgeInsets.only(bottom: 10),
+              decoration: BoxDecoration(
+                  border: Border(
+                bottom: BorderSide(
+                  color: Colors.grey[300],
+                  width: 0.5,
                 ),
-                Row(
-                  children: [
-                    Text(
-                      '\$' + '299.00',
-                      style: TextStyle(
-                        color: AppColors.secondaryElement,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'roboto',
-                        fontSize: Sizes.TEXT_SIZE_16,
-                      ),
-                    ),
-
-                    // Ratings(ratings[i]),
-                  ],
+              )),
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Image.network(
+                        widget.orderdata['order_detail'][i]['rest_menu']
+                            ['menu_image'],
+                        loadingBuilder: (BuildContext ctx, Widget child,
+                            ImageChunkEvent loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return Container(
+                              // height: ,
+                              width: 50,
+                              height: 50,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      AppColors.secondaryElement),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        fit: BoxFit.cover,
+                        height: 50,
+                        width: 50,
+                      )),
                 ),
-              ],
-            ),
-            subtitle: Column(
-              children: [
-                Row(
+                title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Home cooking experience',
-                      style: addressTextStyle,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                  children: <Widget>[
+                    Container(
+                      // color: Colors.red,
+                      width: MediaQuery.of(context).size.width * 0.55,
+                      child: Text(
+                        widget.orderdata['order_detail'][i]['rest_menu']
+                            ['menu_name'],
+                        style: subHeadingTextStyle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                    Text(
-                      '2019-12-11',
-                      style: addressTextStyle,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                    Row(
+                      children: [
+                        Text(
+                          '\$' +
+                              widget.orderdata['order_detail'][i]
+                                  ['total_price'],
+                          style: TextStyle(
+                            color: AppColors.secondaryElement,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'roboto',
+                            fontSize: Sizes.TEXT_SIZE_16,
+                          ),
+                        ),
+
+                        // Ratings(ratings[i]),
+                      ],
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 2.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Quantity: ' + '2',
-                        style: addressTextStyle,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                subtitle: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.54,
+                          child: Text(
+                            widget.orderdata['order_detail'][0]['rest_menu']
+                                ['menu_details'],
+                            style: addressTextStyle,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Text(
+                          DateFormat.yMMMMd('en_US')
+                              .format(DateTime.parse(widget
+                                  .orderdata['order_detail'][i]['created_at']))
+                              .toString(),
+                          style: addressTextStyle,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Quantity: ' +
+                                widget.orderdata['order_detail'][i]['quantity'],
+                            style: addressTextStyle,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            DateFormat.Hm()
+                                .format(DateTime.parse(
+                                    widget.orderdata['order_detail'][i]
+                                        ['created_at']))
+                                .toString(),
+                            style: addressTextStyle,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
-                      Text(
-                        '12:15',
-                        style: addressTextStyle,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ));
+  }
+
+  _onAlertButtonsPressed(context, type, Api, detail) {
+    //  StatefulBuilder(
+    //       builder: (BuildContext context, StateSetter setState) {
+    return Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "Are you sure?",
+      desc: detail,
+      buttons: [
+        DialogButton(
+          child: Text(
+            "No",
+            style: TextStyle(color: Colors.white, fontSize: 18),
           ),
-        ));
+          onPressed: () => Navigator.pop(context),
+          color: Colors.grey,
+        ),
+        DialogButton(
+          child: Text(
+            "Yes",
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          onPressed: () {
+            if (Api == 'superadmin') {
+              var data = {
+                'order_id': widget.orderdata['id'],
+                'super_admin_status': type
+              };
+              Navigator.pop(context);
+              loader = true;
+              setState(() {});
+              AppService().setsuperadmin(data).then((value) {
+                print(value);
+                if (value['message'].contains('Successfully')) {
+                  print('done');
+                  widget.orderdata['super_admin'] = type;
+                  loader = false;
+                  setState(() {});
+                }
+              });
+            } else {
+              var data = {'order_id': widget.orderdata['id'], 'status': type};
+              Navigator.pop(context);
+              loader = true;
+              setState(() {});
+              AppService().setorderstatus(data).then((value) {
+                print(value);
+                if (value['message'].contains('Successfully')) {
+                  print('done');
+                  widget.orderdata['status'] = type;
+                  loader = false;
+                  setState(() {});
+                  // Navigator.pop(context);
+                }
+              });
+            }
+          },
+          color: AppColors.secondaryElement,
+        )
+      ],
+    ).show();
+  }
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Toast.show(
+          'Location services are disabled. Turn on your location', context,
+          duration: 4);
+      // return Future.error('Location services are disabled.');
+      return null;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Toast.show(
+            'Location permissions are denied. Turn on your location', context,
+            duration: 4);
+        // return Future.error('Location permissions are denied');
+        return null;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      Toast.show(
+          'Location permissions are permanently denied, we cannot request permissions. Turn on your location',
+          context,
+          duration: 4);
+      // return Future.error(
+      //   'Location permissions are permanently denied, we cannot request permissions.');
+      return null;
+    }
+    return await Geolocator.getCurrentPosition();
   }
 
   @override
@@ -146,7 +286,6 @@ class _OrdersDetailsState extends State<OrdersDetails> {
       appBar: AppBar(
         centerTitle: true,
         iconTheme: IconThemeData(color: AppColors.secondaryElement),
-
         elevation: 0,
         title: Text(
           'Order Details',
@@ -168,55 +307,169 @@ class _OrdersDetailsState extends State<OrdersDetails> {
         )),
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Total',
-                    style: TextStyle(
-                      color: AppColors.secondaryElement,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'roboto',
-                      fontSize: Sizes.TEXT_SIZE_20,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+          child: loader
+              ? Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        AppColors.secondaryElement),
                   ),
-                  Text(
-                    '\$' + '299.00',
-                    style: TextStyle(
-                      color: AppColors.secondaryElement,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'roboto',
-                      fontSize: Sizes.TEXT_SIZE_20,
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Total',
+                          style: TextStyle(
+                            color: AppColors.secondaryElement,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'roboto',
+                            fontSize: Sizes.TEXT_SIZE_20,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          '\$' + widget.orderdata['total_amount'],
+                          style: TextStyle(
+                            color: AppColors.secondaryElement,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'roboto',
+                            fontSize: Sizes.TEXT_SIZE_20,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-              PotbellyButton(
-                // StringConst.SUBSCRIPTION,
-                'Delivered',
-                buttonHeight: 50,
-                buttonTextStyle: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: AppColors.secondaryElement),
-                // onTap: () => Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (_) => RegisterScreen()
-                // ),
-                // ),
-              ),
-            ],
-          ),
+                    accounttype == '0'
+                        ? widget.orderdata['super_admin'] != null
+                            ? PotbellyButton(toBeginningOfSentenceCase(widget.orderdata['super_admin']).toString(),
+                                buttonHeight: 50,
+                                buttonTextStyle: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: Colors.grey.withOpacity(0.8)),
+                                onTap: () {})
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  PotbellyButton('Reject',
+                                      buttonHeight: 50,
+                                      buttonWidth:
+                                          MediaQuery.of(context).size.width /
+                                              2.5,
+                                      buttonTextStyle: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          color: Colors.red[500]), onTap: () {
+                                    _onAlertButtonsPressed(
+                                        context,
+                                        'rejected',
+                                        'superadmin',
+                                        "Do you want to reject this order?");
+                                  }),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  PotbellyButton('Accept',
+                                      buttonHeight: 50,
+                                      buttonWidth:
+                                          MediaQuery.of(context).size.width /
+                                              2.5,
+                                      buttonTextStyle: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          color: AppColors.secondaryElement),
+                                      onTap: () {
+                                    _onAlertButtonsPressed(
+                                        context,
+                                        'approved',
+                                        'superadmin',
+                                        "Do you want to accept this order?");
+                                  }),
+                                ],
+                              )
+                        : accounttype == '4'
+                            ? widget.orderdata['status'] != null
+                                ? PotbellyButton(
+                                    toBeginningOfSentenceCase(widget.orderdata['status'].toString()),
+                                    buttonHeight: 50,
+
+                                    buttonTextStyle: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        color: Colors.grey.withOpacity(0.8)),
+                                      onTap: () {
+                                        print(1);
+                                      }
+                                  )
+                                : PotbellyButton('Ready',
+                                    buttonHeight: 50,
+                                    buttonTextStyle: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        color: AppColors.secondaryElement),
+                                    onTap: () {
+                                        print(2);
+                                    _onAlertButtonsPressed(context, 'ready',
+                                        'status', 'Food is ready to deliver?');
+                                  })
+                            : accounttype == '3'
+                                ? widget.orderdata['status'] == 'delivered'
+                                    ? PotbellyButton(
+                                        toBeginningOfSentenceCase(widget.orderdata['status'].toString()),
+                                        buttonHeight: 50,
+                                        buttonTextStyle: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            color:
+                                                Colors.grey.withOpacity(0.8)),
+                                        // onTap: () {}
+                                      )
+                                    : PotbellyButton('Delivered',
+                                        buttonHeight: 50,
+                                        buttonTextStyle: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(100),
+                                            color: AppColors.secondaryElement), onTap: () {
+                                        _onAlertButtonsPressed(
+                                            context,
+                                            'delivered',
+                                            'status',
+                                            'Food has been delivered to the customer?');
+                                      })
+                                : Container(),
+                  ],
+                ),
         ),
       ),
       body: SingleChildScrollView(
@@ -248,7 +501,7 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                           // color: Colors.red,
                           width: MediaQuery.of(context).size.width * 0.55,
                           child: Text(
-                            'Order #1234',
+                            'Order #' + widget.orderdata['id'].toString(),
                             style: subHeadingTextStyle,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -257,7 +510,7 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                         Row(
                           children: [
                             Text(
-                              '\$' + '299.00',
+                              '\$' + widget.orderdata['total_amount'],
                               style: TextStyle(
                                 color: AppColors.secondaryElement,
                                 fontWeight: FontWeight.bold,
@@ -277,13 +530,17 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Payment Method: Card',
+                              'Payment Method: ' +
+                                  widget.orderdata['payment_method'],
                               style: addressTextStyle,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              '2019-12-11',
+                              DateFormat.yMMMMd('en_US')
+                                  .format(DateTime.parse(
+                                      widget.orderdata['created_at']))
+                                  .toString(),
                               style: addressTextStyle,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -296,13 +553,18 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Items: ' + '2',
+                                'Items: ' +
+                                    widget.orderdata['order_detail'].length
+                                        .toString(),
                                 style: addressTextStyle,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               Text(
-                                '12:15',
+                                DateFormat.Hm()
+                                    .format(DateTime.parse(
+                                        widget.orderdata['created_at']))
+                                    .toString(),
                                 style: addressTextStyle,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
@@ -350,7 +612,8 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Charles W. Abeyta',
+                        toBeginningOfSentenceCase(
+                            widget.orderdata['user_address']['name']),
                         style: TextStyle(
                             fontSize: 20,
                             // fontWeight: FontWeight.bold,
@@ -381,28 +644,77 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '4722 Villa Drive',
-                        style: TextStyle(
-                            fontSize: 20,
-                            // fontWeight: FontWeight.bold,
-                            fontFamily: 'roboto',
-                            color: Colors.black87),
-                        // maxLines: 1,
-                        // overflow: TextOverflow.ellipsis,
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: Text(
+                          widget.orderdata['user_address']['address'] +
+                              ', ' +
+                              widget.orderdata['user_address']['city'] +
+                              ', ' +
+                              widget.orderdata['user_address']['country'],
+                          style: TextStyle(
+                              fontSize: 20,
+                              // fontWeight: FontWeight.bold,
+                              fontFamily: 'roboto',
+                              color: Colors.black87),
+                          // maxLines: 1,
+                          // overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       Padding(
                           padding: EdgeInsets.only(top: 0),
-                          child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                                color: Color(0xFFDFE0E4),
-                                borderRadius: BorderRadius.circular(100)),
-                            child: Icon(
-                              Icons.directions_outlined,
-                              // size: 16,
-                              color: Colors.black54,
+                          child: InkWell(
+                            onTap: () async {
+                              // LocationData currentLocation;
+                              // Location location;
+                              // currentLocation = await location.getLocation();
+                              if (accounttype == '3') {
+                                var location = await _determinePosition();
+                                print(location);
+                                if (location != null) {
+                                  AppRouter.navigator.pushNamed(
+                                      AppRouter.Opendirection,
+                                      arguments: {
+                                        'lat': double.parse(
+                                            widget.orderdata['user_address']
+                                                ['user_latitude']),
+                                        'long': double.parse(
+                                            widget.orderdata['user_address']
+                                                ['user_longitude']),
+                                        'clat': location.latitude,
+                                        'clong': location.longitude
+                                      });
+                                }
+                              } else {
+                                AppRouter.navigator
+                                    .pushNamed(AppRouter.Open_maps, arguments: {
+                                  'lat': double.parse(
+                                      widget.orderdata['user_address']
+                                          ['user_latitude']),
+                                  'long': double.parse(
+                                      widget.orderdata['user_address']
+                                          ['user_longitude']),
+                                  'address': widget.orderdata['user_address']
+                                          ['address'] +
+                                      ', ' +
+                                      widget.orderdata['user_address']['city'] +
+                                      ', ' +
+                                      widget.orderdata['user_address']
+                                          ['country'],
+                                });
+                              }
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                  color: Color(0xFFDFE0E4),
+                                  borderRadius: BorderRadius.circular(100)),
+                              child: Icon(
+                                Icons.directions_outlined,
+                                // size: 16,
+                                color: Colors.black54,
+                              ),
                             ),
                           )),
                     ],
@@ -414,7 +726,7 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '+442292912993',
+                        widget.orderdata['user_address']['phone_no'],
                         style: TextStyle(
                             fontSize: 20,
                             // fontWeight: FontWeight.bold,

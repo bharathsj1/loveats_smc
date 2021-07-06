@@ -279,7 +279,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           '');
 
       String uid = widget.uid;
-
+      print(uid);
       var message = await _service.registerUserWithEmail(
           userModel, _profilePicture, uid, widget.type ?? 0);
       print(message);

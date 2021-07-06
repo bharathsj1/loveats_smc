@@ -205,7 +205,7 @@ class _CheckOutScreen3State extends State<CheckOutScreen3> {
               // ),
               // SizedBox(width: 10,),
                PotbellyButton(
-              widget.checkoutdata['type'] =='subscription'? 'Continue' : 'Track Order',
+              widget.checkoutdata['type'] =='subscription'? 'Continue' : 'Continue',
                 onTap: () {
                   AppRouter.navigator.pushNamedAndRemoveUntil(AppRouter.rootScreen, (route) => false);
                 },

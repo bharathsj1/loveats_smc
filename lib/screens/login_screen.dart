@@ -244,7 +244,6 @@ class _BackgroundVideoState extends State<BackgroundVideo>
     _controller.dispose();
   }
 }
-
 _signInWithEmail(BuildContext context, TextEditingController emailCont,
     TextEditingController passwordCont, key) async {
   if (key.currentState.validate()) {
@@ -252,12 +251,14 @@ _signInWithEmail(BuildContext context, TextEditingController emailCont,
         .signInWithEmail(context, emailCont.text, passwordCont.text);
     if (response['message'].contains('success')) {
       print(response['user']);
+      
       Navigator.pushAndRemoveUntil(context,
           MaterialPageRoute(builder: (_) => response['user'].data.custAccountType =='2'? RootScreen():RootScreen2()), (route) => false);
     } else
       showSnackBar(context, response['message']);
   }
 }
+
 
 @override
 Widget _buildHeader() {
@@ -339,12 +340,16 @@ _signInWithGoogle(BuildContext context) async {
   String message = await Service().signInWithGoogle();
   print(message);
 
-  if (message.contains('successfully'))
+  if (message.contains('successfully')){
+
     Navigator.pushAndRemoveUntil(context,
         MaterialPageRoute(builder: (_) => RootScreen()), (route) => false);
+  }
+  
   else if (message.contains('register screen')) {
     FirebaseAuth _auth = FirebaseAuth.instance;
     var currUser = await _auth.currentUser();
+    print(currUser.uid);
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
