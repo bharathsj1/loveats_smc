@@ -30,6 +30,7 @@ class _Open_directionState extends State<Open_direction> {
 
 // for my drawn routes on the map
 Set<Polyline> _polylines = Set<Polyline>();
+
 List<LatLng> polylineCoordinates = [];
 PolylinePoints polylinePoints;
 String googleAPIKey = 'AIzaSyCkoLh9yZhcAtP9R-KsP90JaqFiooRuEmg';
@@ -55,6 +56,7 @@ Location location;
   //   //   );
   //   // });
   // }
+
 
   @override
   void initState() {
@@ -85,7 +87,7 @@ Location location;
    
    // subscribe to changes in the user's location
    // by "listening" to the location's onLocationChanged event
-   location.onLocationChanged().listen((LocationData cLoc) {
+   location.onLocationChanged.listen((LocationData cLoc) {
       // cLoc contains the lat and long of the
       // current user's position in real time,
       // so we're holding on to it
@@ -231,23 +233,47 @@ if (currentLocation != null) {
    }
 }
 
+// _addPolyLine() {
+//     PolylineId id = PolylineId("poly");
+//     Polyline polyline = Polyline(
+//         polylineId: id, color: Colors.red, points: polylineCoordinates);
+//     _polylines[id] = polyline;
+//     setState(() {});
+//   }
+
 void setPolylines() async {
-   List<PointLatLng> result = await polylinePoints.getRouteBetweenCoordinates(
-   googleAPIKey,
-  //  currentLocation.latitude,
-  //  currentLocation.longitude,
-   widget.desdirection['clat'],widget.desdirection['clong'],
-  //  destinationLocation.latitude,
-  //  destinationLocation.longitude
- widget.desdirection['lat'],widget.desdirection['long']
-   );
-   
-   if(result.isNotEmpty){
-      result.forEach((PointLatLng point){
-         polylineCoordinates.add(
-            LatLng(point.latitude,point.longitude)
-         );
+   PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        googleAPIKey,
+        PointLatLng(widget.desdirection['clat'], widget.desdirection['clong']),
+        PointLatLng(widget.desdirection['lat'],widget.desdirection['long']),
+        travelMode: TravelMode.driving,
+        wayPoints: [PolylineWayPoint(location: "Sabo, Yaba Lagos Nigeria")]);
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
+    }
+//     if(mounted){
+// _addPolyLine();
+//     }
+//    List<PointLatLng> result = await polylinePoints.getRouteBetweenCoordinates(
+//    googleAPIKey,
+//   //  currentLocation.latitude,
+//   //  currentLocation.longitude,
+//    widget.desdirection['clat'],widget.desdirection['clong'],
+//   //  destinationLocation.latitude,
+//   //  destinationLocation.longitude
+//  widget.desdirection['lat'],widget.desdirection['long']
+//    );
+   
+//    if(result.isNotEmpty){
+//       result.forEach((PointLatLng point){
+//          polylineCoordinates.add(
+//             LatLng(point.latitude,point.longitude)
+//          );
+//       });
+
+
       if(mounted){
      setState(() {
       _polylines.add(Polyline(
@@ -259,9 +285,8 @@ void setPolylines() async {
     });
       }
   }
-}
 
-void updatePinOnMap() async {
+    void updatePinOnMap() async {
    
    // create a new CameraPosition instance
    // every time the location changes, so the camera
@@ -297,4 +322,7 @@ controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
         
    }
 }
+
+
 }
+

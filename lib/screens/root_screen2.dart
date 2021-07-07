@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
@@ -34,6 +35,7 @@ class _RootScreen2State extends State<RootScreen2>
     return angle == tilt90Degrees ? true : false;
   }
 
+ 
   @override
   initState() {
     super.initState();
@@ -128,8 +130,8 @@ class _RootScreen2State extends State<RootScreen2>
           //         currentScreen: HomeScreen(),
           //         currentTab: HomeScreen.TAB_NO,
           //       );
-          AppRouter.navigator
-                        .pushNamed(AppRouter.vendornotificationsScreen);
+          Navigator
+                        .pushNamed(context,AppRouter.vendornotificationsScreen);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

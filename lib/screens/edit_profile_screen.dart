@@ -29,7 +29,7 @@ class EditProfileScreen extends StatelessWidget {
             title: "Edit Profile",
             trailing: <Widget>[
               InkWell(
-                onTap: () => AppRouter.navigator.pop(),
+                onTap: () => Navigator.pop(context),
                 child: Center(
                   child: Container(
                     margin:
@@ -98,7 +98,7 @@ class EditProfileScreen extends StatelessWidget {
               PotbellyButton(
                 "Update",
                 buttonWidth: MediaQuery.of(context).size.width,
-                onTap: () => AppRouter.navigator.pop(),
+                onTap: () => Navigator.pop(context),
               ),
               Spacer(flex: 1),
             ],

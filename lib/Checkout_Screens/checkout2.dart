@@ -112,7 +112,7 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
            Navigator.of(context).pop();
              this.loader = false;
       setState(() {});
-           AppRouter.navigator.pushNamed(AppRouter.CheckOut3, arguments: {
+           Navigator.pushNamed(context,AppRouter.CheckOut3, arguments: {
         'type': widget.checkoutdata['type'],
         'orderId': orderId
       });
@@ -155,7 +155,7 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
            Navigator.of(context).pop();
             this.loader = false;
       setState(() {});
-           AppRouter.navigator.pushNamed(AppRouter.CheckOut3, arguments: {
+           Navigator.pushNamed(context,AppRouter.CheckOut3, arguments: {
         'type': widget.checkoutdata['type'],
         'orderId': orderId
       });
@@ -344,7 +344,7 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
       appBar: AppBar(
         elevation: 0,
         leading: InkWell(
-          onTap: () => AppRouter.navigator.pop(),
+          onTap: () => Navigator.pop(context),
           child: Image.asset(
             ImagePath.arrowBackIcon,
             color: AppColors.headingText,

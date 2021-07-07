@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Restaurant {
   final CollectionReference restaurantlist =
-      Firestore.instance.collection('Restaurants');
+      FirebaseFirestore.instance.collection('Restaurants');
 
   Future<void> createDemoRestaurants(name) {
     var date= DateTime.now().millisecondsSinceEpoch.toString();
@@ -11,7 +11,7 @@ class Restaurant {
       'https://images.all-free-download.com/images/graphiclarge/food_picture_03_hd_pictures_167556.jpg',
       'https://picturecorrect-wpengine.netdna-ssl.com/wp-content/uploads/2016/11/restaurant-food-photography-tips.jpg'
     ];
-    restaurantlist.document(date).setData({
+    restaurantlist.doc(date).set({
       'id': date,
       'name': name,
       'image': 'https://www.businesslist.pk/img/cats/restaurants.jpg',

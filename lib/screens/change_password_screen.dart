@@ -28,7 +28,7 @@ class ChangePasswordScreen extends StatelessWidget {
             title: "Change Password",
             trailing: <Widget>[
               InkWell(
-                onTap: () => AppRouter.navigator.pop(),
+                onTap: () => Navigator.pop(context),
                 child: Center(
                   child: Container(
                     margin:

@@ -24,7 +24,7 @@ import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 
 class Service {
   FirebaseAuth _auth = FirebaseAuth.instance;
-  CollectionReference usersCollection = Firestore.instance.collection('users');
+  CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
   String accessToken;
   Dio dio = Dio(
     BaseOptions(
@@ -44,7 +44,7 @@ class Service {
     print('In Register WIth Email Function');
     bool _isEverthingFine = false;
     String message;
-    User _user;
+    UserData _user;
     String udid;
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {
@@ -81,7 +81,7 @@ class Service {
         _isEverthingFine = true;
         accessToken = value.data['access_token'];
         message = 'success';
-        _user = User.fromJson(value.data);
+        _user = UserData.fromJson(value.data);
         await setKeyData('accessToken', accessToken);
         await setKeyData('accounttype', _user.data.custAccountType);
         await setKeyData('photo', _user.data.custProfileImage);
@@ -113,10 +113,10 @@ class Service {
       GoogleSignInAccount googleSignIn = await GoogleSignIn().signIn();
       GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignIn.authentication;
-      AuthCredential authCredential = GoogleAuthProvider.getCredential(
+      AuthCredential authCredential = GoogleAuthProvider.credential(
           idToken: googleSignInAuthentication.idToken,
           accessToken: googleSignInAuthentication.accessToken);
-      AuthResult _authResult = await _auth.signInWithCredential(authCredential);
+      UserCredential _authResult = await _auth.signInWithCredential(authCredential);
       bool isUserAvailable = await checkIfUserAvailable(_authResult.user.uid);
       if (isUserAvailable) {
         return 'successfully logged in';
@@ -137,20 +137,20 @@ class Service {
     switch (result.status) {
       case AuthorizationStatus.authorized:
         final appleIdCredential = result.credential;
-        OAuthProvider oAuthProvider = OAuthProvider(providerId: 'apple.com');
+        OAuthProvider oAuthProvider = OAuthProvider('apple.com');
 
-        final credentials = oAuthProvider.getCredential(
+        final credentials = oAuthProvider.credential(
           idToken: String.fromCharCodes(appleIdCredential.identityToken),
           rawNonce: String.fromCharCodes(appleIdCredential.authorizationCode),
         );
 
-        final AuthResult authResult =
+        final UserCredential authResult =
             await _auth.signInWithCredential(credentials);
 
         final firebaseUser = authResult.user;
-        UserUpdateInfo userUpdateInfo = UserUpdateInfo();
-        userUpdateInfo.displayName = firebaseUser.displayName;
-        await firebaseUser.updateProfile(userUpdateInfo);
+        // UserUpdateInfo userUpdateInfo = UserUpdateInfo();
+        // userUpdateInfo.displayName = firebaseUser.displayName;
+        await firebaseUser.updateDisplayName(firebaseUser.displayName);
         bool isUserAvailable = await checkIfUserAvailable(firebaseUser.uid);
         if (isUserAvailable) {
           print('vailbale');
@@ -185,11 +185,11 @@ class Service {
   }
 
   Future<UserModel> getUserDetail() async {
-    FirebaseUser _user = await _auth.currentUser();
+    User _user =  _auth.currentUser;
     final userDocs =
-        await usersCollection.where('uId', isEqualTo: _user.uid).getDocuments();
+        await usersCollection.where('uId', isEqualTo: _user.uid).get();
 
-    List<UserModel> userClass = userDocs.documents.map((e) {
+    List<UserModel> userClass = userDocs.docs.map((e) {
       return UserModel.fromSnapshot(e);
     }).toList();
 
@@ -201,7 +201,7 @@ class Service {
       BuildContext context, String email, String password) async {
     print('SIGNIN_WITH_EMAIL');
     String message;
-    User _user;
+    UserData _user;
 
     FormData _form = FormData.fromMap({
       'email': email,
@@ -216,7 +216,7 @@ class Service {
         message = 'Invalid Login Details';
       } else {
         message = 'success';
-        _user = User.fromJson(value.data);
+        _user = UserData.fromJson(value.data);
         await setKeyData('accessToken', _user.accessToken);
         await setKeyData('name', _user.data.custFirstName);
         await setKeyData('email', _user.data.email);
@@ -236,13 +236,13 @@ class Service {
     if (image != null) {
       String fileName = basename(image.path);
       try {
-        StorageReference reference =
+        Reference reference =
             FirebaseStorage.instance.ref().child("images/$fileName");
 
-        StorageUploadTask uploadTask = reference.putFile(image);
+        UploadTask uploadTask = reference.putFile(image);
 
         //Snapshot of the uploading task
-        StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+        TaskSnapshot taskSnapshot = (await uploadTask);
         String url = await taskSnapshot.ref.getDownloadURL();
         return url;
       } catch (error) {
@@ -265,8 +265,8 @@ class Service {
         _isAvailable = false;
       else{
         _isAvailable = true;
-    User _user;
-    _user = User.fromJson(value.data);
+    UserData _user;
+    _user = UserData.fromJson(value.data);
         await setKeyData('accessToken', _user.accessToken);
         await setKeyData('name', _user.data.custFirstName);
         await setKeyData('email', _user.data.email);
@@ -283,7 +283,7 @@ class Service {
   }
 
   Future<String> setDataInUserCollection(UserModel userModel) async {
-    usersCollection.document(userModel.phoneNo).setData(userModel.toJson());
+    usersCollection.doc(userModel.phoneNo).set(userModel.toJson());
     return 'successfully';
   }
 

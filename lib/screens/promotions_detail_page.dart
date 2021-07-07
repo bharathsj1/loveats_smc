@@ -122,7 +122,7 @@ class PromotionDetailsScreen extends StatelessWidget {
                             child: Row(
                               children: <Widget>[
                                 InkWell(
-                                  onTap: () => AppRouter.navigator.pop(),
+                                  onTap: () => Navigator.pop(context),
                                   child: Padding(
                                     padding: const EdgeInsets.only(
                                       left: Sizes.MARGIN_16,

@@ -50,7 +50,7 @@ class _TrendingRestaurantsScreenState extends State<TrendingRestaurantsScreen> {
           appBar: AppBar(
             elevation: 0.0,
             leading: InkWell(
-              onTap: () => AppRouter.navigator.pop(),
+              onTap: () => Navigator.pop(context),
               child: Image.asset(
                 ImagePath.arrowBackIcon,
                 color: AppColors.headingText,
@@ -136,7 +136,7 @@ class _TrendingRestaurantsScreenState extends State<TrendingRestaurantsScreen> {
                                 width: MediaQuery.of(context).size.width * 0.92,
                                 child: FoodyBiteCard(
                                   cardElevation: 1,
-                                  onTap: () => AppRouter.navigator.pushNamed(
+                                  onTap: () => Navigator.pushNamed(context,
                                     AppRouter.restaurantDetailsScreen,
                                     arguments: RestaurantDetails(
                                         imagePath: res.restImage,

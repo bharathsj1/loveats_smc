@@ -390,7 +390,7 @@ class _CartScreenState extends State<CartScreen> {
       appBar: AppBar(
         elevation: 1,
         leading: InkWell(
-          onTap: () => AppRouter.navigator.pop(),
+          onTap: () => Navigator.pop(context),
           child: Image.asset(
             ImagePath.arrowBackIcon,
             color: AppColors.headingText,
@@ -452,7 +452,7 @@ class _CartScreenState extends State<CartScreen> {
                                   'type': 'cart',
                                   'mixmatch': mixmatch,
                                 };
-                    AppRouter.navigator.pushNamed(AppRouter.CheckOut1,arguments: data);
+                    Navigator.pushNamed(context,AppRouter.CheckOut1,arguments: data);
                   },
                   buttonHeight: 45,
                   buttonWidth: 170,

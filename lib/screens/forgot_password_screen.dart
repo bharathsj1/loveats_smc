@@ -41,7 +41,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                   child: ListView(
                     children: [
                       SpaceH16(),
-                      _buildAppBar(),
+                      _buildAppBar(context),
                       Container(
                         margin: EdgeInsets.only(top: Sizes.MARGIN_60),
                         child: Text(
@@ -83,12 +83,12 @@ class ForgotPasswordScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAppBar() {
+  Widget _buildAppBar(context) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         InkWell(
-          onTap: () => AppRouter.navigator.pop(),
+          onTap: () => Navigator.pop(context),
           child: Padding(
             padding: const EdgeInsets.only(
               left: Sizes.MARGIN_12,

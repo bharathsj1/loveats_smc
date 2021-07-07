@@ -25,7 +25,7 @@ class CustomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppBar(
       elevation: 0.0,
-      leading: hasLeading ? (leading ?? defaultLeading()) : null,
+      leading: hasLeading ? (leading ?? defaultLeading(context)) : null,
       centerTitle: true,
       title: Text(
         title,
@@ -51,9 +51,9 @@ class CustomAppBar extends StatelessWidget {
     ];
   }
 
-  Widget defaultLeading() {
+  Widget defaultLeading(context) {
     return InkWell(
-      onTap: () => AppRouter.navigator.pop(),
+      onTap: () => Navigator.pop(context),
       child: Image.asset(
         ImagePath.arrowBackIcon,
         color: AppColors.headingText,

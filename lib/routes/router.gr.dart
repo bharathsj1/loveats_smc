@@ -90,7 +90,7 @@ class AppRouter {
   static const CheckOut3 = '/CheckOutScreen3';
   static const Opendirection = '/opendirection';
   static const Open_maps = '/open_maps';
-  static final navigator = ExtendedNavigator();
+ Navigator navigator = Navigator();
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final args = settings.arguments;
     switch (settings.name) {
@@ -120,54 +120,54 @@ class AppRouter {
           settings: settings,
         );
       case AppRouter.homeScreen:
-        if (hasInvalidArgs<Key>(args)) {
-          return misTypedArgsRoute<Key>(args);
-        }
+        // if (hasInvalidArgs<Key>(args)) {
+        //   return misTypedArgsRoute<Key>(args);
+        // }
         final typedArgs = args as Key;
         return CupertinoPageRoute<dynamic>(
           builder: (_) => HomeScreen(key: typedArgs),
           settings: settings,
         );
       case AppRouter.rootScreen:
-        if (hasInvalidArgs<CurrentScreen>(args)) {
-          return misTypedArgsRoute<CurrentScreen>(args);
-        }
+        // if (hasInvalidArgs<CurrentScreen>(args)) {
+        //   return misTypedArgsRoute<CurrentScreen>(args);
+        // }
         final typedArgs = args as CurrentScreen;
         return CupertinoPageRoute<dynamic>(
           builder: (_) => RootScreen(currentScreen: typedArgs),
           settings: settings,
         );
-      case AppRouter.rootScreen2:
-        if (hasInvalidArgs<CurrentScreen>(args)) {
-          return misTypedArgsRoute<CurrentScreen>(args);
-        }
+       case AppRouter.rootScreen2:
+        // if (hasInvalidArgs<CurrentScreen>(args)) {
+        //   return misTypedArgsRoute<CurrentScreen>(args);
+        // }
         final typedArgs = args as CurrentScreen;
         return CupertinoPageRoute<dynamic>(
           builder: (_) => RootScreen(currentScreen: typedArgs),
           settings: settings,
-        );
+        ); 
       case AppRouter.profileScreen:
-        if (hasInvalidArgs<Key>(args)) {
-          return misTypedArgsRoute<Key>(args);
-        }
+        // if (hasInvalidArgs<Key>(args)) {
+        //   return misTypedArgsRoute<Key>(args);
+        // }
         final typedArgs = args as Key;
         return CupertinoPageRoute<dynamic>(
           builder: (_) => ProfileScreen(key: typedArgs),
           settings: settings,
         );
       case AppRouter.notificationsScreen:
-        if (hasInvalidArgs<Key>(args)) {
-          return misTypedArgsRoute<Key>(args);
-        }
+        // if (hasInvalidArgs<Key>(args)) {
+        //   return misTypedArgsRoute<Key>(args);
+        // }
         final typedArgs = args as Key;
         return CupertinoPageRoute<dynamic>(
           builder: (_) => NotificationsScreen(key: typedArgs),
           settings: settings,
         );
       case AppRouter.vendornotificationsScreen:
-        if (hasInvalidArgs<Key>(args)) {
-          return misTypedArgsRoute<Key>(args);
-        }
+        // if (hasInvalidArgs<Key>(args)) {
+        //   return misTypedArgsRoute<Key>(args);
+        // }
         final typedArgs = args as Key;
         return CupertinoPageRoute<dynamic>(
           builder: (_) => VendorNotificationsScreen(key: typedArgs),
@@ -209,18 +209,18 @@ class AppRouter {
           settings: settings,
         );
       case AppRouter.restaurantDetailsScreen:
-        if (hasInvalidArgs<RestaurantDetails>(args, isRequired: true)) {
-          return misTypedArgsRoute<RestaurantDetails>(args);
-        }
+        // if (hasInvalidArgs<RestaurantDetails>(args, isRequired: true)) {
+        //   return misTypedArgsRoute<RestaurantDetails>(args);
+        // }
         final typedArgs = args as RestaurantDetails;
         return CupertinoPageRoute<dynamic>(
           builder: (_) => RestaurantDetailsScreen(restaurantDetails: typedArgs),
           settings: settings,
         );
       case AppRouter.promotionDetailsScreen:
-        if (hasInvalidArgs<PromotionDetails>(args, isRequired: true)) {
-          return misTypedArgsRoute<PromotionDetails>(args);
-        }
+        // if (hasInvalidArgs<PromotionDetails>(args, isRequired: true)) {
+        //   return misTypedArgsRoute<PromotionDetails>(args);
+        // }
         final typedArgs = args as PromotionDetails;
         return CupertinoPageRoute<dynamic>(
           builder: (_) => PromotionDetailsScreen(promotionDetails: typedArgs),
@@ -252,9 +252,9 @@ class AppRouter {
           settings: settings,
         );
       case AppRouter.searchResultsScreen:
-        if (hasInvalidArgs<SearchValue>(args)) {
-          return misTypedArgsRoute<SearchValue>(args);
-        }
+        // if (hasInvalidArgs<SearchValue>(args)) {
+        //   return misTypedArgsRoute<SearchValue>(args);
+        // }
         final typedArgs = args as SearchValue;
         return CupertinoPageRoute<dynamic>(
           builder: (_) => SearchResultsScreen(typedArgs),
@@ -295,10 +295,10 @@ class AppRouter {
           settings: settings,
         );
       case AppRouter.categoryDetailScreen:
-        if (hasInvalidArgs<CategoryDetailScreenArguments>(args,
-            isRequired: true)) {
-          return misTypedArgsRoute<CategoryDetailScreenArguments>(args);
-        }
+        // if (hasInvalidArgs<CategoryDetailScreenArguments>(args,
+        //     isRequired: true)) {
+        //   return misTypedArgsRoute<CategoryDetailScreenArguments>(args);
+        // }
         final typedArgs = args as CategoryDetailScreenArguments;
         return CupertinoPageRoute<dynamic>(
           builder: (_) => CategoryDetailScreen(
@@ -346,7 +346,7 @@ class AppRouter {
           settings: settings,
         );
       default:
-        return unknownRoutePage(settings.name);
+        // return unknownRoutePage(settings.name);
     }
   }
 }

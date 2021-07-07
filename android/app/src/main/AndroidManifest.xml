@@ -11,11 +11,12 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- android:label="foodybite" -->
     <application
+        android:name=".Application"
         android:label="Loveats"
         android:icon="@mipmap/ic_launcher">
-        <!-- android:name=".MainActivity" -->
+        <!-- android:name="io.flutter.embedding.android.FlutterFragmentActivity" -->
         <activity
-            android:name="io.flutter.embedding.android.FlutterFragmentActivity"
+        android:name=".MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
@@ -42,6 +43,10 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+             <intent-filter>
+              <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+              <category android:name="android.intent.category.DEFAULT" />
+          </intent-filter>
         </activity>
         <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="AIzaSyCkoLh9yZhcAtP9R-KsP90JaqFiooRuEmg"/>

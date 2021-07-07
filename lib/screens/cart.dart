@@ -533,7 +533,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                               'type': 'cart'
                               // 'rest_id':widget.
                             };
-                            AppRouter.navigator.pushNamed(
+                           Navigator.pushNamed(context,
                                 AppRouter.checkoutScreen,
                                 arguments: data);
                           }),

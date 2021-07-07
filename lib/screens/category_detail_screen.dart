@@ -143,7 +143,7 @@ class CategoryDetailScreen extends StatelessWidget {
                         Row(
                           children: <Widget>[
                             InkWell(
-                              onTap: () => AppRouter.navigator.pop(),
+                              onTap: () => Navigator.pop(context),
                               child: Image.asset(ImagePath.arrowBackIcon),
                             ),
                             Spacer(flex: 1),
@@ -193,7 +193,7 @@ class CategoryDetailScreen extends StatelessWidget {
                 margin: EdgeInsets.symmetric(vertical: 6),
                 child: InkWell(
                   onTap: () {
-                    AppRouter.navigator.pushNamed(
+                    Navigator.pushNamed(context,
                       AppRouter.restaurantDetailsScreen,
                       arguments: RestaurantDetails(
                           imagePath: restaurantdata['image'],

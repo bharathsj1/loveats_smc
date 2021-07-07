@@ -466,7 +466,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
       appBar: AppBar(
         elevation: 0,
         leading: InkWell(
-          onTap: () => AppRouter.navigator.pop(),
+          onTap: () => Navigator.pop(context),
           child: Image.asset(
             ImagePath.arrowBackIcon,
             color: AppColors.headingText,
@@ -506,8 +506,8 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                     'customer_addressId': myaddress[selectedaddress]['id'],
                     'addressId': selectedaddress
                   };
-                  AppRouter.navigator
-                      .pushNamed(AppRouter.CheckOut2, arguments: data);
+                  Navigator
+                      .pushNamed(context,AppRouter.CheckOut2, arguments: data);
                 }
                 else{
                    Toast.show('Add address to continue', context, duration: 3);

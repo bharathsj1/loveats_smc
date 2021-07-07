@@ -287,8 +287,8 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
                 PotbellyButton(StringConst.CONTINUE,
                 buttonTextStyle: TextStyle(fontSize: 20,color: AppColors.white,fontWeight: FontWeight.bold),
                     buttonHeight: 50, onTap: () {
-                       AppRouter.navigator
-            .pushNamedAndRemoveUntil(AppRouter.rootScreen, (route) => false);
+                       Navigator
+            .pushNamedAndRemoveUntil(context,AppRouter.rootScreen, (route) => false);
                     }),
               ],
             ),

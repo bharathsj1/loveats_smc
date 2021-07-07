@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:auto_route/auto_route_annotations.dart';
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:potbelly/screens/add_ratings_screen.dart';
 import 'package:potbelly/screens/bookmarks_screen.dart';
@@ -35,7 +35,7 @@ import 'package:meta/meta.dart';
 
 @CupertinoAutoRouter()
 class $Router {
-  @initial
+  // @initial
   @CustomAutoRouter(
       transitionsBuilder: TransitionsBuilders.slideRight,
       durationInMilliseconds: 2000)

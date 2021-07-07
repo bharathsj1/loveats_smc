@@ -107,8 +107,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         SpaceW16(),
                         PotbellyButton(
                           'Settings',
-                          onTap: () => AppRouter.navigator
-                              .pushNamed(AppRouter.settingsScreen),
+                          onTap: () => Navigator
+                              .pushNamed(context,AppRouter.settingsScreen),
                           buttonWidth: MediaQuery.of(context).size.width / 3,
                           buttonHeight: Sizes.HEIGHT_50,
                           decoration: BoxDecoration(

@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:potbelly/routes/router.gr.dart';
@@ -25,9 +26,21 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
     color: AppColors.accentText,
     fontSize: Sizes.TEXT_SIZE_14,
   );
+
+   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  var token;
+    _register() {
+    _firebaseMessaging.getToken().then((tokeen) {
+      print(tokeen);
+      this.token = tokeen;
+      print(token);
+    });
+  }
+
   
   @override
   void initState() {
+    _register();
    getorders();
     super.initState();
     }
@@ -47,8 +60,8 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
         orderslist.length,
         (i) => InkWell(
               onTap: () {
-                AppRouter.navigator
-                    .pushNamed(AppRouter.OrdersDetailScreen,arguments: orderslist[i]).then((value) {
+               Navigator
+                    .pushNamed(context,AppRouter.OrdersDetailScreen,arguments: orderslist[i]).then((value) {
                       setState(() {
                         reloader=true;
                         getorders();

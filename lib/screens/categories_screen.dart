@@ -20,7 +20,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       appBar: AppBar(
         elevation: 0.0,
         leading: InkWell(
-          onTap: () => AppRouter.navigator.pop(),
+          onTap: () => Navigator.pop(context),
           child: Image.asset(
             ImagePath.arrowBackIcon,
             color: AppColors.secondaryElement,
@@ -69,7 +69,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   var res = snapshot.data.data[index];
                   return Container(
                     child: FoodyBiteCategoryCard(
-                      onTap: () => AppRouter.navigator.pushNamed(
+                      onTap: () => Navigator.pushNamed(context,
                         AppRouter.categoryDetailScreen,
                         arguments: CategoryDetailScreenArguments(
                           categoryName: res.menuName,

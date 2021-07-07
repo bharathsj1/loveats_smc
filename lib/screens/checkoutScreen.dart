@@ -122,9 +122,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       bool isPaymentStored =
           await Service().paymentStored((_paymentSheetData['amount'] / 100));
       if (isPaymentStored){
-         FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-      final user = await firebaseAuth.currentUser();
-       AppRouter.navigator.pushReplacementNamed(AppRouter.paymentSuccess,arguments: {
+        //  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+      // final user = firebaseAuth.currentUser;
+       Navigator.pushReplacementNamed(context,AppRouter.paymentSuccess,arguments: {
                             'cartlist': widget.checkoutdata['cartlist'],
                             
                             // 'email': user.email,
@@ -302,7 +302,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         // backgroundColor: AppColors.kFoodyBiteDarkBackground,
         elevation: 0.0,
         leading: InkWell(
-          onTap: () => AppRouter.navigator.pop(context),
+          onTap: () => Navigator.pop(context),
           child: Image.asset(
             ImagePath.arrowBackIcon,
             color: AppColors.secondaryElement,

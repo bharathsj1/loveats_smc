@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'interceptors.dart';
 
 class AppService {
   var dio =  new Dio(

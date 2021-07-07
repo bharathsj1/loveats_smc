@@ -43,7 +43,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
   @override
   Widget build(BuildContext context) {
     void navigateToDetailScreen() {
-      AppRouter.navigator.pushNamed(AppRouter.restaurantDetailsScreen);
+      Navigator.pushNamed(context,AppRouter.restaurantDetailsScreen);
     }
 
     return Scaffold(
@@ -76,7 +76,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
               SizedBox(height: Sizes.WIDTH_16),
               Expanded(
                 child: StreamBuilder(
-                    stream: Firestore.instance
+                    stream: FirebaseFirestore.instance
                         .collection('Restaurants')
                         .snapshots(),
                     builder: (context, snapshot) {
@@ -89,7 +89,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                           ),
                         );
                       } else {
-                        List<DocumentSnapshot> items = snapshot.data.documents;
+                        List<DocumentSnapshot> items = snapshot.data.docs;
                         // if (searching == true) {
                         // } else {
                         records.clear();
@@ -113,7 +113,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                             return Container(
                               margin: EdgeInsets.only(bottom: 10),
                               child: FoodyBiteCard(
-                                onTap: () => AppRouter.navigator.pushNamed(
+                                onTap: () => Navigator.pushNamed(context,
                                   AppRouter.restaurantDetailsScreen,
                                   arguments: RestaurantDetails(
                                       imagePath: records[index]['image'],

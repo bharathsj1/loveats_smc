@@ -672,7 +672,7 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                                 var location = await _determinePosition();
                                 print(location);
                                 if (location != null) {
-                                  AppRouter.navigator.pushNamed(
+                                  Navigator.pushNamed(context,
                                       AppRouter.Opendirection,
                                       arguments: {
                                         'lat': double.parse(
@@ -686,8 +686,8 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                                       });
                                 }
                               } else {
-                                AppRouter.navigator
-                                    .pushNamed(AppRouter.Open_maps, arguments: {
+                                Navigator
+                                    .pushNamed(context,AppRouter.Open_maps, arguments: {
                                   'lat': double.parse(
                                       widget.orderdata['user_address']
                                           ['user_latitude']),

@@ -9,7 +9,7 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 
 class Promotion {
   final CollectionReference promotionlist =
-      Firestore.instance.collection('Promotions');
+      FirebaseFirestore.instance.collection('Promotions');
   String _tempDir;
   File imapath;
 
@@ -120,30 +120,30 @@ class Promotion {
       file = await writeToFile(video); // <= returns File
       _getImage(file.path);
       print(file);
-      final StorageReference storageRef = FirebaseStorage.instance
+      final Reference storageRef = FirebaseStorage.instance
           .ref()
           .child('videos/' + DateTime.now().toString());
-      final StorageReference storageRef2 = FirebaseStorage.instance
+      final Reference storageRef2 = FirebaseStorage.instance
           .ref()
           .child('images/' + DateTime.now().toString());
-      StorageUploadTask uploadTask = storageRef.putFile(
+      UploadTask uploadTask = storageRef.putFile(
         file,
-        StorageMetadata(
+        SettableMetadata(
           contentType: 'video/mp4',
         ),
       );
-      StorageTaskSnapshot download = await uploadTask.onComplete;
+      TaskSnapshot download = (await uploadTask);
       String url = await download.ref.getDownloadURL();
-      StorageUploadTask uploadTask2 = storageRef2.putFile(
+      UploadTask uploadTask2 = storageRef2.putFile(
         imapath,
-        StorageMetadata(
+        SettableMetadata(
           contentType: 'image/jpg',
         ),
       );
-      StorageTaskSnapshot download2 = await uploadTask2.onComplete;
+      TaskSnapshot download2 = (await uploadTask2);
 
       String url2 = await download2.ref.getDownloadURL();
-      promotionlist.document(id).setData({
+      promotionlist.doc(id).set({
         'id': id,
         'name': name,
         'videoUrl': url,
@@ -164,18 +164,18 @@ class Promotion {
     try {
       file = await writeToFile2(video); // <= returns File
       print(file);
-      final StorageReference storageRef = FirebaseStorage.instance
+      final Reference storageRef = FirebaseStorage.instance
           .ref()
           .child('images/' + DateTime.now().toString());
-      StorageUploadTask uploadTask = storageRef.putFile(
+      UploadTask uploadTask = storageRef.putFile(
         file,
-        StorageMetadata(
+        SettableMetadata(
           contentType: 'image/png',
         ),
       );
-      StorageTaskSnapshot download = await uploadTask.onComplete;
+      TaskSnapshot download = (await uploadTask);
       String url = await download.ref.getDownloadURL();
-      promotionlist.document(id).setData({
+      promotionlist.doc(id).set({
         'id': id,
         'name': name,
         'videoUrl': "",

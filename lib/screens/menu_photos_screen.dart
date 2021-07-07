@@ -20,7 +20,7 @@ class MenuPhotosScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0.0,
         leading: InkWell(
-          onTap: () => AppRouter.navigator.pop(),
+          onTap: () => Navigator.pop(context),
           child: Image.asset(
             ImagePath.arrowBackIcon,
             color: AppColors.headingText,
@@ -178,6 +178,6 @@ class MenuPhotosScreen extends StatelessWidget {
   }
 
   void navigateToPreviewPhotos(BuildContext context) {
-    AppRouter.navigator.pushNamed(AppRouter.promotionScreen);
+    Navigator.pushNamed(context,AppRouter.promotionScreen);
   }
 }

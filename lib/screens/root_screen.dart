@@ -1,8 +1,12 @@
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/new_review_screen.dart';
 import 'package:potbelly/screens/profile_screen.dart';
+import 'package:potbelly/services/messagepopup.dart';
 import 'package:potbelly/values/values.dart';
 import 'dart:math' as math;
 
@@ -36,8 +40,10 @@ class _RootScreenState extends State<RootScreen>
     return angle == tilt90Degrees ? true : false;
   }
 
+
   @override
   initState() {
+      
     super.initState();
     print("init runs");
     currentScreen = widget.currentScreen?.currentScreen ?? HomeScreen();
@@ -130,8 +136,8 @@ class _RootScreenState extends State<RootScreen>
           //         currentScreen: HomeScreen(),
           //         currentTab: HomeScreen.TAB_NO,
           //       );
-          AppRouter.navigator
-                        .pushNamed(AppRouter.cart_Screen);
+          Navigator
+                        .pushNamed(context,AppRouter.cart_Screen);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

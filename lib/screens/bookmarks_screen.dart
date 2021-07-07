@@ -84,7 +84,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                     itemBuilder: (context, index) {
                       return Container(
                         child: FoodyBiteCard(
-                          onTap: () => AppRouter.navigator.pushNamed(
+                          onTap: () => Navigator.pushNamed(context,
                             AppRouter.restaurantDetailsScreen,
                             arguments: RestaurantDetails(
                                 imagePath: bookmarks[index]['image'],

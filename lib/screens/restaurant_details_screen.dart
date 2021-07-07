@@ -131,7 +131,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                             child: Row(
                               children: [
                                 InkWell(
-                                  onTap: () => AppRouter.navigator.pop(),
+                                  onTap: () => Navigator.pop(context),
                                   child: Padding(
                                     padding: const EdgeInsets.only(
                                       left: Sizes.MARGIN_16,
@@ -327,8 +327,8 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                                       title: StringConst.MENU_AND_PHOTOS,
                                       number: 'See All ('+_restaurentMenuModel.data.length.toString()+')'
                                           ,
-                                      onTapOfNumber: () => AppRouter.navigator
-                                          .pushNamed(AppRouter.menuPhotosScreen,
+                                      onTapOfNumber: () => Navigator
+                                          .pushNamed(context,AppRouter.menuPhotosScreen,
                                               arguments:
                                                   _restaurentMenuModel.data),
                                     ),

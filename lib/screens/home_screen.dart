@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var show = await Promotion().checkpromo();
     print(show);
     if (show) {
-      AppRouter.navigator.pushNamed(AppRouter.promotionScreen);
+      Navigator.pushNamed(context,AppRouter.promotionScreen);
       Promotion().setpromo();
     } else {
       print('promo already viewed');
@@ -148,8 +148,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_controller != null) {
       _controller.pause();
     }
-    AppRouter.navigator
-        .pushNamed(
+    Navigator
+        .pushNamed(context,
       AppRouter.promotionDetailsScreen,
       arguments: PromotionDetails(
           image: promolist[ind]['image'],
@@ -247,8 +247,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       borderWidth: 0.0, onTapOfLeadingIcon: () {
                     pausevideo();
                     FocusScope.of(context).unfocus();
-                    AppRouter.navigator
-                        .pushNamed(
+                    Navigator
+                        .pushNamed(context,
                       AppRouter.searchResultsScreen,
                       arguments: SearchValue(
                         searchcontroller.text,
@@ -262,8 +262,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     });
                   }, onTapOfSuffixIcon: () {
                     pausevideo();
-                    AppRouter.navigator
-                        .pushNamed(AppRouter.filterScreen)
+                    Navigator
+                        .pushNamed(context,AppRouter.filterScreen)
                         .then((value) => resumevideo());
                   }, borderStyle: BorderStyle.solid),
                 ),
@@ -274,8 +274,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   number: 'See all (' + resturants.length.toString() + ')',
                   onTapOfNumber: () {
                     pausevideo();
-                    AppRouter.navigator
-                        .pushNamed(AppRouter.trendingRestaurantsScreen)
+                    Navigator
+                        .pushNamed(context,AppRouter.trendingRestaurantsScreen)
                         .then((value) {
                       resumevideo();
                     });
@@ -318,8 +318,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 if (_controller != null) {
                                   _controller.pause();
                                 }
-                                AppRouter.navigator
-                                    .pushNamed(
+                                Navigator
+                                    .pushNamed(context,
                                   AppRouter.restaurantDetailsScreen,
                                   arguments: RestaurantDetails(
                                       imagePath: res.restImage,
@@ -445,8 +445,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (context, i) {
                       return InkWell(
                         onTap: () {
-                          AppRouter.navigator
-                              .pushNamed(AppRouter.promotionScreen);
+                          Navigator
+                              .pushNamed(context,AppRouter.promotionScreen);
                         },
                         child: Material(
                           elevation: 6,
@@ -702,7 +702,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: StringConst.CATEGORY,
                 number: 'See all (' + categories.length.toString() + ')',
                 onTapOfNumber: () =>
-                    AppRouter.navigator.pushNamed(AppRouter.categoriesScreen),
+                    Navigator.pushNamed(context,AppRouter.categoriesScreen),
               ),
 
               SizedBox(height: 16.0),
@@ -736,7 +736,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemBuilder: (context, index) {
                           var data = categories[index];
                           return InkWell(
-                            onTap: () => AppRouter.navigator.pushNamed(
+                            onTap: () => Navigator.pushNamed(context,
                               AppRouter.categoryDetailScreen,
                               arguments: CategoryDetailScreenArguments(
                                   categoryName: data.menuName,
@@ -779,7 +779,7 @@ class _HomeScreenState extends State<HomeScreen> {
               HeadingRow(
                 title: StringConst.FRIENDS,
                 number: StringConst.SEE_ALL_56,
-                onTapOfNumber: () => AppRouter.navigator.pushNamed(
+                onTapOfNumber: () => Navigator.pushNamed(context,
                   AppRouter.findFriendsScreen,
                 ),
               ),
@@ -865,7 +865,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   InkWell(
                     onTap: () =>
-                        AppRouter.navigator.pushNamed(AppRouter.googleMap),
+                        Navigator.pushNamed(context,AppRouter.googleMap),
                     child: Row(
                       children: [
                         Icon(Icons.location_searching, size: 12.0),

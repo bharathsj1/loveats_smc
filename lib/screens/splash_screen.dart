@@ -64,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   void textControllerListener() async {
     if (_textController.status == AnimationStatus.completed) {
-      final user = await firebaseAuth.currentUser();
+      final user =  firebaseAuth.currentUser;
       final shared = await Service().loggedUser();
       Future.delayed(Duration(milliseconds: 1000), () {
         Navigator.pushAndRemoveUntil(

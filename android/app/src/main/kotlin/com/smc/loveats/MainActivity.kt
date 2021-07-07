@@ -1,4 +1,4 @@
-package com.davidcobbina.potbelly
+package com.smc.loveats
 
 
 import io.flutter.embedding.android.FlutterActivity

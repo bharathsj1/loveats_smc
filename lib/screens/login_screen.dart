@@ -1,3 +1,4 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
@@ -109,7 +110,7 @@ class _BackgroundVideoState extends State<BackgroundVideo>
                     _buildHeader(),
                     SizedBox(height: Sizes.HEIGHT_130),
                     isLogin
-                        ? _buildForm(
+                        ? _buildForm(context,
                             emailController, passwordController, _formKey)
                         : Container(),
                     SpaceH36(),
@@ -287,7 +288,7 @@ passwordValidation(String value) {
   else if (value.length < 8) return 'Password is wrong';
 }
 
-Widget _buildForm(
+Widget _buildForm(context,
     TextEditingController email, TextEditingController password, _key) {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: Sizes.MARGIN_48),
@@ -316,8 +317,8 @@ Widget _buildForm(
               Align(
                 alignment: Alignment.topRight,
                 child: InkWell(
-                  onTap: () => AppRouter.navigator
-                      .pushNamed(AppRouter.forgotPasswordScreen),
+                  onTap: () => Navigator
+                      .pushNamed(context,AppRouter.forgotPasswordScreen),
                   child: Container(
                     margin: EdgeInsets.only(top: Sizes.MARGIN_16),
                     child: Text(
@@ -348,7 +349,7 @@ _signInWithGoogle(BuildContext context) async {
   
   else if (message.contains('register screen')) {
     FirebaseAuth _auth = FirebaseAuth.instance;
-    var currUser = await _auth.currentUser();
+    var currUser = await _auth.currentUser;
     print(currUser.uid);
     Navigator.pushAndRemoveUntil(
         context,
@@ -373,7 +374,7 @@ _signInWithApple(BuildContext context) async {
         MaterialPageRoute(builder: (_) => RootScreen()), (route) => false);
   else if (message.contains('register screen')) {
     FirebaseAuth _auth = FirebaseAuth.instance;
-    var currUser = await _auth.currentUser();
+    var currUser =  _auth.currentUser;
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(

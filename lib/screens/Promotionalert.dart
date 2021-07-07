@@ -98,9 +98,9 @@ class _PromotionPhotosScreenState extends State<PromotionPhotosScreen> {
               clientSecret: _paymentSheetData['client_secret'],
               confirmPayment: true));
       setState(() {});
-      FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-      final user = await firebaseAuth.currentUser();
-      AppRouter.navigator.pushNamed(AppRouter.CheckOut3, arguments: {
+      // FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+      // final user =  firebaseAuth.currentUser;
+      Navigator.pushNamed(context,AppRouter.CheckOut3, arguments: {
         'type': 'subscription',
         // 'orderId': DateTime.now().millisecondsSinceEpoch
       });
@@ -238,7 +238,7 @@ class _PromotionPhotosScreenState extends State<PromotionPhotosScreen> {
               left: 15,
               
               child:  InkWell(
-          onTap: () => AppRouter.navigator.pop(context),
+          onTap: () => Navigator.pop(context),
           child: Image.asset(
             ImagePath.closeIcon,
             color: AppColors.primaryColor,
