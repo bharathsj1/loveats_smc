@@ -6,6 +6,7 @@ import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/new_review_screen.dart';
 import 'package:potbelly/screens/profile_screen.dart';
+import 'package:potbelly/services/firebaseSetup.dart';
 import 'package:potbelly/services/messagepopup.dart';
 import 'package:potbelly/values/values.dart';
 import 'dart:math' as math;
@@ -43,7 +44,7 @@ class _RootScreenState extends State<RootScreen>
 
   @override
   initState() {
-      
+      FirebaseSetup.configureFirebase(context);
     super.initState();
     print("init runs");
     currentScreen = widget.currentScreen?.currentScreen ?? HomeScreen();

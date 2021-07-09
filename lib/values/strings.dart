@@ -70,5 +70,6 @@ class StringConst {
   static const String KOREAN = "Korean";
 
   //Font Family
-  static const String FONT_FAMILY = "Josefin Sans";
+  // static const String FONT_FAMILY = "Josefin Sans";
+  static const String FONT_FAMILY = "roboto";
 }

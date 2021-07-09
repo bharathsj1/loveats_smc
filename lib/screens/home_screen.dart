@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:potbelly/models/menu_types_model.dart';
 import 'package:potbelly/models/promotions.dart';
@@ -39,10 +40,20 @@ class _HomeScreenState extends State<HomeScreen> {
   List subscription = ['assets/images/mainscreen.jpg'];
 
   RestaurentsModel _restaurentsModel;
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  var token;
+    _register() {
+    _firebaseMessaging.getToken().then((tokeen) {
+      print(tokeen);
+      this.token = tokeen;
+      print(token);
+    });
+  }
 
   @override
   void initState() {
     checkpromo();
+    _register();
     getRestaurent();
     getcateory();
     super.initState();

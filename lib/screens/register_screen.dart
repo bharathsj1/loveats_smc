@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:potbelly/models/UserModel.dart';
 import 'package:potbelly/screens/login_screen.dart';
 import 'package:potbelly/screens/root_screen.dart';
+import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/custom_text_form_field.dart';
@@ -284,6 +287,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
           userModel, _profilePicture, uid, widget.type ?? 0);
       print(message);
       if (message == 'success') {
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+        var udid;
+       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      udid = androidInfo.id;
+    } else {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      udid = iosInfo.identifierForVendor;
+    }
+     _firebaseMessaging.getToken().then((tokeen) {
+      var data={
+        'device_id':udid,
+        'firebase_token':tokeen
+      };
+      AppService().savedeicetoken(data).then((value){
+        print(value);
+      Navigator.pushAndRemoveUntil(context,
+         MaterialPageRoute(builder: (_) =>  RootScreen()), (route) => false);
+      });
+     });
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => RootScreen()));
       } else {

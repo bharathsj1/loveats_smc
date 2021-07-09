@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,6 +11,7 @@ import 'package:potbelly/values/values.dart';
 import 'package:potbelly/vendor_screens.dart/open_direction.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
 class OrdersDetails extends StatefulWidget {
@@ -202,7 +205,7 @@ class _OrdersDetailsState extends State<OrdersDetails> {
             "Yes",
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
-          onPressed: () {
+          onPressed: () async {
             if (Api == 'superadmin') {
               var data = {
                 'order_id': widget.orderdata['id'],
@@ -215,6 +218,34 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                 print(value);
                 if (value['message'].contains('Successfully')) {
                   print('done');
+                  if (type == 'approved') {
+                    var data = {
+                      'title': 'Order Approved',
+                      'body':
+                          'Your order has been approved by admin. Your order will be ready in few minutes',
+                      // 'data': value.toString(),
+                      'user_id': widget.orderdata['customer_id']
+                    };
+                    AppService().sendnotispecificuser(data);
+                     var data2 = {
+                        'title': 'New Order',
+                        'body':
+                            'Order#'+widget.orderdata['id']+' was assigned to you',
+                        // 'title': 'Order Delivered',
+                        // 'body': 'Thanks for ordering, Enjoy you meal',
+                        // 'data': value.toString(),
+                        'user_id': widget.orderdata['rest_details']['user_id']
+                      };
+                      AppService().sendnotispecificuser(data2);
+                  } else {
+                    var data = {
+                      'title': 'Order Rejected',
+                      'body': 'Your order has been reject by admin',
+                      // 'data': value.toString(),
+                      'user_id': widget.orderdata['customer_id']
+                    };
+                    AppService().sendnotispecificuser(data);
+                  }
                   widget.orderdata['super_admin'] = type;
                   loader = false;
                   setState(() {});
@@ -225,16 +256,79 @@ class _OrdersDetailsState extends State<OrdersDetails> {
               Navigator.pop(context);
               loader = true;
               setState(() {});
-              AppService().setorderstatus(data).then((value) {
-                print(value);
-                if (value['message'].contains('Successfully')) {
-                  print('done');
-                  widget.orderdata['status'] = type;
-                  loader = false;
-                  setState(() {});
-                  // Navigator.pop(context);
+              if (type == 'ready') {
+                AppService().setorderstatus(data).then((value) {
+                  print(value);
+                  if (value['message'].contains('Successfully')) {
+                    print('done');
+
+                    var data = {
+                      'title': 'Order Ready',
+                      'body': 'Your order is ready to deliver',
+                      // 'data': value.toString(),
+                      'user_id': widget.orderdata['customer_id']
+                    };
+                    AppService().sendnotispecificuser(data);
+                    var data2 = {
+                      'title': 'New Order to Deliver',
+                      'body': 'Order#'+widget.orderdata['id']+' was assigned you to deliver',
+                      // 'data': value.toString(),
+                      // 'user_id': widget.orderdata['customer_id']
+                    };
+                    AppService().sendnotideliveryboy(data2);
+                  }
+                });
+              } else if (type == 'onway') {
+                var location = await _determinePosition();
+                print(location);
+                if (location != null) {
+                  AppService().setorderstatus(data).then((value) {
+                    print(value);
+                    if (value['message'].contains('Successfully')) {
+                      var data = {
+                        'title': 'Out for Delivery',
+                        'body':
+                            'You can track live location of the order in orders list section',
+                        // 'title': 'Order Delivered',
+                        // 'body': 'Thanks for ordering, Enjoy you meal',
+                        // 'data': value.toString(),
+                        'user_id': widget.orderdata['customer_id']
+                      };
+                      AppService().sendnotispecificuser(data);
+                    }
+                  });
+                   SharedPreferences pref = await SharedPreferences.getInstance();
+                    pref.setBool('driving', true);
+                    pref.setString('drivingorder', jsonEncode(widget.orderdata));
+                  // Navigator.pushNamed(context, AppRouter.Opendirection,
+                  //     arguments: {
+                  //       'lat': double.parse(
+                  //           widget.orderdata['user_address']['user_latitude']),
+                  //       'long': double.parse(
+                  //           widget.orderdata['user_address']['user_longitude']),
+                  //       'clat': location.latitude,
+                  //       'clong': location.longitude,
+                  //       'data': widget.orderdata,
+                  //       'driving': true
+                  //     });
+                  Navigator.pushAndRemoveUntil(context,  MaterialPageRoute(
+                builder: (_) => Open_direction(desdirection:  {
+                        'lat': double.parse(
+                            widget.orderdata['user_address']['user_latitude']),
+                        'long': double.parse(
+                            widget.orderdata['user_address']['user_longitude']),
+                        'clat': location.latitude,
+                        'clong': location.longitude,
+                        'data': widget.orderdata,
+                        'driving': true
+                      })), (route) => false);
                 }
-              });
+              }
+              widget.orderdata['status'] = type;
+              loader = false;
+              setState(() {});
+              // Navigator.pop(context);
+
             }
           },
           color: AppColors.secondaryElement,
@@ -405,41 +499,34 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                               )
                         : accounttype == '4'
                             ? widget.orderdata['status'] != null
-                                ? PotbellyButton(
-                                    toBeginningOfSentenceCase(widget.orderdata['status'].toString()),
+                                ? PotbellyButton(toBeginningOfSentenceCase(widget.orderdata['status'].toString()),
                                     buttonHeight: 50,
-
                                     buttonTextStyle: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white),
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        color: Colors.grey.withOpacity(0.8)),
-                                      onTap: () {
-                                        print(1);
-                                      }
-                                  )
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Colors.grey.withOpacity(0.8)),
+                                    onTap: () {
+                                    print(1);
+                                  })
                                 : PotbellyButton('Ready',
                                     buttonHeight: 50,
                                     buttonTextStyle: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white),
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        color: AppColors.secondaryElement),
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: AppColors.secondaryElement),
                                     onTap: () {
-                                        print(2);
+                                    print(2);
                                     _onAlertButtonsPressed(context, 'ready',
                                         'status', 'Food is ready to deliver?');
                                   })
                             : accounttype == '3'
                                 ? widget.orderdata['status'] == 'delivered'
                                     ? PotbellyButton(
-                                        toBeginningOfSentenceCase(widget.orderdata['status'].toString()),
+                                        toBeginningOfSentenceCase(widget
+                                            .orderdata['status']
+                                            .toString()),
                                         buttonHeight: 50,
                                         buttonTextStyle: TextStyle(
                                             fontSize: 20,
@@ -452,21 +539,26 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                                                 Colors.grey.withOpacity(0.8)),
                                         // onTap: () {}
                                       )
-                                    : PotbellyButton('Delivered',
+                                    : PotbellyButton('Start Driving',
                                         buttonHeight: 50,
-                                        buttonTextStyle: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(100),
-                                            color: AppColors.secondaryElement), onTap: () {
+                                        buttonTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: AppColors.secondaryElement), onTap: () {
                                         _onAlertButtonsPressed(
                                             context,
-                                            'delivered',
+                                            'onway',
                                             'status',
-                                            'Food has been delivered to the customer?');
+                                            'Do you wants to start driving?');
                                       })
+                                // PotbellyButton('Delivered',
+                                //     buttonHeight: 50,
+                                //     buttonTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                                //     decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: AppColors.secondaryElement), onTap: () {
+                                //     _onAlertButtonsPressed(
+                                //         context,
+                                //         'delivered',
+                                //         'status',
+                                //         'Food has been delivered to the customer?');
+                                //   })
                                 : Container(),
                   ],
                 ),
@@ -672,8 +764,8 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                                 var location = await _determinePosition();
                                 print(location);
                                 if (location != null) {
-                                  Navigator.pushNamed(context,
-                                      AppRouter.Opendirection,
+                                  Navigator.pushNamed(
+                                      context, AppRouter.Opendirection,
                                       arguments: {
                                         'lat': double.parse(
                                             widget.orderdata['user_address']
@@ -682,26 +774,31 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                                             widget.orderdata['user_address']
                                                 ['user_longitude']),
                                         'clat': location.latitude,
-                                        'clong': location.longitude
+                                        'clong': location.longitude,
+                                        'data': widget.orderdata,
+                                        'driving': false
                                       });
                                 }
                               } else {
-                                Navigator
-                                    .pushNamed(context,AppRouter.Open_maps, arguments: {
-                                  'lat': double.parse(
-                                      widget.orderdata['user_address']
-                                          ['user_latitude']),
-                                  'long': double.parse(
-                                      widget.orderdata['user_address']
-                                          ['user_longitude']),
-                                  'address': widget.orderdata['user_address']
-                                          ['address'] +
-                                      ', ' +
-                                      widget.orderdata['user_address']['city'] +
-                                      ', ' +
-                                      widget.orderdata['user_address']
-                                          ['country'],
-                                });
+                                Navigator.pushNamed(
+                                    context, AppRouter.Open_maps,
+                                    arguments: {
+                                      'lat': double.parse(
+                                          widget.orderdata['user_address']
+                                              ['user_latitude']),
+                                      'long': double.parse(
+                                          widget.orderdata['user_address']
+                                              ['user_longitude']),
+                                      'address':
+                                          widget.orderdata['user_address']
+                                                  ['address'] +
+                                              ', ' +
+                                              widget.orderdata['user_address']
+                                                  ['city'] +
+                                              ', ' +
+                                              widget.orderdata['user_address']
+                                                  ['country'],
+                                    });
                               }
                             },
                             child: Container(

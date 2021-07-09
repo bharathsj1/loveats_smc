@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/login_screen.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
@@ -64,8 +65,8 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 SettingsListTile(
                   title: "Order List",
-                  // onTap: () => AppRouter.navigator
-                  //     .pushNamed(AppRouter.changeLanguageScreen),
+                  onTap: () => Navigator
+                      .pushNamed(context,AppRouter.order_list),
                 ),
                 SettingsListTile(
                   title: "Payment",

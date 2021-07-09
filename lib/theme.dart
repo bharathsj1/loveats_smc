@@ -21,43 +21,43 @@ const MaterialColor white = const MaterialColor(
 TextTheme _buildTextTheme(BuildContext context) {
   var textTheme = Theme.of(context).textTheme;
 
-  return GoogleFonts.josefinSansTextTheme(textTheme).copyWith(
-    display1: GoogleFonts.josefinSans(
+  return GoogleFonts.robotoTextTheme(textTheme).copyWith(
+    display1: GoogleFonts.roboto(
       fontSize: Sizes.TEXT_SIZE_36,
       color: AppColors.primaryText,
       fontWeight: FontWeight.bold,
       fontStyle: FontStyle.normal,
     ),
-    headline: GoogleFonts.josefinSans(
+    headline: GoogleFonts.roboto(
       fontSize: Sizes.TEXT_SIZE_36,
       color: AppColors.primaryText,
       fontWeight: FontWeight.bold,
       fontStyle: FontStyle.normal,
     ),
-    subhead: GoogleFonts.josefinSans(
+    subhead: GoogleFonts.roboto(
       fontSize: Sizes.TEXT_SIZE_18,
       color: AppColors.primaryText,
       fontWeight: FontWeight.w600,
       fontStyle: FontStyle.normal,
     ),
-    title: GoogleFonts.josefinSans(
+    title: GoogleFonts.roboto(
       fontSize: Sizes.TEXT_SIZE_18,
       color: AppColors.primaryText,
       fontWeight: FontWeight.w600,
       fontStyle: FontStyle.normal,
     ),
-    body1: GoogleFonts.josefinSans(
+    body1: GoogleFonts.roboto(
       fontSize: Sizes.TEXT_SIZE_18,
       color: AppColors.primaryText,
       fontWeight: FontWeight.normal,
       fontStyle: FontStyle.normal,
     ),
-    button: GoogleFonts.josefinSans(
+    button: GoogleFonts.roboto(
         fontSize: Sizes.TEXT_SIZE_18,
         color: AppColors.primaryText,
         fontStyle: FontStyle.normal,
         fontWeight: FontWeight.bold),
-    subtitle: GoogleFonts.josefinSans(
+    subtitle: GoogleFonts.roboto(
       fontSize: Sizes.TEXT_SIZE_18,
       color: AppColors.primaryText,
       fontWeight: FontWeight.bold,

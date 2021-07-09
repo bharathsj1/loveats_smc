@@ -238,6 +238,9 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
             Column(
               children: card(),
             ),
+             SizedBox(
+              height: 30,
+            ),
           ],
         ),
       ),

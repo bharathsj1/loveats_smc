@@ -1,85 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/values/values.dart';
 
-class NotificationsScreen extends StatelessWidget {
+class NotificationsScreen extends StatefulWidget {
   static const int TAB_NO = 2;
 
   NotificationsScreen({Key key}) : super(key: key);
 
-  List<NotificationInfo> notifications = [
-    NotificationInfo(
-      imageUrl: ImagePath.branson,
-      title: "Branson Hawkins",
-      time: "5:30 am",
-      subtitle: "Started following you",
-    ),
-    NotificationInfo(
-      imageUrl: ImagePath.juliet,
-      title: "Juliet Hooper",
-      time: "Yesterday",
-      subtitle: "Checked in at Happy Bones",
-    ),
-    NotificationInfo(
-      imageUrl: ImagePath.andy,
-      title: "Osei Andy",
-      time: "Yesterday",
-      subtitle: "Started following you",
-    ),
-    NotificationInfo(
-      imageUrl: ImagePath.anabel,
-      title: "Anabel Leach",
-      time: "26/05/2019",
-      subtitle: "Checked in at Uncle Booons",
-    ),
-    NotificationInfo(
-      imageUrl: ImagePath.ashlee,
-      title: "Ashlee Rollins",
-      time: "26/05/2019",
-      subtitle: "Started following you",
-    ),
-    NotificationInfo(
-      imageUrl: ImagePath.duke,
-      title: "Duke Carter",
-      time: "16/05/2019",
-      subtitle: "Checked in at Miller's Cafe",
-    ),
-    NotificationInfo(
-      imageUrl: ImagePath.deven,
-      title: "Deven Berry",
-      time: "26/05/2019",
-      subtitle: "Started following you",
-    ),
-    NotificationInfo(
-      imageUrl: ImagePath.branson,
-      title: "Filip Hracek",
-      time: "26/05/2019",
-      subtitle: "Checked in at McDonald's",
-    ),
-    NotificationInfo(
-      imageUrl: ImagePath.duke,
-      title: "John Mark",
-      time: "6:30 pm",
-      subtitle: "Started following you",
-    ),
-    NotificationInfo(
-      imageUrl: ImagePath.ashlee,
-      title: "Emily Fortuna",
-      time: "06/08/2019",
-      subtitle: "Checked in at KFC",
-    ),
-    NotificationInfo(
-      imageUrl: ImagePath.anabel,
-      title: "Attaa Adwoa",
-      time: "09/09/2019",
-      subtitle: "Started following you",
-    ),
-    NotificationInfo(
-      imageUrl: ImagePath.andy,
-      title: "David Legend",
-      time: "19/11/2019",
-      subtitle: "Checked in at Vancouver Cafe",
-    ),
-  ];
+  @override
+  _NotificationsScreenState createState() => _NotificationsScreenState();
+}
+
+class _NotificationsScreenState extends State<NotificationsScreen> {
+  List notilist = [];
+
+  bool loader = true;
+
+
+  getnoti() async {
+    var noti = await AppService().getnoti();
+    print(noti);
+    notilist = noti['data'];
+    loader = false;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    getnoti();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,48 +41,84 @@ class NotificationsScreen extends StatelessWidget {
         title: Text(
           'Notifications',
           style: Styles.customTitleTextStyle(
-            color: AppColors.headingText,
+            color: AppColors.secondaryElement,
             fontWeight: FontWeight.w600,
             fontSize: Sizes.TEXT_SIZE_22,
           ),
         ),
       ),
-      body: Container(
+      body:  loader
+        ? Center(
+            child: CircularProgressIndicator(
+              valueColor:
+                  AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
+            ),
+          ):notilist.length == 0
+            ? Center(
+                child: Container(
+                  child: Text('No Notification available'),
+                ),
+              )
+            :   Container(
         margin: EdgeInsets.symmetric(
             horizontal: Sizes.MARGIN_8, vertical: Sizes.MARGIN_16),
         child: ListView.builder(
-            itemCount: notifications.length,
+            itemCount: notilist.length,
             itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                leading: Image.asset(notifications[index].imageUrl),
-                onTap: () {},
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      notifications[index].title,
-                      style: Styles.customTitleTextStyle(
-                        color: AppColors.headingText,
-                        fontWeight: FontWeight.w400,
-                        fontSize: Sizes.TEXT_SIZE_20,
+              return Card(
+                elevation: 1,
+                child: ListTile(
+                  leading: Image.asset('assets/images/logo.png'),
+                  onTap: () {},
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                          width: MediaQuery.of(context).size.width*0.53,
+                        child: Text(
+                          notilist[index]['title'] ,
+                          style: Styles.customTitleTextStyle(
+                            color: AppColors.headingText,
+                            fontWeight: FontWeight.w400,
+                            fontSize: Sizes.TEXT_SIZE_20,
+                          ),
+                        ),
                       ),
-                    ),
-                    Text(
-                      notifications[index].time,
-                      style: Styles.customNormalTextStyle(
-                        color: AppColors.accentText,
-                        fontSize: Sizes.TEXT_SIZE_14,
+                      Text(
+                        DateFormat('MMM d, yyyy')
+                                      .format(DateTime.parse(notilist[index]['created_at'])).toString(),
+                        style: Styles.customNormalTextStyle(
+                          color: AppColors.accentText,
+                          fontSize: Sizes.TEXT_SIZE_14,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                subtitle: Container(
-                  margin: EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    notifications[index].subtitle,
-                    style: Styles.customNormalTextStyle(
-                      color: AppColors.accentText,
-                      fontSize: Sizes.TEXT_SIZE_14,
+                    ],
+                  ),
+                  subtitle: Container(
+                    margin: EdgeInsets.only(top: 8.0),
+                    child: Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        
+                        Container(
+                          width: MediaQuery.of(context).size.width*0.55,
+                          child: Text(
+                            notilist[index]['subtitle'],
+                            style: Styles.customNormalTextStyle(
+                              color: AppColors.accentText,
+                              fontSize: Sizes.TEXT_SIZE_14,
+                            ),
+                          ),
+                        ),
+                         Text(
+                          DateFormat('h:mm a')
+                                      .format(DateTime.parse(notilist[index]['created_at'])).toString(),
+                          style: Styles.customNormalTextStyle(
+                            color: AppColors.accentText,
+                            fontSize: Sizes.TEXT_SIZE_14,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

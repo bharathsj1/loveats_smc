@@ -18,6 +18,7 @@ import 'package:potbelly/models/restaurent_menu_model.dart';
 import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/models/user.dart';
 import 'package:potbelly/screens/login_screen.dart';
+import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart';
@@ -288,16 +289,24 @@ class Service {
   }
 
   Future<String> loggedoutr() async {
+   AppService().deletefcm();
     final shared = await initializdPrefs();
    shared.clear();
    return null;
   }
+
+
 
   Future<String> loggedUser() async {
     final shared = await initializdPrefs();
     // String accessToken = shared.get('accessToken');
     String accounttype = shared.get('accounttype');
     return accounttype;
+  }
+
+  Future<bool> checkdriving() async {
+     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getBool('driving');
   }
 
   Future<void> clearAllPrefs() async {
@@ -313,7 +322,7 @@ class Service {
   Future<RestaurentsModel> getRestaurentsData() async {
     print(dio.options.baseUrl);
     Response response =
-        await dio.request('/get-restaurents', options: Options(method: 'get'));
+        await dio.request('/get-restaurents', options: Options(method: 'Post'));
     print('hello g');
     print(response.data);
 

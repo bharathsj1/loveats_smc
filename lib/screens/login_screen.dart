@@ -1,5 +1,7 @@
 
+import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
@@ -8,6 +10,7 @@ import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/register_screen.dart';
 import 'package:potbelly/screens/root_screen.dart';
 import 'package:potbelly/screens/root_screen2.dart';
+import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/custom_text_form_field.dart';
@@ -23,6 +26,9 @@ import 'dart:io' show Platform;
 
 void main() => runApp(BackgroundVideo());
 
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  var token;
+ 
 class BackgroundVideo extends StatefulWidget {
   @override
   _BackgroundVideoState createState() => _BackgroundVideoState();
@@ -42,6 +48,7 @@ class _BackgroundVideoState extends State<BackgroundVideo>
   Animation<double> _fadeInFadeOut;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -251,10 +258,27 @@ _signInWithEmail(BuildContext context, TextEditingController emailCont,
     var response = await Service()
         .signInWithEmail(context, emailCont.text, passwordCont.text);
     if (response['message'].contains('success')) {
+      var udid;
       print(response['user']);
-      
+       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      udid = androidInfo.id;
+    } else {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      udid = iosInfo.identifierForVendor;
+    }
+     _firebaseMessaging.getToken().then((tokeen) {
+      var data={
+        'device_id':udid,
+        'firebase_token':tokeen
+      };
+      AppService().savedeicetoken(data).then((value){
+        print(value);
       Navigator.pushAndRemoveUntil(context,
           MaterialPageRoute(builder: (_) => response['user'].data.custAccountType =='2'? RootScreen():RootScreen2()), (route) => false);
+      });
+     });
     } else
       showSnackBar(context, response['message']);
   }
@@ -342,9 +366,27 @@ _signInWithGoogle(BuildContext context) async {
   print(message);
 
   if (message.contains('successfully')){
-
-    Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (_) => RootScreen()), (route) => false);
+    var type= await AppService().gettype();
+          var udid;
+       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      udid = androidInfo.id;
+    } else {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      udid = iosInfo.identifierForVendor;
+    }
+     _firebaseMessaging.getToken().then((tokeen) {
+      var data={
+        'device_id':udid,
+        'firebase_token':tokeen
+      };
+      AppService().savedeicetoken(data).then((value){
+        print(value);
+      Navigator.pushAndRemoveUntil(context,
+         MaterialPageRoute(builder: (_) => type=='2'? RootScreen():RootScreen2()), (route) => false);
+      });
+     });
   }
   
   else if (message.contains('register screen')) {
@@ -369,9 +411,29 @@ _signInWithApple(BuildContext context) async {
   String message = await Service().signInWithApple();
   print(message);
 
-  if (message.contains('successfully'))
-    Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (_) => RootScreen()), (route) => false);
+  if (message.contains('successfully')){
+     var type= await AppService().gettype();
+          var udid;
+       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      udid = androidInfo.id;
+    } else {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      udid = iosInfo.identifierForVendor;
+    }
+     _firebaseMessaging.getToken().then((tokeen) {
+      var data={
+        'device_id':udid,
+        'firebase_token':tokeen
+      };
+      AppService().savedeicetoken(data).then((value){
+        print(value);
+      Navigator.pushAndRemoveUntil(context,
+         MaterialPageRoute(builder: (_) => type=='2'? RootScreen():RootScreen2()), (route) => false);
+      });
+     });
+  }
   else if (message.contains('register screen')) {
     FirebaseAuth _auth = FirebaseAuth.instance;
     var currUser =  _auth.currentUser;

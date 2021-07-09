@@ -108,9 +108,17 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
        AppService().addorderdetails(data2).then((value) {
          print(value);
           if(i ==  widget.checkoutdata['cartlist'].length-1 && j == widget.checkoutdata['cartlist'][i].length-1){
+             var data={
+               'title':'New Order',
+               'body': 'User has been placed a new order',
+               'data':value.toString(),
+              //  ''
+             };
+             AppService().sendnotisuperadmin(data);
              Navigator.of(context).pop();
            Navigator.of(context).pop();
              this.loader = false;
+            
       setState(() {});
            Navigator.pushNamed(context,AppRouter.CheckOut3, arguments: {
         'type': widget.checkoutdata['type'],
@@ -151,9 +159,18 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
        AppService().addorderdetails(data2).then((value) {
          print(value);
          if(i ==  widget.checkoutdata['cartlist'].length-1 && j == widget.checkoutdata['cartlist'][i].length-1){
+             this.loader = false;
+             var data={
+               'title':'New Order',
+               'body': 'User has been placed a new order',
+               'data':value.toString(),
+              //  ''
+             };
+             AppService().sendnotisuperadmin(data);
            Navigator.of(context).pop();
            Navigator.of(context).pop();
             this.loader = false;
+
       setState(() {});
            Navigator.pushNamed(context,AppRouter.CheckOut3, arguments: {
         'type': widget.checkoutdata['type'],

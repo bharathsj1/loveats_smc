@@ -10,7 +10,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:potbelly/screens/google_map.dart';
 import 'package:potbelly/screens/Promotionalert.dart';
 import 'package:potbelly/screens/checkoutScreen.dart';
+import 'package:potbelly/screens/live_tracking.dart';
 import 'package:potbelly/screens/login_screen.dart';
+import 'package:potbelly/screens/myorder_details.dart';
+import 'package:potbelly/screens/orderlist.dart';
 import 'package:potbelly/screens/paymentsuccess.dart';
 import 'package:potbelly/screens/splash_screen.dart';
 import 'package:potbelly/screens/forgot_password_screen.dart';
@@ -90,6 +93,9 @@ class AppRouter {
   static const CheckOut3 = '/CheckOutScreen3';
   static const Opendirection = '/opendirection';
   static const Open_maps = '/open_maps';
+  static const order_list = '/order_list';
+  static const myorder_detail = '/myorder_detail';
+  static const live_tracking = '/live_tracking';
  Navigator navigator = Navigator();
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -186,6 +192,21 @@ class AppRouter {
       case AppRouter.OrdersDetailScreen:
         return CupertinoPageRoute<dynamic>(
           builder: (_) => OrdersDetails(orderdata: args,),
+          settings: settings,
+        );
+      case AppRouter.order_list:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => OrderList(),
+          settings: settings,
+        );
+      case AppRouter.myorder_detail:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => Myorder_Detail(orderdata: args,),
+          settings: settings,
+        );
+      case AppRouter.live_tracking:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => Live_Tracking(desdirection: args,),
           settings: settings,
         );
       case AppRouter.Open_maps:

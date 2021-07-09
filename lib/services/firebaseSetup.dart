@@ -12,6 +12,8 @@ class FirebaseSetup {
   static configureFirebase(context) {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print(message);
+      print(message.data);
       if (message.data != null) {
         //  Provider.of<ProviderPage>(context, listen: false).changenoti();
         print("onMessage");
@@ -20,8 +22,8 @@ class FirebaseSetup {
         _showTopPopup(
             context,
             Platform.isIOS
-                ? message.data["aps"]["alert"]["title"]
-                : message.data["notification"]["title"]);
+                ? message.notification.title
+                : message.notification.title);
       }
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -117,7 +119,7 @@ class FirebaseSetup {
               //     MaterialPageRoute(builder: (context) => NotificationsPage()));
             },
             child: Container(
-              height: 45,
+              height: 55,
               child: Scaffold(
                 body: Center(
                   child: Row(
@@ -130,31 +132,32 @@ class FirebaseSetup {
                           height: 30,
                           width: 30,
                           image: AssetImage(
-                            'Assets/images/icon.png',
+                            'assets/images/logo.png',
                           ),
                         ),
                       ),
 
                       Container(
-                        margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        margin: EdgeInsets.fromLTRB(25, 0, 0, 0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Text(
-                            //   title,
-                            //   style: TextStyle(
-                            //       color: Colors.grey[600],
-                            //       fontSize: 15,
-                            //       fontWeight: FontWeight.bold),
-                            // ),
                             Text(
-                              title,
-                              overflow: TextOverflow.ellipsis,
+                              '+1 New Notification',
                               style: TextStyle(
                                   color: Colors.grey[600],
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 5,),
+                            Text(
+                              title,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 15,
+                                  ),
                             ),
                           ],
                         ),

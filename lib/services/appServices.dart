@@ -61,12 +61,107 @@ class AppService {
      }
   }
 
+  Future<dynamic> getnoti() async {
+    String accessToken = await getAccessToken();
+     dio.options.headers['Authorization'] = "Bearer " + accessToken;
+       try{
+    var resp = await this.dio.get("/getSpecificNotification",);
+    print(resp);
+    return resp.data;
+  }catch(e){
+       print(e);
+       return null;
+     }
+  }
+
+  Future<dynamic> getmyorders() async {
+    String accessToken = await getAccessToken();
+     dio.options.headers['Authorization'] = "Bearer " + accessToken;
+       try{
+    var resp = await this.dio.get("/get-user-orders",);
+    print(resp);
+    return resp.data;
+  }catch(e){
+       print(e);
+       return null;
+     }
+  }
+
   Future<dynamic> setaddress(data) async {
     String accessToken = await getAccessToken();
      dio.options.headers['Authorization'] = "Bearer " + accessToken;
        try{
      FormData formData = new FormData.fromMap(data);
     var resp = await this.dio.post("/addUserAddress",data: formData);
+    print(resp);
+    return resp.data;
+  }catch(e){
+       print(e);
+       return null;
+     }
+  }
+  Future<dynamic> sendnotisuperadmin(data) async {
+    // String accessToken = await getAccessToken();
+    //  dio.options.headers['Authorization'] = "Bearer " + accessToken;
+       try{
+     FormData formData = new FormData.fromMap(data);
+    var resp = await this.dio.post("/sendNotificationToSuperAdmin",data: formData);
+    print(resp);
+    return resp.data;
+  }catch(e){
+       print(e);
+       return null;
+     }
+  }
+
+  Future<dynamic> sendnotispecificuser(data) async {
+    // String accessToken = await getAccessToken();
+    //  dio.options.headers['Authorization'] = "Bearer " + accessToken;
+       try{
+     FormData formData = new FormData.fromMap(data);
+    var resp = await this.dio.post("/send-notification-to-specific-user",data: formData);
+    print(resp);
+    return resp.data;
+  }catch(e){
+       print(e);
+       return null;
+     }
+  }
+
+  Future<dynamic> sendnotideliveryboy(data) async {
+    // String accessToken = await getAccessToken();
+    //  dio.options.headers['Authorization'] = "Bearer " + accessToken;
+       try{
+     FormData formData = new FormData.fromMap(data);
+    var resp = await this.dio.post("/sendNotificationToDeliverBoy",data: formData);
+    print(resp);
+    return resp.data;
+  }catch(e){
+       print(e);
+       return null;
+     }
+  }
+
+      Future<dynamic> deletefcm() async {
+    String accessToken = await getAccessToken();
+     dio.options.headers['Authorization'] = "Bearer " + accessToken;
+       try{
+    //  FormData formData = new FormData.fromMap(data);
+    var resp = await this.dio.delete("/deleteFCM");
+    // print(resp);
+    return resp.data;
+  }catch(e){
+       print(e);
+       return null;
+     }
+    }
+
+  Future<dynamic> savedeicetoken(data) async {
+    String accessToken = await getAccessToken();
+     dio.options.headers['Authorization'] = "Bearer " + accessToken;
+       try{
+     FormData formData = new FormData.fromMap(data);
+    var resp = await this.dio.post("/addDeviceToken",data: formData);
     print(resp);
     return resp.data;
   }catch(e){
