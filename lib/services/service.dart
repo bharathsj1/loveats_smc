@@ -289,10 +289,11 @@ class Service {
   }
 
   Future<String> loggedoutr() async {
-   AppService().deletefcm();
+   AppService().deletefcm().then((value) async {
     final shared = await initializdPrefs();
    shared.clear();
    return null;
+   });
   }
 
 

@@ -61,7 +61,13 @@ class _Live_TrackingState extends State<Live_Tracking> {
   @override
   void initState() {
     _controller = Completer();
-
+ currentLocation = LocationData.fromMap({
+      "latitude": double.parse(widget.desdirection['clat']),
+      "longitude": double.parse(widget.desdirection['clong'])
+    });
+    setState(() {
+      
+    });
     // setState(() {
     //   // add marker on the position
     //   _markers.add(Marker(
@@ -215,7 +221,7 @@ class _Live_TrackingState extends State<Live_Tracking> {
                 // zoomControlsEnabled: false,
                 markers: _markers,
                 polylines: _polylines,
-                mapType: MapType.normal,
+                mapType: MapType.terrain,
                  onCameraMove: _onGeoChanged,
                 //  onCameraMoveStarted: () {
                    

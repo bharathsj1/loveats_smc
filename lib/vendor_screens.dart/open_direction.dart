@@ -124,7 +124,15 @@ class _Open_directionState extends State<Open_direction> {
   @override
   void initState() {
     _controller = Completer();
-
+    // currentLocation.latitude= widget.desdirection['clat'];
+    // currentLocation.longitude= widget.desdirection['clong'];
+     currentLocation = LocationData.fromMap({
+      "latitude": widget.desdirection['clat'],
+      "longitude": widget.desdirection['clong']
+    });
+    setState(() {
+      
+    });
     // setState(() {
     //   // add marker on the position
     //   _markers.add(Marker(
@@ -154,13 +162,15 @@ class _Open_directionState extends State<Open_direction> {
       // current user's position in real time,
       // so we're holding on to it
       currentLocation = cLoc;
+      print(cLoc);
       if(widget.desdirection['driving'] == true){
         if(mounted){
            var data = {
-          'driver_lat': currentLocation.altitude.toString(),
-          'driver_lng': currentLocation.longitude.toString(),
+          'driver_lat': cLoc.latitude.toString(),
+          'driver_lng': cLoc.longitude.toString(),
           'order_id': widget.desdirection['data']['id']
         };
+        print(data);
         try{
         LocationService().setdriverloc(data).then((value) {
           print(value);
