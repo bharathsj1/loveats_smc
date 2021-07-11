@@ -36,7 +36,7 @@ class FirebaseSetup {
         //     MaterialPageRoute(builder: (context) => NotificationsPage()));
       }
     });
-    
+
     // _firebaseMessaging.configure(
     //   onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
     //   onMessage: (Map<String, dynamic> message) async {
@@ -69,7 +69,7 @@ class FirebaseSetup {
     // );
   }
 
-   static Future<void> _firebaseMessagingBackgroundHandler(
+  static Future<void> _firebaseMessagingBackgroundHandler(
       RemoteMessage message) async {
     // If you're going to use other Firebase services in the background, such as Firestore,
     // make sure you call `initializeApp` before using other Firebase services.
@@ -90,7 +90,6 @@ class FirebaseSetup {
     // }
     print('Handling a background message ${message.messageId}');
   }
-
 
   static void _showTopPopup(context, title) {
     Navigator.of(context, rootNavigator: false).push(
@@ -150,14 +149,16 @@ class FirebaseSetup {
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(height: 5,),
+                            SizedBox(
+                              height: 5,
+                            ),
                             Text(
                               title,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 15,
-                                  ),
+                                color: Colors.grey,
+                                fontSize: 15,
+                              ),
                             ),
                           ],
                         ),

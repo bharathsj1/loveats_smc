@@ -1,9 +1,7 @@
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:io' show Platform;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,7 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:path/path.dart';
 import 'package:potbelly/models/UserModel.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:potbelly/models/menu_types_model.dart';
 import 'package:potbelly/models/restaurent_menu_model.dart';
 import 'package:potbelly/models/restaurent_model.dart';
@@ -25,7 +22,7 @@ import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 
 class Service {
   FirebaseAuth _auth = FirebaseAuth.instance;
-  CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
+
   String accessToken;
   Dio dio = Dio(
     BaseOptions(
@@ -117,7 +114,8 @@ class Service {
       AuthCredential authCredential = GoogleAuthProvider.credential(
           idToken: googleSignInAuthentication.idToken,
           accessToken: googleSignInAuthentication.accessToken);
-      UserCredential _authResult = await _auth.signInWithCredential(authCredential);
+      UserCredential _authResult =
+          await _auth.signInWithCredential(authCredential);
       bool isUserAvailable = await checkIfUserAvailable(_authResult.user.uid);
       if (isUserAvailable) {
         return 'successfully logged in';
@@ -151,7 +149,7 @@ class Service {
         final firebaseUser = authResult.user;
         // UserUpdateInfo userUpdateInfo = UserUpdateInfo();
         // userUpdateInfo.displayName = firebaseUser.displayName;
-        await firebaseUser.updateDisplayName(firebaseUser.displayName);
+        // await firebaseUser.updateDisplayName(firebaseUser.displayName);
         bool isUserAvailable = await checkIfUserAvailable(firebaseUser.uid);
         if (isUserAvailable) {
           print('vailbale');
@@ -183,19 +181,6 @@ class Service {
     loggedoutr();
     Navigator.pushAndRemoveUntil(context,
         MaterialPageRoute(builder: (_) => BackgroundVideo()), (route) => false);
-  }
-
-  Future<UserModel> getUserDetail() async {
-    User _user =  _auth.currentUser;
-    final userDocs =
-        await usersCollection.where('uId', isEqualTo: _user.uid).get();
-
-    List<UserModel> userClass = userDocs.docs.map((e) {
-      return UserModel.fromSnapshot(e);
-    }).toList();
-
-    if (userClass.length == 0) return null;
-    return userClass[0];
   }
 
   Future signInWithEmail(
@@ -230,28 +215,28 @@ class Service {
       print(onError.toString());
     });
 
-    return {'message':message,'user':_user};
+    return {'message': message, 'user': _user};
   }
 
-  Future<String> uploadImageToServer(File image) async {
-    if (image != null) {
-      String fileName = basename(image.path);
-      try {
-        Reference reference =
-            FirebaseStorage.instance.ref().child("images/$fileName");
+  // Future<String> uploadImageToServer(File image) async {
+  //   if (image != null) {
+  //     String fileName = basename(image.path);
+  //     try {
+  //       Reference reference =
+  //           FirebaseStorage.instance.ref().child("images/$fileName");
 
-        UploadTask uploadTask = reference.putFile(image);
+  //       UploadTask uploadTask = reference.putFile(image);
 
-        //Snapshot of the uploading task
-        TaskSnapshot taskSnapshot = (await uploadTask);
-        String url = await taskSnapshot.ref.getDownloadURL();
-        return url;
-      } catch (error) {
-        print(error.toString());
-      }
-    }
-    return null;
-  }
+  //       //Snapshot of the uploading task
+  //       TaskSnapshot taskSnapshot = (await uploadTask);
+  //       String url = await taskSnapshot.ref.getDownloadURL();
+  //       return url;
+  //     } catch (error) {
+  //       print(error.toString());
+  //     }
+  //   }
+  //   return null;
+  // }
 
   Future<bool> checkIfUserAvailable(String uid) async {
     FormData _data = FormData.fromMap({
@@ -264,10 +249,10 @@ class Service {
       print(value.data);
       if (value.data['status'] == 1)
         _isAvailable = false;
-      else{
+      else {
         _isAvailable = true;
-    UserData _user;
-    _user = UserData.fromJson(value.data);
+        UserData _user;
+        _user = UserData.fromJson(value.data);
         await setKeyData('accessToken', _user.accessToken);
         await setKeyData('name', _user.data.custFirstName);
         await setKeyData('email', _user.data.email);
@@ -283,20 +268,13 @@ class Service {
     return _isAvailable;
   }
 
-  Future<String> setDataInUserCollection(UserModel userModel) async {
-    usersCollection.doc(userModel.phoneNo).set(userModel.toJson());
-    return 'successfully';
-  }
-
   Future<String> loggedoutr() async {
-   AppService().deletefcm().then((value) async {
-    final shared = await initializdPrefs();
-   shared.clear();
-   return null;
-   });
+    AppService().deletefcm().then((value) async {
+      final shared = await initializdPrefs();
+      shared.clear();
+      return null;
+    });
   }
-
-
 
   Future<String> loggedUser() async {
     final shared = await initializdPrefs();
@@ -306,7 +284,7 @@ class Service {
   }
 
   Future<bool> checkdriving() async {
-     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getBool('driving');
   }
 

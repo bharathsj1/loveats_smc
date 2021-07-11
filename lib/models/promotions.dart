@@ -1,15 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class Promotion {
-  final CollectionReference promotionlist =
-      FirebaseFirestore.instance.collection('Promotions');
+ // final CollectionReference promotionlist =
+      //FirebaseFirestore.instance.collection('Promotions');
   String _tempDir;
   File imapath;
 
@@ -113,82 +111,82 @@ class Promotion {
     // }
   }
 
-  uploadvideopromotion(video, name) async {
-    File file;
-    var id = DateTime.now().millisecondsSinceEpoch.toString();
-    try {
-      file = await writeToFile(video); // <= returns File
-      _getImage(file.path);
-      print(file);
-      final Reference storageRef = FirebaseStorage.instance
-          .ref()
-          .child('videos/' + DateTime.now().toString());
-      final Reference storageRef2 = FirebaseStorage.instance
-          .ref()
-          .child('images/' + DateTime.now().toString());
-      UploadTask uploadTask = storageRef.putFile(
-        file,
-        SettableMetadata(
-          contentType: 'video/mp4',
-        ),
-      );
-      TaskSnapshot download = (await uploadTask);
-      String url = await download.ref.getDownloadURL();
-      UploadTask uploadTask2 = storageRef2.putFile(
-        imapath,
-        SettableMetadata(
-          contentType: 'image/jpg',
-        ),
-      );
-      TaskSnapshot download2 = (await uploadTask2);
+  // uploadvideopromotion(video, name) async {
+  //   File file;
+  //   var id = DateTime.now().millisecondsSinceEpoch.toString();
+  //   try {
+  //     file = await writeToFile(video); // <= returns File
+  //     _getImage(file.path);
+  //     print(file);
+  //     final Reference storageRef = FirebaseStorage.instance
+  //         .ref()
+  //         .child('videos/' + DateTime.now().toString());
+  //     final Reference storageRef2 = FirebaseStorage.instance
+  //         .ref()
+  //         .child('images/' + DateTime.now().toString());
+  //     UploadTask uploadTask = storageRef.putFile(
+  //       file,
+  //       SettableMetadata(
+  //         contentType: 'video/mp4',
+  //       ),
+  //     );
+  //     TaskSnapshot download = (await uploadTask);
+  //     String url = await download.ref.getDownloadURL();
+  //     UploadTask uploadTask2 = storageRef2.putFile(
+  //       imapath,
+  //       SettableMetadata(
+  //         contentType: 'image/jpg',
+  //       ),
+  //     );
+  //     TaskSnapshot download2 = (await uploadTask2);
 
-      String url2 = await download2.ref.getDownloadURL();
-      promotionlist.doc(id).set({
-        'id': id,
-        'name': name,
-        'videoUrl': url,
-        'thumbnailUrl': url2,
-        'image': '',
-        'description':
-            'What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing',
-        'createdAt': DateTime.now()
-      });
-    } catch (e) {
-      // catch errors here
-    }
-  }
+  //     String url2 = await download2.ref.getDownloadURL();
+  //     promotionlist.doc(id).set({
+  //       'id': id,
+  //       'name': name,
+  //       'videoUrl': url,
+  //       'thumbnailUrl': url2,
+  //       'image': '',
+  //       'description':
+  //           'What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing',
+  //       'createdAt': DateTime.now()
+  //     });
+  //   } catch (e) {
+  //     // catch errors here
+  //   }
+  // }
 
-  uploadimagepromotion(video, name) async {
-    File file;
-    var id = DateTime.now().millisecondsSinceEpoch.toString();
-    try {
-      file = await writeToFile2(video); // <= returns File
-      print(file);
-      final Reference storageRef = FirebaseStorage.instance
-          .ref()
-          .child('images/' + DateTime.now().toString());
-      UploadTask uploadTask = storageRef.putFile(
-        file,
-        SettableMetadata(
-          contentType: 'image/png',
-        ),
-      );
-      TaskSnapshot download = (await uploadTask);
-      String url = await download.ref.getDownloadURL();
-      promotionlist.doc(id).set({
-        'id': id,
-        'name': name,
-        'videoUrl': "",
-        'thumbnailUrl': "",
-        "image": url,
-        'description':
-            'What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing',
-        'createdAt': DateTime.now()
-      });
-    } catch (e) {
-      // catch errors here
-    }
-  }
+  // uploadimagepromotion(video, name) async {
+  //   File file;
+  //   var id = DateTime.now().millisecondsSinceEpoch.toString();
+  //   try {
+  //     file = await writeToFile2(video); // <= returns File
+  //     print(file);
+  //     final Reference storageRef = FirebaseStorage.instance
+  //         .ref()
+  //         .child('images/' + DateTime.now().toString());
+  //     UploadTask uploadTask = storageRef.putFile(
+  //       file,
+  //       SettableMetadata(
+  //         contentType: 'image/png',
+  //       ),
+  //     );
+  //     TaskSnapshot download = (await uploadTask);
+  //     String url = await download.ref.getDownloadURL();
+  //     promotionlist.doc(id).set({
+  //       'id': id,
+  //       'name': name,
+  //       'videoUrl': "",
+  //       'thumbnailUrl': "",
+  //       "image": url,
+  //       'description':
+  //           'What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing',
+  //       'createdAt': DateTime.now()
+  //     });
+  //   } catch (e) {
+  //     // catch errors here
+  //   }
+  // }
 
   Future checkpromo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

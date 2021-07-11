@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/splash_screen.dart';
@@ -18,6 +19,7 @@ void main() async {
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    FirebaseMessaging.instance.requestPermission();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: buildLightTheme(context),

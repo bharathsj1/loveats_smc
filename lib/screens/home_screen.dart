@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     checkpromo();
-    _register();
+     _register();
     getRestaurent();
     getcateory();
     super.initState();
@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var show = await Promotion().checkpromo();
     print(show);
     if (show) {
-      Navigator.pushNamed(context,AppRouter.promotionScreen);
+      Navigator.pushNamed(context, AppRouter.promotionScreen);
       Promotion().setpromo();
     } else {
       print('promo already viewed');
@@ -93,23 +93,23 @@ class _HomeScreenState extends State<HomeScreen> {
     print(resturants);
   }
 
-  getpromos() async {
-    await DatabaseManager().getpromotions().then((value) {
-      for (var item in value) {
-        promolist.add(item);
-      }
+  // getpromos() async {
+  //   await DatabaseManager().getpromotions().then((value) {
+  //     for (var item in value) {
+  //       promolist.add(item);
+  //     }
 
-      if (promolist.length != 0 &&
-          (promolist[0]['videoUrl'] != '' ||
-              promolist[0]['videoUrl'] != null)) {
-        print('here');
-        // controllerdispo();
-        initialize(promolist[0]['videoUrl']);
-      }
-      this.loader = false;
-      setState(() {});
-    });
-  }
+  //     if (promolist.length != 0 &&
+  //         (promolist[0]['videoUrl'] != '' ||
+  //             promolist[0]['videoUrl'] != null)) {
+  //       print('here');
+  //       // controllerdispo();
+  //       initialize(promolist[0]['videoUrl']);
+  //     }
+  //     this.loader = false;
+  //     setState(() {});
+  //   });
+  // }
 
   getlocalpromos() async {
     promolist = Promotion().promotiondata;
@@ -159,8 +159,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_controller != null) {
       _controller.pause();
     }
-    Navigator
-        .pushNamed(context,
+    Navigator.pushNamed(
+      context,
       AppRouter.promotionDetailsScreen,
       arguments: PromotionDetails(
           image: promolist[ind]['image'],
@@ -170,8 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
           thumnail: promolist[ind]['thumbnailUrl'],
           description: promolist[ind]['description'],
           data: promolist[ind]),
-    )
-        .then((value) {
+    ).then((value) {
       if (_controller != null) {
         _controller.play();
       }
@@ -258,14 +257,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       borderWidth: 0.0, onTapOfLeadingIcon: () {
                     pausevideo();
                     FocusScope.of(context).unfocus();
-                    Navigator
-                        .pushNamed(context,
+                    Navigator.pushNamed(
+                      context,
                       AppRouter.searchResultsScreen,
                       arguments: SearchValue(
                         searchcontroller.text,
                       ),
-                    )
-                        .then((value) {
+                    ).then((value) {
                       this.searchcontroller.text = '';
                       FocusScope.of(context).unfocus();
                       setState(() {});
@@ -273,8 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     });
                   }, onTapOfSuffixIcon: () {
                     pausevideo();
-                    Navigator
-                        .pushNamed(context,AppRouter.filterScreen)
+                    Navigator.pushNamed(context, AppRouter.filterScreen)
                         .then((value) => resumevideo());
                   }, borderStyle: BorderStyle.solid),
                 ),
@@ -285,8 +282,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   number: 'See all (' + resturants.length.toString() + ')',
                   onTapOfNumber: () {
                     pausevideo();
-                    Navigator
-                        .pushNamed(context,AppRouter.trendingRestaurantsScreen)
+                    Navigator.pushNamed(
+                            context, AppRouter.trendingRestaurantsScreen)
                         .then((value) {
                       resumevideo();
                     });
@@ -329,8 +326,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 if (_controller != null) {
                                   _controller.pause();
                                 }
-                                Navigator
-                                    .pushNamed(context,
+                                Navigator.pushNamed(
+                                  context,
                                   AppRouter.restaurantDetailsScreen,
                                   arguments: RestaurantDetails(
                                       imagePath: res.restImage,
@@ -343,8 +340,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       category: res.restType,
                                       distance: '0 Km',
                                       data: res),
-                                )
-                                    .then((value) {
+                                ).then((value) {
                                   if (_controller != null) {
                                     _controller.play();
                                   }
@@ -456,8 +452,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (context, i) {
                       return InkWell(
                         onTap: () {
-                          Navigator
-                              .pushNamed(context,AppRouter.promotionScreen);
+                          Navigator.pushNamed(
+                              context, AppRouter.promotionScreen);
                         },
                         child: Material(
                           elevation: 6,
@@ -713,7 +709,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: StringConst.CATEGORY,
                 number: 'See all (' + categories.length.toString() + ')',
                 onTapOfNumber: () =>
-                    Navigator.pushNamed(context,AppRouter.categoriesScreen),
+                    Navigator.pushNamed(context, AppRouter.categoriesScreen),
               ),
 
               SizedBox(height: 16.0),
@@ -747,7 +743,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemBuilder: (context, index) {
                           var data = categories[index];
                           return InkWell(
-                            onTap: () => Navigator.pushNamed(context,
+                            onTap: () => Navigator.pushNamed(
+                              context,
                               AppRouter.categoryDetailScreen,
                               arguments: CategoryDetailScreenArguments(
                                   categoryName: data.menuName,
@@ -790,7 +787,8 @@ class _HomeScreenState extends State<HomeScreen> {
               HeadingRow(
                 title: StringConst.FRIENDS,
                 number: StringConst.SEE_ALL_56,
-                onTapOfNumber: () => Navigator.pushNamed(context,
+                onTapOfNumber: () => Navigator.pushNamed(
+                  context,
                   AppRouter.findFriendsScreen,
                 ),
               ),
@@ -876,7 +874,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   InkWell(
                     onTap: () =>
-                        Navigator.pushNamed(context,AppRouter.googleMap),
+                        Navigator.pushNamed(context, AppRouter.googleMap),
                     child: Row(
                       children: [
                         Icon(Icons.location_searching, size: 12.0),

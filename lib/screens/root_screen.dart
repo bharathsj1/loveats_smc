@@ -32,6 +32,7 @@ class _RootScreenState extends State<RootScreen>
   Widget currentScreen;
   int currentTab;
   AnimationController _controller;
+  FirebaseMessaging firebaseMessaging;
 
 //  final double pi = math.pi;
   final double tilt90Degrees = 90;
@@ -41,10 +42,12 @@ class _RootScreenState extends State<RootScreen>
     return angle == tilt90Degrees ? true : false;
   }
 
-
   @override
   initState() {
-      FirebaseSetup.configureFirebase(context);
+    FirebaseSetup.configureFirebase(context);
+    // var token = FirebaseMessaging.instance.getToken();
+    // firebaseMessaging..messaging().ios.registerForRemoteNotifications();
+
     super.initState();
     print("init runs");
     currentScreen = widget.currentScreen?.currentScreen ?? HomeScreen();
@@ -137,8 +140,7 @@ class _RootScreenState extends State<RootScreen>
           //         currentScreen: HomeScreen(),
           //         currentTab: HomeScreen.TAB_NO,
           //       );
-          Navigator
-                        .pushNamed(context,AppRouter.cart_Screen);
+          Navigator.pushNamed(context, AppRouter.cart_Screen);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

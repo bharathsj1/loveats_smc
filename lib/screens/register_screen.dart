@@ -287,7 +287,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           userModel, _profilePicture, uid, widget.type ?? 0);
       print(message);
       if (message == 'success') {
-    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+    // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
         var udid;
        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {
@@ -297,17 +297,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       udid = iosInfo.identifierForVendor;
     }
-     _firebaseMessaging.getToken().then((tokeen) {
-      var data={
-        'device_id':udid,
-        'firebase_token':tokeen
-      };
-      AppService().savedeicetoken(data).then((value){
-        print(value);
-      Navigator.pushAndRemoveUntil(context,
-         MaterialPageRoute(builder: (_) =>  RootScreen()), (route) => false);
-      });
-     });
+    //  _firebaseMessaging.getToken().then((tokeen) {
+    //   var data={
+    //     'device_id':udid,
+    //     'firebase_token':tokeen
+    //   };
+      // AppService().savedeicetoken(data).then((value){
+        // print(value);
+    //   Navigator.pushAndRemoveUntil(context,
+    //      MaterialPageRoute(builder: (_) =>  RootScreen()), (route) => false);
+    //   });
+    //  });
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => RootScreen()));
       } else {

@@ -27,20 +27,20 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
     fontSize: Sizes.TEXT_SIZE_14,
   );
 
-   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  var token;
-    _register() {
-    _firebaseMessaging.getToken().then((tokeen) {
-      print(tokeen);
-      this.token = tokeen;
-      print(token);
-    });
-  }
+  //  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  // var token;
+  //   _register() {
+  //   _firebaseMessaging.getToken().then((tokeen) {
+  //     print(tokeen);
+  //     this.token = tokeen;
+  //     print(token);
+  //   });
+  // }
 
   
   @override
   void initState() {
-    _register();
+  //  _register();
    getorders();
     super.initState();
     }
