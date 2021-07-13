@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:path/path.dart';
+import 'package:potbelly/grovey_startScreens/demo.dart';
 import 'package:potbelly/models/UserModel.dart';
 import 'package:potbelly/models/menu_types_model.dart';
 import 'package:potbelly/models/restaurent_menu_model.dart';
@@ -180,7 +181,8 @@ class Service {
     await _auth.signOut();
     loggedoutr();
     Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (_) => BackgroundVideo()), (route) => false);
+        // MaterialPageRoute(builder: (_) => BackgroundVideo()), (route) => false);
+        MaterialPageRoute(builder: (_) => GooeyEdgeDemo()), (route) => false);
   }
 
   Future signInWithEmail(

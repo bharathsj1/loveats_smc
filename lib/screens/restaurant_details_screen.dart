@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:potbelly/3D_card_widets/city_scenery.dart';
 import 'package:potbelly/models/restaurent_menu_model.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
@@ -87,6 +88,37 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
     setState(() {});
   }
 
+   Widget _buildHeroWidget(context) {
+    return Hero(
+      tag: widget.restaurantDetails.restaurantName,
+      flightShuttleBuilder: _buildFlightWidget,
+      child: Container(
+        height: MediaQuery.of(context).size.height * .4,
+        width: double.infinity,
+        child: CityScenery(
+          animationValue: 1,
+          city: widget.restaurantDetails,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFlightWidget(BuildContext flightContext, Animation<double> heroAnimation,
+      HeroFlightDirection flightDirection, BuildContext fromHeroContext, BuildContext toHeroContext) {
+    return AnimatedBuilder(
+      animation: heroAnimation,
+      builder: (context, child) {
+        return DefaultTextStyle(
+          style: DefaultTextStyle.of(toHeroContext).style,
+          child: CityScenery(
+            city: widget.restaurantDetails,
+            animationValue: heroAnimation.value,
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
 //    final RestaurantDetails args = ModalRoute.of(context).settings.arguments;
@@ -97,6 +129,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
         child: Container(
           child: Column(
             children: <Widget>[
+              
               Expanded(
                 child: ListView(
                   shrinkWrap: true,
@@ -104,21 +137,23 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                     Stack(
                       children: <Widget>[
                         Positioned(
-                          child: widget.restaurantDetails.imagePath
-                                      .substring(0, 4) ==
-                                  'http'
-                              ? Image.network(
-                                  widget.restaurantDetails.imagePath,
-                                  width: MediaQuery.of(context).size.width,
-                                  height: heightOfStack,
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.asset(
-                                  widget.restaurantDetails.imagePath,
-                                  width: MediaQuery.of(context).size.width,
-                                  height: heightOfStack,
-                                  fit: BoxFit.cover,
-                                ),
+                          child:
+                          //  widget.restaurantDetails.imagePath
+                          //             .substring(0, 4) ==
+                          //         'http'
+                          //     ? Image.network(
+                          //         widget.restaurantDetails.imagePath,
+                          //         width: MediaQuery.of(context).size.width,
+                          //         height: heightOfStack,
+                          //         fit: BoxFit.cover,
+                          //       )
+                          //     : Image.asset(
+                          //         widget.restaurantDetails.imagePath,
+                          //         width: MediaQuery.of(context).size.width,
+                          //         height: heightOfStack,
+                          //         fit: BoxFit.cover,
+                          //       ),
+                          _buildHeroWidget(context)
                         ),
                         DarkOverLay(
                             gradient: Gradients.restaurantDetailsGradient),
@@ -173,71 +208,71 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                             ),
                           ),
                         ),
-                        Positioned(
-                          top: aPieceOfTheHeightOfStack,
-                          left: 24,
-                          right: 24 - 0.5,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(24.0),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(vertical: 4.0),
-                                decoration: fullDecorations,
-                                child: Row(
-                                  children: <Widget>[
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 8.0, vertical: 8.0),
-                                      width:
-                                          (MediaQuery.of(context).size.width /
-                                                  2) -
-                                              24,
-//                                      decoration: leftSideDecorations,
-                                      child: Row(
-                                        children: [
-                                          SizedBox(width: 4.0),
-                                          Image.asset(ImagePath.callIcon),
-                                          SizedBox(width: 8.0),
-                                          Text(
-                                            widget.restaurantDetails.data
-                                                .restPhone,
-                                            style: Styles.normalTextStyle,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    IntrinsicHeight(
-                                      child: VerticalDivider(
-                                        width: 0.5,
-                                        thickness: 3.0,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 8.0, vertical: 8.0),
-                                      child: Row(
-                                        children: <Widget>[
-                                          SizedBox(width: 4.0),
-                                          Image.asset(
-                                            ImagePath.directionIcon,
-                                            color: AppColors.secondaryElement,
-                                          ),
-                                          SizedBox(width: 8.0),
-                                          Text(
-                                            'Direction',
-                                            style: Styles.normalTextStyle,
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
+//                         Positioned(
+//                           top: aPieceOfTheHeightOfStack,
+//                           left: 24,
+//                           right: 24 - 0.5,
+//                           child: ClipRRect(
+//                             borderRadius: BorderRadius.circular(24.0),
+//                             child: BackdropFilter(
+//                               filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+//                               child: Container(
+//                                 padding: EdgeInsets.symmetric(vertical: 4.0),
+//                                 decoration: fullDecorations,
+//                                 child: Row(
+//                                   children: <Widget>[
+//                                     Container(
+//                                       padding: EdgeInsets.symmetric(
+//                                           horizontal: 8.0, vertical: 8.0),
+//                                       width:
+//                                           (MediaQuery.of(context).size.width /
+//                                                   2) -
+//                                               24,
+// //                                      decoration: leftSideDecorations,
+//                                       child: Row(
+//                                         children: [
+//                                           SizedBox(width: 4.0),
+//                                           Image.asset(ImagePath.callIcon),
+//                                           SizedBox(width: 8.0),
+//                                           Text(
+//                                             widget.restaurantDetails.data
+//                                                 .restPhone,
+//                                             style: Styles.normalTextStyle,
+//                                           ),
+//                                         ],
+//                                       ),
+//                                     ),
+//                                     IntrinsicHeight(
+//                                       child: VerticalDivider(
+//                                         width: 0.5,
+//                                         thickness: 3.0,
+//                                         color: Colors.red,
+//                                       ),
+//                                     ),
+//                                     Container(
+//                                       padding: EdgeInsets.symmetric(
+//                                           horizontal: 8.0, vertical: 8.0),
+//                                       child: Row(
+//                                         children: <Widget>[
+//                                           SizedBox(width: 4.0),
+//                                           Image.asset(
+//                                             ImagePath.directionIcon,
+//                                             color: AppColors.secondaryElement,
+//                                           ),
+//                                           SizedBox(width: 8.0),
+//                                           Text(
+//                                             'Direction',
+//                                             style: Styles.normalTextStyle,
+//                                           )
+//                                         ],
+//                                       ),
+//                                     ),
+//                                   ],
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                         )
                       ],
                     ),
                     Container(
