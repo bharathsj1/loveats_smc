@@ -42,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<City> _cityList;
   City _currentCity;
   bool search=false;
+  
 
   List subscription = ['assets/images/mainscreen.jpg'];
 
@@ -326,94 +327,144 @@ class _HomeScreenState extends State<HomeScreen> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      Container(
-                        width: 80,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          border: Border.all(width: 0.5,color: AppColors.secondaryElement),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom:5.0),
+                        child: Material(
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                              side: BorderSide(width: 0.5,color: AppColors.grey),
+                             borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Container(
+                            width: 80,
+                            height: 30,
+                            
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(width: 0.5,color: AppColors.grey),
+                            ),
+                            child: Center(
+                              child: Row(children: [
+                                SizedBox(width: 5,),
+                                Icon(Icons.location_pin,size: 18,color: AppColors.black,),
+                                SizedBox(width: 5,),
+                                Text('Nearby',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
+                              ],)
+                            )
+                          ),
                         ),
-                        child: Center(
-                          child: Row(children: [
-                            SizedBox(width: 5,),
-                            Icon(Icons.location_pin,size: 18,color: AppColors.secondaryElement,),
-                            SizedBox(width: 5,),
-                            Text('Nearby',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
-                          ],)
-                        )
                       ),
-                      SizedBox(width: 5,),
-                      Container(
-                        width: 80,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          border: Border.all(width: 0.5,color: AppColors.secondaryElement),
+                      SizedBox(width: 12,),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom:5.0),
+                        child: Material(
+                            elevation: 3,
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(width: 0.5,color: AppColors.grey),
+                               borderRadius: BorderRadius.circular(6),
+                            ),
+                          child: Container(
+                            width: 80,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(width: 0.5,color: AppColors.grey),
+                            ),
+                            child: Center(
+                              child: Row(children: [
+                                SizedBox(width: 5,),
+                                Icon(Icons.store_outlined,size: 18,color: AppColors.black,),
+                                SizedBox(width: 5,),
+                                Text('Opened',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
+                              ],)
+                            )
+                          ),
                         ),
-                        child: Center(
-                          child: Row(children: [
-                            SizedBox(width: 5,),
-                            Icon(Icons.store_outlined,size: 18,color: AppColors.secondaryElement,),
-                            SizedBox(width: 5,),
-                            Text('Opened',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
-                          ],)
-                        )
                       ),
-                      SizedBox(width: 5,),
-                      Container(
-                        width: 105,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          border: Border.all(width: 0.5,color: AppColors.secondaryElement),
+                      SizedBox(width: 12,),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom:5.0),
+                        child: Material(
+                            elevation: 3,
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(width: 0.5,color: AppColors.grey),
+                               borderRadius: BorderRadius.circular(6),
+                            ),
+                          child: Container(
+                            width: 105,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(width: 0.5,color: AppColors.grey),
+                            ),
+                            child: Center(
+                              child: Row(children: [
+                                SizedBox(width: 5,),
+                                Icon(Icons.attach_money,size: 18,color: AppColors.black,),
+                                SizedBox(width: 5,),
+                                Text('High to Low',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
+                              ],)
+                            )
+                          ),
                         ),
-                        child: Center(
-                          child: Row(children: [
-                            SizedBox(width: 5,),
-                            Icon(Icons.attach_money,size: 18,color: AppColors.secondaryElement,),
-                            SizedBox(width: 5,),
-                            Text('High to Low',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
-                          ],)
-                        )
                       ),
-                      SizedBox(width: 5,),
-                      Container(
-                        width: 105,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          border: Border.all(width: 0.5,color: AppColors.secondaryElement),
-                        ),
-                        child: Center(
-                          child: Row(children: [
-                            SizedBox(width: 5,),
-                            Icon(Icons.attach_money,size: 18,color: AppColors.secondaryElement,),
-                            SizedBox(width: 5,),
-                            Text('Low to High',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
-                          ],)
-                        )
+                      SizedBox(width: 12,),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom:5.0),
+                         child: Material(
+                            elevation: 3,
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(width: 0.5,color: AppColors.grey),
+                               borderRadius: BorderRadius.circular(6),
+                            ),
+                          child: Container(
+                            width: 105,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(width: 0.5,color: AppColors.grey),
+                            ),
+                            child: Center(
+                              child: Row(children: [
+                                SizedBox(width: 5,),
+                                Icon(Icons.attach_money,size: 18,color: AppColors.black,),
+                                SizedBox(width: 5,),
+                                Text('Low to High',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
+                              ],)
+                            )
+                          ),
                       ),
-                      SizedBox(width: 5,),
-                      Container(
-                        width: 105,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          border: Border.all(width: 0.5,color: AppColors.secondaryElement),
+                       ),
+                      SizedBox(width: 12,),
+                     Padding(
+                        padding: const EdgeInsets.only(bottom:5.0),
+                        child: Material(
+                            elevation: 3,
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(width: 0.5,color: AppColors.grey),
+                               borderRadius: BorderRadius.circular(6),
+                            ),
+                          child: Container(
+                            width: 105,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(width: 0.5,color: AppColors.grey),
+                            ),
+                            child: Center(
+                              child: Row(children: [
+                                SizedBox(width: 5,),
+                                Icon(Icons.star,size: 18,color: AppColors.black,),
+                                SizedBox(width: 5,),
+                                Text('4+ Rating',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
+                              ],)
+                            )
+                          ),
                         ),
-                        child: Center(
-                          child: Row(children: [
-                            SizedBox(width: 5,),
-                            Icon(Icons.star,size: 18,color: AppColors.secondaryElement,),
-                            SizedBox(width: 5,),
-                            Text('4+ Rating',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
-                          ],)
-                        )
                       ),
                   ],),
                 ),
               ),
-
               SizedBox(height: 10,),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal:12.0),
