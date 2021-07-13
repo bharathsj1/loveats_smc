@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/splash_screen.dart';
@@ -6,6 +5,9 @@ import 'package:potbelly/theme.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+
+import 'grovey_startScreens/ProviderService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +21,12 @@ void main() async {
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    FirebaseMessaging.instance.requestPermission();
+   return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ProviderService()),
+      ],
+      child: Consumer<ProviderService>(
+        builder: (context, appState, child) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: buildLightTheme(context),
@@ -27,6 +34,7 @@ class App extends StatelessWidget {
       onGenerateRoute: AppRouter.onGenerateRoute,
       // navigatorKey: AppRouter.navigator.key,
       home: SplashScreen(),
-    );
+  );
+        }));
   }
 }
