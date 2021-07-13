@@ -1,6 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:potbelly/3D_card_widets/demo_data.dart';
+import 'package:potbelly/3D_card_widets/travel_card_list.dart';
 import 'package:potbelly/models/menu_types_model.dart';
 import 'package:potbelly/models/promotions.dart';
 import 'package:potbelly/models/restaurent_model.dart';
@@ -36,6 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
   int totalRestaurent = 0;
   List resturants = [];
   List categories = [];
+  List<City> _cityList;
+  City _currentCity;
+  bool search=false;
 
   List subscription = ['assets/images/mainscreen.jpg'];
 
@@ -52,6 +58,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+        var data = DemoData();
+    _cityList = data.getCities();
+    _currentCity = _cityList[1];
     checkpromo();
     _register();
     getRestaurent();
@@ -190,6 +199,12 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+    void _handleCityChange(City city) {
+    setState(() {
+      this._currentCity = city;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -202,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         body: Container(
           margin: EdgeInsets.symmetric(
-            horizontal: Sizes.MARGIN_16,
+            // horizontal: Sizes.MARGIN_16,
             vertical: Sizes.MARGIN_8,
           ),
           child: ListView(
@@ -210,29 +225,53 @@ class _HomeScreenState extends State<HomeScreen> {
               InkWell(
                 onTap: () => bottomSheetForLocation(context),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 5.0),
-                      child: Icon(Icons.location_on,
-                          color: AppColors.secondaryElement),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(
-                        bottom: 5,
-                      ),
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                        color: Colors.black38,
-                        width: 1.0,
-                      ))),
-                      child: Text(
-                        "Preston",
-                        style: TextStyle(
-                          color: Colors.black,
+                      padding: const EdgeInsets.only(left:8.0),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 5.0),
+                            child: Icon(Icons.share_location_outlined,
+                                color: AppColors.black),
+                          ),
+                       SizedBox(width: 2,),
+                      Container(
+                        
+                        padding: EdgeInsets.only(
+                          bottom: 5,
+                        ),
+                        // decoration: BoxDecoration(
+                        //     border: Border(
+                        //         bottom: BorderSide(
+                        //   color: Colors.black38,
+                        //   width: 0.0,
+                        // ))),
+                        child: Text(
+                          "Preston",
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom:2.0),
+                        child: Icon(Icons.keyboard_arrow_down_rounded,color: AppColors.black,size: 18,),
+                      )
+                       ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right:15.0),
+                      child: InkWell(
+                        onTap: (){
+                          search=!search;
+                          setState(() {
+                            
+                          });
+                        },
+                        child: Icon(Icons.search_rounded,color: AppColors.black,)),
                     )
                   ],
                 ),
@@ -240,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: Sizes.MARGIN_14,
               ),
-              Padding(
+            search?  Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Material(
                   elevation: 5,
@@ -278,21 +317,109 @@ class _HomeScreenState extends State<HomeScreen> {
                         .then((value) => resumevideo());
                   }, borderStyle: BorderStyle.solid),
                 ),
-              ),
-              SizedBox(height: 16.0),
-              HeadingRow(
-                  title: StringConst.TRENDING_RESTAURANTS,
-                  number: 'See all (' + resturants.length.toString() + ')',
-                  onTapOfNumber: () {
-                    pausevideo();
-                    Navigator
-                        .pushNamed(context,AppRouter.trendingRestaurantsScreen)
-                        .then((value) {
-                      resumevideo();
-                    });
-                  }),
+              ): Container(),
+              SizedBox(height: 0,),
 
-              // SizedBox(height: 16.0),
+              Padding(
+                padding: const EdgeInsets.only(left:10.0,right: 10),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(width: 0.5,color: AppColors.secondaryElement),
+                        ),
+                        child: Center(
+                          child: Row(children: [
+                            SizedBox(width: 5,),
+                            Icon(Icons.location_pin,size: 18,color: AppColors.secondaryElement,),
+                            SizedBox(width: 5,),
+                            Text('Nearby',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
+                          ],)
+                        )
+                      ),
+                      SizedBox(width: 5,),
+                      Container(
+                        width: 80,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(width: 0.5,color: AppColors.secondaryElement),
+                        ),
+                        child: Center(
+                          child: Row(children: [
+                            SizedBox(width: 5,),
+                            Icon(Icons.store_outlined,size: 18,color: AppColors.secondaryElement,),
+                            SizedBox(width: 5,),
+                            Text('Opened',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
+                          ],)
+                        )
+                      ),
+                      SizedBox(width: 5,),
+                      Container(
+                        width: 105,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(width: 0.5,color: AppColors.secondaryElement),
+                        ),
+                        child: Center(
+                          child: Row(children: [
+                            SizedBox(width: 5,),
+                            Icon(Icons.attach_money,size: 18,color: AppColors.secondaryElement,),
+                            SizedBox(width: 5,),
+                            Text('High to Low',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
+                          ],)
+                        )
+                      ),
+                      SizedBox(width: 5,),
+                      Container(
+                        width: 105,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(width: 0.5,color: AppColors.secondaryElement),
+                        ),
+                        child: Center(
+                          child: Row(children: [
+                            SizedBox(width: 5,),
+                            Icon(Icons.attach_money,size: 18,color: AppColors.secondaryElement,),
+                            SizedBox(width: 5,),
+                            Text('Low to High',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
+                          ],)
+                        )
+                      ),
+                      SizedBox(width: 5,),
+                      Container(
+                        width: 105,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(width: 0.5,color: AppColors.secondaryElement),
+                        ),
+                        child: Center(
+                          child: Row(children: [
+                            SizedBox(width: 5,),
+                            Icon(Icons.star,size: 18,color: AppColors.secondaryElement,),
+                            SizedBox(width: 5,),
+                            Text('4+ Rating',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
+                          ],)
+                        )
+                      ),
+                  ],),
+                ),
+              ),
+
+              SizedBox(height: 10,),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal:12.0),
+                child: Text('What you want to order next?', textAlign: TextAlign.left, style: GoogleFonts.dmSerifDisplay(textStyle:TextStyle(fontSize: 36,color: AppColors.black)),),
+              ),
+//
               loader
                   ? Container(
                       height: 280,
@@ -313,142 +440,108 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           )),
                     )
-                  : Container(
-                      height: 280,
-                      width: MediaQuery.of(context).size.width,
-                      child: ListView.builder(
-                        physics: BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: resturants.length,
-                        itemBuilder: (context, index) {
-                          var res = resturants[index];
-                          return Container(
-                            margin: EdgeInsets.only(right: 4.0),
-                            child: FoodyBiteCard(
-                              onTap: () {
-                                if (_controller != null) {
-                                  _controller.pause();
-                                }
-                                Navigator
-                                    .pushNamed(context,
-                                  AppRouter.restaurantDetailsScreen,
-                                  arguments: RestaurantDetails(
-                                      imagePath: res.restImage,
-                                      restaurantName: res.restName,
-                                      restaurantAddress: res.restAddress +
-                                          res.restCity +
-                                          ' ' +
-                                          res.restCountry,
-                                      rating: '0.0',
-                                      category: res.restType,
-                                      distance: '0 Km',
-                                      data: res),
-                                )
-                                    .then((value) {
-                                  if (_controller != null) {
-                                    _controller.play();
-                                  }
-                                });
-                              },
-                              imagePath: res.restImage,
-                              status: res.restIsOpen == 1 ? "OPEN" : "CLOSE",
-                              cardTitle: res.restName,
-                              rating: '0.0',
-                              category: res.restType ?? 'Not Found',
-                              distance: '8 KM',
-                              address: res.restAddress ??
-                                  'Not Found' + ' ' + res.restCity ??
-                                  'Not Found' + ' ' + res.restCountry ??
-                                  'Not Available',
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-
-              // StreamBuilder(
-              //     stream:
-              //         Firestore.instance.collection('Restaurants').snapshots(),
-              //     builder: (context, snapshot) {
-              //       if (!snapshot.hasData) {
-              //         return Center(
-              //           child: CircularProgressIndicator(
-              //             valueColor: AlwaysStoppedAnimation<Color>(
-              //               AppColors.secondaryElement,
-              //             ),
-              //           ),
-              //         );
-              //       } else {
-              //         List<DocumentSnapshot> items = snapshot.data.documents;
-              //         records.clear();
-              //         items.forEach((e) {
-              //           records.add(e.data);
-              //           // print(e.data());
-              //         });
-
-              //         return Container(
-              //           height: 280,
-              //           width: MediaQuery.of(context).size.width,
-              //           child: ListView.builder(
-              //               physics: BouncingScrollPhysics(),
-              //               scrollDirection: Axis.horizontal,
-              //               itemCount: records.length,
-              //               itemBuilder: (context, index) {
-              //                 return Container(
-              //                   margin: EdgeInsets.only(right: 4.0),
-              //                   child: FoodyBiteCard(
-              //                     onTap: () {
-              //                       if (_controller != null) {
-              //                         _controller.pause();
-              //                       }
-              //                       AppRouter.navigator
-              //                           .pushNamed(
-              //                         AppRouter.restaurantDetailsScreen,
-              //                         arguments: RestaurantDetails(
-              //                             imagePath: records[index]['image'],
-              //                             restaurantName: records[index]
-              //                                 ['name'],
-              //                             restaurantAddress: records[index]
-              //                                     ['address'] +
-              //                                 ' ' +
-              //                                 records[index]['city'] +
-              //                                 ' ' +
-              //                                 records[index]['country'],
-              //                             rating: records[index]['ratings'],
-              //                             category: records[index]['type'],
-              //                             distance: records[index]['distance'],
-              //                             data: records[index]),
-              //                       )
-              //                           .then((value) {
-              //                         if (_controller != null) {
-              //                           _controller.play();
-              //                         }
-              //                       });
-              //                     },
-              //                     imagePath: records[index]['image'],
-              //                     status:
-              //                         records[index]['open'] ? "OPEN" : "CLOSE",
-              //                     cardTitle: records[index]['name'],
-              //                     rating: records[index]['ratings'],
-              //                     category: records[index]['type'],
-              //                     distance: records[index]['distance'],
-              //                     address: records[index]['address'] +
-              //                         ' ' +
-              //                         records[index]['city'] +
-              //                         ' ' +
-              //                         records[index]['country'],
-              //                   ),
-              //                 );
-              //               }),
-              //         );
-              //       }
+                  : 
+              // SizedBox(height: 15.0),
+               TravelCardList(
+              cities: resturants,
+              onCityChange: _handleCityChange,
+            ),
+//
+              // SizedBox(height: 0.0),
+              // HeadingRow(
+              //     title: StringConst.TRENDING_RESTAURANTS,
+              //     number: 'See all (' + resturants.length.toString() + ')',
+              //     onTapOfNumber: () {
+              //       pausevideo();
+              //       Navigator
+              //           .pushNamed(context,AppRouter.trendingRestaurantsScreen)
+              //           .then((value) {
+              //         resumevideo();
+              //       });
               //     }),
-              SizedBox(height: 12.0),
+
+              // // SizedBox(height: 16.0),
+              // loader
+              //     ? Container(
+              //         height: 280,
+              //         child: CarouselSlider(
+              //             options: CarouselOptions(
+              //                 enableInfiniteScroll: true, height: 260),
+              //             items: List.generate(
+              //               1,
+              //               (ind) => SkeletonAnimation(
+              //                 shimmerColor: Colors.grey[350],
+              //                 shimmerDuration: 1100,
+              //                 child: Container(
+              //                   decoration: BoxDecoration(
+              //                     color: Colors.grey[300],
+              //                   ),
+              //                   margin: EdgeInsets.symmetric(horizontal: 4),
+              //                 ),
+              //               ),
+              //             )),
+              //       )
+              //     : Container(
+              //         height: 280,
+              //         width: MediaQuery.of(context).size.width,
+              //         child: ListView.builder(
+              //           physics: BouncingScrollPhysics(),
+              //           scrollDirection: Axis.horizontal,
+              //           itemCount: resturants.length,
+              //           itemBuilder: (context, index) {
+              //             var res = resturants[index];
+              //             return Container(
+              //               margin: EdgeInsets.only(right: 4.0),
+              //               child: FoodyBiteCard(
+              //                 onTap: () {
+              //                   if (_controller != null) {
+              //                     _controller.pause();
+              //                   }
+              //                   Navigator
+              //                       .pushNamed(context,
+              //                     AppRouter.restaurantDetailsScreen,
+              //                     arguments: RestaurantDetails(
+              //                         imagePath: res.restImage,
+              //                         restaurantName: res.restName,
+              //                         restaurantAddress: res.restAddress +
+              //                             res.restCity +
+              //                             ' ' +
+              //                             res.restCountry,
+              //                         rating: '0.0',
+              //                         category: res.restType,
+              //                         distance: '0 Km',
+              //                         data: res),
+              //                   )
+              //                       .then((value) {
+              //                     if (_controller != null) {
+              //                       _controller.play();
+              //                     }
+              //                   });
+              //                 },
+              //                 imagePath: res.restImage,
+              //                 status: res.restIsOpen == 1 ? "OPEN" : "CLOSE",
+              //                 cardTitle: res.restName,
+              //                 rating: '0.0',
+              //                 category: res.restType ?? 'Not Found',
+              //                 distance: '8 KM',
+              //                 address: res.restAddress ??
+              //                     'Not Found' + ' ' + res.restCity ??
+              //                     'Not Found' + ' ' + res.restCountry ??
+              //                     'Not Available',
+              //               ),
+              //             );
+              //           },
+              //         ),
+              //       ),
+
+            
+              SizedBox(height: 15.0),
               Container(
                 height: 160,
                 //  width: 180,
                 //  color: Colors.red,
-                margin: EdgeInsets.symmetric(horizontal: 4),
+
+                margin: EdgeInsets.symmetric(horizontal: 12),
                 child: ListView.builder(
                     physics: BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
@@ -461,16 +554,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         child: Material(
                           elevation: 6,
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(10),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(10),
                             child: Stack(
                               children: [
                                 Image.asset(
                                   subscription[i],
                                   width:
-                                      MediaQuery.of(context).size.width / 1.12,
+                                      MediaQuery.of(context).size.width / 1.07,
                                   fit: BoxFit.cover,
+                                  // color: Colors.red,
                                 ),
                                 Positioned(
                                   right: 10,
@@ -709,17 +803,21 @@ class _HomeScreenState extends State<HomeScreen> {
               //           ),
 
               SizedBox(height: 20.0),
-              HeadingRow(
-                title: StringConst.CATEGORY,
-                number: 'See all (' + categories.length.toString() + ')',
-                onTapOfNumber: () =>
-                    Navigator.pushNamed(context,AppRouter.categoriesScreen),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal:12.0),
+                child: HeadingRow(
+                  title: StringConst.CATEGORY,
+                  number: 'See all (' + categories.length.toString() + ')',
+                  onTapOfNumber: () =>
+                      Navigator.pushNamed(context,AppRouter.categoriesScreen),
+                ),
               ),
 
               SizedBox(height: 16.0),
               loader2
                   ? Container(
                       height: 200,
+                      
                       child: CarouselSlider(
                           options: CarouselOptions(
                               // viewportFraction: 1.2,
@@ -741,6 +839,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   : Container(
                       height: 200,
+                      margin: EdgeInsets.symmetric(horizontal: 12),
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: categories.length,
