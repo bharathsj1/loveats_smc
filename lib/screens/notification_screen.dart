@@ -74,7 +74,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Container(
-                          width: MediaQuery.of(context).size.width*0.53,
+                          width: MediaQuery.of(context).size.width*0.50,
                         child: Text(
                           notilist[index]['title'] ,
                           style: Styles.customTitleTextStyle(
@@ -101,7 +101,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       children: [
                         
                         Container(
-                          width: MediaQuery.of(context).size.width*0.55,
+                          width: MediaQuery.of(context).size.width*0.52,
                           child: Text(
                             notilist[index]['subtitle'],
                             style: Styles.customNormalTextStyle(
