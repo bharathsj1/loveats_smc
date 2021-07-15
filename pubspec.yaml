@@ -103,6 +103,7 @@ flutter:
   # https://flutter.io/assets-and-images/#resolution-aware.
   assets:
     - assets/
+    - assets/swipe/
     - assets/grovey/
     - assets/images/
     - assets/launcher/

@@ -61,12 +61,13 @@ class CartProvider with ChangeNotifier {
   }
 
   // Remove from cart
-  Future<void> removeqtyCart(cart) async {
+  Future<void> removeqtyCart(context,cart) async {
+        await getcarts();
     int index = cartitems.indexWhere((x) => x['id'] == cart['id']);
     if (index == -1) {
       return;
     }
-    int ntotalAmount = 1 * int.parse(cart['price']);
+    int ntotalAmount = 1 * cart['price'];
     print(ntotalAmount);
     if (totalAmount > 0) {
       totalAmount = totalAmount - ntotalAmount;
@@ -82,6 +83,8 @@ class CartProvider with ChangeNotifier {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove('cartitems');
       await prefs.setString('cartlist', jsonEncode(cartitems));
+       Toast.show('Item Removed', context, duration: 3);
+
     } else {
       cartitems[index]['qty'] =
           (int.parse(cartitems[index]['qty']) - 1).toString();
@@ -97,6 +100,7 @@ class CartProvider with ChangeNotifier {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove('cartitems');
       await prefs.setString('cartlist', jsonEncode(cartitems));
+       Toast.show('Remove Quantity -1', context, duration: 3);
     }
     // also save into sqflite
     notifyListeners();
