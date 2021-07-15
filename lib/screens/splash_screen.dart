@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:potbelly/Flip_nav_bar/demo.dart';
 import 'package:potbelly/grovey_startScreens/demo.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/root_screen2.dart';
@@ -242,7 +243,7 @@ class _SplashScreenState extends State<SplashScreen>
             context,
             MaterialPageRoute(
                 builder: (_) =>
-                    shared != null ? shared == '2'? RootScreen():  RootScreen2() :
+                    shared != null ? shared == '2'? BubbleTabBarDemo():  RootScreen2() :
                     //  BackgroundVideo()
                     GooeyEdgeDemo()
                      ),
