@@ -41,15 +41,14 @@ class _HomeScreenState extends State<HomeScreen> {
   List categories = [];
   List<City> _cityList;
   City _currentCity;
-  bool search=false;
-  
+  bool search = false;
 
   List subscription = ['assets/images/mainscreen.jpg'];
 
   RestaurentsModel _restaurentsModel;
-    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   var token;
-    _register() {
+  _register() {
     _firebaseMessaging.getToken().then((tokeen) {
       print(tokeen);
       this.token = tokeen;
@@ -59,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-        var data = DemoData();
+    var data = DemoData();
     _cityList = data.getCities();
     _currentCity = _cityList[1];
     checkpromo();
@@ -73,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var show = await Promotion().checkpromo();
     print(show);
     if (show) {
-      Navigator.pushNamed(context,AppRouter.promotionScreen);
+      Navigator.pushNamed(context, AppRouter.promotionScreen);
       Promotion().setpromo();
     } else {
       print('promo already viewed');
@@ -169,8 +168,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_controller != null) {
       _controller.pause();
     }
-    Navigator
-        .pushNamed(context,
+    Navigator.pushNamed(
+      context,
       AppRouter.promotionDetailsScreen,
       arguments: PromotionDetails(
           image: promolist[ind]['image'],
@@ -180,8 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
           thumnail: promolist[ind]['thumbnailUrl'],
           description: promolist[ind]['description'],
           data: promolist[ind]),
-    )
-        .then((value) {
+    ).then((value) {
       if (_controller != null) {
         _controller.play();
       }
@@ -200,10 +198,111 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-    void _handleCityChange(City city) {
+  void _handleCityChange(City city) {
     setState(() {
       this._currentCity = city;
     });
+  }
+
+  categorieslist() {
+    return List.generate(
+        5,
+        (i) => Container(
+              margin: EdgeInsets.symmetric(horizontal: 6),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 5.0),
+                child: Stack(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      margin: EdgeInsets.only(
+                          top: 50, bottom: 5, left: 5, right: 5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.red,
+                        // border: Border.all(width: 0.5,color: AppColors.grey),
+                      ),
+                      // child: Center(
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.start,
+                      //     children: [
+                      //     // SizedBox(width: 5,),
+                      //     Padding(
+                      //       padding: const EdgeInsets.only(left:12.0),
+                      //       child: Icon(Icons.fastfood_outlined,size: 18,color:  i != 0? AppColors.black: AppColors.white,),
+                      //     ),
+                      //     SizedBox(width: 15,),
+                      //     Text('Burgers',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: i != 0? AppColors.black: AppColors.white),)
+                      //   ],)
+                      // )
+                      child: Material(
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            // side: BorderSide(width: 0.5,color: AppColors.green),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Container()),
+                    ),
+                    Positioned(
+                        top: 10,
+                        //  bottom: 10,
+                        left: 20,
+                        right: 20,
+                        child: Image.asset(
+                          'assets/images/d${i + 1}.png',
+                          width: MediaQuery.of(context).size.width / 2.2,
+                          height: MediaQuery.of(context).size.width / 2.3,
+                          fit: BoxFit.fill,
+                        )),
+
+                    // SizedBox(height: 10,),
+                    Positioned(
+                      bottom: MediaQuery.of(context).size.height * 0.1,
+                      left: 0,
+                      right: 0,
+                      child: Text('Chopped Spring',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.dmSerifDisplay(
+                            textStyle: Styles.customTitleTextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.normal,
+                              fontSize: 24,
+                            ),
+                          )),
+                    ),
+
+                    Positioned(
+                      bottom: MediaQuery.of(context).size.height * 0.07,
+                      left: 0,
+                      right: 0,
+                      child: Text('Scallions & Radishes',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.openSans(
+                            textStyle: Styles.customNormalTextStyle(
+                              color: Colors.black54,
+                              fontSize: Sizes.TEXT_SIZE_14,
+                            ),
+                          )),
+                    ),
+                    Positioned(
+                      bottom: MediaQuery.of(context).size.height * 0.03,
+                      left: 0,
+                      right: 0,
+                      child: Text('250 Kcal',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.dmSerifDisplay(
+                            textStyle: Styles.customTitleTextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.normal,
+                              fontSize: 18,
+                            ),
+                          )),
+                    ),
+                  ],
+                ),
+              ),
+            ));
   }
 
   @override
@@ -229,7 +328,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left:8.0),
+                      padding: const EdgeInsets.only(left: 8.0),
                       child: Row(
                         children: [
                           Padding(
@@ -237,42 +336,48 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Icon(Icons.share_location_outlined,
                                 color: AppColors.black),
                           ),
-                       SizedBox(width: 2,),
-                      Container(
-                        
-                        padding: EdgeInsets.only(
-                          bottom: 5,
-                        ),
-                        // decoration: BoxDecoration(
-                        //     border: Border(
-                        //         bottom: BorderSide(
-                        //   color: Colors.black38,
-                        //   width: 0.0,
-                        // ))),
-                        child: Text(
-                          "Preston",
-                          style: TextStyle(
-                            color: Colors.black,
+                          SizedBox(
+                            width: 2,
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom:2.0),
-                        child: Icon(Icons.keyboard_arrow_down_rounded,color: AppColors.black,size: 18,),
-                      )
-                       ],
+                          Container(
+                            padding: EdgeInsets.only(
+                              bottom: 5,
+                            ),
+                            // decoration: BoxDecoration(
+                            //     border: Border(
+                            //         bottom: BorderSide(
+                            //   color: Colors.black38,
+                            //   width: 0.0,
+                            // ))),
+                            child: Text(
+                              "Preston",
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 2.0),
+                            child: Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              color: AppColors.black,
+                              size: 18,
+                            ),
+                          )
+                        ],
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(right:15.0),
+                      padding: const EdgeInsets.only(right: 15.0),
                       child: InkWell(
-                        onTap: (){
-                          search=!search;
-                          setState(() {
-                            
-                          });
-                        },
-                        child: Icon(Icons.search_rounded,color: AppColors.black,)),
+                          onTap: () {
+                            search = !search;
+                            setState(() {});
+                          },
+                          child: Icon(
+                            Icons.search_rounded,
+                            color: AppColors.black,
+                          )),
                     )
                   ],
                 ),
@@ -280,196 +385,317 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: Sizes.MARGIN_14,
               ),
-            search?  Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Material(
-                  elevation: 5,
-                  borderRadius: BorderRadius.circular(20),
-                  child: FoodyBiteSearchInputField(ImagePath.searchIcon,
-                      borderRadius: 20,
-                      controller: searchcontroller,
-                      contentPaddingVertical: 6,
-                      textFormFieldStyle:
-                          Styles.customNormalTextStyle(color: Colors.black54),
-                      hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
-                      hintTextStyle:
-                          Styles.customNormalTextStyle(color: Colors.black54),
-                      suffixIconImagePath: ImagePath.settingsIcon,
-                      borderWidth: 0.0, onTapOfLeadingIcon: () {
-                    pausevideo();
-                    FocusScope.of(context).unfocus();
-                    Navigator
-                        .pushNamed(context,
-                      AppRouter.searchResultsScreen,
-                      arguments: SearchValue(
-                        searchcontroller.text,
-                      ),
+              search
+                  ? Row(
+                    
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: Material(
+                            elevation: 5,
+                            borderRadius: BorderRadius.circular(10),
+                            child: FoodyBiteSearchInputField(
+                                ImagePath.searchIcon,
+                                borderRadius: 10,
+                                controller: searchcontroller,
+                                contentPaddingVertical: 6,
+                                textFormFieldStyle:
+                                    Styles.customNormalTextStyle(
+                                        color: Colors.black54),
+                                hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
+                                hintTextStyle: Styles.customNormalTextStyle(
+                                    color: Colors.black54),
+                                suffixIconImagePath: ImagePath.settingsIcon,
+                                hasSuffixIcon: false,
+                                borderWidth: 0.0, onTapOfLeadingIcon: () {
+                              pausevideo();
+                              FocusScope.of(context).unfocus();
+                              Navigator.pushNamed(
+                                context,
+                                AppRouter.searchResultsScreen,
+                                arguments: SearchValue(
+                                  searchcontroller.text,
+                                ),
+                              ).then((value) {
+                                this.searchcontroller.text = '';
+                                FocusScope.of(context).unfocus();
+                                setState(() {});
+                                resumevideo();
+                              });
+                            }, onTapOfSuffixIcon: () {
+                              pausevideo();
+                              Navigator.pushNamed(
+                                      context, AppRouter.filterScreen)
+                                  .then((value) => resumevideo());
+                            }, borderStyle: BorderStyle.solid),
+                          ),
+                        ),
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(right:25.0),
+                          child: Material(
+                            elevation: 5,
+                             borderRadius: BorderRadius.circular(10),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: ImageIcon(
+                                AssetImage(ImagePath.settingsIcon),
+                                color: AppColors.black,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
                     )
-                        .then((value) {
-                      this.searchcontroller.text = '';
-                      FocusScope.of(context).unfocus();
-                      setState(() {});
-                      resumevideo();
-                    });
-                  }, onTapOfSuffixIcon: () {
-                    pausevideo();
-                    Navigator
-                        .pushNamed(context,AppRouter.filterScreen)
-                        .then((value) => resumevideo());
-                  }, borderStyle: BorderStyle.solid),
-                ),
-              ): Container(),
-              SizedBox(height: 0,),
+                  : Container(),
+              SizedBox(
+                height: search ? 25 : 0,
+              ),
 
               Padding(
-                padding: const EdgeInsets.only(left:10.0,right: 10),
+                padding: const EdgeInsets.only(left: 10.0, right: 10),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(bottom:5.0),
+                        padding: const EdgeInsets.only(bottom: 5.0),
                         child: Material(
                           elevation: 3,
                           shape: RoundedRectangleBorder(
-                              side: BorderSide(width: 0.5,color: AppColors.grey),
-                             borderRadius: BorderRadius.circular(6),
+                            side: BorderSide(width: 0.5, color: AppColors.grey),
+                            borderRadius: BorderRadius.circular(6),
                           ),
                           child: Container(
-                            width: 80,
-                            height: 30,
-                            
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(width: 0.5,color: AppColors.grey),
-                            ),
-                            child: Center(
-                              child: Row(children: [
-                                SizedBox(width: 5,),
-                                Icon(Icons.location_pin,size: 18,color: AppColors.black,),
-                                SizedBox(width: 5,),
-                                Text('Nearby',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
-                              ],)
-                            )
-                          ),
+                              width: 80,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(
+                                    width: 0.5, color: AppColors.grey),
+                              ),
+                              child: Center(
+                                  child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Icon(
+                                    Icons.location_pin,
+                                    size: 18,
+                                    color: AppColors.black,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    'Nearby',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ))),
                         ),
                       ),
-                      SizedBox(width: 12,),
+                      SizedBox(
+                        width: 12,
+                      ),
                       Padding(
-                        padding: const EdgeInsets.only(bottom:5.0),
+                        padding: const EdgeInsets.only(bottom: 5.0),
                         child: Material(
-                            elevation: 3,
-                            shape: RoundedRectangleBorder(
-                                side: BorderSide(width: 0.5,color: AppColors.grey),
-                               borderRadius: BorderRadius.circular(6),
-                            ),
-                          child: Container(
-                            width: 80,
-                            height: 30,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(width: 0.5,color: AppColors.grey),
-                            ),
-                            child: Center(
-                              child: Row(children: [
-                                SizedBox(width: 5,),
-                                Icon(Icons.store_outlined,size: 18,color: AppColors.black,),
-                                SizedBox(width: 5,),
-                                Text('Opened',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
-                              ],)
-                            )
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(width: 0.5, color: AppColors.grey),
+                            borderRadius: BorderRadius.circular(6),
                           ),
+                          child: Container(
+                              width: 80,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(
+                                    width: 0.5, color: AppColors.grey),
+                              ),
+                              child: Center(
+                                  child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Icon(
+                                    Icons.store_outlined,
+                                    size: 18,
+                                    color: AppColors.black,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    'Opened',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ))),
                         ),
                       ),
-                      SizedBox(width: 12,),
+                      SizedBox(
+                        width: 12,
+                      ),
                       Padding(
-                        padding: const EdgeInsets.only(bottom:5.0),
+                        padding: const EdgeInsets.only(bottom: 5.0),
                         child: Material(
-                            elevation: 3,
-                            shape: RoundedRectangleBorder(
-                                side: BorderSide(width: 0.5,color: AppColors.grey),
-                               borderRadius: BorderRadius.circular(6),
-                            ),
-                          child: Container(
-                            width: 105,
-                            height: 30,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(width: 0.5,color: AppColors.grey),
-                            ),
-                            child: Center(
-                              child: Row(children: [
-                                SizedBox(width: 5,),
-                                Icon(Icons.attach_money,size: 18,color: AppColors.black,),
-                                SizedBox(width: 5,),
-                                Text('High to Low',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
-                              ],)
-                            )
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(width: 0.5, color: AppColors.grey),
+                            borderRadius: BorderRadius.circular(6),
                           ),
+                          child: Container(
+                              width: 105,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(
+                                    width: 0.5, color: AppColors.grey),
+                              ),
+                              child: Center(
+                                  child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Icon(
+                                    Icons.attach_money,
+                                    size: 18,
+                                    color: AppColors.black,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    'High to Low',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ))),
                         ),
                       ),
-                      SizedBox(width: 12,),
+                      SizedBox(
+                        width: 12,
+                      ),
                       Padding(
-                        padding: const EdgeInsets.only(bottom:5.0),
-                         child: Material(
-                            elevation: 3,
-                            shape: RoundedRectangleBorder(
-                                side: BorderSide(width: 0.5,color: AppColors.grey),
-                               borderRadius: BorderRadius.circular(6),
-                            ),
-                          child: Container(
-                            width: 105,
-                            height: 30,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(width: 0.5,color: AppColors.grey),
-                            ),
-                            child: Center(
-                              child: Row(children: [
-                                SizedBox(width: 5,),
-                                Icon(Icons.attach_money,size: 18,color: AppColors.black,),
-                                SizedBox(width: 5,),
-                                Text('Low to High',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
-                              ],)
-                            )
-                          ),
-                      ),
-                       ),
-                      SizedBox(width: 12,),
-                     Padding(
-                        padding: const EdgeInsets.only(bottom:5.0),
+                        padding: const EdgeInsets.only(bottom: 5.0),
                         child: Material(
-                            elevation: 3,
-                            shape: RoundedRectangleBorder(
-                                side: BorderSide(width: 0.5,color: AppColors.grey),
-                               borderRadius: BorderRadius.circular(6),
-                            ),
-                          child: Container(
-                            width: 105,
-                            height: 30,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(width: 0.5,color: AppColors.grey),
-                            ),
-                            child: Center(
-                              child: Row(children: [
-                                SizedBox(width: 5,),
-                                Icon(Icons.star,size: 18,color: AppColors.black,),
-                                SizedBox(width: 5,),
-                                Text('4+ Rating',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
-                              ],)
-                            )
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(width: 0.5, color: AppColors.grey),
+                            borderRadius: BorderRadius.circular(6),
                           ),
+                          child: Container(
+                              width: 105,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(
+                                    width: 0.5, color: AppColors.grey),
+                              ),
+                              child: Center(
+                                  child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Icon(
+                                    Icons.attach_money,
+                                    size: 18,
+                                    color: AppColors.black,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    'Low to High',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ))),
                         ),
                       ),
-                  ],),
+                      SizedBox(
+                        width: 12,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: Material(
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(width: 0.5, color: AppColors.grey),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Container(
+                              width: 105,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(
+                                    width: 0.5, color: AppColors.grey),
+                              ),
+                              child: Center(
+                                  child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Icon(
+                                    Icons.star,
+                                    size: 18,
+                                    color: AppColors.black,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    '4+ Rating',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ))),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(height: 10,),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal:12.0),
-                child: Text('What you want to order next?', textAlign: TextAlign.left, style: GoogleFonts.dmSerifDisplay(textStyle:TextStyle(fontSize: 36,color: AppColors.black)),),
+              SizedBox(
+                height: 10,
               ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal:12.0),
+              //   child: Text('What you want to order next?', textAlign: TextAlign.left, style: GoogleFonts.dmSerifDisplay(textStyle:TextStyle(fontSize: 36,color: AppColors.black)),),
+              // ),
+              Padding(
+                padding: const EdgeInsets.only(left: 5.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  physics: BouncingScrollPhysics(),
+                  child: Row(
+                    children: categorieslist(),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+
 //
               loader
                   ? Container(
@@ -491,12 +717,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           )),
                     )
-                  : 
-              // SizedBox(height: 15.0),
-               TravelCardList(
-              cities: resturants,
-              onCityChange: _handleCityChange,
-            ),
+                  :
+                  // SizedBox(height: 15.0),
+                  TravelCardList(
+                      cities: resturants,
+                      onCityChange: _handleCityChange,
+                    ),
 //
               // SizedBox(height: 0.0),
               // HeadingRow(
@@ -585,7 +811,6 @@ class _HomeScreenState extends State<HomeScreen> {
               //         ),
               //       ),
 
-            
               SizedBox(height: 15.0),
               Container(
                 height: 160,
@@ -600,8 +825,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (context, i) {
                       return InkWell(
                         onTap: () {
-                          Navigator
-                              .pushNamed(context,AppRouter.promotionScreen);
+                          Navigator.pushNamed(
+                              context, AppRouter.promotionScreen);
                         },
                         child: Material(
                           elevation: 6,
@@ -855,12 +1080,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
               SizedBox(height: 20.0),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal:12.0),
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: HeadingRow(
                   title: StringConst.CATEGORY,
                   number: 'See all (' + categories.length.toString() + ')',
                   onTapOfNumber: () =>
-                      Navigator.pushNamed(context,AppRouter.categoriesScreen),
+                      Navigator.pushNamed(context, AppRouter.categoriesScreen),
                 ),
               ),
 
@@ -868,7 +1093,6 @@ class _HomeScreenState extends State<HomeScreen> {
               loader2
                   ? Container(
                       height: 200,
-                      
                       child: CarouselSlider(
                           options: CarouselOptions(
                               // viewportFraction: 1.2,
@@ -897,7 +1121,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemBuilder: (context, index) {
                           var data = categories[index];
                           return InkWell(
-                            onTap: () => Navigator.pushNamed(context,
+                            onTap: () => Navigator.pushNamed(
+                              context,
                               AppRouter.categoryDetailScreen,
                               arguments: CategoryDetailScreenArguments(
                                   categoryName: data.menuName,
@@ -940,7 +1165,8 @@ class _HomeScreenState extends State<HomeScreen> {
               HeadingRow(
                 title: StringConst.FRIENDS,
                 number: StringConst.SEE_ALL_56,
-                onTapOfNumber: () => Navigator.pushNamed(context,
+                onTapOfNumber: () => Navigator.pushNamed(
+                  context,
                   AppRouter.findFriendsScreen,
                 ),
               ),
@@ -1026,7 +1252,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   InkWell(
                     onTap: () =>
-                        Navigator.pushNamed(context,AppRouter.googleMap),
+                        Navigator.pushNamed(context, AppRouter.googleMap),
                     child: Row(
                       children: [
                         Icon(Icons.location_searching, size: 12.0),
