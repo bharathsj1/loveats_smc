@@ -55,7 +55,8 @@ class FoodyBiteSearchInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 45,
+      height: 55,
+      padding: EdgeInsets.only(top: 4),
       child: TextFormField(
         controller: controller,
         style: textFormFieldStyle,
@@ -112,7 +113,7 @@ class FoodyBiteSearchInputField extends StatelessWidget {
   Widget defaultPrefixIcon() {
     return ImageIcon(
       AssetImage(prefixIconImagePath),
-      color: AppColors.secondaryElement,
+      color: AppColors.black,
     );
   }
 }

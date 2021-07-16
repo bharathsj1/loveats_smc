@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -163,8 +164,9 @@ class GooeyCarouselState extends State<GooeyCarousel>
     return showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        // backgroundColor: Colors.white.withOpacity(0.5),
-        backgroundColor: Colors.transparent,
+        
+        backgroundColor: Colors.white.withOpacity(0.3),
+        // backgroundColor: Colors.transparent,
         shape: RoundedRectangleBorder(
             // side: BorderSide(color: Colors.white70, width: 1),
             borderRadius: new BorderRadius.only(
@@ -176,279 +178,289 @@ class GooeyCarouselState extends State<GooeyCarousel>
             return Padding(
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: new Container(
-                height: MediaQuery.of(context).size.height / 2.1,
-                color: Colors
-                    .transparent, //could change this to Color(0xFF737373),
-                //so you don't have to change MaterialApp canvasColor
-                //   child: new Container(
-                //       decoration: new BoxDecoration(
-                //           color: Colors.transparent,
-                //           borderRadius: new BorderRadius.only(
-                //               topLeft: const Radius.circular(30.0),
-                //               topRight: const Radius.circular(30.0))),
-                //       child: new Center(
-                //         child: new Text("This is a modal sheet"),
-                //       )),
-                child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Center(
-                            child: Text(
-                          "Sign In",
-                          style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.white),
-                        )),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(left: 35.0),
-                        //   child: Text(
-                        //     'Email Address',
-                        //     style: TextStyle(color: Colors.black54),
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: 6,
-                        // ),
-                        Card(
-                          // elevation: 5,
-                          color: Colors.transparent,
-                          // shape: RoundedRectangleBorder(
-                          //  side: BorderSide(color: Colors.white, width: 1),
-                          //     borderRadius: BorderRadius.circular(8)),
-                          margin: EdgeInsets.symmetric(horizontal: 30),
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
-                            child: Theme(
-                              data: ThemeData(
-                                primaryColor: Colors.white,
-                                primaryColorDark: Colors.white,
-                              ),
-                              child: TextFormField(
-                                controller: emailController,
-                                keyboardType: TextInputType.emailAddress,
-                                validator: (value) => emailValidation(value),
-                                style: TextStyle(
-                                    // fontFamily: "WorkSansSemiBold",
-                                    fontSize: 14.0,
-                                    color: Colors.white),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.transparent,
-                                  border: InputBorder.none,
-                                  // border: OutlineInputBorder(
-                                  //     borderSide:
-                                  //         BorderSide(color: Colors.white)),
-                                  hintText: "Email Address",
-
-                                  hintStyle: TextStyle(
-                                      fontSize: 14.0,
-                                      color: Colors.white.withOpacity(0.8)),
-                                ),
-                              ),
+              child: ClipRRect(
+                borderRadius: new BorderRadius.only(
+                topLeft: const Radius.circular(30.0),
+                topRight: const Radius.circular(30.0)),
+              child: new BackdropFilter(
+                filter: new ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
+                
+                  child: new Container(
+                    height: MediaQuery.of(context).size.height / 2.1,
+                    color: Colors
+                        .white.withOpacity(0.2), //could change this to Color(0xFF737373),
+                    //so you don't have to change MaterialApp canvasColor
+                    //   child: new Container(
+                    //       decoration: new BoxDecoration(
+                    //           color: Colors.transparent,
+                    //           borderRadius: new BorderRadius.only(
+                    //               topLeft: const Radius.circular(30.0),
+                    //               topRight: const Radius.circular(30.0))),
+                    //       child: new Center(
+                    //         child: new Text("This is a modal sheet"),
+                    //       )),
+                    child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 30,
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(left: 35.0),
-                        //   child: Text(
-                        //     'Password',
-                        //     style: TextStyle(color: Colors.black54),
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: 6,
-                        // ),
-                        Card(
-                          // elevation: 5,
-                          color: Colors.transparent,
-                          // shape: RoundedRectangleBorder(
-                          //  side: BorderSide(color: Colors.white, width: 1),
-                          //     borderRadius: BorderRadius.circular(8)),
-                          margin: EdgeInsets.symmetric(horizontal: 30),
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
-                            child: Theme(
-                              data: ThemeData(
-                                primaryColor: Colors.white,
-                                primaryColorDark: Colors.white,
-                              ),
-                              child: TextFormField(
-                                // focusNode: myFocusNodePassword,
-                                controller: passwordController,
-                                keyboardType: TextInputType.visiblePassword,
-                                validator: (value) => passwordValidation(value),
-                                obscureText: true,
-                                style: TextStyle(
-                                    // fontFamily: "WorkSansSemiBold",
-                                    fontSize: 14.0,
-                                    color: Colors.white),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.transparent,
-                                  border: InputBorder.none,
-                                  // border: OutlineInputBorder(
-                                  //     borderSide:
-                                  //         BorderSide(color: Colors.white)),
-                                  hintText: "Password",
-                                  hintStyle: TextStyle(
-                                      fontSize: 14.0,
-                                      color: Colors.white.withOpacity(0.8)),
-                                ),
-                              ),
+                            Center(
+                                child: Text(
+                              "Sign In",
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.white),
+                            )),
+                            SizedBox(
+                              height: 30,
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 32),
-                          child: InkWell(
-                            onTap: () {
-                              // Navigator.pushAndRemoveUntil(
-                              //     context,
-                              //     MaterialPageRoute(builder: (_) => RootScreen()),
-                              //     (route) => false);
-                              _signInWithEmail(context, emailController,
-                                  passwordController, _formKey);
-                            },
-                            child: Material(
-                              elevation: 5,
-                              borderRadius: BorderRadius.circular(8),
+                            // Padding(
+                            //   padding: const EdgeInsets.only(left: 35.0),
+                            //   child: Text(
+                            //     'Email Address',
+                            //     style: TextStyle(color: Colors.black54),
+                            //   ),
+                            // ),
+                            // SizedBox(
+                            //   height: 6,
+                            // ),
+                            Card(
+                              // elevation: 5,
                               color: Colors.transparent,
                               // shape: RoundedRectangleBorder(
-                              //   side: BorderSide(width: 1,color: AppColors.black,),
-                              // ),
-                              child: Container(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                    color: AppColors.black,
-                                    // border: Border.all(width: 1,color: AppColors.black),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Center(
-                                  child: Text(
-                                    'Sign In',
+                              //  side: BorderSide(color: Colors.white, width: 1),
+                              //     borderRadius: BorderRadius.circular(8)),
+                              margin: EdgeInsets.symmetric(horizontal: 30),
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
+                                child: Theme(
+                                  data: ThemeData(
+                                    primaryColor: Colors.white,
+                                    primaryColorDark: Colors.white,
+                                  ),
+                                  child: TextFormField(
+                                    controller: emailController,
+                                    keyboardType: TextInputType.emailAddress,
+                                    validator: (value) => emailValidation(value),
                                     style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600),
+                                        // fontFamily: "WorkSansSemiBold",
+                                        fontSize: 14.0,
+                                        color: Colors.white),
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.transparent,
+                                      border: InputBorder.none,
+                                      // border: OutlineInputBorder(
+                                      //     borderSide:
+                                      //         BorderSide(color: Colors.white)),
+                                      hintText: "Email Address",
+                        
+                                      hintStyle: TextStyle(
+                                          fontSize: 14.0,
+                                          color: Colors.white.withOpacity(0.8)),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Platform.isIOS
-                                ? Container(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        10, 5, 10, 10),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            // Padding(
+                            //   padding: const EdgeInsets.only(left: 35.0),
+                            //   child: Text(
+                            //     'Password',
+                            //     style: TextStyle(color: Colors.black54),
+                            //   ),
+                            // ),
+                            // SizedBox(
+                            //   height: 6,
+                            // ),
+                            Card(
+                              // elevation: 5,
+                              color: Colors.transparent,
+                              // shape: RoundedRectangleBorder(
+                              //  side: BorderSide(color: Colors.white, width: 1),
+                              //     borderRadius: BorderRadius.circular(8)),
+                              margin: EdgeInsets.symmetric(horizontal: 30),
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
+                                child: Theme(
+                                  data: ThemeData(
+                                    primaryColor: Colors.white,
+                                    primaryColorDark: Colors.white,
+                                  ),
+                                  child: TextFormField(
+                                    // focusNode: myFocusNodePassword,
+                                    controller: passwordController,
+                                    keyboardType: TextInputType.visiblePassword,
+                                    validator: (value) => passwordValidation(value),
+                                    obscureText: true,
+                                    style: TextStyle(
+                                        // fontFamily: "WorkSansSemiBold",
+                                        fontSize: 14.0,
+                                        color: Colors.white),
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.transparent,
+                                      border: InputBorder.none,
+                                      // border: OutlineInputBorder(
+                                      //     borderSide:
+                                      //         BorderSide(color: Colors.white)),
+                                      hintText: "Password",
+                                      hintStyle: TextStyle(
+                                          fontSize: 14.0,
+                                          color: Colors.white.withOpacity(0.8)),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 32),
+                              child: InkWell(
+                                onTap: () {
+                                  // Navigator.pushAndRemoveUntil(
+                                  //     context,
+                                  //     MaterialPageRoute(builder: (_) => RootScreen()),
+                                  //     (route) => false);
+                                  _signInWithEmail(context, emailController,
+                                      passwordController, _formKey);
+                                },
+                                child: Material(
+                                  elevation: 5,
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.transparent,
+                                  // shape: RoundedRectangleBorder(
+                                  //   side: BorderSide(width: 1,color: AppColors.black,),
+                                  // ),
+                                  child: Container(
+                                    height: 50,
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        color: AppColors.black,
+                                        // border: Border.all(width: 1,color: AppColors.black),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: Center(
+                                      child: Text(
+                                        'Sign In',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Platform.isIOS
+                                    ? Container(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            10, 5, 10, 10),
+                                        decoration: new BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white,
+                                        ),
+                                        child: Icon(
+                                          FontAwesomeIcons.apple,
+                                          color: Colors.black,
+                                          size: 28,
+                                        ),
+                                        // child: Image.asset('assets/images/apple.png',height: 30,width: 30,),
+                                      )
+                                    : Container(),
+                                Platform.isIOS
+                                    ? SizedBox(
+                                        width: 50,
+                                      )
+                                    : Container(),
+                                InkWell(
+                                  onTap: () {
+                                    _signInWithGoogle(context);
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(10.0),
                                     decoration: new BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: Colors.white,
                                     ),
-                                    child: Icon(
-                                      FontAwesomeIcons.apple,
-                                      color: Colors.black,
-                                      size: 28,
+                                    child: new Icon(
+                                      FontAwesomeIcons.google,
+                                      color: Color(0xFFEA4335),
                                     ),
-                                    // child: Image.asset('assets/images/apple.png',height: 30,width: 30,),
-                                  )
-                                : Container(),
-                            Platform.isIOS
-                                ? SizedBox(
-                                    width: 50,
-                                  )
-                                : Container(),
-                            InkWell(
-                              onTap: () {
-                                _signInWithGoogle(context);
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(10.0),
-                                decoration: new BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.white,
+                                  ),
                                 ),
-                                child: new Icon(
-                                  FontAwesomeIcons.google,
-                                  color: Color(0xFFEA4335),
-                                ),
-                              ),
+                                // Icon(FontAwesomeIcons.applePay)
+                              ],
                             ),
-                            // Icon(FontAwesomeIcons.applePay)
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "I'm new user. ",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400),
+                            SizedBox(
+                              height: 20,
                             ),
-                            InkWell(
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  newemailController.text='';
-                                  uid=null;
-                                  type=null;
-                                        setState(() {});
-                                  bottomsheet2();
-                                  Provider.of<ProviderService>(context,
-                                          listen: false)
-                                      .changessignuptatus();
-                                  print(Provider.of<ProviderService>(context,
-                                          listen: false)
-                                      .login);
-                                  print(Provider.of<ProviderService>(context,
-                                          listen: false)
-                                      .signup);
-                                },
-                                child: Text(
-                                  "Sign Up",
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "I'm new user. ",
                                   style: TextStyle(
-                                      color: AppColors.secondaryElement,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                ))
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                      newemailController.text='';
+                                      uid=null;
+                                      type=null;
+                                            setState(() {});
+                                      bottomsheet2();
+                                      Provider.of<ProviderService>(context,
+                                              listen: false)
+                                          .changessignuptatus();
+                                      print(Provider.of<ProviderService>(context,
+                                              listen: false)
+                                          .login);
+                                      print(Provider.of<ProviderService>(context,
+                                              listen: false)
+                                          .signup);
+                                    },
+                                    child: Text(
+                                      "Sign Up",
+                                      style: TextStyle(
+                                          color: AppColors.secondaryElement,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ))
+                              ],
+                            )
                           ],
-                        )
-                      ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
             );
           });
+          
         }).whenComplete(() {
       print('here');
       Provider.of<ProviderService>(context, listen: false).allfalse();
@@ -460,8 +472,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
         // elevation: 5,
         context: context,
         isScrollControlled: true,
-        // backgroundColor: Colors.white.withOpacity(0.5),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white.withOpacity(0.4),
+        // backgroundColor: Colors.transparent,
         shape: RoundedRectangleBorder(
             // side: BorderSide(color: Colors.white70, width: 1),
             borderRadius: new BorderRadius.only(
@@ -473,306 +485,315 @@ class GooeyCarouselState extends State<GooeyCarousel>
             return Padding(
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: new Container(
-                height: MediaQuery.of(context).size.height / 1.8,
-                color: Colors.transparent,
-                child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  child: Form(
-                    key: _formKey2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Center(
-                            child: Text(
-                          "Create Account",
-                          style: TextStyle(
-                              color: AppColors.white,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold),
-                        )),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(left: 35.0),
-                        //   child: Text(
-                        //     'Full Name',
-                        //     style: TextStyle(color: Colors.black54),
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: 6,
-                        // ),
-                        Card(
-                          // elevation: 5,
-                          color: Colors.transparent,
-                          // shape: RoundedRectangleBorder(
-                          //  side: BorderSide(color: Colors.white, width: 1),
-                          //     borderRadius: BorderRadius.circular(8)),
-                          margin: EdgeInsets.symmetric(horizontal: 30),
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
-                            child: Theme(
-                              data: ThemeData(
-                                primaryColor: Colors.white,
-                                primaryColorDark: Colors.white,
-                              ),
-                              child: TextFormField(
-                                // focusNode: myFocusNodeEmailLogin,
-                                controller: fullnameController,
-                                keyboardType: TextInputType.name,
-                                validator: (value) => nameValidator(value),
-                                style: TextStyle(
-                                    // fontFamily: "WorkSansSemiBold",
-                                    fontSize: 14.0,
-                                    color: Colors.white),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.transparent,
-                                  border: InputBorder.none,
-                                  // border: OutlineInputBorder(
-                                  //     borderSide:
-                                  //         BorderSide(color: Colors.white)),
-                                  hintText: "Full Name",
-                                  hintStyle: TextStyle(
-                                      fontSize: 14.0,
-                                      color: Colors.white.withOpacity(0.8)),
-                                ),
-                              ),
+              child:  ClipRRect(
+                borderRadius: new BorderRadius.only(
+                topLeft: const Radius.circular(30.0),
+                topRight: const Radius.circular(30.0)),
+              child: new BackdropFilter(
+                filter: new ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
+                  child: new Container(
+                    height: MediaQuery.of(context).size.height / 2,
+                    color: Colors.white.withOpacity(0.2),
+                    // color: Colors.transparent,
+                    child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: Form(
+                        key: _formKey2,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 30,
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(left: 35.0),
-                        //   child: Text(
-                        //     'Phone Number',
-                        //     style: TextStyle(color: Colors.black54),
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: 6,
-                        // ),
-                        Card(
-                          // elevation: 5,
-                          color: Colors.transparent,
-                          // shape: RoundedRectangleBorder(
-                          //  side: BorderSide(color: Colors.white, width: 1),
-                          //     borderRadius: BorderRadius.circular(8)),
-                          margin: EdgeInsets.symmetric(horizontal: 30),
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
-                            child: Theme(
-                              data: ThemeData(
-                                primaryColor: Colors.white,
-                                primaryColorDark: Colors.white,
-                              ),
-                              child: TextFormField(
-                                // focusNode: myFocusNodeEmailLogin,
-                                controller: phoneController,
-                                keyboardType: TextInputType.phone,
-                                validator: (value) => phoneValidator(value),
-                                style: TextStyle(
-                                    // fontFamily: "WorkSansSemiBold",
-                                    fontSize: 14.0,
-                                    color: Colors.white),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.transparent,
-                                  border: InputBorder.none,
-                                  // border: OutlineInputBorder(
-                                  //     borderSide:
-                                  //         BorderSide(color: Colors.white)),
-                                  hintText: "Phone Number",
-                                  hintStyle: TextStyle(
-                                      fontSize: 14.0,
-                                      color: Colors.white.withOpacity(0.8)),
-                                ),
-                              ),
+                            Center(
+                                child: Text(
+                              "Create Account",
+                              style: TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold),
+                            )),
+                            SizedBox(
+                              height: 30,
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(left: 35.0),
-                        //   child: Text(
-                        //     'Email Address',
-                        //     style: TextStyle(color: Colors.black54),
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: 6,
-                        // ),
-                        Card(
-                          // elevation: 5,
-                          color: Colors.transparent,
-                          // shape: RoundedRectangleBorder(
-                          //  side: BorderSide(color: Colors.white, width: 1),
-                          //     borderRadius: BorderRadius.circular(8)),
-                          margin: EdgeInsets.symmetric(horizontal: 30),
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
-                            child: Theme(
-                              data: ThemeData(
-                                primaryColor: Colors.white,
-                                primaryColorDark: Colors.white,
-                              ),
-                              child: TextFormField(
-                                // focusNode: myFocusNodeEmailLogin,
-                                controller: newemailController,
-                                keyboardType: TextInputType.emailAddress,
-                                validator: (value) => emailValidation(value),
-                                style: TextStyle(
-                                    // fontFamily: "WorkSansSemiBold",
-                                    fontSize: 14.0,
-                                    color: Colors.white),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.transparent,
-                                  border: InputBorder.none,
-                                  // border: OutlineInputBorder(
-                                  //     borderSide:
-                                  //         BorderSide(color: Colors.white)),
-                                  hintText: "Email Address",
-                                  hintStyle: TextStyle(
-                                      fontSize: 14.0,
-                                      color: Colors.white.withOpacity(0.8)),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(left: 35.0),
-                        //   child: Text(
-                        //     'Password',
-                        //     style: TextStyle(color: Colors.black54),
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: 6,
-                        // ),
-                        Card(
-                          // elevation: 5,
-                          color: Colors.transparent,
-                          // shape: RoundedRectangleBorder(
-                          //  side: BorderSide(color: Colors.white, width: 1),
-                          //     borderRadius: BorderRadius.circular(8)),
-                          margin: EdgeInsets.symmetric(horizontal: 30),
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
-                            child: Theme(
-                              data: ThemeData(
-                                primaryColor: Colors.white,
-                                primaryColorDark: Colors.white,
-                              ),
-                              child: TextFormField(
-                                // focusNode: myFocusNodeEmailLogin,
-                                controller: newpasswordController,
-                                keyboardType: TextInputType.visiblePassword,
-                                validator: (value) => passwordValidation(value),
-                                obscureText: true,
-                                style: TextStyle(
-                                    // fontFamily: "WorkSansSemiBold",
-                                    fontSize: 14.0,
-                                    color: Colors.white),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.transparent,
-                                  border: InputBorder.none,
-                                  // border: OutlineInputBorder(
-                                  //     borderSide:
-                                  //         BorderSide(color: Colors.white)),
-                                  hintText: "Password",
-                                  hintStyle: TextStyle(
-                                      fontSize: 14.0,
-                                      color: Colors.white.withOpacity(0.8)),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 32),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => RootScreen()),
-                                  (route) => false);
-                            },
-                            child: Material(
-                              elevation: 5,
-                              borderRadius: BorderRadius.circular(8),
+                            // Padding(
+                            //   padding: const EdgeInsets.only(left: 35.0),
+                            //   child: Text(
+                            //     'Full Name',
+                            //     style: TextStyle(color: Colors.black54),
+                            //   ),
+                            // ),
+                            // SizedBox(
+                            //   height: 6,
+                            // ),
+                            Card(
+                              // elevation: 5,
                               color: Colors.transparent,
                               // shape: RoundedRectangleBorder(
-                              //   side: BorderSide(width: 1,color: AppColors.black,),
-                              // ),
-                              child: Container(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                    color: AppColors.black,
-                                    // border: Border.all(width: 1,color: AppColors.black),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Center(
-                                  child: Text(
-                                    'Sign Up',
+                              //  side: BorderSide(color: Colors.white, width: 1),
+                              //     borderRadius: BorderRadius.circular(8)),
+                              margin: EdgeInsets.symmetric(horizontal: 30),
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
+                                child: Theme(
+                                  data: ThemeData(
+                                    primaryColor: Colors.white,
+                                    primaryColorDark: Colors.white,
+                                  ),
+                                  child: TextFormField(
+                                    // focusNode: myFocusNodeEmailLogin,
+                                    controller: fullnameController,
+                                    keyboardType: TextInputType.name,
+                                    validator: (value) => nameValidator(value),
                                     style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600),
+                                        // fontFamily: "WorkSansSemiBold",
+                                        fontSize: 14.0,
+                                        color: Colors.white),
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.transparent,
+                                      border: InputBorder.none,
+                                      // border: OutlineInputBorder(
+                                      //     borderSide:
+                                      //         BorderSide(color: Colors.white)),
+                                      hintText: "Full Name",
+                                      hintStyle: TextStyle(
+                                          fontSize: 14.0,
+                                          color: Colors.white.withOpacity(0.8)),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            // Padding(
+                            //   padding: const EdgeInsets.only(left: 35.0),
+                            //   child: Text(
+                            //     'Phone Number',
+                            //     style: TextStyle(color: Colors.black54),
+                            //   ),
+                            // ),
+                            // SizedBox(
+                            //   height: 6,
+                            // ),
+                            Card(
+                              // elevation: 5,
+                              color: Colors.transparent,
+                              // shape: RoundedRectangleBorder(
+                              //  side: BorderSide(color: Colors.white, width: 1),
+                              //     borderRadius: BorderRadius.circular(8)),
+                              margin: EdgeInsets.symmetric(horizontal: 30),
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
+                                child: Theme(
+                                  data: ThemeData(
+                                    primaryColor: Colors.white,
+                                    primaryColorDark: Colors.white,
+                                  ),
+                                  child: TextFormField(
+                                    // focusNode: myFocusNodeEmailLogin,
+                                    controller: phoneController,
+                                    keyboardType: TextInputType.phone,
+                                    validator: (value) => phoneValidator(value),
+                                    style: TextStyle(
+                                        // fontFamily: "WorkSansSemiBold",
+                                        fontSize: 14.0,
+                                        color: Colors.white),
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.transparent,
+                                      border: InputBorder.none,
+                                      // border: OutlineInputBorder(
+                                      //     borderSide:
+                                      //         BorderSide(color: Colors.white)),
+                                      hintText: "Phone Number",
+                                      hintStyle: TextStyle(
+                                          fontSize: 14.0,
+                                          color: Colors.white.withOpacity(0.8)),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            // Padding(
+                            //   padding: const EdgeInsets.only(left: 35.0),
+                            //   child: Text(
+                            //     'Email Address',
+                            //     style: TextStyle(color: Colors.black54),
+                            //   ),
+                            // ),
+                            // SizedBox(
+                            //   height: 6,
+                            // ),
+                            Card(
+                              // elevation: 5,
+                              color: Colors.transparent,
+                              // shape: RoundedRectangleBorder(
+                              //  side: BorderSide(color: Colors.white, width: 1),
+                              //     borderRadius: BorderRadius.circular(8)),
+                              margin: EdgeInsets.symmetric(horizontal: 30),
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
+                                child: Theme(
+                                  data: ThemeData(
+                                    primaryColor: Colors.white,
+                                    primaryColorDark: Colors.white,
+                                  ),
+                                  child: TextFormField(
+                                    // focusNode: myFocusNodeEmailLogin,
+                                    controller: newemailController,
+                                    keyboardType: TextInputType.emailAddress,
+                                    validator: (value) => emailValidation(value),
+                                    style: TextStyle(
+                                        // fontFamily: "WorkSansSemiBold",
+                                        fontSize: 14.0,
+                                        color: Colors.white),
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.transparent,
+                                      border: InputBorder.none,
+                                      // border: OutlineInputBorder(
+                                      //     borderSide:
+                                      //         BorderSide(color: Colors.white)),
+                                      hintText: "Email Address",
+                                      hintStyle: TextStyle(
+                                          fontSize: 14.0,
+                                          color: Colors.white.withOpacity(0.8)),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            // Padding(
+                            //   padding: const EdgeInsets.only(left: 35.0),
+                            //   child: Text(
+                            //     'Password',
+                            //     style: TextStyle(color: Colors.black54),
+                            //   ),
+                            // ),
+                            // SizedBox(
+                            //   height: 6,
+                            // ),
+                            Card(
+                              // elevation: 5,
+                              color: Colors.transparent,
+                              // shape: RoundedRectangleBorder(
+                              //  side: BorderSide(color: Colors.white, width: 1),
+                              //     borderRadius: BorderRadius.circular(8)),
+                              margin: EdgeInsets.symmetric(horizontal: 30),
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
+                                child: Theme(
+                                  data: ThemeData(
+                                    primaryColor: Colors.white,
+                                    primaryColorDark: Colors.white,
+                                  ),
+                                  child: TextFormField(
+                                    // focusNode: myFocusNodeEmailLogin,
+                                    controller: newpasswordController,
+                                    keyboardType: TextInputType.visiblePassword,
+                                    validator: (value) => passwordValidation(value),
+                                    obscureText: true,
+                                    style: TextStyle(
+                                        // fontFamily: "WorkSansSemiBold",
+                                        fontSize: 14.0,
+                                        color: Colors.white),
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.transparent,
+                                      border: InputBorder.none,
+                                      // border: OutlineInputBorder(
+                                      //     borderSide:
+                                      //         BorderSide(color: Colors.white)),
+                                      hintText: "Password",
+                                      hintStyle: TextStyle(
+                                          fontSize: 14.0,
+                                          color: Colors.white.withOpacity(0.8)),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 32),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => RootScreen()),
+                                      (route) => false);
+                                },
+                                child: Material(
+                                  elevation: 5,
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.transparent,
+                                  // shape: RoundedRectangleBorder(
+                                  //   side: BorderSide(width: 1,color: AppColors.black,),
+                                  // ),
+                                  child: Container(
+                                    height: 50,
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        color: AppColors.black,
+                                        // border: Border.all(width: 1,color: AppColors.black),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: Center(
+                                      child: Text(
+                                        'Sign Up',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.center,
+                            //   children: [
+                            //     Text(
+                            //       "I'm new user. ",
+                            //       style: TextStyle(
+                            //           color: Colors.white,
+                            //           fontSize: 16,
+                            //           fontWeight: FontWeight.w400),
+                            //     ),
+                            //     Text(
+                            //       "Sign Up",
+                            //       style: TextStyle(
+                            //           color: AppColors.secondaryElement,
+                            //           fontSize: 18,
+                            //           fontWeight: FontWeight.bold),
+                            //     )
+                            //   ],
+                            // ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   children: [
-                        //     Text(
-                        //       "I'm new user. ",
-                        //       style: TextStyle(
-                        //           color: Colors.white,
-                        //           fontSize: 16,
-                        //           fontWeight: FontWeight.w400),
-                        //     ),
-                        //     Text(
-                        //       "Sign Up",
-                        //       style: TextStyle(
-                        //           color: AppColors.secondaryElement,
-                        //           fontSize: 18,
-                        //           fontWeight: FontWeight.bold),
-                        //     )
-                        //   ],
-                        // ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
