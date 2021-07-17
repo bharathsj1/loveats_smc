@@ -7,9 +7,14 @@ import 'package:potbelly/screens/cart_screen.dart';
 import 'package:potbelly/screens/home_screen.dart';
 import 'package:potbelly/screens/notification_screen.dart';
 import 'package:potbelly/screens/profile_screen.dart';
+import 'package:potbelly/vendor_screens.dart/Home_screen.dart';
+import 'package:potbelly/vendor_screens.dart/vendor_notifications.dart';
 import 'navbar.dart';
 
 class BubbleTabBarDemo extends StatefulWidget {
+    final String type;
+     const BubbleTabBarDemo({Key key, @required this.type})
+      : super(key: key);
   @override
   _BubbleTabBarDemoState createState() => _BubbleTabBarDemoState();
 }
@@ -23,6 +28,7 @@ class _BubbleTabBarDemoState extends State<BubbleTabBarDemo> {
   @override
   void initState() {
     //Declare some buttons for our tab bar
+    if(widget.type == '2'){
     _navBarItems = [
       NavBarItemData("Home", OMIcons.home, 100, Colors.black),
       NavBarItemData("Bookmarks", OMIcons.bookmarks, 140, Colors.black),
@@ -39,6 +45,23 @@ class _BubbleTabBarDemoState extends State<BubbleTabBarDemo> {
       NotificationsScreen(),
       ProfileScreen(),
     ];
+    }
+    else{
+      _navBarItems = [
+      NavBarItemData("Home", OMIcons.home, 100, Colors.black),
+      // NavBarItemData("Bookmarks", OMIcons.bookmarks, 140, Colors.black),
+      // NavBarItemData("Cart", OMIcons.shoppingCart, 90, Colors.black),
+      NavBarItemData("Notification", OMIcons.notificationsActive, 140, Colors.black),
+      NavBarItemData("Profile", OMIcons.person, 105, Colors.black),
+    ];
+
+    //Create the views which will be mapped to the indices for our nav btns
+    _viewsByIndex = <Widget>[
+      Vendor_Home_screen(),
+      VendorNotificationsScreen(),
+      ProfileScreen(),
+    ];
+    }
     super.initState();
   }
 

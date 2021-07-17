@@ -108,7 +108,7 @@ class _SplashScreenState extends State<SplashScreen>
             context,
             MaterialPageRoute(
                 builder: (_) =>
-                    shared != null ? shared == '2'? RootScreen():  RootScreen2() :
+                    shared != null ? BubbleTabBarDemo(type: shared,):
                     //  BackgroundVideo()
                     GooeyEdgeDemo()
                      ),
@@ -243,7 +243,7 @@ class _SplashScreenState extends State<SplashScreen>
             context,
             MaterialPageRoute(
                 builder: (_) =>
-                    shared != null ? shared == '2'? BubbleTabBarDemo():  RootScreen2() :
+                    shared != null ?  BubbleTabBarDemo(type: shared,) :
                     //  BackgroundVideo()
                     GooeyEdgeDemo()
                      ),
