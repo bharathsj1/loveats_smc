@@ -9,6 +9,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:potbelly/Flip_nav_bar/demo.dart';
 import 'package:potbelly/models/UserModel.dart';
 import 'package:potbelly/screens/root_screen.dart';
 import 'package:potbelly/screens/root_screen2.dart';
@@ -372,20 +373,25 @@ class GooeyCarouselState extends State<GooeyCarousel>
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Platform.isIOS
-                                    ? Container(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            10, 5, 10, 10),
-                                        decoration: new BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.white,
+                                    ? InkWell(
+                                      onTap: (){
+                                        _signInWithApple(context);
+                                      },
+                                      child: Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              10, 5, 10, 10),
+                                          decoration: new BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.white,
+                                          ),
+                                          child: Icon(
+                                            FontAwesomeIcons.apple,
+                                            color: Colors.black,
+                                            size: 28,
+                                          ),
+                                          // child: Image.asset('assets/images/apple.png',height: 30,width: 30,),
                                         ),
-                                        child: Icon(
-                                          FontAwesomeIcons.apple,
-                                          color: Colors.black,
-                                          size: 28,
-                                        ),
-                                        // child: Image.asset('assets/images/apple.png',height: 30,width: 30,),
-                                      )
+                                    )
                                     : Container(),
                                 Platform.isIOS
                                     ? SizedBox(
@@ -733,11 +739,12 @@ class GooeyCarouselState extends State<GooeyCarousel>
                               padding: EdgeInsets.symmetric(horizontal: 32),
                               child: InkWell(
                                 onTap: () {
-                                  Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) => RootScreen()),
-                                      (route) => false);
+                                  // Navigator.pushAndRemoveUntil(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (_) => BubbleTabBarDemo(type: '2')),
+                                  //     (route) => false);
+                                  validateFormAndCreateUser(context);
                                 },
                                 child: Material(
                                   elevation: 5,
@@ -865,7 +872,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (_) => type == '2' ? RootScreen() : RootScreen2()),
+                  builder: (_) => BubbleTabBarDemo(type: type,)),
               (route) => false);
         });
       });
@@ -918,9 +925,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                    builder: (_) => response['user'].data.custAccountType == '2'
-                        ? RootScreen()
-                        : RootScreen2()),
+                    builder: (_) =>  BubbleTabBarDemo(type: response['user'].data.custAccountType)
+                        ),
                 (route) => false);
           });
         });
@@ -954,7 +960,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (_) => type == '2' ? RootScreen() : RootScreen2()),
+                  builder: (_) =>  BubbleTabBarDemo(type: type)),
               (route) => false);
         });
       });
@@ -1023,12 +1029,12 @@ class GooeyCarouselState extends State<GooeyCarousel>
             print(value);
             Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (_) => RootScreen()),
+                MaterialPageRoute(builder: (_) => BubbleTabBarDemo(type: '2')),
                 (route) => false);
           });
         });
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => RootScreen()));
+            context, MaterialPageRoute(builder: (_) => BubbleTabBarDemo(type: '2')));
       } else {
         showSnackBar(context, message);
       }
