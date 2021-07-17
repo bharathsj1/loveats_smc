@@ -17,14 +17,37 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
-class New_Splash extends HookWidget {
+class New_Splash extends StatefulWidget {
+  @override
+  _New_SplashState createState() => _New_SplashState();
+}
+
+class _New_SplashState extends State<New_Splash>  with TickerProviderStateMixin{
    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+    AnimationController animationcontroll ;
+    @override
+  void initState() {
+    // TODO: implement initState
+    animationcontroll = AnimationController(
+      duration: const Duration(milliseconds: 100),
+      vsync: this,
+    );
+    super.initState();
+  }
+
+   @override
+  dispose() {
+    animationcontroll.dispose();
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    final animationcontroll = useAnimationController();
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: Center(
+      body: Center( 
         child: Lottie.asset(
           'assets/food.json',
           // 'assets/food2.json',
@@ -109,7 +132,7 @@ class New_Splash extends HookWidget {
         }
       });
     }
-  
+
     _onAlertButtonsPressed(context, detail) {
     //  StatefulBuilder(
     //       builder: (BuildContext context, StateSetter setState) {
@@ -231,6 +254,4 @@ class New_Splash extends HookWidget {
              }
         }
   }
-
-
 }
