@@ -7,6 +7,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:potbelly/screens/New_splash_Screen.dart';
 import 'package:potbelly/screens/google_map.dart';
 import 'package:potbelly/screens/Promotionalert.dart';
 import 'package:potbelly/screens/checkoutScreen.dart';
@@ -55,6 +56,7 @@ import 'package:potbelly/vendor_screens.dart/orders_detail.dart';
 class AppRouter {
   static const loginScreen = '/';
   static const splashScreen = '/splash-screen';
+  static const newsplashScreen = '/new-splash-screen';
   static const forgotPasswordScreen = '/forgot-password-screen';
   static const registerScreen = '/register-screen';
   static const setLocationScreen = '/set-location-screen';
@@ -108,6 +110,11 @@ class AppRouter {
       case AppRouter.splashScreen:
         return CupertinoPageRoute<dynamic>(
           builder: (_) => SplashScreen(),
+          settings: settings,
+        );
+      case AppRouter.newsplashScreen:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => New_Splash(),
           settings: settings,
         );
       case AppRouter.forgotPasswordScreen:

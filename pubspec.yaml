@@ -69,6 +69,8 @@ dependencies:
   auto_route: ^2.2.0
   flutter_svg: ^0.22.0
   font_awesome_flutter:
+  lottie: ^1.1.0
+  flutter_hooks: ^0.18.0
 
   
   
