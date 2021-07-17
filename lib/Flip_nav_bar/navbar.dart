@@ -9,7 +9,10 @@ class NavBar extends StatelessWidget {
 
   const NavBar({this.items, this.itemTapped, this.currentIndex = 0});
 
-  NavBarItemData get selectedItem => currentIndex >= 0 && currentIndex < items.length ? items[currentIndex] : null;
+  NavBarItemData get selectedItem =>
+      currentIndex >= 0 && currentIndex < items.length
+          ? items[currentIndex]
+          : null;
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +30,17 @@ class NavBar extends StatelessWidget {
     //Create a container with a row, and add our btn widgets into the row
     return Container(
       margin: EdgeInsets.zero,
-      padding: EdgeInsets.zero,
+      padding: EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         //Add some drop-shadow to our navbar, use 2 for a slightly nicer effect
         boxShadow: [
-          BoxShadow(blurRadius: 16, color: Colors.black12),
-          BoxShadow(blurRadius: 24, color: Colors.black12),
+          BoxShadow(blurRadius: 10, color: Colors.black12),
+          BoxShadow(blurRadius: 10, color: Colors.black12),
         ],
       ),
       alignment: Alignment.center,
-      height: 60,
+      height: 70,
       //Clip the row of widgets, to suppress any overflow errors that might occur during animation
       child: ClippedView(
         child: Row(

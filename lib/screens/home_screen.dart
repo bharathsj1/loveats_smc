@@ -386,71 +386,46 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: Sizes.MARGIN_14,
               ),
               search
-                  ? Row(
-                    
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: Material(
-                            elevation: 5,
-                            borderRadius: BorderRadius.circular(10),
-                            child: FoodyBiteSearchInputField(
-                                ImagePath.searchIcon,
-                                borderRadius: 10,
-                                controller: searchcontroller,
-                                contentPaddingVertical: 6,
-                                textFormFieldStyle:
-                                    Styles.customNormalTextStyle(
-                                        color: Colors.black54),
-                                hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
-                                hintTextStyle: Styles.customNormalTextStyle(
-                                    color: Colors.black54),
-                                suffixIconImagePath: ImagePath.settingsIcon,
-                                hasSuffixIcon: false,
-                                borderWidth: 0.0, onTapOfLeadingIcon: () {
-                              pausevideo();
-                              FocusScope.of(context).unfocus();
-                              Navigator.pushNamed(
-                                context,
-                                AppRouter.searchResultsScreen,
-                                arguments: SearchValue(
-                                  searchcontroller.text,
-                                ),
-                              ).then((value) {
-                                this.searchcontroller.text = '';
-                                FocusScope.of(context).unfocus();
-                                setState(() {});
-                                resumevideo();
-                              });
-                            }, onTapOfSuffixIcon: () {
-                              pausevideo();
-                              Navigator.pushNamed(
-                                      context, AppRouter.filterScreen)
-                                  .then((value) => resumevideo());
-                            }, borderStyle: BorderStyle.solid),
-                          ),
-                        ),
-                        Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.only(right:25.0),
-                          child: Material(
-                            elevation: 5,
-                             borderRadius: BorderRadius.circular(10),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: ImageIcon(
-                                AssetImage(ImagePath.settingsIcon),
-                                color: AppColors.black,
-                              ),
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Material(
+                        elevation: 5,
+                        borderRadius: BorderRadius.circular(20),
+                        child: FoodyBiteSearchInputField(ImagePath.searchIcon,
+                            borderRadius: 20,
+                            controller: searchcontroller,
+                            contentPaddingVertical: 6,
+                            textFormFieldStyle: Styles.customNormalTextStyle(
+                                color: Colors.black54),
+                            hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
+                            hintTextStyle: Styles.customNormalTextStyle(
+                                color: Colors.black54),
+                            suffixIconImagePath: ImagePath.settingsIcon,
+                            borderWidth: 0.0, onTapOfLeadingIcon: () {
+                          pausevideo();
+                          FocusScope.of(context).unfocus();
+                          Navigator.pushNamed(
+                            context,
+                            AppRouter.searchResultsScreen,
+                            arguments: SearchValue(
+                              searchcontroller.text,
                             ),
-                          ),
-                        )
-                      ],
+                          ).then((value) {
+                            this.searchcontroller.text = '';
+                            FocusScope.of(context).unfocus();
+                            setState(() {});
+                            resumevideo();
+                          });
+                        }, onTapOfSuffixIcon: () {
+                          pausevideo();
+                          Navigator.pushNamed(context, AppRouter.filterScreen)
+                              .then((value) => resumevideo());
+                        }, borderStyle: BorderStyle.solid),
+                      ),
                     )
                   : Container(),
               SizedBox(
-                height: search ? 25 : 0,
+                height: 0,
               ),
 
               Padding(
@@ -464,16 +439,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Material(
                           elevation: 3,
                           shape: RoundedRectangleBorder(
-                            side: BorderSide(width: 0.5, color: AppColors.grey),
-                            borderRadius: BorderRadius.circular(6),
+                            side: BorderSide(width: 0.5, color: Colors.orange),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           child: Container(
                               width: 80,
-                              height: 30,
+                              height: 35,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6),
-                                border: Border.all(
-                                    width: 0.5, color: AppColors.grey),
+                                borderRadius: BorderRadius.circular(10),
+                                border:
+                                    Border.all(width: 2, color: Colors.orange),
                               ),
                               child: Center(
                                   child: Row(
@@ -492,7 +467,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text(
                                     'Nearby',
                                     style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold),
                                   )
                                 ],
@@ -511,8 +486,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Container(
-                              width: 80,
-                              height: 30,
+                              width: 85,
+                              height: 35,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6),
                                 border: Border.all(
@@ -554,8 +529,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Container(
-                              width: 105,
-                              height: 30,
+                              width: 115,
+                              height: 35,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6),
                                 border: Border.all(
@@ -597,8 +572,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Container(
-                              width: 105,
-                              height: 30,
+                              width: 125,
+                              height: 35,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6),
                                 border: Border.all(
@@ -640,8 +615,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Container(
-                              width: 105,
-                              height: 30,
+                              width: 115,
+                              height: 35,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6),
                                 border: Border.all(
@@ -678,22 +653,15 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: 10,
               ),
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal:12.0),
-              //   child: Text('What you want to order next?', textAlign: TextAlign.left, style: GoogleFonts.dmSerifDisplay(textStyle:TextStyle(fontSize: 36,color: AppColors.black)),),
-              // ),
               Padding(
-                padding: const EdgeInsets.only(left: 5.0),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  physics: BouncingScrollPhysics(),
-                  child: Row(
-                    children: categorieslist(),
-                  ),
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Text(
+                  'What you want to order next?',
+                  textAlign: TextAlign.left,
+                  style: GoogleFonts.dmSerifDisplay(
+                      textStyle:
+                          TextStyle(fontSize: 36, color: AppColors.black)),
                 ),
-              ),
-              SizedBox(
-                height: 10,
               ),
 
 //
