@@ -386,48 +386,70 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: Sizes.MARGIN_14,
               ),
               search
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Material(
-                        elevation: 5,
-                        borderRadius: BorderRadius.circular(20),
-                        child: FoodyBiteSearchInputField(ImagePath.searchIcon,
-                            borderRadius: 20,
-                            controller: searchcontroller,
-                            contentPaddingVertical: 6,
-                            textFormFieldStyle: Styles.customNormalTextStyle(
-                                color: Colors.black54),
-                            hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
-                            hintTextStyle: Styles.customNormalTextStyle(
-                                color: Colors.black54),
-                            suffixIconImagePath: ImagePath.settingsIcon,
-                            borderWidth: 0.0, onTapOfLeadingIcon: () {
-                          pausevideo();
-                          FocusScope.of(context).unfocus();
-                          Navigator.pushNamed(
-                            context,
-                            AppRouter.searchResultsScreen,
-                            arguments: SearchValue(
-                              searchcontroller.text,
+                  ? Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: Material(
+                            borderRadius: BorderRadius.circular(10),
+                            child: FoodyBiteSearchInputField(
+                                ImagePath.searchIcon,
+                                borderRadius: 0,
+                                controller: searchcontroller,
+                                contentPaddingVertical: 6,
+                                textFormFieldStyle:
+                                    Styles.customNormalTextStyle(
+                                        color: Colors.black54),
+                                hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
+                                hintTextStyle: Styles.customNormalTextStyle(
+                                    color: Colors.black54),
+                                suffixIconImagePath: ImagePath.settingsIcon,
+                                hasSuffixIcon: false,
+                                borderWidth: 0.0, onTapOfLeadingIcon: () {
+                              pausevideo();
+                              FocusScope.of(context).unfocus();
+                              Navigator.pushNamed(
+                                context,
+                                AppRouter.searchResultsScreen,
+                                arguments: SearchValue(
+                                  searchcontroller.text,
+                                ),
+                              ).then((value) {
+                                this.searchcontroller.text = '';
+                                FocusScope.of(context).unfocus();
+                                setState(() {});
+                                resumevideo();
+                              });
+                            }, onTapOfSuffixIcon: () {
+                              pausevideo();
+                              Navigator.pushNamed(
+                                      context, AppRouter.filterScreen)
+                                  .then((value) => resumevideo());
+                            }, borderStyle: BorderStyle.solid),
+                          ),
+                        ),
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 25.0),
+                          child: Material(
+                            elevation: 5,
+                            borderRadius: BorderRadius.circular(10),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: ImageIcon(
+                                AssetImage(ImagePath.settingsIcon),
+                                color: AppColors.black,
+                              ),
                             ),
-                          ).then((value) {
-                            this.searchcontroller.text = '';
-                            FocusScope.of(context).unfocus();
-                            setState(() {});
-                            resumevideo();
-                          });
-                        }, onTapOfSuffixIcon: () {
-                          pausevideo();
-                          Navigator.pushNamed(context, AppRouter.filterScreen)
-                              .then((value) => resumevideo());
-                        }, borderStyle: BorderStyle.solid),
-                      ),
+                          ),
+                        )
+                      ],
                     )
                   : Container(),
               SizedBox(
-                height: 0,
+                height: search ? 25 : 0,
               ),
-
               Padding(
                 padding: const EdgeInsets.only(left: 10.0, right: 10),
                 child: SingleChildScrollView(
@@ -654,14 +676,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 10,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: Text(
-                  'What you want to order next?',
-                  textAlign: TextAlign.left,
-                  style: GoogleFonts.dmSerifDisplay(
-                      textStyle:
-                          TextStyle(fontSize: 36, color: AppColors.black)),
+                padding: const EdgeInsets.only(left: 5.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  physics: BouncingScrollPhysics(),
+                  child: Row(
+                    children: categorieslist(),
+                  ),
                 ),
+              ),
+              SizedBox(
+                height: 10,
               ),
 
 //
