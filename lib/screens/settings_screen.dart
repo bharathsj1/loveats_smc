@@ -221,6 +221,7 @@ class SettingsScreen extends StatelessWidget {
       ),
     );
   }
+
 }
 
 class SettingsListTile extends StatelessWidget {
@@ -246,16 +247,16 @@ class SettingsListTile extends StatelessWidget {
       onTap: onTap,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(
-            vertical: Sizes.PADDING_4, horizontal: Sizes.PADDING_16),
+            vertical: Sizes.PADDING_0, horizontal: Sizes.PADDING_16),
         title: Container(
           margin: const EdgeInsets.only(bottom: Sizes.MARGIN_8),
           child: Text(
             title,
             style: textTheme.title
-                .copyWith(fontSize: Sizes.TEXT_SIZE_20, color: titleColor),
+                .copyWith(fontSize: Sizes.TEXT_SIZE_16, color: titleColor),
           ),
         ),
-        trailing: hasTrailing ? Icon(iconData, color: AppColors.indigo) : null,
+        trailing: hasTrailing ? Icon(iconData, color: AppColors.secondaryElement,size: 16,) : null,
       ),
     );
   }
