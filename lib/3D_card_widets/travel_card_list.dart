@@ -46,15 +46,15 @@ class TravelCardListState extends State<TravelCardList>
     //Create our main list
     Widget listContent = Container(
       //Wrap list in a container to control height and padding
-      height: _cardHeight,
+      height: _cardHeight-30,
       //Use a ListView.builder, calls buildItemRenderer() lazily, whenever it need to display a listItem
       child: PageView.builder(
         //Use bounce-style scroll physics, feels better with this demo
         physics: BouncingScrollPhysics(),
         controller: _pageController,
-        itemCount: widget.cities.length,
+        itemCount: widget.cities.length + 2,
         scrollDirection: Axis.horizontal,
-        itemBuilder: (context, i) => _buildItemRenderer(i),
+        itemBuilder: (context, i) => _buildItemRenderer(0),
       ),
     );
 

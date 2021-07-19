@@ -125,16 +125,16 @@ class FoodyBiteCard extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 5.0),
-                              CardTags(
-                                title: distance,
-                                decoration: BoxDecoration(
-                                  // color: Color.fromARGB(255, 132, 141, 255),
-                                  color: AppColors.secondaryElement,
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(tagRadius)),
-                                ),
-                              ),
+                              // SizedBox(width: 5.0),
+                              // CardTags(
+                              //   title: distance,
+                              //   decoration: BoxDecoration(
+                              //     // color: Color.fromARGB(255, 132, 141, 255),
+                              //     color: AppColors.secondaryElement,
+                              //     borderRadius: BorderRadius.all(
+                              //         Radius.circular(tagRadius)),
+                              //   ),
+                              // ),
                               Spacer(
                                 flex: 1,
                               ),
