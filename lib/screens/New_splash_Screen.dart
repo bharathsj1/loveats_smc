@@ -9,6 +9,7 @@ import 'package:lottie/lottie.dart';
 import 'package:potbelly/Flip_nav_bar/demo.dart';
 import 'package:potbelly/grovey_startScreens/demo.dart';
 import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/screens/home_screen.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
@@ -124,7 +125,10 @@ class _New_SplashState extends State<New_Splash>  with TickerProviderStateMixin{
             context,
             MaterialPageRoute(
                 builder: (_) =>
-                    shared != null ?  BubbleTabBarDemo(type: shared,) :
+                    shared != null ? 
+                    //  BubbleTabBarDemo(type: shared,) 
+                     HomeScreen()
+                     :
                     //  BackgroundVideo()
                     GooeyEdgeDemo()
                      ),

@@ -55,8 +55,8 @@ class FoodyBiteSearchInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 55,
-      padding: EdgeInsets.only(top: 4),
+      height: 50,
+      padding: EdgeInsets.only(top: 1),
       child: TextFormField(
         controller: controller,
         style: textFormFieldStyle,

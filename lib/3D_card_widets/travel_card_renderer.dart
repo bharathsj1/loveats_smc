@@ -20,7 +20,7 @@ class TravelCardRenderer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: cardWidth,
-      margin: EdgeInsets.only(top: 10),
+      margin: EdgeInsets.only(top: 5),
       child: Stack(
         overflow: Overflow.visible,
         alignment: Alignment.center,
@@ -41,7 +41,7 @@ class TravelCardRenderer extends StatelessWidget {
             ),
           ),
           // City image, out of card by 15px
-          Positioned(top: -30, child: _buildCityImage()),
+          Positioned(top: -45, child: _buildCityImage()),
           // City information
           // _buildCityData(),
           Positioned(
