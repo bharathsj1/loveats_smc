@@ -81,7 +81,7 @@ class _BubbleTabBarDemoState extends State<BubbleTabBarDemo> {
     return Scaffold(
       backgroundColor: Color(0xffE6E6E6),
       body: SafeArea(
-        child: Container(
+        child: Container( 
           width: double.infinity,
           //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
           child: AnimatedSwitcher(

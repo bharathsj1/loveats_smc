@@ -11,11 +11,13 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:potbelly/Flip_nav_bar/demo.dart';
 import 'package:potbelly/models/UserModel.dart';
+import 'package:potbelly/screens/home_screen.dart';
 import 'package:potbelly/screens/root_screen.dart';
 import 'package:potbelly/screens/root_screen2.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
+import 'package:potbelly/vendor_screens.dart/Home_screen.dart';
 import 'package:potbelly/widgets/snackbar.dart';
 import './ProviderService.dart';
 import 'package:provider/provider.dart';
@@ -872,7 +874,10 @@ class GooeyCarouselState extends State<GooeyCarousel>
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (_) => BubbleTabBarDemo(type: type,)),
+                  builder: (_) => 
+                  // BubbleTabBarDemo(type: type,)
+                   type == '2'? HomeScreen():  Vendor_Home_screen()
+                  ),
               (route) => false);
         });
       });
@@ -925,7 +930,9 @@ class GooeyCarouselState extends State<GooeyCarousel>
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                    builder: (_) =>  BubbleTabBarDemo(type: response['user'].data.custAccountType)
+                    builder: (_) =>  
+                    // BubbleTabBarDemo(type: response['user'].data.custAccountType)
+                    response['user'].data.custAccountType == '2'? HomeScreen():  Vendor_Home_screen()
                         ),
                 (route) => false);
           });
@@ -960,7 +967,10 @@ class GooeyCarouselState extends State<GooeyCarousel>
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (_) =>  BubbleTabBarDemo(type: type)),
+                  builder: (_) =>  
+                  // BubbleTabBarDemo(type: type)
+                  type == '2'? HomeScreen():  Vendor_Home_screen()
+                  ),
               (route) => false);
         });
       });
@@ -1029,12 +1039,18 @@ class GooeyCarouselState extends State<GooeyCarousel>
             print(value);
             Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (_) => BubbleTabBarDemo(type: '2')),
+                MaterialPageRoute(builder: (_) => 
+                // BubbleTabBarDemo(type: '2')
+                HomeScreen()
+                ),
                 (route) => false);
           });
         });
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => BubbleTabBarDemo(type: '2')));
+            context, MaterialPageRoute(builder: (_) => 
+            // BubbleTabBarDemo(type: '2')
+            HomeScreen()
+            ));
       } else {
         showSnackBar(context, message);
       }
