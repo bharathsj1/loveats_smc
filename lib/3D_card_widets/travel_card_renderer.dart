@@ -45,8 +45,8 @@ class TravelCardRenderer extends StatelessWidget {
           // City information
           // _buildCityData(),
           Positioned(
-            bottom: 30,
-            left: 12,
+            bottom: 40,
+            right: 12,
             child: Card(
               elevation: 0,
               child: Padding(
@@ -71,7 +71,7 @@ class TravelCardRenderer extends StatelessWidget {
             ),
           ),
           Positioned(
-              bottom: 30,
+              bottom: 10,
               right: 12,
               child: Card(
                 elevation: 0,
@@ -102,22 +102,22 @@ class TravelCardRenderer extends StatelessWidget {
                 ),
               )),
        Positioned(
-         bottom: 8,
+         bottom: 0,
          left: 0,
          right: 0,
          child: Container(
                         margin: EdgeInsets.symmetric(
                           horizontal: Sizes.MARGIN_16,
-                          vertical: Sizes.MARGIN_16,
+                          vertical: Sizes.MARGIN_22,
                         ),
                         child: Column(
                           children: <Widget>[
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Text(
                                   'Rose, Farrington',
-                                  textAlign: TextAlign.center,
+                                  textAlign: TextAlign.left,
                                   style:  GoogleFonts.dmSerifDisplay(textStyle:Styles.customTitleTextStyle(
                                     color: Colors.black87,
                                     fontWeight: FontWeight.normal,
@@ -153,17 +153,37 @@ class TravelCardRenderer extends StatelessWidget {
                                 
                               ],
                             ),
-                            SizedBox(height: 20.0),
+                            // SizedBox(height: 20.0),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Container(
-                                    width: MediaQuery.of(context).size.width*0.5,
+                                    // width: MediaQuery.of(context).size.width*0.5,
                                     // color: Colors.red,
                                     child: Text(
-                                      'Roayal Avenue',
+                                      'Roayal Avenue (500+)',
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.openSans(textStyle:Styles.customNormalTextStyle(
+                                        color: Colors.black54,
+                                        fontSize: Sizes.TEXT_SIZE_14,
+                                      ),)
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    // width: MediaQuery.of(context).size.width*0.5,
+                                    // color: Colors.red,
+                                    child: Text(
+                                      '0.3 miles away - \$0.5 Delivery',
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.openSans(textStyle:Styles.customNormalTextStyle(
                                         color: Colors.black54,

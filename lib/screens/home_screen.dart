@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potbelly/3D_card_widets/demo_data.dart';
@@ -307,36 +308,173 @@ class _HomeScreenState extends State<HomeScreen> {
             ));
   }
 
-  filterswidget(name, icon, border, width) {
+  List catlist = ['All', 'Korean', 'Indian'];
+
+  newcategorieslist() {
+    return List.generate(
+        catlist.length,
+        (i) => Container(
+              margin: EdgeInsets.symmetric(horizontal: 4),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 5.0),
+                child: Stack(
+                  children: [
+                    Material(
+                      elevation: i == 0 ? 10 : 0,
+                      color: i == 0
+                          ? Color(0xFFFF8E5D)
+                          : i == 1
+                              ? Color(0xFF00808D)
+                              : Color(0xFF4C0065),
+                      shape: RoundedRectangleBorder(
+                        // side: i== 0? BorderSide(width: 1,color: AppColors.black): BorderSide.none,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        height: MediaQuery.of(context).size.height * 0.12,
+                        // margin: EdgeInsets.only(
+                        //     top: 50, bottom: 5, left: 5, right: 0),
+                        // margin: EdgeInsets.all(i==0? 5:0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: i == 0
+                              ? Color(0xFFFF8E5D)
+                              : i == 1
+                                  ? Color(0xFF00808D)
+                                  : Color(0xFF4C0065),
+                          // border: Border.all(width: 0.5,color: AppColors.grey),
+                        ),
+                        // child: Center(
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.start,
+                        //     children: [
+                        //     // SizedBox(width: 5,),
+                        //     Padding(
+                        //       padding: const EdgeInsets.only(left:12.0),
+                        //       child: Icon(Icons.fastfood_outlined,size: 18,color:  i != 0? AppColors.black: AppColors.white,),
+                        //     ),
+                        //     SizedBox(width: 15,),
+                        //     Text('Burgers',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: i != 0? AppColors.black: AppColors.white),)
+                        //   ],)
+                        // )
+                        // child: Material(
+                        //     elevation: i== 0?10: 0,
+                        //     color: i== 0? Color(0xFFFF8E5D): i== 1? Color(0xFF00808D): Color(0xFF4C0065),
+                        //     shape: RoundedRectangleBorder(
+                        //       // side: i== 0? BorderSide(width: 1,color: AppColors.black): BorderSide.none,
+                        //       borderRadius: BorderRadius.circular(6),
+                        //     ),
+                        //     child: Container()),
+                      ),
+                    ),
+                    Positioned(
+                        top: 5,
+                        bottom: 0,
+                        // left: 25,
+                        right: -45,
+                        child: Image.asset(
+                          'assets/images/d${i + 1}.png',
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          height: MediaQuery.of(context).size.height * 0.12,
+                          fit: BoxFit.fill,
+                        )),
+                    // Positioned(
+                    //     top: 10,
+                    //     //  bottom: 10,
+                    //     left: 25,
+                    //     right: 25,
+                    //     child: Image.asset(
+                    //       'assets/images/d${i + 1}.png',
+                    //       width: MediaQuery.of(context).size.width / 2.5,
+                    //       height: MediaQuery.of(context).size.width / 2.8,
+                    //       fit: BoxFit.fill,
+                    //     )),
+
+                    // SizedBox(height: 10,),
+                    // Positioned(
+                    //   bottom: MediaQuery.of(context).size.height * 0.075,
+                    //   left: 0,
+                    //   right: 0,
+                    //   child: Text('Chopped Spring',
+                    //       textAlign: TextAlign.center,
+                    //       style: GoogleFonts.dmSerifDisplay(
+                    //         textStyle: Styles.customTitleTextStyle(
+                    //           color: Colors.black87,
+                    //           fontWeight: FontWeight.normal,
+                    //           fontSize: 22,
+                    //         ),
+                    //       )),
+                    // ),
+
+                    // Positioned(
+                    //   bottom: MediaQuery.of(context).size.height * 0.05,
+                    //   left: 0,
+                    //   right: 0,
+                    //   child: Text('Scallions & Radishes',
+                    //       textAlign: TextAlign.center,
+                    //       style: GoogleFonts.openSans(
+                    //         textStyle: Styles.customNormalTextStyle(
+                    //           color: Colors.black54,
+                    //           fontSize: Sizes.TEXT_SIZE_12,
+                    //         ),
+                    //       )),
+                    // ),
+                    Positioned(
+                      bottom: MediaQuery.of(context).size.height * 0.01,
+                      left: 10,
+                      // right: 0,
+                      child: Text(catlist[i],
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.dmSerifDisplay(
+                            textStyle: Styles.customTitleTextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          )),
+                    ),
+                  ],
+                ),
+              ),
+            ));
+  }
+
+  filterswidget(name, iconsize, icon, border, width, active) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 5.0),
       child: Material(
-        elevation: 1,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(width: 0.5, color: border),
-          borderRadius: BorderRadius.circular(6),
-        ),
+        elevation: active ? 1 : 0,
+        shape: active
+            ? RoundedRectangleBorder(
+                side: BorderSide(width: 0.5, color: border),
+                borderRadius: BorderRadius.circular(6),
+              )
+            : null,
         child: Container(
             width: width,
             height: 30,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6),
-              border: Border.all(width: 0.5, color: border),
-            ),
+            decoration: active
+                ? BoxDecoration(
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(width: 0.5, color: border),
+                  )
+                : null,
             child: Center(
                 child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
                   width: 5,
                 ),
-                Icon(
-                  icon,
-                  size: 16,
-                  color: AppColors.black,
-                ),
-                SizedBox(
-                  width: 5,
-                ),
+                // Icon(
+                //   icon,
+                //   size: iconsize,
+                //   color: AppColors.black,
+                // ),
+                // SizedBox(
+                //   width: 5,
+                // ),
                 Text(
                   name,
                   style: TextStyle(
@@ -477,45 +615,56 @@ class _HomeScreenState extends State<HomeScreen> {
                                 size: 21,
                               )),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5.0),
-                          child: InkWell(
-                              onTap: () {
-                                // search = !search;
-                                // setState(() {});
-                                Navigator.pushNamed(
-                                  context,
-                                  AppRouter.notificationsScreen,
-                                  // arguments: SearchValue(
-                                  //   searchcontroller.text,
-                                  // ),
-                                );
-                              },
-                              child: Icon(
-                                Icons.notifications_none_rounded,
-                                color: AppColors.black,
-                                size: 21,
-                              )),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(right: 5.0),
+                        //   child: InkWell(
+                        //       onTap: () {
+                        //         // search = !search;
+                        //         // setState(() {});
+                        //          Navigator.pushNamed(
+                        //           context,
+                        //           AppRouter.notificationsScreen,
+                        //           // arguments: SearchValue(
+                        //           //   searchcontroller.text,
+                        //           // ),
+                        //         );
+                        //       },
+                        //       child: Icon(
+                        //         Icons.notifications_none_rounded,
+                        //         color: AppColors.black,
+                        //         size: 21,
+                        //       )),
+                        // ),
                         Padding(
                           padding: const EdgeInsets.only(right: 10.0),
                           child: InkWell(
-                              onTap: () {
-                                // search = !search;
-                                Navigator.pushNamed(
-                                  context,
-                                  AppRouter.profileScreen,
-                                  // arguments: SearchValue(
-                                  //   searchcontroller.text,
-                                  // ),
-                                );
-                                setState(() {});
-                              },
-                              child: Icon(
-                                Icons.person,
-                                color: AppColors.black,
-                                size: 22,
-                              )),
+                            onTap: () {
+                              // search = !search;
+                              Navigator.pushNamed(
+                                context,
+                                AppRouter.profileScreen,
+                                // arguments: SearchValue(
+                                //   searchcontroller.text,
+                                // ),
+                              );
+                              setState(() {});
+                            },
+                            // child: Icon(
+                            //   Icons.person,
+                            //   color: AppColors.black,
+                            //   size: 22,
+                            // )
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: CircleAvatar(
+                                backgroundImage:
+                                    AssetImage('assets/images/andy.png'),
+                                backgroundColor: Colors.transparent,
+                                minRadius: Sizes.RADIUS_14,
+                                maxRadius: Sizes.RADIUS_14,
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     )
@@ -523,7 +672,37 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(
-                height: Sizes.MARGIN_8,
+                height: 6,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      filterswidget('Filters', 12.0, FontAwesomeIcons.slidersH,
+                          AppColors.secondaryElement, 75.0, true),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      filterswidget('Delivery', 16.0, Icons.store_outlined,
+                          AppColors.grey, 80.0, false),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      filterswidget('Pickup', 16.0, Icons.attach_money,
+                          AppColors.grey, 75.0, false),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      filterswidget('Table Service', 16.0, Icons.attach_money,
+                          AppColors.grey, 105.0, false),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 6,
               ),
               search
                   ? Row(
@@ -532,11 +711,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           width: MediaQuery.of(context).size.width * 0.82,
                           child: Material(
-                            borderRadius: BorderRadius.circular(10),
+                            elevation: 0,
+                            borderRadius: BorderRadius.circular(6),
                             child: FoodyBiteSearchInputField(
                                 ImagePath.searchIcon,
-                                borderRadius: 5,
+                                borderRadius: 6,
                                 controller: searchcontroller,
+                                fillColor: Colors.grey[300],
+                                filled: true,
                                 contentPaddingVertical: 6,
                                 textFormFieldStyle:
                                     Styles.customNormalTextStyle(
@@ -571,15 +753,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         Spacer(),
                         Padding(
-                          padding: const EdgeInsets.only(right: 25.0),
+                          padding: const EdgeInsets.only(right: 18.0),
                           child: Material(
-                            elevation: 5,
-                            borderRadius: BorderRadius.circular(10),
+                            elevation: 2,
+                            borderRadius: BorderRadius.circular(6),
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(10.0),
                               child: ImageIcon(
                                 AssetImage(ImagePath.settingsIcon),
-                                color: AppColors.black,
+                                color: AppColors.secondaryElement,
                               ),
                             ),
                           ),
@@ -588,88 +770,95 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   : Container(),
               SizedBox(
-                height: search ? 20 : 0,
+                height: search ? 10 : 0,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0, right: 10),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5.0),
-                        child: Material(
-                          elevation: 3,
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(width: 0.5, color: Colors.orange),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Container(
-                              width: 80,
-                              height: 35,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border:
-                                    Border.all(width: 2, color: Colors.orange),
-                              ),
-                              child: Center(
-                                  child: Row(
-                                children: [
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Icon(
-                                    Icons.location_pin,
-                                    size: 16,
-                                    color: AppColors.secondaryElement,
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    'Nearby',
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ))),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      filterswidget(
-                          'Opened', Icons.store_outlined, AppColors.grey, 80.0),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      filterswidget('High to Low', Icons.attach_money,
-                          AppColors.grey, 115.0),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      filterswidget('Low to High', Icons.attach_money,
-                          AppColors.grey, 115.0),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      filterswidget(
-                          '4+ Rating', Icons.star, AppColors.grey, 105.0),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 0,
-              ),
+
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 10.0, right: 10),
+              //   child: SingleChildScrollView(
+              //     scrollDirection: Axis.horizontal,
+              //     child: Row(
+              //       children: [
+              //         Padding(
+              //           padding: const EdgeInsets.only(bottom: 5.0),
+              //           child: Material(
+              //             elevation: 3,
+              //             shape: RoundedRectangleBorder(
+              //               side: BorderSide(
+              //                   width: 0.5, color: AppColors.secondaryElement),
+              //               borderRadius: BorderRadius.circular(6),
+              //             ),
+              //             child: Container(
+              //                 width: 80,
+              //                 height: 30,
+              //                 decoration: BoxDecoration(
+              //                   borderRadius: BorderRadius.circular(6),
+              //                   border: Border.all(
+              //                       width: 0.5,
+              //                       color: AppColors.secondaryElement),
+              //                 ),
+              //                 child: Center(
+              //                     child: Row(
+              //                   children: [
+              //                     SizedBox(
+              //                       width: 5,
+              //                     ),
+              //                     Icon(
+              //                       Icons.location_pin,
+              //                       size: 16,
+              //                       color: AppColors.secondaryElement,
+              //                     ),
+              //                     SizedBox(
+              //                       width: 5,
+              //                     ),
+              //                     Text(
+              //                       'Nearby',
+              //                       style: TextStyle(
+              //                           fontSize: 15,
+              //                           color: AppColors.black,
+              //                           fontWeight: FontWeight.bold),
+              //                     )
+              //                   ],
+              //                 ))),
+              //           ),
+              //         ),
+              //         SizedBox(
+              //           width: 12,
+              //         ),
+              //         filterswidget('Opened', Icons.store_outlined, AppColors.grey,80.0),
+              //         SizedBox(
+              //           width: 12,
+              //         ),
+              //         filterswidget('High to Low', Icons.attach_money, AppColors.grey,105.0),
+              //         SizedBox(
+              //           width: 12,
+              //         ),
+              //         filterswidget('Low to High', Icons.attach_money, AppColors.grey,105.0),
+
+              //         SizedBox(
+              //           width: 12,
+              //         ),
+              //         filterswidget('4+ Rating', Icons.star, AppColors.grey,105.0),
+
+              //       ],
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: 0,
+              // ),
+
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal:12.0),
+              //   child: Text('What you want to order next?', textAlign: TextAlign.left, style: GoogleFonts.dmSerifDisplay(textStyle:TextStyle(fontSize: 36,color: AppColors.black)),),
+              // ),
               Padding(
                 padding: const EdgeInsets.only(left: 5.0, right: 5),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   physics: BouncingScrollPhysics(),
                   child: Row(
-                    children: categorieslist(),
+                    children: newcategorieslist(),
                   ),
                 ),
               ),
@@ -699,9 +888,29 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   :
                   // SizedBox(height: 15.0),
-                  TravelCardList(
-                      cities: resturants,
-                      onCityChange: _handleCityChange,
+                  Column(
+                      // mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 5.0),
+                        Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: Text(
+                              'Featured Resturant'.toUpperCase(),
+                              textAlign: TextAlign.left,
+                              style: Styles.customTitleTextStyle2(
+                                color: Colors.black87,
+                                fontWeight: FontWeight.bold,
+                                fontSize: Sizes.TEXT_SIZE_16,
+                              ),
+                            )),
+                        TravelCardList(
+                          cities: resturants,
+                          onCityChange: _handleCityChange,
+                        ),
+                        SizedBox(height: 5.0),
+                      ],
                     ),
 //
               // SizedBox(height: 0.0),

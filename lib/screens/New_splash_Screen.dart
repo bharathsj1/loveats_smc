@@ -23,11 +23,11 @@ class New_Splash extends StatefulWidget {
   _New_SplashState createState() => _New_SplashState();
 }
 
-class _New_SplashState extends State<New_Splash>  with TickerProviderStateMixin{
-   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
-    AnimationController animationcontroll ;
-    @override
+  AnimationController animationcontroll;
+  @override
   void initState() {
     // TODO: implement initState
     animationcontroll = AnimationController(
@@ -37,20 +37,20 @@ class _New_SplashState extends State<New_Splash>  with TickerProviderStateMixin{
     super.initState();
   }
 
-   @override
+  @override
   dispose() {
     animationcontroll.dispose();
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: Center( 
+      body: Center(
         child: Lottie.asset(
           'assets/food.json',
+          // 'assets/food4.json',
           // 'assets/food2.json',
           // 'assets/food3.json',
           controller: animationcontroll,
@@ -82,22 +82,23 @@ class _New_SplashState extends State<New_Splash>  with TickerProviderStateMixin{
     //             //  BackgroundVideo()
     //             GooeyEdgeDemo()),
     //     (route) => false);
-      final user =  firebaseAuth.currentUser;
-      final shared = await Service().loggedUser();
-      final driving = await Service().checkdriving();
-      Future.delayed(Duration(milliseconds: 1000), () async {
-        if(shared == '3' && driving == true){
-           var location = await _determinePosition(context);
-                print(location);
-                if(location == null){
-                 _onAlertButtonsPressed(context, '');
-                }
-                else{
-                   SharedPreferences pref = await SharedPreferences.getInstance();
-                  var orderdata=await  pref.get('drivingorder');
-                  var order= jsonDecode(orderdata);
-                  Navigator.pushAndRemoveUntil(context,  MaterialPageRoute(
-                builder: (_) => Open_direction(desdirection:  {
+    final user = firebaseAuth.currentUser;
+    final shared = await Service().loggedUser();
+    final driving = await Service().checkdriving();
+    Future.delayed(Duration(milliseconds: 1000), () async {
+      if (shared == '3' && driving == true) {
+        var location = await _determinePosition(context);
+        print(location);
+        if (location == null) {
+          _onAlertButtonsPressed(context, '');
+        } else {
+          SharedPreferences pref = await SharedPreferences.getInstance();
+          var orderdata = await pref.get('drivingorder');
+          var order = jsonDecode(orderdata);
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => Open_direction(desdirection: {
                         'lat': double.parse(
                             order['user_address']['user_latitude']),
                         'long': double.parse(
@@ -106,47 +107,47 @@ class _New_SplashState extends State<New_Splash>  with TickerProviderStateMixin{
                         'clong': location.longitude,
                         'data': order,
                         'driving': true
-                      })), (route) => false);
-                    // Navigator.pushNamed(context, AppRouter.Opendirection,
-                    //   arguments: {
-                    //     'lat': double.parse(
-                    //         order['user_address']['user_latitude']),
-                    //     'long': double.parse(
-                    //         order['user_address']['user_longitude']),
-                    //     'clat': location.latitude,
-                    //     'clong': location.longitude,
-                    //     'data': order,
-                    //     'driving': true
-                    //   });
-                }
+                      })),
+              (route) => false);
+          // Navigator.pushNamed(context, AppRouter.Opendirection,
+          //   arguments: {
+          //     'lat': double.parse(
+          //         order['user_address']['user_latitude']),
+          //     'long': double.parse(
+          //         order['user_address']['user_longitude']),
+          //     'clat': location.latitude,
+          //     'clong': location.longitude,
+          //     'data': order,
+          //     'driving': true
+          //   });
         }
-        else{
+      } else {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (_) =>
-                    shared != null ? 
-                    //  BubbleTabBarDemo(type: shared,) 
-                     HomeScreen()
-                     :
+                builder: (_) => shared != null
+                    ?
+                    //  BubbleTabBarDemo(type: shared,)
+                    HomeScreen()
+                    :
                     //  BackgroundVideo()
-                    GooeyEdgeDemo()
-                     ),
+                    GooeyEdgeDemo()),
             (route) => false);
-        }
-      });
-    }
+      }
+    });
+  }
 
-    _onAlertButtonsPressed(context, detail) {
+  _onAlertButtonsPressed(context, detail) {
     //  StatefulBuilder(
     //       builder: (BuildContext context, StateSetter setState) {
     return Alert(
-
       context: context,
       type: AlertType.error,
-       closeIcon: Container(height: 20,),
-       onWillPopActive: false,
-       useRootNavigator: false,
+      closeIcon: Container(
+        height: 20,
+      ),
+      onWillPopActive: false,
+      useRootNavigator: false,
       closeFunction: null,
       title: "Are you still driving?",
       desc: detail,
@@ -158,25 +159,27 @@ class _New_SplashState extends State<New_Splash>  with TickerProviderStateMixin{
           ),
           onPressed: () async {
             SharedPreferences pref = await SharedPreferences.getInstance();
-             var orderdata=await  pref.get('drivingorder');
-                  var order= jsonDecode(orderdata);
-                    final shared = await Service().loggedUser();
-                    var data = {'order_id': order['id'], 'status': 'ready'};
-                    AppService().setorderstatus(data).then((value) {
-                      pref.remove('driving');
-                    pref.remove('drivingorder');
-                    print(value);
-                    if (value['message'].contains('Successfully')) {
-                     } });
-                     Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (_) =>
-                    shared != null ? BubbleTabBarDemo(type: shared,):
-                    //  BackgroundVideo()
-                    GooeyEdgeDemo()
-                     ),
-            (route) => false);
+            var orderdata = await pref.get('drivingorder');
+            var order = jsonDecode(orderdata);
+            final shared = await Service().loggedUser();
+            var data = {'order_id': order['id'], 'status': 'ready'};
+            AppService().setorderstatus(data).then((value) {
+              pref.remove('driving');
+              pref.remove('drivingorder');
+              print(value);
+              if (value['message'].contains('Successfully')) {}
+            });
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => shared != null
+                        ? BubbleTabBarDemo(
+                            type: shared,
+                          )
+                        :
+                        //  BackgroundVideo()
+                        GooeyEdgeDemo()),
+                (route) => false);
           },
           color: Colors.grey,
         ),
@@ -186,7 +189,7 @@ class _New_SplashState extends State<New_Splash>  with TickerProviderStateMixin{
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           onPressed: () async {
-           Navigator.of(context).pop();
+            Navigator.of(context).pop();
             retry(context);
           },
           color: AppColors.secondaryElement,
@@ -233,29 +236,25 @@ class _New_SplashState extends State<New_Splash>  with TickerProviderStateMixin{
 
   retry(context) async {
     final shared = await Service().loggedUser();
-      final driving = await Service().checkdriving();
-     if(shared == '3' && driving == true){
-           var location = await _determinePosition(context);
-           print(location);
-             if (location != null) {
-                SharedPreferences pref = await SharedPreferences.getInstance();
-                  var orderdata=await  pref.get('drivingorder');
-                  var order= jsonDecode(orderdata);
-                    Navigator.pushNamed(context, AppRouter.Opendirection,
-                      arguments: {
-                        'lat': double.parse(
-                            order['user_address']['user_latitude']),
-                        'long': double.parse(
-                            order['user_address']['user_longitude']),
-                        'clat': location.latitude,
-                        'clong': location.longitude,
-                        'data': order,
-                        'driving': true
-                      });
-             }
-             else{
-             _onAlertButtonsPressed(context, '');
-             }
-        }
+    final driving = await Service().checkdriving();
+    if (shared == '3' && driving == true) {
+      var location = await _determinePosition(context);
+      print(location);
+      if (location != null) {
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        var orderdata = await pref.get('drivingorder');
+        var order = jsonDecode(orderdata);
+        Navigator.pushNamed(context, AppRouter.Opendirection, arguments: {
+          'lat': double.parse(order['user_address']['user_latitude']),
+          'long': double.parse(order['user_address']['user_longitude']),
+          'clat': location.latitude,
+          'clong': location.longitude,
+          'data': order,
+          'driving': true
+        });
+      } else {
+        _onAlertButtonsPressed(context, '');
+      }
+    }
   }
 }
