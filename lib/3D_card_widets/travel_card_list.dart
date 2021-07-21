@@ -52,9 +52,9 @@ class TravelCardListState extends State<TravelCardList>
         //Use bounce-style scroll physics, feels better with this demo
         physics: BouncingScrollPhysics(),
         controller: _pageController,
-        itemCount: widget.cities.length + 2,
+        itemCount: widget.cities.length ,
         scrollDirection: Axis.horizontal,
-        itemBuilder: (context, i) => _buildItemRenderer(0),
+        itemBuilder: (context, i) => _buildItemRenderer(i),
       ),
     );
 

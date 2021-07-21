@@ -54,6 +54,9 @@ class Datum {
     this.restCountry,
     this.restMenuId,
     this.restCity,
+    this.delivery,
+    this.pickup,
+    this.tableService,
     this.createdAt,
     this.updatedAt,
   });
@@ -75,6 +78,9 @@ class Datum {
   String restCountry;
   int restMenuId;
   String restCity;
+  String delivery;
+  String pickup;
+  String tableService;
   dynamic createdAt;
   dynamic updatedAt;
 
@@ -98,6 +104,9 @@ class Datum {
         restCountry: json["rest_country"],
         restMenuId: json["rest_menuId"],
         restCity: json["rest_city"],
+        delivery: json["delivery"],
+        pickup: json["pickup"],
+        tableService: json["table_service"],
         createdAt: json["created_at"],
         updatedAt: json["updated_at"],
       );
@@ -120,6 +129,9 @@ class Datum {
         "rest_country": restCountry,
         "rest_menuId": restMenuId,
         "rest_city": restCity,
+        "delivery": delivery,
+        "pickup": pickup,
+        "table_service": tableService,
         "created_at": createdAt,
         "updated_at": updatedAt,
       };

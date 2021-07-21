@@ -116,7 +116,7 @@ class TravelCardRenderer extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  'Rose, Farrington',
+                                  city.restName,
                                   textAlign: TextAlign.left,
                                   style:  GoogleFonts.dmSerifDisplay(textStyle:Styles.customTitleTextStyle(
                                     color: Colors.black87,
