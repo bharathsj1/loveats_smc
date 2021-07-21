@@ -11,10 +11,13 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:path/path.dart';
 import 'package:potbelly/grovey_startScreens/demo.dart';
 import 'package:potbelly/models/UserModel.dart';
+import 'package:potbelly/models/get_all_subscription_model.dart';
 import 'package:potbelly/models/menu_types_model.dart';
 import 'package:potbelly/models/restaurent_menu_model.dart';
 import 'package:potbelly/models/restaurent_model.dart';
+import 'package:potbelly/models/specific_user_subscription_model.dart';
 import 'package:potbelly/models/user.dart';
+import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/login_screen.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/values/values.dart';
@@ -84,6 +87,7 @@ class Service {
         await setKeyData('accessToken', accessToken);
         await setKeyData('accounttype', _user.data.custAccountType);
         await setKeyData('photo', _user.data.custProfileImage);
+        await setKeyData('userId', _user.data.id.toString());
         await setKeyData('userdata', jsonEncode(value.data['data']));
       } else {
         print(value.data['message']);
@@ -180,9 +184,11 @@ class Service {
   Future<void> logout(BuildContext context) async {
     await _auth.signOut();
     loggedoutr();
-    Navigator.pushAndRemoveUntil(context,
+    Navigator.pushAndRemoveUntil(
+        context,
         // MaterialPageRoute(builder: (_) => BackgroundVideo()), (route) => false);
-        MaterialPageRoute(builder: (_) => GooeyEdgeDemo()), (route) => false);
+        MaterialPageRoute(builder: (_) => GooeyEdgeDemo()),
+        (route) => false);
   }
 
   Future signInWithEmail(
@@ -203,13 +209,18 @@ class Service {
       if (value.data['status'] == false) {
         message = 'Invalid Login Details';
       } else {
+        var pref = await initializdPrefs();
+
         message = 'success';
         _user = UserData.fromJson(value.data);
+        pref.setInt('USERID', _user.data.id);
+        print('thats the user id is ${_user.data.id}');
         await setKeyData('accessToken', _user.accessToken);
         await setKeyData('name', _user.data.custFirstName);
         await setKeyData('email', _user.data.email);
         await setKeyData('accounttype', _user.data.custAccountType);
         await setKeyData('photo', _user.data.custProfileImage);
+        await setKeyData('userId', _user.data.id.toString());
         await setKeyData('userdata', jsonEncode(value.data['data']));
       }
     }).catchError((onError) {
@@ -260,6 +271,7 @@ class Service {
         await setKeyData('email', _user.data.email);
         await setKeyData('accounttype', _user.data.custAccountType);
         await setKeyData('photo', _user.data.custProfileImage);
+        await setKeyData('userId', _user.data.id.toString());
         await setKeyData('userdata', jsonEncode(value.data['data']));
       }
     }).catchError((onError) {
@@ -328,6 +340,11 @@ class Service {
   Future<String> getAccessToken() async {
     final shared = await initializdPrefs();
     return shared.getString('accessToken');
+  }
+
+  Future<String> getUserId() async {
+    final shared = await initializdPrefs();
+    return shared.getInt('USERID').toString();
   }
 
   Future<bool> makeOrder(int total) async {
@@ -402,5 +419,71 @@ class Service {
     });
 
     return isPaymentStored;
+  }
+
+  Future<bool> subscribedOffer(String planID) async {
+    FormData formData = FormData.fromMap({
+      'subscription_plan_id': planID,
+      'subscription_status': 'active',
+      'subscription_start_date': DateTime.now().toString(),
+      'subscription_end_date': DateTime.now()
+          .add(Duration(
+            days: 30,
+          ))
+          .toString()
+    });
+    accessToken = await getAccessToken();
+
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+
+    await dio
+        .request('/storeSubscription',
+            data: formData, options: Options(method: 'post'))
+        .then((value) {
+      if (value.data['success'] == 200) {
+        return true;
+      }
+    }).catchError((onError) {
+      print(onError.toString());
+    });
+
+    return false;
+  }
+
+  Future<SpecificUserSubscriptionModel>
+      getSpecificUserSubscriptionData() async {
+    accessToken = await getAccessToken();
+
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+
+    Response response = await dio.request(
+      '/get-specific-user-subs',
+    );
+    print(response.data);
+
+    if (response.data['success'] == true) {
+      try {
+        return SpecificUserSubscriptionModel.fromJson(response.data);
+      } catch (onError) {
+        print('ERROR hai');
+        print(onError.toString());
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  Future<GetAllSubscriptionModel> getAllSubscription() async {
+    Response response = await dio.request('/get-all-subscription-plans');
+    if (response.data['success'] == true)
+      return GetAllSubscriptionModel.fromJson(response.data);
+    else
+      return null;
+  }
+
+  Future<String> getUserdata() async {
+    final shared = await initializdPrefs();
+    return shared.getString('userdata');
   }
 }

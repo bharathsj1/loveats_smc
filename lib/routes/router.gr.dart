@@ -26,6 +26,7 @@ import 'package:potbelly/screens/root_screen2.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/screens/profile_screen.dart';
 import 'package:potbelly/screens/notification_screen.dart';
+import 'package:potbelly/screens/subscription_page.dart';
 import 'package:potbelly/screens/trending_restaurant_screen.dart';
 import 'package:potbelly/screens/restaurant_details_screen.dart';
 import 'package:potbelly/screens/promotions_detail_page.dart';
@@ -48,6 +49,7 @@ import 'package:potbelly/screens/new_review_screen.dart';
 import 'package:potbelly/Checkout_Screens/Checkout1.dart';
 import 'package:potbelly/Checkout_Screens/Checkout2.dart';
 import 'package:potbelly/Checkout_Screens/Checkout3.dart';
+import 'package:potbelly/screens/user_subscription_list.dart';
 import 'package:potbelly/vendor_screens.dart/open_direction.dart';
 import 'package:potbelly/vendor_screens.dart/open_map.dart';
 import 'package:potbelly/vendor_screens.dart/vendor_notifications.dart';
@@ -98,7 +100,10 @@ class AppRouter {
   static const order_list = '/order_list';
   static const myorder_detail = '/myorder_detail';
   static const live_tracking = '/live_tracking';
- Navigator navigator = Navigator();
+  static const subscriptionPage = '/subscription-page';
+  static const userSubscriptionList = '/user-subscription-list';
+
+  Navigator navigator = Navigator();
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final args = settings.arguments;
     switch (settings.name) {
@@ -150,7 +155,7 @@ class AppRouter {
           builder: (_) => RootScreen(currentScreen: typedArgs),
           settings: settings,
         );
-       case AppRouter.rootScreen2:
+      case AppRouter.rootScreen2:
         // if (hasInvalidArgs<CurrentScreen>(args)) {
         //   return misTypedArgsRoute<CurrentScreen>(args);
         // }
@@ -158,7 +163,7 @@ class AppRouter {
         return CupertinoPageRoute<dynamic>(
           builder: (_) => RootScreen(currentScreen: typedArgs),
           settings: settings,
-        ); 
+        );
       case AppRouter.profileScreen:
         // if (hasInvalidArgs<Key>(args)) {
         //   return misTypedArgsRoute<Key>(args);
@@ -193,12 +198,16 @@ class AppRouter {
         );
       case AppRouter.Opendirection:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => Open_direction(desdirection: args,),
+          builder: (_) => Open_direction(
+            desdirection: args,
+          ),
           settings: settings,
         );
       case AppRouter.OrdersDetailScreen:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => OrdersDetails(orderdata: args,),
+          builder: (_) => OrdersDetails(
+            orderdata: args,
+          ),
           settings: settings,
         );
       case AppRouter.order_list:
@@ -208,12 +217,16 @@ class AppRouter {
         );
       case AppRouter.myorder_detail:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => Myorder_Detail(orderdata: args,),
+          builder: (_) => Myorder_Detail(
+            orderdata: args,
+          ),
           settings: settings,
         );
       case AppRouter.live_tracking:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => Live_Tracking(desdirection: args,),
+          builder: (_) => Live_Tracking(
+            desdirection: args,
+          ),
           settings: settings,
         );
       case AppRouter.Open_maps:
@@ -223,17 +236,23 @@ class AppRouter {
         );
       case AppRouter.CheckOut1:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => CheckOutScreen1(checkoutdata: args,),
+          builder: (_) => CheckOutScreen1(
+            checkoutdata: args,
+          ),
           settings: settings,
         );
       case AppRouter.CheckOut2:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => CheckOutScreen2(checkoutdata: args,),
+          builder: (_) => CheckOutScreen2(
+            checkoutdata: args,
+          ),
           settings: settings,
         );
       case AppRouter.CheckOut3:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => CheckOutScreen3(checkoutdata: args,),
+          builder: (_) => CheckOutScreen3(
+            checkoutdata: args,
+          ),
           settings: settings,
         );
       case AppRouter.restaurantDetailsScreen:
@@ -266,12 +285,16 @@ class AppRouter {
         );
       case AppRouter.checkoutScreen:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => CheckoutScreen(checkoutdata: args,),
+          builder: (_) => CheckoutScreen(
+            checkoutdata: args,
+          ),
           settings: settings,
         );
-         case AppRouter.paymentSuccess:
+      case AppRouter.paymentSuccess:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => PaymentSuccess(checkoutdata: args,),
+          builder: (_) => PaymentSuccess(
+            checkoutdata: args,
+          ),
           settings: settings,
         );
       case AppRouter.filterScreen:
@@ -330,12 +353,13 @@ class AppRouter {
         final typedArgs = args as CategoryDetailScreenArguments;
         return CupertinoPageRoute<dynamic>(
           builder: (_) => CategoryDetailScreen(
-              categoryName: typedArgs.categoryName,
-              imagePath: typedArgs.imagePath,
-              numberOfCategories: typedArgs.numberOfCategories,
-              selectedCategory: typedArgs.selectedCategory,
-              gradient: typedArgs.gradient,
-             restaurantdata: typedArgs.restaurantdata,),
+            categoryName: typedArgs.categoryName,
+            imagePath: typedArgs.imagePath,
+            numberOfCategories: typedArgs.numberOfCategories,
+            selectedCategory: typedArgs.selectedCategory,
+            gradient: typedArgs.gradient,
+            restaurantdata: typedArgs.restaurantdata,
+          ),
           settings: settings,
         );
       case AppRouter.findFriendsScreen:
@@ -373,8 +397,20 @@ class AppRouter {
           builder: (_) => GoogleMaps(),
           settings: settings,
         );
+      case AppRouter.subscriptionPage:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => SubscriptionScreen(),
+          settings: settings,
+        );
+
+        case AppRouter.userSubscriptionList:
+         return CupertinoPageRoute<dynamic>(
+          builder: (_) => UserSubscriptionList(),
+          settings: settings,
+        );
+
       default:
-        // return unknownRoutePage(settings.name);
+      // return unknownRoutePage(settings.name);
     }
   }
 }
@@ -390,7 +426,7 @@ class CategoryDetailScreenArguments {
   final int numberOfCategories;
   final int selectedCategory;
   final Gradient gradient;
-   var restaurantdata;
+  var restaurantdata;
   CategoryDetailScreenArguments(
       {@required this.categoryName,
       @required this.imagePath,

@@ -47,11 +47,13 @@ class Datum {
     this.menuTypeId,
     this.createdAt,
     this.updatedAt,
+    this.foodCategoryId,
+    this.foodCategory,
   });
 
   int id;
   String menuImage;
-  int menuPrice;
+  String menuPrice;
   String menuName;
   String menuDetails;
   String menuQuantity;
@@ -59,11 +61,13 @@ class Datum {
   int menuTypeId;
   dynamic createdAt;
   dynamic updatedAt;
+  int foodCategoryId;
+  FoodCategory foodCategory;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
         menuImage: json["menu_image"],
-        menuPrice: int.parse(json["menu_price"]),
+        menuPrice: json["menu_price"],
         menuName: json["menu_name"],
         menuDetails: json["menu_details"],
         menuQuantity: json["menu_quantity"],
@@ -71,6 +75,8 @@ class Datum {
         menuTypeId: json["menu_type_id"],
         createdAt: json["created_at"],
         updatedAt: json["updated_at"],
+        foodCategoryId: json["food_category_id"],
+        foodCategory: FoodCategory.fromJson(json["food_category"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -83,6 +89,40 @@ class Datum {
         "rest_id": restId,
         "menu_type_id": menuTypeId,
         "created_at": createdAt,
+        "updated_at": updatedAt,
+        "food_category_id": foodCategoryId,
+        "food_category": foodCategory.toJson(),
+      };
+}
+
+class FoodCategory {
+  FoodCategory({
+    this.id,
+    this.name,
+    this.isDiscount,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  int id;
+  String name;
+  String isDiscount;
+  DateTime createdAt;
+  dynamic updatedAt;
+
+  factory FoodCategory.fromJson(Map<String, dynamic> json) => FoodCategory(
+        id: json["id"],
+        name: json["name"],
+        isDiscount: json["is_discount"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "is_discount": isDiscount,
+        "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt,
       };
 }

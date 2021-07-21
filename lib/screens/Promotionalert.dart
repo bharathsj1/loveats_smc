@@ -1,15 +1,14 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/paymentservice.dart';
+import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:toast/toast.dart';
 
 final List<String> images = [
-  // 'assets/images/mainscreen.jpg',
   'assets/images/main2.png',
   'assets/images/Slide1.jpg',
   'assets/images/Slide2.jpg',
@@ -46,15 +45,14 @@ class PromotionPhotosScreen extends StatefulWidget {
 
 class _PromotionPhotosScreenState extends State<PromotionPhotosScreen> {
   int _current = 0;
-    bool loader=false;
+  bool loader = false;
   var _paymentSheetData;
 
-
-    paynow() async {
+  paynow() async {
     this.loader = true;
     setState(() {});
     var data = {
-      'amount': '1'+ '00',
+      'amount': '1' + '00',
       'currency': 'usd',
       // 'receipt_email': 'miansaadhafeez@gmail.com'
     };
@@ -82,6 +80,7 @@ class _PromotionPhotosScreenState extends State<PromotionPhotosScreen> {
             // merchantDisplayName: 'saad',
             // style:  ThemeMode.dark,
           ));
+
           setState(() {});
           displayPayment();
         } catch (error) {
@@ -100,16 +99,22 @@ class _PromotionPhotosScreenState extends State<PromotionPhotosScreen> {
       setState(() {});
       // FirebaseAuth firebaseAuth = FirebaseAuth.instance;
       // final user =  firebaseAuth.currentUser;
-      Navigator.pushNamed(context,AppRouter.CheckOut3, arguments: {
+      Navigator.pushNamed(context, AppRouter.CheckOut3, arguments: {
         'type': 'subscription',
         // 'orderId': DateTime.now().millisecondsSinceEpoch
       });
       Toast.show('Payment Success', context, duration: 3);
+      bool isSubscribed = await Service().subscribedOffer('1');
+      if (isSubscribed)
+        Navigator.pushNamed(context, AppRouter.CheckOut3, arguments: {
+          'type': 'subscription',
+          // 'orderId': DateTime.now().millisecondsSinceEpoch
+        });
+      else {}
     } catch (error) {
       print(error);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -189,8 +194,8 @@ class _PromotionPhotosScreenState extends State<PromotionPhotosScreen> {
                       return Container(
                         width: 8.0,
                         height: 8.0,
-                        margin:
-                            EdgeInsets.symmetric(vertical: 16.0, horizontal: 2.0),
+                        margin: EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: 2.0),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: _current == index
@@ -207,45 +212,47 @@ class _PromotionPhotosScreenState extends State<PromotionPhotosScreen> {
               bottom: 20,
               left: 15,
               right: 15,
-              child:  loader?  Padding(
-          padding: const EdgeInsets.only(bottom:8.0),
-          child: Center(
-              child: CircularProgressIndicator(
-                valueColor:
-                    AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
-              ),
-            ),
-        ): PotbellyButton(
-                StringConst.SUBSCRIPTION,
-
-                onTap: (){
-                  //  var data={
-                  //                 'cartlist': null,
-                  //                 'charges':0.0,
-                  //                 'shipping':0.0,
-                  //                 'total': 1,
-                  //                 'type': 'promo'
-                  //               };
-                  //           AppRouter.navigator.pushReplacementNamed(
-                  //             AppRouter.checkoutScreen, arguments: data
-                  //           );
-                  paynow();
-                },
-              ),
+              child: loader
+                  ? Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              AppColors.secondaryElement),
+                        ),
+                      ),
+                    )
+                  : PotbellyButton(
+                      StringConst.SUBSCRIPTION,
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, AppRouter.subscriptionPage);
+                        //  var data={
+                        //                 'cartlist': null,
+                        //                 'charges':0.0,
+                        //                 'shipping':0.0,
+                        //                 'total': 1,
+                        //                 'type': 'promo'
+                        //               };
+                        //           AppRouter.navigator.pushReplacementNamed(
+                        //             AppRouter.checkoutScreen, arguments: data
+                        //           );
+                        //  paynow();
+                      },
+                    ),
             ),
             Positioned(
               top: 40,
               left: 15,
-              
-              child:  InkWell(
-          onTap: () => Navigator.pop(context),
-          child: Image.asset(
-            ImagePath.closeIcon,
-            color: AppColors.primaryColor,
-            height: 15,
-            width: 15,
-          ),
-        ), 
+              child: InkWell(
+                onTap: () => Navigator.pop(context),
+                child: Image.asset(
+                  ImagePath.closeIcon,
+                  color: AppColors.primaryColor,
+                  height: 15,
+                  width: 15,
+                ),
+              ),
             ),
           ],
         ),

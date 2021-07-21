@@ -103,7 +103,7 @@ class _Myorder_DetailState extends State<Myorder_Detail> {
         leading: InkWell(
           onTap: () => Navigator.pop(context),
           child: Icon(
-            Icons.arrow_back_ios_new,
+            Icons.arrow_back_ios,
             color: AppColors.secondaryElement,
           ),
         ),
