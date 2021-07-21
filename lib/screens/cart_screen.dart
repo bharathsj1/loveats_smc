@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:potbelly/models/specific_user_subscription_model.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/cartservice.dart';
+import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
 
@@ -20,8 +22,17 @@ class _CartScreenState extends State<CartScreen> {
   int charges = 0;
   int shipping = 3;
   int totalitems = 0;
+  SpecificUserSubscriptionModel _specificUserSubscriptionModel;
+
+  void getSpecificUserSubscription() async {
+    _specificUserSubscriptionModel =
+        await Service().getSpecificUserSubscriptionData();
+    print(_specificUserSubscriptionModel.data.length);
+    setState(() {});
+  }
 
   getcartlist() async {
+    print(await Service().getUserdata());
     var cart = await CartProvider().getcartslist();
     cartlist.clear();
     newcart.clear();
@@ -48,12 +59,11 @@ class _CartScreenState extends State<CartScreen> {
       } else {
         print('already');
       }
-
     }
 
-  if(newcart.length > 1){
-    mixmatch=true;
-  }
+    if (newcart.length > 1) {
+      mixmatch = true;
+    }
 
     loader = false;
     if (cartlist.length != 0) {
@@ -66,7 +76,7 @@ class _CartScreenState extends State<CartScreen> {
   calculate() {
     double total = 0;
     cartlist.forEach((f) {
-      total += f['price'] * double.parse(f['qty']);
+      total += double.parse(f['price']) * double.parse(f['qty']);
     });
     totalAmount = total;
     print('total');
@@ -75,7 +85,9 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   void initState() {
+    getSpecificUserSubscription();
     getcartlist();
+
     super.initState();
   }
 
@@ -83,9 +95,10 @@ class _CartScreenState extends State<CartScreen> {
     newcart[i1][i2]['qty'] = type == 'add'
         ? (int.parse(newcart[i1][i2]['qty']) + 1).toString()
         : (int.parse(newcart[i1][i2]['qty']) - 1).toString();
-    newcart[i1][i2]['payableAmount'] = (newcart[i1][i2]['price'] *
-            double.parse(newcart[i1][i2]['qty']))
-        .toString();
+    newcart[i1][i2]['payableAmount'] =
+        ((double.tryParse(newcart[i1][i2]['price']) *
+                int.parse(newcart[i1][i2]['qty'])))
+            .toString();
   }
 
   List<Widget> renderAddList(i) {
@@ -140,7 +153,7 @@ class _CartScreenState extends State<CartScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                width: MediaQuery.of(context).size.width * 0.64,
+                                width: MediaQuery.of(context).size.width * 0.50,
                                 child: Text(newcart[i][index]['name'],
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
@@ -153,7 +166,7 @@ class _CartScreenState extends State<CartScreen> {
                               ),
                               Container(
                                 // color: Colors.red,
-                                width: MediaQuery.of(context).size.width * 0.64,
+                                width: MediaQuery.of(context).size.width * 0.50,
                                 child: Text(newcart[i][index]['details'],
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
@@ -189,18 +202,17 @@ class _CartScreenState extends State<CartScreen> {
                                 height: 15,
                               ),
                               Container(
-                                width: MediaQuery.of(context).size.width * 0.64,
+                                width: MediaQuery.of(context).size.width * 0.50,
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     InkWell(
                                       onTap: () async {
-                                         print('here');
-                                                await CartProvider()
-                                                    .removeToCart(
-                                                        cartlist[index]);
-                                                getcartlist();
+                                        print('here');
+                                        await CartProvider()
+                                            .removeToCart(cartlist[index]);
+                                        getcartlist();
                                       },
                                       child: Row(
                                         children: [
@@ -213,7 +225,8 @@ class _CartScreenState extends State<CartScreen> {
                                                 style: TextStyle(
                                                     // fontSize: 18,
                                                     color: Colors.black54,
-                                                    fontWeight: FontWeight.w600)),
+                                                    fontWeight:
+                                                        FontWeight.w600)),
                                           ),
                                         ],
                                       ),
@@ -406,220 +419,253 @@ class _CartScreenState extends State<CartScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: (loader ==false && newcart.length==0) ||(loader ==false  && newcart.length>1 && mixmatch == false)? null: Material(
-        // elevation: 5,
-        child: Container(
-          color: AppColors.white,
-          margin: EdgeInsets.only(top: 5),
-          height: 65,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: Text(totalitems.toString() + ' Items in cart',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w400)),
-                  ),
-                  SizedBox(
-                    height: 6,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: Text(
-                        '\$' +
-                            (totalAmount + shipping + charges)
-                                .toStringAsFixed(2),
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: PotbellyButton(
-                  'Secure Checkout',
-                  onTap: () {
-                     var data={
-                                  'cartlist': newcart,
-                                  'charges':charges,
-                                  'shipping':shipping,
-                                  'total': totalAmount,
-                                  'type': 'cart',
-                                  'mixmatch': mixmatch,
-                                };
-                    Navigator.pushNamed(context,AppRouter.CheckOut1,arguments: data);
-                  },
-                  buttonHeight: 45,
-                  buttonWidth: 170,
-                  buttonTextStyle: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: AppColors.secondaryElement),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      body: loader
-        ? Center(
-            child: CircularProgressIndicator(
-              valueColor:
-                  AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
-            ),
-          )
-        :newcart.length == 0
-            ? Center(
-                child: Container(
-                  child: Text('Cart is empty'),
-                ),
-              )
-            :  SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              height: 50,
-              color: Colors.white,
-              child: Center(
+      bottomNavigationBar: (loader == false && newcart.length == 0) ||
+              (loader == false && newcart.length > 1 && mixmatch == false)
+          ? null
+          : Material(
+              // elevation: 5,
+              child: Container(
+                color: AppColors.white,
+                margin: EdgeInsets.only(top: 5),
+                height: 65,
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: Text(totalitems.toString() + ' Items in cart',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w400)),
+                        ),
+                        SizedBox(
+                          height: 6,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: Text(
+                              '\$' +
+                                  (totalAmount + shipping + charges)
+                                      .toStringAsFixed(2),
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                    ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Text(
-                        'Your Cart',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: PotbellyButton(
+                        'Secure Checkout',
+                        onTap: () {
+                          var data = {
+                            'cartlist': newcart,
+                            'charges': charges,
+                            'shipping': shipping,
+                            'total': totalAmount,
+                            'type': 'cart',
+                            'mixmatch': mixmatch,
+                          };
+                          Navigator.pushNamed(context, AppRouter.CheckOut1,
+                              arguments: data);
+                        },
+                        buttonHeight: 45,
+                        buttonWidth: 170,
+                        buttonTextStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: AppColors.secondaryElement),
                       ),
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      height: 23,
-                      width: 80,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: AppColors.secondaryElement,
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        totalitems.toString() + ' Items',
-                        style: TextStyle(color: AppColors.white),
-                      ),
-                    )
                   ],
                 ),
               ),
             ),
-            Column(
-              children: resturantwithcart(),
-            ),
-            Container(
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                padding: EdgeInsets.zero,
-                // color: Colors.red,
-                child: CheckboxListTile(
-                  tileColor: AppColors.white,
-                  title: Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: Text("Enable Mix Match Feature",
-                        style: TextStyle(
-                            color: AppColors.black,
-                            fontWeight: FontWeight.bold)),
+      body: loader
+          ? Center(
+              child: CircularProgressIndicator(
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
+              ),
+            )
+          : newcart.length == 0
+              ? Center(
+                  child: Container(
+                    child: Text('Cart is empty'),
                   ),
-                  value: mixmatch,
-
-                  activeColor: AppColors.secondaryElement,
-                  //  selectedTileColor: Colors.red,
-                  contentPadding: EdgeInsets.all(0),
-                  checkColor: AppColors.white,
-                  onChanged: (newValue) {
-                    setState(() {
-                      mixmatch = newValue;
-                    });
-                  },
-                  controlAffinity:
-                      ListTileControlAffinity.leading, //  <-- leading Checkbox
-                )),
-            SizedBox(
-              height: newcart.length > 1  && mixmatch == false? 10 : 40,
-            ),
-            newcart.length > 1 && mixmatch == false
-                ? Card(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    color: Colors.grey[200],
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.info_rounded,
-                            color: AppColors.black,
+                )
+              : SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(20.0),
+                          color: AppColors.secondaryElement,
+                          child: _specificUserSubscriptionModel
+                                      .data[0].subscriptionStatus ==
+                                  'active'
+                              ? Column(
+                                  children: [
+                                    Text(
+                                      'Subscribed User',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    const SizedBox(
+                                      height: 5.0,
+                                    ),
+                                    Text(
+                                      'You have 1 free meal option',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                )
+                              : const SizedBox()),
+                      Container(
+                        height: 50,
+                        color: Colors.white,
+                        child: Center(
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20.0),
+                                child: Text(
+                                  'Your Cart',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Container(
+                                height: 23,
+                                width: 80,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: AppColors.secondaryElement,
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  totalitems.toString() + ' Items',
+                                  style: TextStyle(color: AppColors.white),
+                                ),
+                              )
+                            ],
                           ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width*0.75,
-                              child: Text(
-                                  'You have added items from more than 1 restaurant, Enable mix match feature to procced furter or add single resturant items in your cart'))
-                        ],
+                        ),
                       ),
-                    ),
-                  )
-                : Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        pricerow(
-                            'Subtotal', '\$' + totalAmount.toStringAsFixed(2)),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        pricerow('Value Added Tax',
-                            '\$' + charges.toStringAsFixed(2)),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        pricerow('Delivery Charges',
-                            '\$' + shipping.toStringAsFixed(2)),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Order total',
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold)),
-                            Text(
-                              '\$' +
-                                  (totalAmount + shipping + charges)
-                                      .toStringAsFixed(2),
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
+                      Column(
+                        children: resturantwithcart(),
+                      ),
+                      Container(
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          padding: EdgeInsets.zero,
+                          // color: Colors.red,
+                          child: CheckboxListTile(
+                            tileColor: AppColors.white,
+                            title: Padding(
+                              padding: const EdgeInsets.only(top: 5.0),
+                              child: Text("Enable Mix Match Feature",
+                                  style: TextStyle(
+                                      color: AppColors.black,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            value: mixmatch,
+
+                            activeColor: AppColors.secondaryElement,
+                            //  selectedTileColor: Colors.red,
+                            contentPadding: EdgeInsets.all(0),
+                            checkColor: AppColors.white,
+                            onChanged: (newValue) {
+                              setState(() {
+                                mixmatch = newValue;
+                              });
+                            },
+                            controlAffinity: ListTileControlAffinity
+                                .leading, //  <-- leading Checkbox
+                          )),
+                      SizedBox(
+                        height:
+                            newcart.length > 1 && mixmatch == false ? 10 : 40,
+                      ),
+                      newcart.length > 1 && mixmatch == false
+                          ? Card(
+                              margin: EdgeInsets.symmetric(horizontal: 20),
+                              color: Colors.grey[200],
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.info_rounded,
+                                      color: AppColors.black,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.75,
+                                        child: Text(
+                                            'You have added items from more than 1 restaurant, Enable mix match feature to procced furter or add single resturant items in your cart'))
+                                  ],
+                                ),
+                              ),
                             )
-                          ],
-                        ),
-                      ],
-                    ),
+                          : Container(
+                              margin: EdgeInsets.symmetric(horizontal: 20),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  pricerow('Subtotal',
+                                      '\$' + totalAmount.toStringAsFixed(2)),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  pricerow('Value Added Tax',
+                                      '\$' + charges.toStringAsFixed(2)),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  pricerow('Delivery Charges',
+                                      '\$' + shipping.toStringAsFixed(2)),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Order total',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold)),
+                                      Text(
+                                        '\$' +
+                                            (totalAmount + shipping + charges)
+                                                .toStringAsFixed(2),
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
                   ),
-            SizedBox(
-              height: 20,
-            ),
-          ],
-        ),
-      ),
+                ),
     );
   }
 }

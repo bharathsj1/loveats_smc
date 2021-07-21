@@ -3,7 +3,7 @@ part of values;
 class StringConst {
   //strings
   static const String APP_NAME = "Loveats";
-  static const String BASE_URL = "http://love.signaturemediachannel.com/api/";
+  static const String BASE_URL = "https://love.signaturemediachannel.com/api/";
   static const String LOCAL_URL = 'http://loveats.test/api';
 
 

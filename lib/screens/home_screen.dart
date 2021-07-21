@@ -72,6 +72,87 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  bottomSheetForLocation(BuildContext context) {
+    return showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        builder: (context) {
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(10.0),
+                  topRight: const Radius.circular(10.0),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Search Location',
+                    style: Styles.customNormalTextStyle(color: Colors.black),
+                  ),
+                  Divider(),
+                  TextField(
+                    decoration: InputDecoration(
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: Image.asset(
+                            ImagePath.searchIcon,
+                          ),
+                        ),
+                        hintText: 'Search for your location',
+                        hintStyle: TextStyle(
+                          color: Colors.black26,
+                          fontSize: 16,
+                        ),
+                        border: InputBorder.none),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  InkWell(
+                    onTap: () =>
+                        Navigator.pushNamed(context, AppRouter.googleMap),
+                    child: Row(
+                      children: [
+                        Icon(Icons.location_searching, size: 12.0),
+                        SizedBox(
+                          width: 5.0,
+                        ),
+                        Text('Use current location',
+                            style: Styles.customNormalTextStyle(
+                                color: Colors.indigo)),
+                      ],
+                    ),
+                  ),
+                  Divider(),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Text(
+                    'Saved Addresses',
+                    style: Styles.customNormalTextStyle(color: Colors.black),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.home),
+                    title: Text('Home'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    subtitle: Text('Habib Street, Banigala'),
+                  ),
+                  Divider(),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   checkpromo() async {
     var show = await Promotion().checkpromo();
     print(show);
@@ -106,36 +187,55 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
-   searchfromlist() {
-       print(searchlist[0].delivery);
-        print(searchlist[0].pickup);
-        print(searchlist[0].tableService);
+  searchfromlist() {
+    print(searchlist[0].delivery);
+    print(searchlist[0].pickup);
+    print(searchlist[0].tableService);
     resturants = searchlist
         .where((product) => product.restName
             .toLowerCase()
-            .contains(searchcontroller.text.toLowerCase()) )
+            .contains(searchcontroller.text.toLowerCase()))
         .toList();
-      
-        setState(() { });
-  }
 
+    setState(() {});
+  }
 
   getpromos() async {
     await DatabaseManager().getpromotions().then((value) {
       for (var item in value) {
         promolist.add(item);
       }
+      // getpromos() async {
+      //   await DatabaseManager().getpromotions().then((value) {
+      //     for (var item in value) {
+      //       promolist.add(item);
+      //     }
 
-      if (promolist.length != 0 &&
-          (promolist[0]['videoUrl'] != '' ||
-              promolist[0]['videoUrl'] != null)) {
-        print('here');
-        // controllerdispo();
-        initialize(promolist[0]['videoUrl']);
-      }
-      this.loader = false;
-      setState(() {});
+      //     if (promolist.length != 0 &&
+      //         (promolist[0]['videoUrl'] != '' ||
+      //             promolist[0]['videoUrl'] != null)) {
+      //       print('here');
+      //       // controllerdispo();
+      //       initialize(promolist[0]['videoUrl']);
+      //     }
+      //     this.loader = false;
+      //     setState(() {});
+      //   });
+      // }
     });
+  }
+
+  initialize(videourl) {
+    print(videourl);
+    if (_controller != null) {
+      _controller.dispose();
+    }
+    _controller = VideoPlayerController.asset(videourl)
+      ..initialize().then((_) {
+        _controller.play();
+        _controller.setLooping(true);
+        setState(() {});
+      });
   }
 
   getlocalpromos() async {
@@ -153,19 +253,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     this.loader = false;
     setState(() {});
-  }
-
-  initialize(videourl) {
-    print(videourl);
-    if (_controller != null) {
-      _controller.dispose();
-    }
-    _controller = VideoPlayerController.asset(videourl)
-      ..initialize().then((_) {
-        _controller.play();
-        _controller.setLooping(true);
-        setState(() {});
-      });
   }
 
   @override
@@ -222,7 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  int deliverytype=0;
+  int deliverytype = 0;
 
   categorieslist() {
     return List.generate(
@@ -326,6 +413,30 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   List catlist = ['All', 'Korean', 'Indian'];
+  List<Widget> createUserProfilePhotos({@required numberOfProfilePhotos}) {
+    List<Widget> profilePhotos = [];
+    List<String> imagePaths = [
+      ImagePath.profile1,
+      ImagePath.profile2,
+      ImagePath.profile3,
+      ImagePath.profile4,
+      ImagePath.profile1,
+      ImagePath.profile2,
+    ];
+
+    List<int> list = List<int>.generate(numberOfProfilePhotos, (i) => i + 1);
+
+    list.forEach((i) {
+      profilePhotos.add(Container(
+          margin: EdgeInsets.symmetric(horizontal: 5),
+          child: Material(
+              elevation: 6,
+              borderRadius: BorderRadius.circular(1000),
+              child: CircleAvatar(
+                  backgroundImage: AssetImage(imagePaths[i - 1])))));
+    });
+    return profilePhotos;
+  }
 
   newcategorieslist() {
     return List.generate(
@@ -457,7 +568,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ));
   }
 
-  filterswidget(id,name, iconsize, icon, border, width, active) {
+  filterswidget(id, name, iconsize, icon, border, width, active) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 5.0),
       child: Material(
@@ -469,11 +580,9 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             : null,
         child: InkWell(
-          onTap: (){
-            deliverytype= id;
-            setState(() {
-              
-            });
+          onTap: () {
+            deliverytype = id;
+            setState(() {});
           },
           child: Container(
               width: width,
@@ -710,18 +819,42 @@ class _HomeScreenState extends State<HomeScreen> {
                       // SizedBox(
                       //   width: 10,
                       // ),
-                      filterswidget(0,'Delivery', 16.0, Icons.store_outlined,
-                         deliverytype ==0? AppColors.secondaryElement: AppColors.grey, 80.0,  deliverytype ==0? true:false),
+                      filterswidget(
+                          0,
+                          'Delivery',
+                          16.0,
+                          Icons.store_outlined,
+                          deliverytype == 0
+                              ? AppColors.secondaryElement
+                              : AppColors.grey,
+                          80.0,
+                          deliverytype == 0 ? true : false),
                       SizedBox(
                         width: 10,
                       ),
-                      filterswidget(1,'Pickup', 16.0, Icons.attach_money,
-                          deliverytype ==1? AppColors.secondaryElement: AppColors.grey, 75.0, deliverytype ==1? true:false),
+                      filterswidget(
+                          1,
+                          'Pickup',
+                          16.0,
+                          Icons.attach_money,
+                          deliverytype == 1
+                              ? AppColors.secondaryElement
+                              : AppColors.grey,
+                          75.0,
+                          deliverytype == 1 ? true : false),
                       SizedBox(
                         width: 10,
                       ),
-                      filterswidget(2,'Table Service', 16.0, Icons.attach_money,
-                          deliverytype ==2? AppColors.secondaryElement: AppColors.grey, 105.0, deliverytype ==2? true:false),
+                      filterswidget(
+                          2,
+                          'Table Service',
+                          16.0,
+                          Icons.attach_money,
+                          deliverytype == 2
+                              ? AppColors.secondaryElement
+                              : AppColors.grey,
+                          105.0,
+                          deliverytype == 2 ? true : false),
                     ],
                   ),
                 ),
@@ -753,11 +886,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     color: Colors.black54),
                                 suffixIconImagePath: ImagePath.settingsIcon,
                                 hasSuffixIcon: false,
-                                borderWidth: 0.0,
-                                onChanged: (value){
-                                  searchfromlist();
-                                },
-                               onTapOfLeadingIcon: () {
+                                borderWidth: 0.0, onChanged: (value) {
+                              searchfromlist();
+                            }, onTapOfLeadingIcon: () {
                               pausevideo();
                               FocusScope.of(context).unfocus();
                               Navigator.pushNamed(
@@ -894,7 +1025,7 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: 0,
               ),
-//
+
               loader
                   ? Container(
                       height: 280,
@@ -918,8 +1049,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   :
                   // SizedBox(height: 15.0),
                   Column(
-                    // mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                      // mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 5.0),
                         Padding(
@@ -941,7 +1072,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: 5.0),
                       ],
                     ),
-//
+
               // SizedBox(height: 0.0),
               // HeadingRow(
               //     title: StringConst.TRENDING_RESTAURANTS,
@@ -1405,111 +1536,5 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
-  }
-
-  List<Widget> createUserProfilePhotos({@required numberOfProfilePhotos}) {
-    List<Widget> profilePhotos = [];
-    List<String> imagePaths = [
-      ImagePath.profile1,
-      ImagePath.profile2,
-      ImagePath.profile3,
-      ImagePath.profile4,
-      ImagePath.profile1,
-      ImagePath.profile2,
-    ];
-
-    List<int> list = List<int>.generate(numberOfProfilePhotos, (i) => i + 1);
-
-    list.forEach((i) {
-      profilePhotos.add(Container(
-          margin: EdgeInsets.symmetric(horizontal: 5),
-          child: Material(
-              elevation: 6,
-              borderRadius: BorderRadius.circular(1000),
-              child: CircleAvatar(
-                  backgroundImage: AssetImage(imagePaths[i - 1])))));
-    });
-    return profilePhotos;
-  }
-
-  bottomSheetForLocation(BuildContext context) {
-    return showModalBottomSheet(
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        builder: (context) {
-          return Container(
-            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(10.0),
-                  topRight: const Radius.circular(10.0),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Search Location',
-                    style: Styles.customNormalTextStyle(color: Colors.black),
-                  ),
-                  Divider(),
-                  TextField(
-                    decoration: InputDecoration(
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child: Image.asset(
-                            ImagePath.searchIcon,
-                          ),
-                        ),
-                        hintText: 'Search for your location',
-                        hintStyle: TextStyle(
-                          color: Colors.black26,
-                          fontSize: 16,
-                        ),
-                        border: InputBorder.none),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  InkWell(
-                    onTap: () =>
-                        Navigator.pushNamed(context, AppRouter.googleMap),
-                    child: Row(
-                      children: [
-                        Icon(Icons.location_searching, size: 12.0),
-                        SizedBox(
-                          width: 5.0,
-                        ),
-                        Text('Use current location',
-                            style: Styles.customNormalTextStyle(
-                                color: Colors.indigo)),
-                      ],
-                    ),
-                  ),
-                  Divider(),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  Text(
-                    'Saved Addresses',
-                    style: Styles.customNormalTextStyle(color: Colors.black),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.home),
-                    title: Text('Home'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    subtitle: Text('Habib Street, Banigala'),
-                  ),
-                  Divider(),
-                ],
-              ),
-            ),
-          );
-        });
   }
 }

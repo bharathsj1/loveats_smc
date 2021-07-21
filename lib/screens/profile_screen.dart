@@ -1,11 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potbelly/Flip_nav_bar/navbar.dart';
 import 'package:potbelly/models/UserModel.dart';
+import 'package:potbelly/models/specific_user_subscription_model.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/settings_screen.dart';
@@ -14,7 +13,6 @@ import 'package:potbelly/services/bookmarkservice.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/foody_bite_card.dart';
-import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:potbelly/widgets/spaces.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,8 +34,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List<NavBarItemData> _navBarItems;
   List<Widget> _viewsByIndex;
   int _selectedNavIndex = 0;
-    List notilist = [];
+  List notilist = [];
   bool loader2 = true;
+  SpecificUserSubscriptionModel _specificUserSubscriptionModel;
 
   getbookmark() async {
     bookmarks = await BookmarkService().getbookmarklist();
@@ -46,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {});
   }
 
-    getnoti() async {
+  getnoti() async {
     var noti = await AppService().getnoti();
     print(noti);
     notilist = noti['data'];
@@ -54,9 +53,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {});
   }
 
-
   @override
   void initState() {
+    getSpecificUserSubscription();
     getUserDetail();
     getbookmark();
     getnoti();
@@ -94,6 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _viewsByIndex = <Widget>[
       homewidget(),
       bookmarkwidget(),
+
       notificationwidget(),
       profilewidget()
       // HomeScreen(),
@@ -122,7 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   bookmarkwidget() {
-   return loader
+    return loader
         ? Center(
             child: CircularProgressIndicator(
               valueColor:
@@ -142,144 +142,153 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   top: Sizes.MARGIN_16,
                 ),
                 child:
-                //  ListView.separated(
-                //   shrinkWrap: true,
-                //   scrollDirection: Axis.vertical,
-                //   itemCount: bookmarks.length,
-                //   separatorBuilder: (context, index) {
-                //     return SpaceH8();
-                //   },
-                //   itemBuilder: (context, index) {
-                //     return 
-                Column(children:  List.generate(
-          bookmarks.length, (index) => 
-                    Container(
-                      child: FoodyBiteCard(
-                        onTap: () => Navigator.pushNamed(
-                          context,
-                          AppRouter.restaurantDetailsScreen,
-                          arguments: RestaurantDetails(
+                    //  ListView.separated(
+                    //   shrinkWrap: true,
+                    //   scrollDirection: Axis.vertical,
+                    //   itemCount: bookmarks.length,
+                    //   separatorBuilder: (context, index) {
+                    //     return SpaceH8();
+                    //   },
+                    //   itemBuilder: (context, index) {
+                    //     return
+                    Column(
+                  children: List.generate(
+                      bookmarks.length,
+                      (index) => Container(
+                            child: FoodyBiteCard(
+                              onTap: () => Navigator.pushNamed(
+                                context,
+                                AppRouter.restaurantDetailsScreen,
+                                arguments: RestaurantDetails(
+                                    imagePath: bookmarks[index]['rest_image'],
+                                    restaurantName: bookmarks[index]['name'],
+                                    restaurantAddress: bookmarks[index]
+                                            ['address'] +
+                                        ' ' +
+                                        bookmarks[index]['city'] +
+                                        ' ' +
+                                        bookmarks[index]['country'],
+                                    rating: bookmarks[index]['rest_ratings'],
+                                    category: bookmarks[index]['type'],
+                                    distance: bookmarks[index]['distance'],
+                                    data: bookmarks[index]),
+                              ),
+                              bookmark: true,
                               imagePath: bookmarks[index]['rest_image'],
-                              restaurantName: bookmarks[index]['name'],
-                              restaurantAddress: bookmarks[index]['address'] +
-                                  ' ' +
-                                  bookmarks[index]['city'] +
-                                  ' ' +
-                                  bookmarks[index]['country'],
-                              rating: bookmarks[index]['rest_ratings'],
-                              category: bookmarks[index]['type'],
-                              distance: bookmarks[index]['distance'],
-                              data: bookmarks[index]),
-                        ),
-                        bookmark: true,
-                        imagePath: bookmarks[index]['rest_image'],
-                        status: bookmarks[index]['rest_isOpen'] == 1
-                            ? "OPEN"
-                            : "CLOSE",
-                        cardTitle:
-                            bookmarks[index]['name'] ?? 'Rose, Farrington',
-                        rating: bookmarks[index]['rest_rating'] ?? '4.2',
-                        category:
-                            bookmarks[index]['rest_type'] ?? 'Not Available',
-                        distance:
-                            bookmarks[index]['distance'] ?? 'Not Available',
-                        address: bookmarks[index]['rest_address'] ??
-                            'Not Available' +
-                                ' ' +
-                                bookmarks[index]['rest_city'] +
-                                ' ' +
-                                bookmarks[index]['rest_country'],
-                      ),
-                    )
-                  
-                ),
-              ));
+                              status: bookmarks[index]['rest_isOpen'] == 1
+                                  ? "OPEN"
+                                  : "CLOSE",
+                              cardTitle: bookmarks[index]['name'] ??
+                                  'Rose, Farrington',
+                              rating: bookmarks[index]['rest_rating'] ?? '4.2',
+                              category: bookmarks[index]['rest_type'] ??
+                                  'Not Available',
+                              distance: bookmarks[index]['distance'] ??
+                                  'Not Available',
+                              address: bookmarks[index]['rest_address'] ??
+                                  'Not Available' +
+                                      ' ' +
+                                      bookmarks[index]['rest_city'] +
+                                      ' ' +
+                                      bookmarks[index]['rest_country'],
+                            ),
+                          )),
+                ));
   }
 
   notificationwidget() {
-    return  loader2
+    return loader2
         ? Center(
             child: Container(
-              margin: EdgeInsets.only(top:20),
+              margin: EdgeInsets.only(top: 20),
               child: CircularProgressIndicator(
                 valueColor:
                     AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
               ),
             ),
-          ):notilist.length == 0
+          )
+        : notilist.length == 0
             ? Center(
                 child: Container(
                   child: Text('No Notification available'),
                 ),
               )
-            :   Container(
-        margin: EdgeInsets.symmetric(
-            horizontal: Sizes.MARGIN_8, vertical: Sizes.MARGIN_16),
-        child:Column(children:  List.generate(
-          notilist.length, (index) => 
-            // itemCount: ,
-            // shrinkWrap: true,
-            // itemBuilder: (BuildContext context, int index) {
-               Card(
-                elevation: 1,
-                child: ListTile(
-                  leading: Image.asset('assets/images/logo.png'),
-                  onTap: () {},
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Container(
-                          width: MediaQuery.of(context).size.width*0.50,
-                        child: Text(
-                          notilist[index]['title'] ,
-                          style: Styles.customTitleTextStyle(
-                            color: AppColors.black,
-                            fontWeight: FontWeight.w400,
-                            fontSize: Sizes.TEXT_SIZE_18,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        DateFormat('MMM d, yyyy')
-                                      .format(DateTime.parse(notilist[index]['created_at'])).toString(),
-                        style: Styles.customNormalTextStyle(
-                          color: AppColors.grey,
-                          fontSize: Sizes.TEXT_SIZE_12,
-                        ),
-                      ),
-                    ],
-                  ),
-                  subtitle: Container(
-                    margin: EdgeInsets.only(top: 8.0),
-                    child: Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        
-                        Container(
-                          width: MediaQuery.of(context).size.width*0.52,
-                          child: Text(
-                            notilist[index]['subtitle'],
-                            style: Styles.customNormalTextStyle(
-                              color: AppColors.grey,
-                              fontSize: Sizes.TEXT_SIZE_12,
+            : Container(
+                margin: EdgeInsets.symmetric(
+                    horizontal: Sizes.MARGIN_8, vertical: Sizes.MARGIN_16),
+                child: Column(
+                  children: List.generate(
+                      notilist.length,
+                      (index) =>
+                          // itemCount: ,
+                          // shrinkWrap: true,
+                          // itemBuilder: (BuildContext context, int index) {
+                          Card(
+                            elevation: 1,
+                            child: ListTile(
+                              leading: Image.asset('assets/images/logo.png'),
+                              onTap: () {},
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.50,
+                                    child: Text(
+                                      notilist[index]['title'],
+                                      style: Styles.customTitleTextStyle(
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: Sizes.TEXT_SIZE_18,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    DateFormat('MMM d, yyyy')
+                                        .format(DateTime.parse(
+                                            notilist[index]['created_at']))
+                                        .toString(),
+                                    style: Styles.customNormalTextStyle(
+                                      color: AppColors.grey,
+                                      fontSize: Sizes.TEXT_SIZE_12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              subtitle: Container(
+                                margin: EdgeInsets.only(top: 8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.52,
+                                      child: Text(
+                                        notilist[index]['subtitle'],
+                                        style: Styles.customNormalTextStyle(
+                                          color: AppColors.grey,
+                                          fontSize: Sizes.TEXT_SIZE_12,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      DateFormat('h:mm a')
+                                          .format(DateTime.parse(
+                                              notilist[index]['created_at']))
+                                          .toString(),
+                                      style: Styles.customNormalTextStyle(
+                                        color: AppColors.grey,
+                                        fontSize: Sizes.TEXT_SIZE_12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                         Text(
-                          DateFormat('h:mm a')
-                                      .format(DateTime.parse(notilist[index]['created_at'])).toString(),
-                          style: Styles.customNormalTextStyle(
-                            color: AppColors.grey,
-                            fontSize: Sizes.TEXT_SIZE_12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            ),
-      ));
+                          )),
+                ));
   }
 
   profilewidget() {
@@ -349,9 +358,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         SpaceH8(),
                         Text(prefs.getString('email') ?? 'Not Available',
                             style: Styles.foodyBiteSubtitleTextStyle),
+                        _specificUserSubscriptionModel == null
+                            ? const SizedBox()
+                            : Container(
+                                width: double.infinity,
+                                margin: EdgeInsets.symmetric(vertical: 10.0),
+                                padding: const EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                    color: AppColors.secondaryColor),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'Subscribed'.toUpperCase(),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
                       ],
                     ),
-
                     _selectedNavIndex == 3
                         ? Column(
                             children: [
@@ -378,69 +402,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           )
                         : Container(),
-                    // SpaceH24(),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: <Widget>[
-                    //     PotbellyButton(
-                    //       'Edit Profile',
-                    //       // onTap: () => AppRouter.navigator
-                    //       //     .pushNamed(AppRouter.editProfileScreen),
-                    //       buttonWidth: MediaQuery.of(context).size.width / 3,
-                    //       buttonHeight: Sizes.HEIGHT_50,
-                    //     ),
-                    //     SpaceW16(),
-                    //     PotbellyButton(
-                    //       'Settings',
-                    //       onTap: () => Navigator.pushNamed(
-                    //           context, AppRouter.settingsScreen),
-                    //       buttonWidth: MediaQuery.of(context).size.width / 3,
-                    //       buttonHeight: Sizes.HEIGHT_50,
-                    //       decoration: BoxDecoration(
-                    //         color: AppColors.primaryColor,
-                    //         border: Border.all(color: AppColors.indigo),
-                    //         borderRadius: BorderRadius.all(
-                    //           Radius.circular(Sizes.RADIUS_8),
-                    //         ),
-                    //       ),
-                    //       buttonTextStyle: Styles.customNormalTextStyle(
-                    //         color: AppColors.accentText,
-                    //         fontSize: Sizes.TEXT_SIZE_16,
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                     Divider(
                       height: Sizes.HEIGHT_24,
                       thickness: 3.0,
                       color: Colors.grey[200],
                     ),
-                    // Column(
-                    //   children: <Widget>[
-                    //     FoodyBiteCard(
-                    //       imagePath: ImagePath.dinnerIsServed,
-                    //       status: StringConst.STATUS_OPEN,
-                    //       cardTitle: "Gramercy Tavern",
-                    //       category: StringConst.ITALIAN,
-                    //       distance: "12 km",
-                    //       address: "394 Broome St, New York, NY 10013, USA",
-                    //       isThereStatus: false,
-                    //       onTap: () {},
-                    //     ),
-                    //     SpaceH16(),
-                    //     FoodyBiteCard(
-                    //       imagePath: ImagePath.breakfastInBed,
-                    //       status: StringConst.STATUS_OPEN,
-                    //       cardTitle: "Happy Bones",
-                    //       category: StringConst.ITALIAN,
-                    //       distance: "12 km",
-                    //       address: "394 Broome St, New York, NY 10013, USA",
-                    //       isThereStatus: false,
-                    //       onTap: () {},
-                    //     ),
-                    //   ],
-                    // ),
-
                     _selectedNavIndex == 0
                         ? homewidget()
                         : _selectedNavIndex == 1
@@ -448,178 +414,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             : _selectedNavIndex == 2
                                 ? notificationwidget()
                                 : profilewidget()
-
-                    // Center(
-                    //   child: Container(
-                    //       // color: AppColors.green,
-                    //       child: DefaultTabController(
-                    //           length: 2,
-                    //           child: Column(children: [
-                    //             TabBar(
-                    //               // isScrollable: true,
-                    //               onTap: (index) {
-                    //                 print('indeeeeeeeeeeeeeeex');
-                    //                 print(index);
-                    //               },
-                    //               physics: BouncingScrollPhysics(),
-                    //               indicatorColor: AppColors.black,
-                    //               labelColor: AppColors.black,
-                    //               unselectedLabelColor: AppColors.grey,
-
-                    //               // isScrollable: true,
-                    //               indicator: UnderlineTabIndicator(
-                    //                   borderSide: BorderSide(
-                    //                       width: 1.2, color: AppColors.black),
-                    //                   insets: EdgeInsets.symmetric(
-                    //                       horizontal: 30.0)),
-                    //               // labelStyle: TextStyle(fontWeight: FontWeight.bold),
-                    //               tabs: [
-                    //                 Tab(
-                    //                   text: "My Favourite",
-                    //                 ),
-                    //                 Tab(
-                    //                   text: "Settings",
-                    //                 ),
-                    //               ],
-                    //             ),
-                    //             SingleChildScrollView(
-                    //               child: Container(
-                    //                   height:
-                    //                       MediaQuery.of(context).size.height *
-                    //                           0.55,
-                    //                   color: Colors.transparent,
-                    //                   child: TabBarView(children: [
-                    //                     loader
-                    //                         ? Center(
-                    //                             child:
-                    //                                 CircularProgressIndicator(
-                    //                               valueColor:
-                    //                                   AlwaysStoppedAnimation<
-                    //                                           Color>(
-                    //                                       AppColors
-                    //                                           .secondaryElement),
-                    //                             ),
-                    //                           )
-                    //                         : bookmarks.length == 0
-                    //                             ? Center(
-                    //                                 child: Container(
-                    //                                   child:
-                    //                                       Text('No Bookmarks'),
-                    //                                 ),
-                    //                               )
-                    //                             : Container(
-                    //                                 margin:
-                    //                                     const EdgeInsets.only(
-                    //                                   left: Sizes.MARGIN_16,
-                    //                                   right: Sizes.MARGIN_16,
-                    //                                   top: Sizes.MARGIN_16,
-                    //                                 ),
-                    //                                 child: ListView.separated(
-                    //                                   scrollDirection:
-                    //                                       Axis.vertical,
-                    //                                   itemCount:
-                    //                                       bookmarks.length,
-                    //                                   separatorBuilder:
-                    //                                       (context, index) {
-                    //                                     return SpaceH8();
-                    //                                   },
-                    //                                   itemBuilder:
-                    //                                       (context, index) {
-                    //                                     return Container(
-                    //                                       child: FoodyBiteCard(
-                    //                                         onTap: () =>
-                    //                                             Navigator
-                    //                                                 .pushNamed(
-                    //                                           context,
-                    //                                           AppRouter
-                    //                                               .restaurantDetailsScreen,
-                    //                                           arguments: RestaurantDetails(
-                    //                                               imagePath: bookmarks[index][
-                    //                                                   'rest_image'],
-                    //                                               restaurantName:
-                    //                                                   bookmarks[index][
-                    //                                                       'name'],
-                    //                                               restaurantAddress: bookmarks[index]['address'] +
-                    //                                                   ' ' +
-                    //                                                   bookmarks[index][
-                    //                                                       'city'] +
-                    //                                                   ' ' +
-                    //                                                   bookmarks[index][
-                    //                                                       'country'],
-                    //                                               rating: bookmarks[index][
-                    //                                                   'rest_ratings'],
-                    //                                               category: bookmarks[
-                    //                                                       index]
-                    //                                                   ['type'],
-                    //                                               distance:
-                    //                                                   bookmarks[index]
-                    //                                                       ['distance'],
-                    //                                               data: bookmarks[index]),
-                    //                                         ),
-                    //                                         bookmark: true,
-                    //                                         imagePath: bookmarks[
-                    //                                                 index]
-                    //                                             ['rest_image'],
-                    //                                         status: bookmarks[
-                    //                                                         index]
-                    //                                                     [
-                    //                                                     'rest_isOpen'] ==
-                    //                                                 1
-                    //                                             ? "OPEN"
-                    //                                             : "CLOSE",
-                    //                                         cardTitle: bookmarks[
-                    //                                                     index]
-                    //                                                 ['name'] ??
-                    //                                             'Rose, Farrington',
-                    //                                         rating: bookmarks[
-                    //                                                     index][
-                    //                                                 'rest_rating'] ??
-                    //                                             '4.2',
-                    //                                         category: bookmarks[
-                    //                                                     index][
-                    //                                                 'rest_type'] ??
-                    //                                             'Not Available',
-                    //                                         distance: bookmarks[
-                    //                                                     index][
-                    //                                                 'distance'] ??
-                    //                                             'Not Available',
-                    //                                         address: bookmarks[
-                    //                                                     index][
-                    //                                                 'rest_address'] ??
-                    //                                             'Not Available' +
-                    //                                                 ' ' +
-                    //                                                 bookmarks[
-                    //                                                         index]
-                    //                                                     [
-                    //                                                     'rest_city'] +
-                    //                                                 ' ' +
-                    //                                                 bookmarks[
-                    //                                                         index]
-                    //                                                     [
-                    //                                                     'rest_country'],
-                    //                                       ),
-                    //                                     );
-                    //                                   },
-                    //                                 ),
-                    //                               ),
-                    //                     Column(
-                    //                       children: <Widget>[
-                    //                         SizedBox(
-                    //                           height: 10,
-                    //                         ),
-                    //                         _buildAccountSettings(
-                    //                             context: context),
-                    //                         _buildOtherSettings(
-                    //                             context: context),
-                    //                       ],
-                    //                     ),
-                    //                   ])),
-                    //             )
-                    //           ]))),
-                    // )
                   ],
                 ),
               ));
+  }
+
+  void getSpecificUserSubscription() async {
+    _specificUserSubscriptionModel =
+        await Service().getSpecificUserSubscriptionData();
+    print(_specificUserSubscriptionModel.data.length);
+    setState(() {});
   }
 
   Widget _buildAccountSettings({@required BuildContext context}) {
@@ -738,6 +542,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   title: "Payments",
                   //  onTap: () => Navigator
                   //     .pushNamed(context,AppRouter.order_list),
+                ),
+                SettingsListTile(
+                  titleColor: AppColors.black,
+                  title: "Subscriptions",
+                  onTap: () => Navigator.pushNamed(
+                      context, AppRouter.userSubscriptionList),
                 ),
                 // SettingsListTile(
                 //     title: "Change Language",
