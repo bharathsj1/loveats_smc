@@ -19,7 +19,13 @@ class CartProvider with ChangeNotifier {
       return x['id'] == product['id'] &&
           x['restaurantId'] == product['restaurantId'];
     });
-    if (index == -1) {
+    var extraadd = cartitems.where((x) =>x['topping'].toString() == product['topping'].toString() &&  x['drink'].toString() == product['drink'].toString()).toList();
+    print(index);
+    // print(cartitems[index]['topping']);
+    // print(product['topping']);
+    // print(cartitems[index]['topping'].toString() == product['topping'].toString());
+
+    if (index == -1 || extraadd.length==0) {
       double total = 0.0;
       cartitems.add(product);
 
@@ -39,8 +45,7 @@ class CartProvider with ChangeNotifier {
           (int.parse(cartitems[index]['qty']) + int.parse(product['qty']))
               .toString();
       cartitems[index]['payableAmount'] =
-          ((cartitems[index]['price']) *
-                  double.parse(cartitems[index]['qty']))
+          ((cartitems[index]['price']) * double.parse(cartitems[index]['qty']))
               .toString();
       print('payable');
       print(cartitems[index]['payableAmount']);
@@ -61,8 +66,8 @@ class CartProvider with ChangeNotifier {
   }
 
   // Remove from cart
-  Future<void> removeqtyCart(context,cart) async {
-        await getcarts();
+  Future<void> removeqtyCart(context, cart) async {
+    await getcarts();
     int index = cartitems.indexWhere((x) => x['id'] == cart['id']);
     if (index == -1) {
       return;
@@ -83,8 +88,7 @@ class CartProvider with ChangeNotifier {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove('cartitems');
       await prefs.setString('cartlist', jsonEncode(cartitems));
-       Toast.show('Item Removed', context, duration: 3);
-
+      Toast.show('Item Removed', context, duration: 3);
     } else {
       cartitems[index]['qty'] =
           (int.parse(cartitems[index]['qty']) - 1).toString();
@@ -100,7 +104,7 @@ class CartProvider with ChangeNotifier {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove('cartitems');
       await prefs.setString('cartlist', jsonEncode(cartitems));
-       Toast.show('Remove Quantity -1', context, duration: 3);
+      Toast.show('Remove Quantity -1', context, duration: 3);
     }
     // also save into sqflite
     notifyListeners();

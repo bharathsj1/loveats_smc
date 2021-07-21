@@ -45,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<City> _cityList;
   City _currentCity;
   bool search = true;
+  List searchlist = [];
 
   List subscription = ['assets/images/mainscreen.jpg'];
 
@@ -91,9 +92,10 @@ class _HomeScreenState extends State<HomeScreen> {
   getRestaurent() async {
     var response = await Service().getRestaurentsData();
     resturants = response.data;
+    searchlist = response.data;
     totalRestaurent = response.data.length;
     loader = false;
-    print(response);
+    print(searchlist);
     setState(() {});
   }
 
@@ -102,8 +104,21 @@ class _HomeScreenState extends State<HomeScreen> {
     categories = response.data;
     loader2 = false;
     setState(() {});
-    print(resturants);
   }
+
+   searchfromlist() {
+       print(searchlist[0].delivery);
+        print(searchlist[0].pickup);
+        print(searchlist[0].tableService);
+    resturants = searchlist
+        .where((product) => product.restName
+            .toLowerCase()
+            .contains(searchcontroller.text.toLowerCase()) )
+        .toList();
+      
+        setState(() { });
+  }
+
 
   getpromos() async {
     await DatabaseManager().getpromotions().then((value) {
@@ -206,6 +221,8 @@ class _HomeScreenState extends State<HomeScreen> {
       this._currentCity = city;
     });
   }
+
+  int deliverytype=0;
 
   categorieslist() {
     return List.generate(
@@ -440,7 +457,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ));
   }
 
-  filterswidget(name, iconsize, icon, border, width, active) {
+  filterswidget(id,name, iconsize, icon, border, width, active) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 5.0),
       child: Material(
@@ -451,39 +468,47 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(6),
               )
             : null,
-        child: Container(
-            width: width,
-            height: 30,
-            decoration: active
-                ? BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(width: 0.5, color: border),
+        child: InkWell(
+          onTap: (){
+            deliverytype= id;
+            setState(() {
+              
+            });
+          },
+          child: Container(
+              width: width,
+              height: 30,
+              decoration: active
+                  ? BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(width: 0.5, color: border),
+                    )
+                  : null,
+              child: Center(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 5,
+                  ),
+                  // Icon(
+                  //   icon,
+                  //   size: iconsize,
+                  //   color: AppColors.black,
+                  // ),
+                  // SizedBox(
+                  //   width: 5,
+                  // ),
+                  Text(
+                    name,
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: AppColors.black,
+                        fontWeight: FontWeight.bold),
                   )
-                : null,
-            child: Center(
-                child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 5,
-                ),
-                // Icon(
-                //   icon,
-                //   size: iconsize,
-                //   color: AppColors.black,
-                // ),
-                // SizedBox(
-                //   width: 5,
-                // ),
-                Text(
-                  name,
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: AppColors.black,
-                      fontWeight: FontWeight.bold),
-                )
-              ],
-            ))),
+                ],
+              ))),
+        ),
       ),
     );
   }
@@ -680,23 +705,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      filterswidget('Filters', 12.0, FontAwesomeIcons.slidersH,
-                          AppColors.secondaryElement, 75.0, true),
+                      // filterswidget('Filters', 12.0, FontAwesomeIcons.slidersH,
+                      //     AppColors.secondaryElement, 75.0, true),
+                      // SizedBox(
+                      //   width: 10,
+                      // ),
+                      filterswidget(0,'Delivery', 16.0, Icons.store_outlined,
+                         deliverytype ==0? AppColors.secondaryElement: AppColors.grey, 80.0,  deliverytype ==0? true:false),
                       SizedBox(
                         width: 10,
                       ),
-                      filterswidget('Delivery', 16.0, Icons.store_outlined,
-                          AppColors.grey, 80.0, false),
+                      filterswidget(1,'Pickup', 16.0, Icons.attach_money,
+                          deliverytype ==1? AppColors.secondaryElement: AppColors.grey, 75.0, deliverytype ==1? true:false),
                       SizedBox(
                         width: 10,
                       ),
-                      filterswidget('Pickup', 16.0, Icons.attach_money,
-                          AppColors.grey, 75.0, false),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      filterswidget('Table Service', 16.0, Icons.attach_money,
-                          AppColors.grey, 105.0, false),
+                      filterswidget(2,'Table Service', 16.0, Icons.attach_money,
+                          deliverytype ==2? AppColors.secondaryElement: AppColors.grey, 105.0, deliverytype ==2? true:false),
                     ],
                   ),
                 ),
@@ -728,7 +753,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontSize: 15, color: Colors.black26),
                                 suffixIconImagePath: ImagePath.settingsIcon,
                                 hasSuffixIcon: false,
-                                borderWidth: 0.0, onTapOfLeadingIcon: () {
+                                borderWidth: 0.0,
+                                onChanged: (value){
+                                  searchfromlist();
+                                },
+                               onTapOfLeadingIcon: () {
                               pausevideo();
                               FocusScope.of(context).unfocus();
                               Navigator.pushNamed(
