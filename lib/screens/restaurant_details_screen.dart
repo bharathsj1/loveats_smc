@@ -351,7 +351,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                                                   MainAxisAlignment.center,
                                               children: [
                                                 Icon(
-                                                  Icons.grid_view_rounded,
+                                                  Icons.grid_view,
                                                   color: AppColors.white,
                                                   size: 16,
                                                 ),

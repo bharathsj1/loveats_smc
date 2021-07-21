@@ -31,14 +31,14 @@ class DatabaseManager {
     });
   }
 
-  // Future getpromotions() async {
-  //   CollectionReference _collectionRef =
-  //       FirebaseFirestore.instance.collection('Promotions');
-  //   // Get docs from collection reference
-  //   QuerySnapshot querySnapshot = await _collectionRef.get();
-  //   // Get data from docs and convert map to List
-  //   final allData = querySnapshot.docs.map((doc) => doc.data).toList();
-  //   print(allData);
-  //   return allData;
-  // }
+  Future getpromotions() async {
+    CollectionReference _collectionRef =
+        FirebaseFirestore.instance.collection('Promotions');
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await _collectionRef.get();
+    // Get data from docs and convert map to List
+    final allData = querySnapshot.docs.map((doc) => doc.data).toList();
+    print(allData);
+    return allData;
+  }
 }
