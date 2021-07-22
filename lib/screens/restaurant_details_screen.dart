@@ -227,11 +227,14 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
               SliverAppBar(
                 elevation: 0.0,
                 expandedHeight: MediaQuery.of(context).size.height * 0.64,
+                collapsedHeight: MediaQuery.of(context).size.height*0.5,
+
                 floating: true,
                 forceElevated: false,
                 pinned: false,
                 titleSpacing: 0,
                 automaticallyImplyLeading: false,
+                
                 backgroundColor: Colors.white,
                 // leading: BackButton(
                 //   color: AppColors.white,
