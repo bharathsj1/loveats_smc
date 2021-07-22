@@ -78,9 +78,9 @@ class Datum {
   String restCountry;
   int restMenuId;
   String restCity;
-  String delivery;
-  String pickup;
-  String tableService;
+  int delivery;
+  int pickup;
+  int tableService;
   dynamic createdAt;
   dynamic updatedAt;
 
