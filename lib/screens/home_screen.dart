@@ -1,13 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potbelly/3D_card_widets/demo_data.dart';
 import 'package:potbelly/3D_card_widets/travel_card_list.dart';
-import 'package:potbelly/models/menu_types_model.dart';
 import 'package:potbelly/models/promotions.dart';
 import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/routes/router.dart';
@@ -15,9 +12,6 @@ import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/DatabaseManager.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
-import 'package:potbelly/values/data.dart';
-import 'package:potbelly/widgets/category_card.dart';
-import 'package:potbelly/widgets/foody_bite_card.dart';
 import 'package:potbelly/widgets/heading_row.dart';
 import 'package:potbelly/widgets/search_input_field.dart';
 import 'package:skeleton_text/skeleton_text.dart';
@@ -195,24 +189,25 @@ class _HomeScreenState extends State<HomeScreen> {
     print(searchlist[0].delivery);
     print(searchlist[0].pickup);
     print(searchlist[0].tableService);
-    resturants = searchlist
-        .where((product) => product.restName
-            .toLowerCase()
-            .contains(searchcontroller.text.toLowerCase()))
+    resturants = searchlist.where(
+      (product) => product.restName.toLowerCase().contains(
+            searchcontroller.text.toLowerCase(),
+          ),
+    );
     // print(searchlist[0].delivery);
     // print(searchlist[0].pickup);
     // print(searchlist[0].tableService);
     resturants = searchlist
         .where((product) => product.restName
-                    .toLowerCase()
-                    .contains(searchcontroller.text.toLowerCase()) 
+                .toLowerCase()
+                .contains(searchcontroller.text.toLowerCase())
             //         &&
             //     deliverytype == 0
             // ? product.delivery == '1'
             // : deliverytype == 1
             //     ? product.pickup == '1'
             //     : product.tableServive == '1'
-                )
+            )
         .toList();
 
     setState(() {});
@@ -223,23 +218,6 @@ class _HomeScreenState extends State<HomeScreen> {
       for (var item in value) {
         promolist.add(item);
       }
-      // getpromos() async {
-      //   await DatabaseManager().getpromotions().then((value) {
-      //     for (var item in value) {
-      //       promolist.add(item);
-      //     }
-
-      //     if (promolist.length != 0 &&
-      //         (promolist[0]['videoUrl'] != '' ||
-      //             promolist[0]['videoUrl'] != null)) {
-      //       print('here');
-      //       // controllerdispo();
-      //       initialize(promolist[0]['videoUrl']);
-      //     }
-      //     this.loader = false;
-      //     setState(() {});
-      //   });
-      // }
     });
   }
 
@@ -455,6 +433,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     return profilePhotos;
   }
+
   List hotlist = [
     {
       'name': 'LovesatNew',
@@ -478,198 +457,188 @@ class _HomeScreenState extends State<HomeScreen> {
 
   hotspot() {
     return List.generate(
-        hotlist.length,
-        (i) => InkWell(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  AppRouter.HotspotsDetailsScreen,
-                  arguments: RestaurantDetails(
-                      imagePath: hotlist[i]['image'],
-                      restaurantName: hotlist[i]['name'],
-                      restaurantAddress: hotlist[i]['address'],
-                      rating: hotlist[i]['rating'],
-                      category: '',
-                      distance: hotlist[i]['distance'],
-                      data: hotlist[i]),
-                );
-              },
-              child: Container(
-                height: 240,
-                width: MediaQuery.of(context).size.width / 1.2,
-                child: Card(
-                  elevation: 1,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6.0),
-                  ),
+      hotlist.length,
+      (i) => InkWell(
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            AppRouter.HotspotsDetailsScreen,
+            arguments: RestaurantDetails(
+                imagePath: hotlist[i]['image'],
+                restaurantName: hotlist[i]['name'],
+                restaurantAddress: hotlist[i]['address'],
+                rating: hotlist[i]['rating'],
+                category: '',
+                distance: hotlist[i]['distance'],
+                data: hotlist[i]),
+          );
+        },
+        child: Container(
+          height: 240,
+          width: MediaQuery.of(context).size.width / 1.2,
+          child: Card(
+            elevation: 1,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6.0),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(6),
+                          topRight: Radius.circular(6)),
+                      child: hotlist[i]['image'].substring(0, 4) == 'http'
+                          ? Image.network(
+                              hotlist[i]['image'],
+                              loadingBuilder: (BuildContext ctx, Widget child,
+                                  ImageChunkEvent loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                } else {
+                                  return Container(
+                                    height: 150,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                AppColors.secondaryElement),
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              width: MediaQuery.of(context).size.width,
+                              height: 150,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(
+                              hotlist[i]['image'],
+                              width: MediaQuery.of(context).size.width,
+                              height: 150,
+                              fit: BoxFit.cover,
+                            ),
+                    ),
+                    Positioned(
+                        right: 5,
+                        bottom: 5,
+                        child: Container(
+                          width: 90,
+                          padding: EdgeInsets.symmetric(vertical: 2),
+                          decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.7),
+                              borderRadius: BorderRadius.circular(100)),
+                          child: Text('15 - 20\nMins',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.openSans(
+                                textStyle: Styles.customNormalTextStyle(
+                                  color: AppColors.white,
+                                  fontSize: Sizes.TEXT_SIZE_12,
+                                ),
+                              )),
+                        ))
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 5.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(6),
-                                topRight: Radius.circular(6)),
-                            child: hotlist[i]['image'].substring(0, 4) == 'http'
-                                ? Image.network(
-                                    hotlist[i]['image'],
-                                    loadingBuilder: (BuildContext ctx,
-                                        Widget child,
-                                        ImageChunkEvent loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child;
-                                      } else {
-                                        return Container(
-                                          height: 150,
-                                          child: Center(
-                                            child: CircularProgressIndicator(
-                                              valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
-                                                      AppColors
-                                                          .secondaryElement),
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Image.asset(
-                                    hotlist[i]['image'],
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  ),
+                      Text(hotlist[i]['name'] + '- Rose, Farrington',
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.dmSerifDisplay(
+                            textStyle: Styles.customTitleTextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.normal,
+                              fontSize: Sizes.TEXT_SIZE_22,
+                            ),
+                          )),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Icon(
+                            Icons.star,
+                            color: AppColors.secondaryElement,
+                            size: 16,
                           ),
-                          Positioned(
-                              right: 5,
-                              bottom: 5,
-                              child: Container(
-                                width: 90,
-                                padding: EdgeInsets.symmetric(vertical: 2),
-                                decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.7),
-                                    borderRadius: BorderRadius.circular(100)),
-                                child: Text('15 - 20\nMins',
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.openSans(
-                                      textStyle: Styles.customNormalTextStyle(
-                                        color: AppColors.white,
-                                        fontSize: Sizes.TEXT_SIZE_12,
-                                      ),
-                                    )),
-                              ))
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Container(
+                              // width: MediaQuery.of(context).size.width*0.5,
+                              // color: Colors.red,
+                              child: Text(hotlist[i]['rating'] + ' Very good',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.openSans(
+                                    textStyle: Styles.customNormalTextStyle(
+                                      color: AppColors.secondaryElement,
+                                      fontSize: Sizes.TEXT_SIZE_14,
+                                    ),
+                                  )),
+                            ),
+                          ),
                         ],
                       ),
-                      SizedBox(
-                        height: 5,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Container(
+                              // width: MediaQuery.of(context).size.width*0.5,
+                              // color: Colors.red,
+                              child: Text(hotlist[i]['address'] + ' (500+)',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.openSans(
+                                    textStyle: Styles.customNormalTextStyle(
+                                      color: Colors.black54,
+                                      fontSize: Sizes.TEXT_SIZE_14,
+                                    ),
+                                  )),
+                            ),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 5.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(hotlist[i]['name'] + '- Rose, Farrington',
-                                textAlign: TextAlign.left,
-                                style: GoogleFonts.dmSerifDisplay(
-                                  textStyle: Styles.customTitleTextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: Sizes.TEXT_SIZE_22,
-                                  ),
-                                )),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.star,
-                                  color: AppColors.secondaryElement,
-                                  size: 16,
-                                ),
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Container(
-                                    // width: MediaQuery.of(context).size.width*0.5,
-                                    // color: Colors.red,
-                                    child: Text(
-                                        hotlist[i]['rating'] + ' Very good',
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.openSans(
-                                          textStyle:
-                                              Styles.customNormalTextStyle(
-                                            color: AppColors.secondaryElement,
-                                            fontSize: Sizes.TEXT_SIZE_14,
-                                          ),
-                                        )),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Container(
+                              // width: MediaQuery.of(context).size.width*0.5,
+                              // color: Colors.red,
+                              child: Text(
+                                hotlist[i]['distance'] +
+                                    ' - \$' +
+                                    hotlist[i]['delivery'] +
+                                    ' Delivery',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.openSans(
+                                  textStyle: Styles.customNormalTextStyle(
+                                    color: Colors.black54,
+                                    fontSize: Sizes.TEXT_SIZE_14,
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Container(
-                                    // width: MediaQuery.of(context).size.width*0.5,
-                                    // color: Colors.red,
-                                    child:
-                                        Text(hotlist[i]['address'] + ' (500+)',
-                                            textAlign: TextAlign.center,
-                                            style: GoogleFonts.openSans(
-                                              textStyle:
-                                                  Styles.customNormalTextStyle(
-                                                color: Colors.black54,
-                                                fontSize: Sizes.TEXT_SIZE_14,
-                                              ),
-                                            )),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Container(
-                                    // width: MediaQuery.of(context).size.width*0.5,
-                                    // color: Colors.red,
-                                    child: Text(
-                                        hotlist[i]['distance'] +
-                                            ' - \$' +
-                                            hotlist[i]['delivery'] +
-                                            ' Delivery',
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.openSans(
-                                          textStyle:
-                                              Styles.customNormalTextStyle(
-                                            color: Colors.black54,
-                                            fontSize: Sizes.TEXT_SIZE_14,
-                                          ),
-                                        )),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-              ),
-            ));
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
-  List catlist = [
-    'All',
-    'Korean',
-    'Indian',
-  ];
   int selectedcat = 0;
 
   newcategorieslist() {
@@ -828,97 +797,90 @@ class _HomeScreenState extends State<HomeScreen> {
 
   filterswidget(id, name, iconsize, icon, border, width, active) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 5.0),
-      child: Container(
-        decoration: deliverytype == id
-            ? BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.secondaryElement.withOpacity(0.4),
-                    spreadRadius: 0,
-                    blurRadius: 4,
-                    // offset: Offset(0, 3), // changes position of shadow
-                  ),
-                ],
-              )
-            : null,
-        child: InkWell(
-          onTap: () {
-            deliverytype = id;
-            setState(() {});
-          },
-          child: Container(
-              width: width,
-              height: 30,
-              decoration: active
-                  ? BoxDecoration(
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(width: 0.5, color: border),
-        child: Material(
-          elevation: active ? 1 : 0,
-          shape: active
-              ? RoundedRectangleBorder(
-                  side: BorderSide(width: 0.5, color: border),
-                  borderRadius: BorderRadius.circular(6),
-                )
-              : null,
-          child: InkWell(
-            onTap: () {
-              if (deliverytype == id) {
-                deliverytype = null;
-                resturants = searchlist;
-                setState(() {});
-              } else {
+        padding: const EdgeInsets.only(bottom: 5.0),
+        child: Container(
+            decoration: deliverytype == id
+                ? BoxDecoration(
+                    borderRadius: BorderRadius.circular(6),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.secondaryElement.withOpacity(0.4),
+                        spreadRadius: 0,
+                        blurRadius: 4,
+                        // offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  )
+                : null,
+            child: InkWell(
+              onTap: () {
                 deliverytype = id;
-                print(resturants);
-                resturants = searchlist
-                    .where((pro) => deliverytype == 0
-                        ? pro.delivery == 1
-                        : deliverytype == 1
-                            ? pro.pickup == 1
-                            : pro.tableService == 1)
-                    .toList();
                 setState(() {});
-              }
-            },
-            child: Container(
+              },
+              child: Container(
                 width: width,
                 height: 30,
                 decoration: active
                     ? BoxDecoration(
                         borderRadius: BorderRadius.circular(6),
-                        border: Border.all(width: 0.5, color: border),
-                      )
+                        border: Border.all(width: 0.5, color: border))
                     : null,
-                child: Center(
-                    child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 5,
-                    ),
-                    // Icon(
-                    //   icon,
-                    //   size: iconsize,
-                    //   color: AppColors.black,
-                    // ),
-                    // SizedBox(
-                    //   width: 5,
-                    // ),
-                    Text(
-                      name,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: AppColors.black,
-                          fontWeight: FontWeight.bold),
-                    )
-                  ],
-                ))),
-          ),
-        ),
-      ),
-    );
+                child: Material(
+                  elevation: active ? 1 : 0,
+                  shape: active
+                      ? RoundedRectangleBorder(
+                          side: BorderSide(width: 0.5, color: border),
+                          borderRadius: BorderRadius.circular(6),
+                        )
+                      : null,
+                  child: InkWell(
+                    onTap: () {
+                      if (deliverytype == id) {
+                        deliverytype = null;
+                        resturants = searchlist;
+                        setState(() {});
+                      } else {
+                        deliverytype = id;
+                        print(resturants);
+                        resturants = searchlist
+                            .where((pro) => deliverytype == 0
+                                ? pro.delivery == 1
+                                : deliverytype == 1
+                                    ? pro.pickup == 1
+                                    : pro.tableService == 1)
+                            .toList();
+                        setState(() {});
+                      }
+                    },
+                    child: Container(
+                        width: width,
+                        height: 30,
+                        decoration: active
+                            ? BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(width: 0.5, color: border),
+                              )
+                            : null,
+                        child: Center(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              name,
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: AppColors.black,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ))),
+                  ),
+                ),
+              ),
+            )));
   }
 
   @override
