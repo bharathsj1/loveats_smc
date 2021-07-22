@@ -38,43 +38,95 @@ class GetAllSubscriptionModel {
 class Datum {
   Datum({
     this.id,
-    this.planDetails,
-    this.discount,
-    this.status,
-    this.duration,
-    this.price,
-    this.createdAt,
-    this.updatedAt,
+    this.object,
+    this.active,
+    this.attributes,
+    this.created,
+    this.description,
+    this.images,
+    this.livemode,
+    this.metadata,
+    this.name,
+    this.packageDimensions,
+    this.shippable,
+    this.statementDescriptor,
+    this.type,
+    this.unitLabel,
+    this.updated,
+    this.url,
   });
 
-  int id;
-  String planDetails;
-  String discount;
-  String status;
-  String duration;
-  String price;
-  dynamic createdAt;
-  dynamic updatedAt;
+  String id;
+  String object;
+  bool active;
+  List<dynamic> attributes;
+  int created;
+  String description;
+  List<dynamic> images;
+  bool livemode;
+  dynamic metadata;
+  String name;
+  dynamic packageDimensions;
+  dynamic shippable;
+  dynamic statementDescriptor;
+  String type;
+  dynamic unitLabel;
+  int updated;
+  dynamic url;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
-        planDetails: json["plan_details"],
-        discount: json["discount"],
-        status: json["status"],
-        duration: json["duration"],
-        price: json["price"],
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
+        object: json["object"],
+        active: json["active"],
+        attributes: List<dynamic>.from(json["attributes"].map((x) => x)),
+        created: json["created"],
+        description: json["description"] == null ? null : json["description"],
+        images: List<dynamic>.from(json["images"].map((x) => x)),
+        livemode: json["livemode"],
+        metadata: json["metadata"],
+        name: json["name"],
+        packageDimensions: json["package_dimensions"],
+        shippable: json["shippable"],
+        statementDescriptor: json["statement_descriptor"],
+        type: json["type"],
+        unitLabel: json["unit_label"],
+        updated: json["updated"],
+        url: json["url"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "plan_details": planDetails,
-        "discount": discount,
-        "status": status,
-        "duration": duration,
-        "price": price,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
+        "object": object,
+        "active": active,
+        "attributes": List<dynamic>.from(attributes.map((x) => x)),
+        "created": created,
+        "description": description == null ? null : description,
+        "images": List<dynamic>.from(images.map((x) => x)),
+        "livemode": livemode,
+        "metadata": metadata,
+        "name": name,
+        "package_dimensions": packageDimensions,
+        "shippable": shippable,
+        "statement_descriptor": statementDescriptor,
+        "type": type,
+        "unit_label": unitLabel,
+        "updated": updated,
+        "url": url,
+      };
+}
+
+class MetadataClass {
+  MetadataClass({
+    this.amount,
+  });
+
+  String amount;
+
+  factory MetadataClass.fromJson(Map<String, dynamic> json) => MetadataClass(
+        amount: json["amount"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "amount": amount,
       };
 }

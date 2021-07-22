@@ -21,6 +21,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   GetAllSubscriptionModel _getAllSubscriptionModel;
   var _paymentSheetData;
   bool _isLoading = true;
+  TextStyle descriptionStyle = TextStyle(
+    fontSize: 14.0,
+    color: Colors.black38,
+  );
   @override
   void initState() {
     getSubscriptionPlans();
@@ -49,7 +53,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                     ),
                   ),
                 ),
-                SizedBox(
+             const   SizedBox(
                   height: 20.0,
                 ),
                 Expanded(
@@ -78,52 +82,22 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(data.planDetails),
-            Wrap(
-              spacing: 10.0,
-              children: [
-                Chip(
-                  label: Row(
-                    children: [
-                      Text('Price'),
-                      Text(' \$ ${data.price}'),
-                    ],
-                  ),
-                ),
-                Chip(
-                  label: Row(
-                    children: [
-                      Text('Discount'),
-                      Text(' ${data.discount} %'),
-                    ],
-                  ),
-                ),
-                Chip(
-                  label: Row(
-                    children: [
-                      Text('Duration'),
-                      Text(' ${data.duration} Days'),
-                    ],
-                  ),
-                ),
-              ],
+            Text(data.name),
+            Text(
+              data.description ?? 'Not Available',
+              style: descriptionStyle,
             ),
             const SizedBox(
               height: 20.0,
             ),
             PotbellyButton('Subscribe', onTap: () async {
-              var price = int.tryParse(data.price) -
-                  (int.tryParse(data.price) *
-                      (int.tryParse(data.discount)) /
-                      100);
               var userId = await Service().getUserId();
-            
-             
+
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (_) => SubscriptionWebview(
-                            planId: data.id.toString(),
+                            planId: data.id,
                             userId: userId,
                           )));
               //   paynow(price.toStringAsFixed(0).toString());

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potbelly/models/free_meal_model.dart';
 import 'package:potbelly/models/specific_user_subscription_model.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/cartservice.dart';
@@ -23,11 +24,14 @@ class _CartScreenState extends State<CartScreen> {
   int shipping = 3;
   int totalitems = 0;
   SpecificUserSubscriptionModel _specificUserSubscriptionModel;
+  FreemealModel _freemealModel;
 
   void getSpecificUserSubscription() async {
     _specificUserSubscriptionModel =
         await Service().getSpecificUserSubscriptionData();
+    _freemealModel = await Service().checkFreeMeal();
     print(_specificUserSubscriptionModel.data.length);
+    loader = false;
     setState(() {});
   }
 
@@ -65,12 +69,11 @@ class _CartScreenState extends State<CartScreen> {
       mixmatch = true;
     }
 
-    loader = false;
     if (cartlist.length != 0) {
       calculate();
     }
     print(cartlist);
-    setState(() {});
+    //setState(() {});
   }
 
   calculate() {
@@ -85,9 +88,8 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   void initState() {
-    getSpecificUserSubscription();
     getcartlist();
-
+    getSpecificUserSubscription();
     super.initState();
   }
 
@@ -506,25 +508,14 @@ class _CartScreenState extends State<CartScreen> {
                           width: double.infinity,
                           padding: EdgeInsets.all(20.0),
                           color: AppColors.secondaryElement,
-                          child: _specificUserSubscriptionModel
-                                      .data[0].subscriptionStatus ==
-                                  'active'
-                              ? Column(
-                                  children: [
-                                    Text(
-                                      'Subscribed User',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    const SizedBox(
-                                      height: 5.0,
-                                    ),
-                                    Text(
-                                      'You have 1 free meal option',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ],
-                                )
-                              : const SizedBox()),
+                          child: Column(
+                            children: [
+                              Text(
+                                _freemealModel.message,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          )),
                       Container(
                         height: 50,
                         color: Colors.white,

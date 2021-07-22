@@ -49,6 +49,7 @@ class Data {
     this.createdAt,
     this.updatedAt,
     this.deviceId,
+    this.stripeCusId,
   });
 
   int id;
@@ -66,6 +67,7 @@ class Data {
   DateTime createdAt;
   DateTime updatedAt;
   dynamic deviceId;
+  String stripeCusId;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         id: json["id"],
@@ -82,6 +84,7 @@ class Data {
         custUid: json["cust_uid"],
         createdAt: DateTime.parse(json["created_at"]),
         // updatedAt: DateTime.parse(json["updated_at"]),
+        stripeCusId: json['stripe_cus_id'],
         deviceId: json["device_id"],
       );
 
@@ -101,5 +104,6 @@ class Data {
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
         "device_id": deviceId,
+        'stripe_cus_id': stripeCusId,
       };
 }
