@@ -11,6 +11,7 @@ import 'package:potbelly/screens/New_splash_Screen.dart';
 import 'package:potbelly/screens/google_map.dart';
 import 'package:potbelly/screens/Promotionalert.dart';
 import 'package:potbelly/screens/checkoutScreen.dart';
+import 'package:potbelly/screens/hotsport_details.dart';
 import 'package:potbelly/screens/live_tracking.dart';
 import 'package:potbelly/screens/login_screen.dart';
 import 'package:potbelly/screens/myorder_details.dart';
@@ -70,6 +71,7 @@ class AppRouter {
   static const vendornotificationsScreen = '/vendornotifications-screen';
   static const trendingRestaurantsScreen = '/trending-restaurants-screen';
   static const restaurantDetailsScreen = '/restaurant-details-screen';
+  static const HotspotsDetailsScreen = '/Hotspot-details-screen';
   static const promotionDetailsScreen = '/promotion-details-screen';
   static const bookmarksScreen = '/bookmarks-screen';
   static const filterScreen = '/filter-screen';
@@ -262,6 +264,15 @@ class AppRouter {
         final typedArgs = args as RestaurantDetails;
         return CupertinoPageRoute<dynamic>(
           builder: (_) => RestaurantDetailsScreen(restaurantDetails: typedArgs),
+          settings: settings,
+        );
+      case AppRouter.HotspotsDetailsScreen:
+        // if (hasInvalidArgs<RestaurantDetails>(args, isRequired: true)) {
+        //   return misTypedArgsRoute<RestaurantDetails>(args);
+        // }
+        final typedArgs = args as RestaurantDetails;
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => HotSpotDetailsScreen(restaurantDetails: typedArgs),
           settings: settings,
         );
       case AppRouter.promotionDetailsScreen:
