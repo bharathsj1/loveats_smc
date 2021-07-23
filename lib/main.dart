@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/New_splash_Screen.dart';
-import 'package:potbelly/screens/splash_screen.dart';
 import 'package:potbelly/theme.dart';
-import 'package:potbelly/routes/router.gr.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';

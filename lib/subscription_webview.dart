@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:potbelly/widgets/toaster.dart';
-import 'package:toast/toast.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class SubscriptionWebview extends StatefulWidget {

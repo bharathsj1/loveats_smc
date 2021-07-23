@@ -154,6 +154,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   checkpromo() async {
+    String stripeCusId = await Service().getStripeUserId();
+    if (stripeCusId != null) {
+      return;
+    }
     var show = await Promotion().checkpromo();
     print(show);
     if (show) {

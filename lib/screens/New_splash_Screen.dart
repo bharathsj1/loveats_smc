@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:lottie/lottie.dart';
 import 'package:potbelly/Flip_nav_bar/demo.dart';
@@ -138,8 +136,6 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
   }
 
   _onAlertButtonsPressed(context, detail) {
-    //  StatefulBuilder(
-    //       builder: (BuildContext context, StateSetter setState) {
     return Alert(
       context: context,
       type: AlertType.error,
@@ -154,7 +150,7 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
       buttons: [
         DialogButton(
           child: Text(
-            "Cancle driving",
+            "Cancel driving",
             style: TextStyle(color: Colors.white, fontSize: 16),
           ),
           onPressed: () async {
@@ -176,9 +172,7 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
                         ? BubbleTabBarDemo(
                             type: shared,
                           )
-                        :
-                        //  BackgroundVideo()
-                        GooeyEdgeDemo()),
+                        : GooeyEdgeDemo()),
                 (route) => false);
           },
           color: Colors.grey,

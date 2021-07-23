@@ -8,17 +8,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:path/path.dart';
 import 'package:potbelly/grovey_startScreens/demo.dart';
 import 'package:potbelly/models/UserModel.dart';
+import 'package:potbelly/models/free_meal_model.dart';
 import 'package:potbelly/models/get_all_subscription_model.dart';
 import 'package:potbelly/models/menu_types_model.dart';
 import 'package:potbelly/models/restaurent_menu_model.dart';
 import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/models/specific_user_subscription_model.dart';
 import 'package:potbelly/models/user.dart';
-import 'package:potbelly/routes/router.gr.dart';
-import 'package:potbelly/screens/login_screen.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -214,6 +212,7 @@ class Service {
         message = 'success';
         _user = UserData.fromJson(value.data);
         pref.setInt('USERID', _user.data.id);
+        pref.setString('STRIPE_CUS_ID', _user.data.stripeCusId);
         print('thats the user id is ${_user.data.id}');
         await setKeyData('accessToken', _user.accessToken);
         await setKeyData('name', _user.data.custFirstName);
@@ -265,6 +264,8 @@ class Service {
       else {
         _isAvailable = true;
         UserData _user;
+        var pref = await initializdPrefs();
+
         _user = UserData.fromJson(value.data);
         await setKeyData('accessToken', _user.accessToken);
         await setKeyData('name', _user.data.custFirstName);
@@ -272,6 +273,8 @@ class Service {
         await setKeyData('accounttype', _user.data.custAccountType);
         await setKeyData('photo', _user.data.custProfileImage);
         await setKeyData('userId', _user.data.id.toString());
+        pref.setString('STRIPE_CUS_ID', _user.data.stripeCusId);
+
         await setKeyData('userdata', jsonEncode(value.data['data']));
       }
     }).catchError((onError) {
@@ -475,15 +478,31 @@ class Service {
   }
 
   Future<GetAllSubscriptionModel> getAllSubscription() async {
-    Response response = await dio.request('/get-all-subscription-plans');
-    if (response.data['success'] == true)
-      return GetAllSubscriptionModel.fromJson(response.data);
-    else
+    try {
+      Response response = await dio.request('/get-all-subscription-plans');
+      if (response.data['success'] == true)
+        return GetAllSubscriptionModel.fromJson(response.data);
+      else
+        return null;
+    } catch (error) {
+      print(error.toString());
       return null;
+    }
+  }
+
+  Future<FreemealModel> checkFreeMeal() async {
+    String _userID = await getUserId();
+    Response response = await dio.request('/get-free-meal/$_userID');
+    return FreemealModel.fromJson(response.data);
   }
 
   Future<String> getUserdata() async {
     final shared = await initializdPrefs();
     return shared.getString('userdata');
+  }
+
+  Future<String> getStripeUserId() async {
+    final shared = await initializdPrefs();
+    return shared.getString('STRIPE_CUS_ID');
   }
 }

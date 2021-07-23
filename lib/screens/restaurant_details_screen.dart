@@ -1447,7 +1447,8 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
         'qty': '1',
         'id': element.id,
         'restaurantId': element.restId,
-        'restaurantdata': widget.restaurantDetails.data
+        'restaurantdata': widget.restaurantDetails.data,
+        'foodCategoryName':element.foodCategory,
       });
     });
 

@@ -36,51 +36,101 @@ class _UserSubscriptionListState extends State<UserSubscriptionList> {
                 )
               : Column(
                   children: [
-                    const SizedBox(
-                      height: 50.0,
-                    ),
                     Expanded(
                       child: ListView.builder(
-                        reverse: true,
                         itemCount: _specificUserSubscriptionModel.data.length,
                         itemBuilder: (context, index) {
                           var data = _specificUserSubscriptionModel.data[index];
                           return Column(
                             children: [
-                              ListTile(
-                                tileColor: AppColors.white,
-                                title: Text(data.subscriptionPlan.planDetails),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
+                              Container(
+                                margin: EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(width: 2.0),
+                                  color: AppColors.secondaryColor,
+                                ),
+                                padding: EdgeInsets.all(20.0),
+                                child: Column(
                                   children: [
-                                    Text(
-                                      'Expired at : ' +
-                                          DateFormat('dd-MMM-yyy').format(
-                                            DateTime.parse(data.createdAt).add(
-                                              Duration(days: 30),
-                                            ),
-                                          ),
+                                    Row(
+                                      children: [
+                                        Text('Interval'),
+                                        Spacer(),
+                                        Text(data.plan.interval.toUpperCase()),
+                                      ],
                                     ),
-                                    Chip(
-                                      backgroundColor: AppColors.secondaryColor,
-                                      label: Text(
-                                        data.subscriptionStatus,
-                                      ),
-                                    )
+                                    const Divider(),
+                                    Row(
+                                      children: [
+                                        Text('Subcription Id'),
+                                        Spacer(),
+                                        Text(data.id),
+                                      ],
+                                    ),
+                                    const Divider(),
+                                    Row(
+                                      children: [
+                                        Text('Start Date'),
+                                        Spacer(),
+                                        Text(
+                                          DateFormat('dd-MMM-yyy').format(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                data.currentPeriodStart * 1000),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const Divider(),
+                                    Row(
+                                      children: [
+                                        Text('End Date'),
+                                        Spacer(),
+                                        Text(
+                                          DateFormat('dd-MMM-yyy').format(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                data.currentPeriodEnd * 1000),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const Divider(),
+                                    Row(
+                                      children: [
+                                        Text('Amount '),
+                                        Spacer(),
+                                        Text((double.tryParse(data
+                                                        .items
+                                                        .data[0]
+                                                        .price
+                                                        .unitAmountDecimal) /
+                                                    100)
+                                                .toString() +
+                                            ' ' +
+                                            data.items.data[0].price.currency
+                                                .toUpperCase()),
+                                      ],
+                                    ),
+                                    const Divider(),
+                                    Row(
+                                      children: [
+                                        Text('Type'),
+                                        Spacer(),
+                                        Text(data.items.data[0].price.type
+                                            .toUpperCase()),
+                                      ],
+                                    ),
+                                    const Divider(),
+                                    Row(
+                                      children: [
+                                        Text('Status'),
+                                        Spacer(),
+                                        Text(data.status)
+                                      ],
+                                    ),
+                                    const Divider(),
                                   ],
                                 ),
-                                trailing: data.subscriptionStatus == 'active'
-                                    ? IconButton(
-                                        icon: Icon(
-                                          Icons.cancel,
-                                          color: Colors.red,
-                                        ),
-                                        onPressed: () => print('hello'),
-                                      )
-                                    : const SizedBox(),
-                              ),
-                              Divider(),
+                              )
                             ],
                           );
                         },
@@ -92,6 +142,7 @@ class _UserSubscriptionListState extends State<UserSubscriptionList> {
   }
 
   void getCurrentUserSubscription() async {
+    print(await Service().getStripeUserId());
     _specificUserSubscriptionModel =
         await Service().getSpecificUserSubscriptionData();
     _isLoading = false;
