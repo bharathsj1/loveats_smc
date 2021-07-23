@@ -7,6 +7,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:potbelly/screens/NewSearch_screen.dart';
 import 'package:potbelly/screens/New_splash_Screen.dart';
 import 'package:potbelly/screens/google_map.dart';
 import 'package:potbelly/screens/Promotionalert.dart';
@@ -76,6 +77,7 @@ class AppRouter {
   static const bookmarksScreen = '/bookmarks-screen';
   static const filterScreen = '/filter-screen';
   static const searchResultsScreen = '/search-results-screen';
+  static const newsearch = '/newsearch';
   static const reviewRatingScreen = '/review-rating-screen';
   static const addRatingsScreen = '/add-ratings-screen';
   static const menuPhotosScreen = '/menu-photos-screen';
@@ -325,6 +327,11 @@ class AppRouter {
       case AppRouter.reviewRatingScreen:
         return CupertinoPageRoute<dynamic>(
           builder: (_) => ReviewRatingScreen(),
+          settings: settings,
+        );
+      case AppRouter.newsearch:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => NewSearchScreen(),
           settings: settings,
         );
       case AppRouter.addRatingsScreen:

@@ -337,6 +337,7 @@ class Service {
     Response response = await dio.request(
       '/get-menus/$restId',
     );
+    print(response);
     return RestaurentMenuModel.fromJson(response.data);
   }
 

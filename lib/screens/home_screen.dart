@@ -1,23 +1,18 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potbelly/3D_card_widets/demo_data.dart';
 import 'package:potbelly/3D_card_widets/travel_card_list.dart';
-import 'package:potbelly/models/menu_types_model.dart';
 import 'package:potbelly/models/promotions.dart';
 import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/DatabaseManager.dart';
+import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
-import 'package:potbelly/values/data.dart';
-import 'package:potbelly/widgets/category_card.dart';
-import 'package:potbelly/widgets/foody_bite_card.dart';
 import 'package:potbelly/widgets/heading_row.dart';
 import 'package:potbelly/widgets/search_input_field.dart';
 import 'package:skeleton_text/skeleton_text.dart';
@@ -38,10 +33,12 @@ class _HomeScreenState extends State<HomeScreen> {
   VideoPlayerController _controller;
   int active_video = 0;
   bool loader = true;
+  bool loader3 = true;
   bool loader2 = true;
   int totalRestaurent = 0;
   List resturants = [];
   List categories = [];
+  List hotspotlist = [];
   List<City> _cityList;
   City _currentCity;
   bool search = true;
@@ -69,88 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _register();
     getRestaurent();
     getcateory();
+    gethotspot();
     super.initState();
-  }
-
-  bottomSheetForLocation(BuildContext context) {
-    return showModalBottomSheet(
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        builder: (context) {
-          return Container(
-            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(10.0),
-                  topRight: const Radius.circular(10.0),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Search Location',
-                    style: Styles.customNormalTextStyle(color: Colors.black),
-                  ),
-                  Divider(),
-                  TextField(
-                    decoration: InputDecoration(
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child: Image.asset(
-                            ImagePath.searchIcon,
-                          ),
-                        ),
-                        hintText: 'Search for your location',
-                        hintStyle: TextStyle(
-                          color: Colors.black26,
-                          fontSize: 16,
-                        ),
-                        border: InputBorder.none),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  InkWell(
-                    onTap: () =>
-                        Navigator.pushNamed(context, AppRouter.googleMap),
-                    child: Row(
-                      children: [
-                        Icon(Icons.location_searching, size: 12.0),
-                        SizedBox(
-                          width: 5.0,
-                        ),
-                        Text('Use current location',
-                            style: Styles.customNormalTextStyle(
-                                color: Colors.indigo)),
-                      ],
-                    ),
-                  ),
-                  Divider(),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  Text(
-                    'Saved Addresses',
-                    style: Styles.customNormalTextStyle(color: Colors.black),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.home),
-                    title: Text('Home'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    subtitle: Text('Habib Street, Banigala'),
-                  ),
-                  Divider(),
-                ],
-              ),
-            ),
-          );
-        });
   }
 
   checkpromo() async {
@@ -191,13 +108,15 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
+  gethotspot() async {
+    var response = await AppService().getallhotspot();
+    hotspotlist = response['data'];
+    print(hotspotlist);
+    loader3 = false;
+    setState(() {});
+  }
+
   searchfromlist() {
-    print(searchlist[0].delivery);
-    print(searchlist[0].pickup);
-    print(searchlist[0].tableService);
-    resturants = searchlist.where((product) => product.restName
-        .toLowerCase()
-        .contains(searchcontroller.text.toLowerCase()));
     // print(searchlist[0].delivery);
     // print(searchlist[0].pickup);
     // print(searchlist[0].tableService);
@@ -222,37 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
       for (var item in value) {
         promolist.add(item);
       }
-      // getpromos() async {
-      //   await DatabaseManager().getpromotions().then((value) {
-      //     for (var item in value) {
-      //       promolist.add(item);
-      //     }
-
-      //     if (promolist.length != 0 &&
-      //         (promolist[0]['videoUrl'] != '' ||
-      //             promolist[0]['videoUrl'] != null)) {
-      //       print('here');
-      //       // controllerdispo();
-      //       initialize(promolist[0]['videoUrl']);
-      //     }
-      //     this.loader = false;
-      //     setState(() {});
-      //   });
-      // }
     });
-  }
-
-  initialize(videourl) {
-    print(videourl);
-    if (_controller != null) {
-      _controller.dispose();
-    }
-    _controller = VideoPlayerController.asset(videourl)
-      ..initialize().then((_) {
-        _controller.play();
-        _controller.setLooping(true);
-        setState(() {});
-      });
   }
 
   getlocalpromos() async {
@@ -270,6 +159,19 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     this.loader = false;
     setState(() {});
+  }
+
+  initialize(videourl) {
+    print(videourl);
+    if (_controller != null) {
+      _controller.dispose();
+    }
+    _controller = VideoPlayerController.asset(videourl)
+      ..initialize().then((_) {
+        _controller.play();
+        _controller.setLooping(true);
+        setState(() {});
+      });
   }
 
   @override
@@ -429,7 +331,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ));
   }
 
-  List catlist = ['All', 'Korean', 'Indian'];
   List<Widget> createUserProfilePhotos({@required numberOfProfilePhotos}) {
     List<Widget> profilePhotos = [];
     List<String> imagePaths = [
@@ -478,24 +379,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
   hotspot() {
     return List.generate(
-        hotlist.length,
+        hotspotlist.length,
         (i) => InkWell(
               onTap: () {
                 Navigator.pushNamed(
                   context,
                   AppRouter.HotspotsDetailsScreen,
                   arguments: RestaurantDetails(
-                      imagePath: hotlist[i]['image'],
-                      restaurantName: hotlist[i]['name'],
-                      restaurantAddress: hotlist[i]['address'],
-                      rating: hotlist[i]['rating'],
+                      imagePath: hotspotlist[i]['image'],
+                      restaurantName: hotspotlist[i]['name'],
+                      restaurantAddress: hotspotlist[i]['address'],
+                      // rating: hotspotlist[i]['rating'],
+                      rating: '3.2',
                       category: '',
-                      distance: hotlist[i]['distance'],
-                      data: hotlist[i]),
+                      distance: hotspotlist[i]['distance'] + ' Km',
+                      data: hotspotlist[i]),
                 );
               },
               child: Container(
-                height: 240,
+                height: 250,
                 width: MediaQuery.of(context).size.width / 1.2,
                 child: Card(
                   elevation: 1,
@@ -511,9 +413,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(6),
                                 topRight: Radius.circular(6)),
-                            child: hotlist[i]['image'].substring(0, 4) == 'http'
+                            child: hotspotlist[i]['image'].substring(0, 4) ==
+                                    'http'
                                 ? Image.network(
-                                    hotlist[i]['image'],
+                                    hotspotlist[i]['image'],
                                     loadingBuilder: (BuildContext ctx,
                                         Widget child,
                                         ImageChunkEvent loadingProgress) {
@@ -538,7 +441,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fit: BoxFit.cover,
                                   )
                                 : Image.asset(
-                                    hotlist[i]['image'],
+                                    hotspotlist[i]['image'],
                                     width: MediaQuery.of(context).size.width,
                                     height: 150,
                                     fit: BoxFit.cover,
@@ -572,7 +475,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(hotlist[i]['name'] + '- Rose, Farrington',
+                            Text(hotspotlist[i]['name'] + '- Rose, Farrington',
                                 textAlign: TextAlign.left,
                                 style: GoogleFonts.dmSerifDisplay(
                                   textStyle: Styles.customTitleTextStyle(
@@ -594,8 +497,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Container(
                                     // width: MediaQuery.of(context).size.width*0.5,
                                     // color: Colors.red,
-                                    child: Text(
-                                        hotlist[i]['rating'] + ' Very good',
+                                    child: Text('4.4' + ' Very good',
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.openSans(
                                           textStyle:
@@ -665,11 +567,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ));
   }
 
-  // List catlist = [
-  //   'All',
-  //   'Korean',
-  //   'Indian',
-  // ];
+  List catlist = [
+    'All',
+    'Korean',
+    'Indian',
+  ];
   int selectedcat = 0;
 
   newcategorieslist() {
@@ -828,27 +730,49 @@ class _HomeScreenState extends State<HomeScreen> {
 
   filterswidget(id, name, iconsize, icon, border, width, active) {
     return Padding(
-        padding: const EdgeInsets.only(bottom: 5.0),
-        child: Container(
-            decoration: deliverytype == id
-                ? BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.secondaryElement.withOpacity(0.4),
-                        spreadRadius: 0,
-                        blurRadius: 4,
-                        // offset: Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
-                  )
-                : null,
-            child: InkWell(
-              onTap: () {
-                deliverytype = id;
+      padding: const EdgeInsets.only(bottom: 5.0),
+      child: Container(
+        decoration: deliverytype == id
+            ? BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.secondaryElement.withOpacity(0.4),
+                    spreadRadius: 0,
+                    blurRadius: 4,
+                    // offset: Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+              )
+            : null,
+        child: Material(
+          elevation: active ? 1 : 0,
+          shape: active
+              ? RoundedRectangleBorder(
+                  side: BorderSide(width: 0.5, color: border),
+                  borderRadius: BorderRadius.circular(6),
+                )
+              : null,
+          child: InkWell(
+            onTap: () {
+              if (deliverytype == id) {
+                deliverytype = null;
+                resturants = searchlist;
                 setState(() {});
-              },
-              child: Container(
+              } else {
+                deliverytype = id;
+                print(resturants);
+                resturants = searchlist
+                    .where((pro) => deliverytype == 0
+                        ? pro.delivery == 1
+                        : deliverytype == 1
+                            ? pro.pickup == 1
+                            : pro.tableService == 1)
+                    .toList();
+                setState(() {});
+              }
+            },
+            child: Container(
                 width: width,
                 height: 30,
                 decoration: active
@@ -857,70 +781,34 @@ class _HomeScreenState extends State<HomeScreen> {
                         border: Border.all(width: 0.5, color: border),
                       )
                     : null,
-                child: Material(
-                  elevation: active ? 1 : 0,
-                  shape: active
-                      ? RoundedRectangleBorder(
-                          side: BorderSide(width: 0.5, color: border),
-                          borderRadius: BorderRadius.circular(6),
-                        )
-                      : null,
-                  child: InkWell(
-                    onTap: () {
-                      if (deliverytype == id) {
-                        deliverytype = null;
-                        resturants = searchlist;
-                        setState(() {});
-                      } else {
-                        deliverytype = id;
-                        print(resturants);
-                        resturants = searchlist
-                            .where((pro) => deliverytype == 0
-                                ? pro.delivery == 1
-                                : deliverytype == 1
-                                    ? pro.pickup == 1
-                                    : pro.tableService == 1)
-                            .toList();
-                        setState(() {});
-                      }
-                    },
-                    child: Container(
-                        width: width,
-                        height: 30,
-                        decoration: active
-                            ? BoxDecoration(
-                                borderRadius: BorderRadius.circular(6),
-                                border: Border.all(width: 0.5, color: border),
-                              )
-                            : null,
-                        child: Center(
-                            child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 5,
-                            ),
-                            // Icon(
-                            //   icon,
-                            //   size: iconsize,
-                            //   color: AppColors.black,
-                            // ),
-                            // SizedBox(
-                            //   width: 5,
-                            // ),
-                            Text(
-                              name,
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          ],
-                        ))),
-                  ),
-                ),
-              ),
-            )));
+                child: Center(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 5,
+                    ),
+                    // Icon(
+                    //   icon,
+                    //   size: iconsize,
+                    //   color: AppColors.black,
+                    // ),
+                    // SizedBox(
+                    //   width: 5,
+                    // ),
+                    Text(
+                      name,
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: AppColors.black,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ))),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -1166,51 +1054,59 @@ class _HomeScreenState extends State<HomeScreen> {
               search
                   ? Row(
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          // width: MediaQuery.of(context).size.width * 0.82,
-                          width: MediaQuery.of(context).size.width,
-                          child: Material(
-                            elevation: 0,
-                            borderRadius: BorderRadius.circular(6),
-                            child: FoodyBiteSearchInputField(
-                                ImagePath.searchIcon,
-                                borderRadius: 6,
-                                controller: searchcontroller,
-                                fillColor: Colors.grey[200],
-                                filled: true,
-                                contentPaddingVertical: 6,
-                                textFormFieldStyle:
-                                    Styles.customNormalTextStyle(
-                                        color: Colors.black54),
-                                hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
-                                hintTextStyle: Styles.customNormalTextStyle(
-                                    color: Colors.black54),
-                                suffixIconImagePath: ImagePath.settingsIcon,
-                                hasSuffixIcon: true,
-                                borderWidth: 0.0, onChanged: (value) {
-                              searchfromlist();
-                            }, onTapOfLeadingIcon: () {
-                              pausevideo();
-                              FocusScope.of(context).unfocus();
-                              Navigator.pushNamed(
-                                context,
-                                AppRouter.searchResultsScreen,
-                                arguments: SearchValue(
-                                  searchcontroller.text,
-                                ),
-                              ).then((value) {
-                                this.searchcontroller.text = '';
+                        InkWell(
+                          onTap: () {
+                            print('here');
+                            Navigator.pushNamed(context, AppRouter.newsearch);
+                          },
+                          child: Container(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            // width: MediaQuery.of(context).size.width * 0.82,
+                            width: MediaQuery.of(context).size.width,
+                            child: Material(
+                              elevation: 0,
+                              borderRadius: BorderRadius.circular(6),
+                              child: FoodyBiteSearchInputField(
+                                  ImagePath.searchIcon,
+                                  borderRadius: 6,
+                                  controller: searchcontroller,
+                                  fillColor: Colors.grey[200],
+                                  filled: true,
+                                  contentPaddingVertical: 6,
+                                  textFormFieldStyle:
+                                      Styles.customNormalTextStyle(
+                                          color: Colors.black54),
+                                  hintText:
+                                      StringConst.HINT_TEXT_HOME_SEARCH_BAR,
+                                  hintTextStyle: Styles.customNormalTextStyle(
+                                      color: Colors.black54),
+                                  suffixIconImagePath: ImagePath.settingsIcon,
+                                  hasSuffixIcon: true,
+                                  borderWidth: 0.0, onChanged: (value) {
+                                searchfromlist();
+                              }, onTapOfLeadingIcon: () {
+                                pausevideo();
                                 FocusScope.of(context).unfocus();
-                                setState(() {});
-                                resumevideo();
-                              });
-                            }, onTapOfSuffixIcon: () {
-                              pausevideo();
-                              Navigator.pushNamed(
-                                      context, AppRouter.filterScreen)
-                                  .then((value) => resumevideo());
-                            }, borderStyle: BorderStyle.solid),
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRouter.searchResultsScreen,
+                                  arguments: SearchValue(
+                                    searchcontroller.text,
+                                  ),
+                                ).then((value) {
+                                  this.searchcontroller.text = '';
+                                  FocusScope.of(context).unfocus();
+                                  setState(() {});
+                                  resumevideo();
+                                });
+                              }, onTapOfSuffixIcon: () {
+                                pausevideo();
+                                Navigator.pushNamed(
+                                        context, AppRouter.filterScreen)
+                                    .then((value) => resumevideo());
+                              }, borderStyle: BorderStyle.solid),
+                            ),
                           ),
                         ),
                         // Spacer(),
@@ -1327,7 +1223,7 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: 0,
               ),
-
+//
               loader
                   ? Container(
                       height: 280,
@@ -1374,44 +1270,64 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: 5.0),
                       ],
                     ),
-
-              // SizedBox(height: 0.0),
 //
               SizedBox(height: 0.0),
-              Column(
-                // mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 5.0),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Text(
-                        'Hot Spot'.toUpperCase(),
-                        textAlign: TextAlign.left,
-                        style: Styles.customTitleTextStyle2(
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold,
-                          fontSize: Sizes.TEXT_SIZE_16,
-                        ),
-                      )),
-                  SizedBox(height: 5.0),
+              loader3
+                  ? Container(
+                      height: 280,
+                      child: CarouselSlider(
+                          options: CarouselOptions(
+                              enableInfiniteScroll: true, height: 260),
+                          items: List.generate(
+                            1,
+                            (ind) => SkeletonAnimation(
+                              shimmerColor: Colors.grey[350],
+                              shimmerDuration: 1100,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 4),
+                              ),
+                            ),
+                          )),
+                    )
+                  : Column(
+                      // mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 5.0),
+                        Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: Text(
+                              'Hot Spot'.toUpperCase(),
+                              textAlign: TextAlign.left,
+                              style: Styles.customTitleTextStyle2(
+                                color: Colors.black87,
+                                fontWeight: FontWeight.bold,
+                                fontSize: Sizes.TEXT_SIZE_16,
+                              ),
+                            )),
+                        SizedBox(height: 5.0),
 
-                  // TravelCardList(
-                  //   cities: resturants,
-                  //   onCityChange: _handleCityChange,
-                  // ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Row(
-                        children: hotspot(),
-                      ),
+                        // TravelCardList(
+                        //   cities: resturants,
+                        //   onCityChange: _handleCityChange,
+                        // ),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Row(
+                              children: hotspot(),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 5.0),
+                      ],
                     ),
-                  ),
-                  SizedBox(height: 5.0),
-                ],
-              ),
               // HeadingRow(
               //     title: StringConst.TRENDING_RESTAURANTS,
               //     number: 'See all (' + resturants.length.toString() + ')',
@@ -1875,5 +1791,86 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  bottomSheetForLocation(BuildContext context) {
+    return showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        builder: (context) {
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(10.0),
+                  topRight: const Radius.circular(10.0),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Search Location',
+                    style: Styles.customNormalTextStyle(color: Colors.black),
+                  ),
+                  Divider(),
+                  TextField(
+                    decoration: InputDecoration(
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: Image.asset(
+                            ImagePath.searchIcon,
+                          ),
+                        ),
+                        hintText: 'Search for your location',
+                        hintStyle: TextStyle(
+                          color: Colors.black26,
+                          fontSize: 16,
+                        ),
+                        border: InputBorder.none),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  InkWell(
+                    onTap: () =>
+                        Navigator.pushNamed(context, AppRouter.googleMap),
+                    child: Row(
+                      children: [
+                        Icon(Icons.location_searching, size: 12.0),
+                        SizedBox(
+                          width: 5.0,
+                        ),
+                        Text('Use current location',
+                            style: Styles.customNormalTextStyle(
+                                color: Colors.indigo)),
+                      ],
+                    ),
+                  ),
+                  Divider(),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Text(
+                    'Saved Addresses',
+                    style: Styles.customNormalTextStyle(color: Colors.black),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.home),
+                    title: Text('Home'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    subtitle: Text('Habib Street, Banigala'),
+                  ),
+                  Divider(),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }

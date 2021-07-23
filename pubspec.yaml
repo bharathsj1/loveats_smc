@@ -19,7 +19,7 @@ dependencies:
   auth_buttons: 1.0.1+4
   auto_route: ^2.2.0
   carousel_slider: ^4.0.0
-  cloud_firestore: 1.0.4
+  cloud_firestore: 
   cupertino_icons: ^1.0.0
   device_info: ^2.0.2
   dio: null
@@ -91,6 +91,7 @@ flutter:
   assets:
     - assets/
     - assets/grovey/
+    - assets/swipe/
     - assets/images/
     - assets/launcher/
     - assets/loveats.mp4

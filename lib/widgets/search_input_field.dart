@@ -60,6 +60,7 @@ class FoodyBiteSearchInputField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         style: textFormFieldStyle,
+        enabled: false,
         decoration: InputDecoration(
           
           enabledBorder: OutlineInputBorder(
