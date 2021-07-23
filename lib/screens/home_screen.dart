@@ -10,6 +10,7 @@ import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/DatabaseManager.dart';
+import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/heading_row.dart';
@@ -32,10 +33,12 @@ class _HomeScreenState extends State<HomeScreen> {
   VideoPlayerController _controller;
   int active_video = 0;
   bool loader = true;
+  bool loader3 = true;
   bool loader2 = true;
   int totalRestaurent = 0;
   List resturants = [];
   List categories = [];
+  List hotspotlist = [];
   List<City> _cityList;
   City _currentCity;
   bool search = true;
@@ -63,88 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _register();
     getRestaurent();
     getcateory();
+    gethotspot();
     super.initState();
-  }
-
-  bottomSheetForLocation(BuildContext context) {
-    return showModalBottomSheet(
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        builder: (context) {
-          return Container(
-            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(10.0),
-                  topRight: const Radius.circular(10.0),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Search Location',
-                    style: Styles.customNormalTextStyle(color: Colors.black),
-                  ),
-                  Divider(),
-                  TextField(
-                    decoration: InputDecoration(
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child: Image.asset(
-                            ImagePath.searchIcon,
-                          ),
-                        ),
-                        hintText: 'Search for your location',
-                        hintStyle: TextStyle(
-                          color: Colors.black26,
-                          fontSize: 16,
-                        ),
-                        border: InputBorder.none),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  InkWell(
-                    onTap: () =>
-                        Navigator.pushNamed(context, AppRouter.googleMap),
-                    child: Row(
-                      children: [
-                        Icon(Icons.location_searching, size: 12.0),
-                        SizedBox(
-                          width: 5.0,
-                        ),
-                        Text('Use current location',
-                            style: Styles.customNormalTextStyle(
-                                color: Colors.indigo)),
-                      ],
-                    ),
-                  ),
-                  Divider(),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  Text(
-                    'Saved Addresses',
-                    style: Styles.customNormalTextStyle(color: Colors.black),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.home),
-                    title: Text('Home'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    subtitle: Text('Habib Street, Banigala'),
-                  ),
-                  Divider(),
-                ],
-              ),
-            ),
-          );
-        });
   }
 
   checkpromo() async {
@@ -185,15 +108,15 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
+  gethotspot() async {
+    var response = await AppService().getallhotspot();
+    hotspotlist = response['data'];
+    print(hotspotlist);
+    loader3 = false;
+    setState(() {});
+  }
+
   searchfromlist() {
-    print(searchlist[0].delivery);
-    print(searchlist[0].pickup);
-    print(searchlist[0].tableService);
-    resturants = searchlist.where(
-      (product) => product.restName.toLowerCase().contains(
-            searchcontroller.text.toLowerCase(),
-          ),
-    );
     // print(searchlist[0].delivery);
     // print(searchlist[0].pickup);
     // print(searchlist[0].tableService);
@@ -221,19 +144,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  initialize(videourl) {
-    print(videourl);
-    if (_controller != null) {
-      _controller.dispose();
-    }
-    _controller = VideoPlayerController.asset(videourl)
-      ..initialize().then((_) {
-        _controller.play();
-        _controller.setLooping(true);
-        setState(() {});
-      });
-  }
-
   getlocalpromos() async {
     promolist = Promotion().promotiondata;
     //  for (var item in Promotion().promotiondata) {
@@ -249,6 +159,19 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     this.loader = false;
     setState(() {});
+  }
+
+  initialize(videourl) {
+    print(videourl);
+    if (_controller != null) {
+      _controller.dispose();
+    }
+    _controller = VideoPlayerController.asset(videourl)
+      ..initialize().then((_) {
+        _controller.play();
+        _controller.setLooping(true);
+        setState(() {});
+      });
   }
 
   @override
@@ -408,7 +331,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ));
   }
 
-  List catlist = ['All', 'Korean', 'Indian'];
   List<Widget> createUserProfilePhotos({@required numberOfProfilePhotos}) {
     List<Widget> profilePhotos = [];
     List<String> imagePaths = [
@@ -457,188 +379,199 @@ class _HomeScreenState extends State<HomeScreen> {
 
   hotspot() {
     return List.generate(
-      hotlist.length,
-      (i) => InkWell(
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            AppRouter.HotspotsDetailsScreen,
-            arguments: RestaurantDetails(
-                imagePath: hotlist[i]['image'],
-                restaurantName: hotlist[i]['name'],
-                restaurantAddress: hotlist[i]['address'],
-                rating: hotlist[i]['rating'],
-                category: '',
-                distance: hotlist[i]['distance'],
-                data: hotlist[i]),
-          );
-        },
-        child: Container(
-          height: 240,
-          width: MediaQuery.of(context).size.width / 1.2,
-          child: Card(
-            elevation: 1,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6.0),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(6),
-                          topRight: Radius.circular(6)),
-                      child: hotlist[i]['image'].substring(0, 4) == 'http'
-                          ? Image.network(
-                              hotlist[i]['image'],
-                              loadingBuilder: (BuildContext ctx, Widget child,
-                                  ImageChunkEvent loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                } else {
-                                  return Container(
-                                    height: 150,
-                                    child: Center(
-                                      child: CircularProgressIndicator(
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                AppColors.secondaryElement),
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                              width: MediaQuery.of(context).size.width,
-                              height: 150,
-                              fit: BoxFit.cover,
-                            )
-                          : Image.asset(
-                              hotlist[i]['image'],
-                              width: MediaQuery.of(context).size.width,
-                              height: 150,
-                              fit: BoxFit.cover,
-                            ),
-                    ),
-                    Positioned(
-                        right: 5,
-                        bottom: 5,
-                        child: Container(
-                          width: 90,
-                          padding: EdgeInsets.symmetric(vertical: 2),
-                          decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.7),
-                              borderRadius: BorderRadius.circular(100)),
-                          child: Text('15 - 20\nMins',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.openSans(
-                                textStyle: Styles.customNormalTextStyle(
-                                  color: AppColors.white,
-                                  fontSize: Sizes.TEXT_SIZE_12,
-                                ),
-                              )),
-                        ))
-                  ],
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5.0),
+        hotspotlist.length,
+        (i) => InkWell(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  AppRouter.HotspotsDetailsScreen,
+                  arguments: RestaurantDetails(
+                      imagePath: hotspotlist[i]['image'],
+                      restaurantName: hotspotlist[i]['name'],
+                      restaurantAddress: hotspotlist[i]['address'],
+                      // rating: hotspotlist[i]['rating'],
+                      rating: '3.2',
+                      category: '',
+                      distance: hotspotlist[i]['distance']+ ' Km',
+                      data: hotspotlist[i]),
+                );
+              },
+              child: Container(
+                height: 250,
+                width: MediaQuery.of(context).size.width / 1.2,
+                child: Card(
+                  elevation: 1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6.0),
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(hotlist[i]['name'] + '- Rose, Farrington',
-                          textAlign: TextAlign.left,
-                          style: GoogleFonts.dmSerifDisplay(
-                            textStyle: Styles.customTitleTextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.normal,
-                              fontSize: Sizes.TEXT_SIZE_22,
-                            ),
-                          )),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Icon(
-                            Icons.star,
-                            color: AppColors.secondaryElement,
-                            size: 16,
+                      Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(6),
+                                topRight: Radius.circular(6)),
+                            child: hotspotlist[i]['image'].substring(0, 4) == 'http'
+                                ? Image.network(
+                                    hotspotlist[i]['image'],
+                                    loadingBuilder: (BuildContext ctx,
+                                        Widget child,
+                                        ImageChunkEvent loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return Container(
+                                          height: 150,
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      AppColors
+                                                          .secondaryElement),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 150,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.asset(
+                                    hotspotlist[i]['image'],
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 150,
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Container(
-                              // width: MediaQuery.of(context).size.width*0.5,
-                              // color: Colors.red,
-                              child: Text(hotlist[i]['rating'] + ' Very good',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.openSans(
-                                    textStyle: Styles.customNormalTextStyle(
-                                      color: AppColors.secondaryElement,
-                                      fontSize: Sizes.TEXT_SIZE_14,
-                                    ),
-                                  )),
-                            ),
-                          ),
+                          Positioned(
+                              right: 5,
+                              bottom: 5,
+                              child: Container(
+                                width: 90,
+                                padding: EdgeInsets.symmetric(vertical: 2),
+                                decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.7),
+                                    borderRadius: BorderRadius.circular(100)),
+                                child: Text('15 - 20\nMins',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.openSans(
+                                      textStyle: Styles.customNormalTextStyle(
+                                        color: AppColors.white,
+                                        fontSize: Sizes.TEXT_SIZE_12,
+                                      ),
+                                    )),
+                              ))
                         ],
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Container(
-                              // width: MediaQuery.of(context).size.width*0.5,
-                              // color: Colors.red,
-                              child: Text(hotlist[i]['address'] + ' (500+)',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.openSans(
-                                    textStyle: Styles.customNormalTextStyle(
-                                      color: Colors.black54,
-                                      fontSize: Sizes.TEXT_SIZE_14,
-                                    ),
-                                  )),
-                            ),
-                          ),
-                        ],
+                      SizedBox(
+                        height: 5,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Container(
-                              // width: MediaQuery.of(context).size.width*0.5,
-                              // color: Colors.red,
-                              child: Text(
-                                hotlist[i]['distance'] +
-                                    ' - \$' +
-                                    hotlist[i]['delivery'] +
-                                    ' Delivery',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.openSans(
-                                  textStyle: Styles.customNormalTextStyle(
-                                    color: Colors.black54,
-                                    fontSize: Sizes.TEXT_SIZE_14,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(hotspotlist[i]['name'] + '- Rose, Farrington',
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.dmSerifDisplay(
+                                  textStyle: Styles.customTitleTextStyle(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: Sizes.TEXT_SIZE_22,
+                                  ),
+                                )),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.star,
+                                  color: AppColors.secondaryElement,
+                                  size: 16,
+                                ),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    // width: MediaQuery.of(context).size.width*0.5,
+                                    // color: Colors.red,
+                                    child: Text(
+                                        '4.4' + ' Very good',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.openSans(
+                                          textStyle:
+                                              Styles.customNormalTextStyle(
+                                            color: AppColors.secondaryElement,
+                                            fontSize: Sizes.TEXT_SIZE_14,
+                                          ),
+                                        )),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ),
-                        ],
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    // width: MediaQuery.of(context).size.width*0.5,
+                                    // color: Colors.red,
+                                    child:
+                                        Text(hotlist[i]['address'] + ' (500+)',
+                                            textAlign: TextAlign.center,
+                                            style: GoogleFonts.openSans(
+                                              textStyle:
+                                                  Styles.customNormalTextStyle(
+                                                color: Colors.black54,
+                                                fontSize: Sizes.TEXT_SIZE_14,
+                                              ),
+                                            )),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    // width: MediaQuery.of(context).size.width*0.5,
+                                    // color: Colors.red,
+                                    child: Text(
+                                        hotlist[i]['distance'] +
+                                            ' - \$' +
+                                            hotlist[i]['delivery'] +
+                                            ' Delivery',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.openSans(
+                                          textStyle:
+                                              Styles.customNormalTextStyle(
+                                            color: Colors.black54,
+                                            fontSize: Sizes.TEXT_SIZE_14,
+                                          ),
+                                        )),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+              ),
+            ));
   }
 
+  List catlist = [
+    'All',
+    'Korean',
+    'Indian',
+  ];
   int selectedcat = 0;
 
   newcategorieslist() {
@@ -797,90 +730,85 @@ class _HomeScreenState extends State<HomeScreen> {
 
   filterswidget(id, name, iconsize, icon, border, width, active) {
     return Padding(
-        padding: const EdgeInsets.only(bottom: 5.0),
-        child: Container(
-            decoration: deliverytype == id
-                ? BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.secondaryElement.withOpacity(0.4),
-                        spreadRadius: 0,
-                        blurRadius: 4,
-                        // offset: Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
-                  )
-                : null,
-            child: InkWell(
-              onTap: () {
-                deliverytype = id;
+      padding: const EdgeInsets.only(bottom: 5.0),
+      child: Container(
+        decoration: deliverytype == id
+            ? BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.secondaryElement.withOpacity(0.4),
+                    spreadRadius: 0,
+                    blurRadius: 4,
+                    // offset: Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+              )
+            : null,
+        child: Material(
+          elevation: active ? 1 : 0,
+          shape: active
+              ? RoundedRectangleBorder(
+                  side: BorderSide(width: 0.5, color: border),
+                  borderRadius: BorderRadius.circular(6),
+                )
+              : null,
+          child: InkWell(
+            onTap: () {
+              if (deliverytype == id) {
+                deliverytype = null;
+                resturants = searchlist;
                 setState(() {});
-              },
-              child: Container(
+              } else {
+                deliverytype = id;
+                print(resturants);
+                resturants = searchlist
+                    .where((pro) => deliverytype == 0
+                        ? pro.delivery == 1
+                        : deliverytype == 1
+                            ? pro.pickup == 1
+                            : pro.tableService == 1)
+                    .toList();
+                setState(() {});
+              }
+            },
+            child: Container(
                 width: width,
                 height: 30,
                 decoration: active
                     ? BoxDecoration(
                         borderRadius: BorderRadius.circular(6),
-                        border: Border.all(width: 0.5, color: border))
+                        border: Border.all(width: 0.5, color: border),
+                      )
                     : null,
-                child: Material(
-                  elevation: active ? 1 : 0,
-                  shape: active
-                      ? RoundedRectangleBorder(
-                          side: BorderSide(width: 0.5, color: border),
-                          borderRadius: BorderRadius.circular(6),
-                        )
-                      : null,
-                  child: InkWell(
-                    onTap: () {
-                      if (deliverytype == id) {
-                        deliverytype = null;
-                        resturants = searchlist;
-                        setState(() {});
-                      } else {
-                        deliverytype = id;
-                        print(resturants);
-                        resturants = searchlist
-                            .where((pro) => deliverytype == 0
-                                ? pro.delivery == 1
-                                : deliverytype == 1
-                                    ? pro.pickup == 1
-                                    : pro.tableService == 1)
-                            .toList();
-                        setState(() {});
-                      }
-                    },
-                    child: Container(
-                        width: width,
-                        height: 30,
-                        decoration: active
-                            ? BoxDecoration(
-                                borderRadius: BorderRadius.circular(6),
-                                border: Border.all(width: 0.5, color: border),
-                              )
-                            : null,
-                        child: Center(
-                            child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              name,
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          ],
-                        ))),
-                  ),
-                ),
-              ),
-            )));
+                child: Center(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 5,
+                    ),
+                    // Icon(
+                    //   icon,
+                    //   size: iconsize,
+                    //   color: AppColors.black,
+                    // ),
+                    // SizedBox(
+                    //   width: 5,
+                    // ),
+                    Text(
+                      name,
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: AppColors.black,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ))),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -1126,51 +1054,58 @@ class _HomeScreenState extends State<HomeScreen> {
               search
                   ? Row(
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          // width: MediaQuery.of(context).size.width * 0.82,
-                          width: MediaQuery.of(context).size.width,
-                          child: Material(
-                            elevation: 0,
-                            borderRadius: BorderRadius.circular(6),
-                            child: FoodyBiteSearchInputField(
-                                ImagePath.searchIcon,
-                                borderRadius: 6,
-                                controller: searchcontroller,
-                                fillColor: Colors.grey[200],
-                                filled: true,
-                                contentPaddingVertical: 6,
-                                textFormFieldStyle:
-                                    Styles.customNormalTextStyle(
-                                        color: Colors.black54),
-                                hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
-                                hintTextStyle: Styles.customNormalTextStyle(
-                                    color: Colors.black54),
-                                suffixIconImagePath: ImagePath.settingsIcon,
-                                hasSuffixIcon: true,
-                                borderWidth: 0.0, onChanged: (value) {
-                              searchfromlist();
-                            }, onTapOfLeadingIcon: () {
-                              pausevideo();
-                              FocusScope.of(context).unfocus();
-                              Navigator.pushNamed(
-                                context,
-                                AppRouter.searchResultsScreen,
-                                arguments: SearchValue(
-                                  searchcontroller.text,
-                                ),
-                              ).then((value) {
-                                this.searchcontroller.text = '';
+                        InkWell(
+                          onTap: (){
+                            print('here');
+                            Navigator.pushNamed(context, AppRouter.newsearch);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                            // width: MediaQuery.of(context).size.width * 0.82,
+                            width: MediaQuery.of(context).size.width,
+                            child: Material(
+                              elevation: 0,
+                              borderRadius: BorderRadius.circular(6),
+                              child: FoodyBiteSearchInputField(
+                                  ImagePath.searchIcon,
+                                  
+                                  borderRadius: 6,
+                                  controller: searchcontroller,
+                                  fillColor: Colors.grey[200],
+                                  filled: true,
+                                  contentPaddingVertical: 6,
+                                  textFormFieldStyle:
+                                      Styles.customNormalTextStyle(
+                                          color: Colors.black54),
+                                  hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
+                                  hintTextStyle: Styles.customNormalTextStyle(
+                                      color: Colors.black54),
+                                  suffixIconImagePath: ImagePath.settingsIcon,
+                                  hasSuffixIcon: true,
+                                  borderWidth: 0.0, onChanged: (value) {
+                                searchfromlist();
+                              }, onTapOfLeadingIcon: () {
+                                pausevideo();
                                 FocusScope.of(context).unfocus();
-                                setState(() {});
-                                resumevideo();
-                              });
-                            }, onTapOfSuffixIcon: () {
-                              pausevideo();
-                              Navigator.pushNamed(
-                                      context, AppRouter.filterScreen)
-                                  .then((value) => resumevideo());
-                            }, borderStyle: BorderStyle.solid),
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRouter.searchResultsScreen,
+                                  arguments: SearchValue(
+                                    searchcontroller.text,
+                                  ),
+                                ).then((value) {
+                                  this.searchcontroller.text = '';
+                                  FocusScope.of(context).unfocus();
+                                  setState(() {});
+                                  resumevideo();
+                                });
+                              }, onTapOfSuffixIcon: () {
+                                pausevideo();
+                                Navigator.pushNamed(
+                                        context, AppRouter.filterScreen)
+                                    .then((value) => resumevideo());
+                              }, borderStyle: BorderStyle.solid),
+                            ),
                           ),
                         ),
                         // Spacer(),
@@ -1287,7 +1222,7 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: 0,
               ),
-
+//
               loader
                   ? Container(
                       height: 280,
@@ -1334,11 +1269,29 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: 5.0),
                       ],
                     ),
-
-              // SizedBox(height: 0.0),
 //
               SizedBox(height: 0.0),
-              Column(
+             loader3
+                  ? Container(
+                      height: 280,
+                      child: CarouselSlider(
+                          options: CarouselOptions(
+                              enableInfiniteScroll: true, height: 260),
+                          items: List.generate(
+                            1,
+                            (ind) => SkeletonAnimation(
+                              shimmerColor: Colors.grey[350],
+                              shimmerDuration: 1100,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 4),
+                              ),
+                            ),
+                          )),
+                    )
+                  : Column(
                 // mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -1835,5 +1788,88 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  
+
+  bottomSheetForLocation(BuildContext context) {
+    return showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        builder: (context) {
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(10.0),
+                  topRight: const Radius.circular(10.0),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Search Location',
+                    style: Styles.customNormalTextStyle(color: Colors.black),
+                  ),
+                  Divider(),
+                  TextField(
+                    decoration: InputDecoration(
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: Image.asset(
+                            ImagePath.searchIcon,
+                          ),
+                        ),
+                        hintText: 'Search for your location',
+                        hintStyle: TextStyle(
+                          color: Colors.black26,
+                          fontSize: 16,
+                        ),
+                        border: InputBorder.none),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  InkWell(
+                    onTap: () =>
+                        Navigator.pushNamed(context, AppRouter.googleMap),
+                    child: Row(
+                      children: [
+                        Icon(Icons.location_searching, size: 12.0),
+                        SizedBox(
+                          width: 5.0,
+                        ),
+                        Text('Use current location',
+                            style: Styles.customNormalTextStyle(
+                                color: Colors.indigo)),
+                      ],
+                    ),
+                  ),
+                  Divider(),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Text(
+                    'Saved Addresses',
+                    style: Styles.customNormalTextStyle(color: Colors.black),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.home),
+                    title: Text('Home'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    subtitle: Text('Habib Street, Banigala'),
+                  ),
+                  Divider(),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }

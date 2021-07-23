@@ -76,7 +76,7 @@ class Datum {
         createdAt: json["created_at"],
         updatedAt: json["updated_at"],
         foodCategoryId: json["food_category_id"],
-        foodCategory: FoodCategory.fromJson(json["food_category"]),
+        foodCategory: json["food_category"] !=null? FoodCategory.fromJson(json["food_category"]):null,
       );
 
   Map<String, dynamic> toJson() => {

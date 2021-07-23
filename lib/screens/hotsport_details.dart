@@ -5,6 +5,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/bookmarkservice.dart';
 import 'package:potbelly/services/cartservice.dart';
 import 'package:potbelly/services/service.dart';
@@ -71,10 +72,10 @@ class _HotSpotDetailsScreenState extends State<HotSpotDetailsScreen> {
   @override
   void initState() {
     // checkbookmark();
-    for (var item in fooditems) {
-      item['restaurantId'] = widget.restaurantDetails.data['id'].toString();
-      print(item);
-    }
+    // for (var item in fooditems) {
+    //   item['restaurantId'] = widget.restaurantDetails.data['id'].toString();
+    //   print(item);
+    // }
     getrest();
     super.initState();
   }
@@ -702,24 +703,28 @@ class _HotSpotDetailsScreenState extends State<HotSpotDetailsScreen> {
 
   void getrest() async {
     fooditems.clear();
-    var data = await Service().getRestaurentsData();
+    var data = await AppService().gethotspotRestaurant(widget.restaurantDetails.data['id'].toString());
     print('this is a data');
-    print(data.data);
-    data.data.forEach((element) {
+    print(data);
+    if(data !=null){
+ 
+    data.forEach((element) {
       fooditems.add({
-        'name': element.restName,
-        // 'image': element.restImage,
+        'name': element['restaurent_hotspot']['rest_name'],
+        'image': element['restaurent_hotspot']['rest_image'],
         // 'image': 'assets/demo_card/Budapest/Budapest-Front.png',
-        'image': 'https://www.abeautifulplate.com/wp-content/uploads/2015/08/the-best-homemade-margherita-pizza-1-4-480x480.jpg',
+        // 'image': 'https://www.abeautifulplate.com/wp-content/uploads/2015/08/the-best-homemade-margherita-pizza-1-4-480x480.jpg',
         'details':
             'The Baan Thai restaurant in Fort Wayne, Indiana makes great use of high-resolution pictures to draw in website visitors.',
         'price': '',
         'qty': '1',
-        // 'id': element.id,
-        'restaurantId': element.id,
-        'restaurantdata': element
+        // 'id': element['restaurent_hotspot'].id,
+        'restaurantId': element['restaurent_hotspot']['id'],
+        'restaurantdata': element['restaurent_hotspot']
       });
     });
+         
+    }
     setState(() {
       
     });
@@ -978,4 +983,5 @@ class _HotSpotDetailsScreenState extends State<HotSpotDetailsScreen> {
       // )
     );
   }
+
 }

@@ -82,7 +82,7 @@ class EmailCard extends StatelessWidget {
                               )),
                         ),
                         const SizedBox(width: 10.0,),
-                        email['foodCategoryName'].isDiscount == 'true'
+                      email['foodCategoryName'] !=null &&  email['foodCategoryName'].isDiscount == 'true'
                             ? Expanded(
                                 child: Container(
                                   decoration: BoxDecoration(

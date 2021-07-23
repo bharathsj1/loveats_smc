@@ -25,6 +25,47 @@ class AppService {
     }
   }
 
+  Future<dynamic> gethotspotRestaurant(id) async {
+    // String accessToken = await getAccessToken();
+    // dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      var resp = await this.dio.get(
+            "/get-hotspot-restaurent/"+id,
+          );
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future<dynamic> getallitems() async {
+    // String accessToken = await getAccessToken();
+    // dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      var resp = await this.dio.get(
+            "/getMenuItemsWithRestaurant",
+          );
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+  Future<dynamic> getallhotspot() async {
+    // String accessToken = await getAccessToken();
+    // dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      var resp = await this.dio.get(
+            "/getAllHotspot",
+          );
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   Future<String> getAccessToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString('accessToken');
