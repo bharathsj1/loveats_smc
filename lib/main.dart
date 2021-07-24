@@ -20,21 +20,18 @@ void main() async {
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-   return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ProviderService()),
-      ],
-      child: Consumer<ProviderService>(
-        builder: (context, appState, child) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: buildLightTheme(context),
-      initialRoute: AppRouter.newsplashScreen,
-      onGenerateRoute: AppRouter.onGenerateRoute,
-      // navigatorKey: AppRouter.navigator.key,
-      // home: SplashScreen(),
-      home: New_Splash(),
-  );
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => ProviderService()),
+        ],
+        child: Consumer<ProviderService>(builder: (context, appState, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: buildLightTheme(context),
+            initialRoute: AppRouter.newsplashScreen,
+            onGenerateRoute: AppRouter.onGenerateRoute,
+            home: New_Splash(),
+          );
         }));
   }
 }

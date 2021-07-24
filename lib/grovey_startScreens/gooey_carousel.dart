@@ -1009,7 +1009,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
   ) async {
     print('In Validating form section');
 
-    if (_formKey.currentState.validate()) {
+    // if (_formKey.currentState.validate()) {
       UserModel userModel = UserModel(
           '',
           fullnameController.text,
@@ -1054,8 +1054,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
       } else {
         showSnackBar(context, message);
       }
-    } else {
-      print('Not Validate');
-    }
+    // } else {
+    //   print('Not Validate');
+    // }
   }
 }

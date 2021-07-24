@@ -230,26 +230,6 @@ class Service {
     return {'message': message, 'user': _user};
   }
 
-  // Future<String> uploadImageToServer(File image) async {
-  //   if (image != null) {
-  //     String fileName = basename(image.path);
-  //     try {
-  //       Reference reference =
-  //           FirebaseStorage.instance.ref().child("images/$fileName");
-
-  //       UploadTask uploadTask = reference.putFile(image);
-
-  //       //Snapshot of the uploading task
-  //       TaskSnapshot taskSnapshot = (await uploadTask);
-  //       String url = await taskSnapshot.ref.getDownloadURL();
-  //       return url;
-  //     } catch (error) {
-  //       print(error.toString());
-  //     }
-  //   }
-  //   return null;
-  // }
-
   Future<bool> checkIfUserAvailable(String uid) async {
     FormData _data = FormData.fromMap({
       'uid': uid,
@@ -317,27 +297,42 @@ class Service {
 
   Future<RestaurentsModel> getRestaurentsData() async {
     print(dio.options.baseUrl);
-    Response response =
-        await dio.request('/get-restaurents', options: Options(method: 'Post'));
-    print('hello g');
-    print(response.data);
-
-    return RestaurentsModel.fromJson(response.data);
+    try {
+      Response response = await dio.request(
+        '/get-restaurents',
+        options: Options(method: 'Post'),
+      );
+      if (response.data['success'] == true)
+        return RestaurentsModel.fromJson(response.data);
+      else
+        return null;
+    } catch (error) {
+      return null;
+    }
   }
 
   Future<MenuTypesModel> getMenuTypes() async {
     print(dio.options.baseUrl);
-    Response response = await dio.request(
-      '/get-menu-types',
-    );
-    return MenuTypesModel.fromJson(response.data);
+    try {
+      Response response = await dio.request(
+        '/get-menu-types',
+      );
+      return MenuTypesModel.fromJson(response.data);
+    } catch (onError) {
+      return null;
+    }
   }
 
   Future<RestaurentMenuModel> getMenus(int restId) async {
-    Response response = await dio.request(
-      '/get-menus/$restId',
-    );
-    return RestaurentMenuModel.fromJson(response.data);
+    try {
+      Response response = await dio.request(
+        '/get-menus/$restId',
+      );
+      if (response.data['success'] != true) return null;
+      return RestaurentMenuModel.fromJson(response.data);
+    } catch (onError) {
+      return null;
+    }
   }
 
   Future<String> getAccessToken() async {
@@ -492,8 +487,18 @@ class Service {
 
   Future<FreemealModel> checkFreeMeal() async {
     String _userID = await getUserId();
-    Response response = await dio.request('/get-free-meal/$_userID');
-    return FreemealModel.fromJson(response.data);
+    try {
+      Response response = await dio.request('/get-free-meal/$_userID');
+      print('helloggg');
+      print(response.data);
+      if (response.data['status'] == true)
+        return FreemealModel.fromJson(response.data);
+      else
+        return null;
+    } catch (onError) {
+      print(onError.toString());
+      return null;
+    }
   }
 
   Future<String> getUserdata() async {

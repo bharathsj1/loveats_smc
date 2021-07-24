@@ -17,7 +17,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   bool loader = true;
 
-
   getnoti() async {
     var noti = await AppService().getnoti();
     print(noti);
@@ -47,84 +46,91 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ),
         ),
       ),
-      body:  loader
-        ? Center(
-            child: CircularProgressIndicator(
-              valueColor:
-                  AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
-            ),
-          ):notilist.length == 0
-            ? Center(
-                child: Container(
-                  child: Text('No Notification available'),
-                ),
-              )
-            :   Container(
-        margin: EdgeInsets.symmetric(
-            horizontal: Sizes.MARGIN_8, vertical: Sizes.MARGIN_16),
-        child: ListView.builder(
-            itemCount: notilist.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Card(
-                elevation: 1,
-                child: ListTile(
-                  leading: Image.asset('assets/images/logo.png'),
-                  onTap: () {},
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Container(
-                          width: MediaQuery.of(context).size.width*0.50,
-                        child: Text(
-                          notilist[index]['title'] ,
-                          style: Styles.customTitleTextStyle(
-                            color: AppColors.headingText,
-                            fontWeight: FontWeight.w400,
-                            fontSize: Sizes.TEXT_SIZE_20,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        DateFormat('MMM d, yyyy')
-                                      .format(DateTime.parse(notilist[index]['created_at'])).toString(),
-                        style: Styles.customNormalTextStyle(
-                          color: AppColors.accentText,
-                          fontSize: Sizes.TEXT_SIZE_14,
-                        ),
-                      ),
-                    ],
+      body: loader
+          ? Center(
+              child: CircularProgressIndicator(
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
+              ),
+            )
+          : notilist == null || notilist.length == 0
+              ? Center(
+                  child: Container(
+                    child: Text('No Notification available'),
                   ),
-                  subtitle: Container(
-                    margin: EdgeInsets.only(top: 8.0),
-                    child: Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        
-                        Container(
-                          width: MediaQuery.of(context).size.width*0.52,
-                          child: Text(
-                            notilist[index]['subtitle'],
-                            style: Styles.customNormalTextStyle(
-                              color: AppColors.accentText,
-                              fontSize: Sizes.TEXT_SIZE_14,
+                )
+              : Container(
+                  margin: EdgeInsets.symmetric(
+                      horizontal: Sizes.MARGIN_8, vertical: Sizes.MARGIN_16),
+                  child: ListView.builder(
+                      itemCount: notilist.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Card(
+                          elevation: 1,
+                          child: ListTile(
+                            leading: Image.asset('assets/images/logo.png'),
+                            onTap: () {},
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.40,
+                                  child: Text(
+                                    notilist[index]['title'],
+                                    style: Styles.customTitleTextStyle(
+                                      color: AppColors.headingText,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: Sizes.TEXT_SIZE_20,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  DateFormat('MMM d, yyyy')
+                                      .format(DateTime.parse(
+                                          notilist[index]['created_at']))
+                                      .toString(),
+                                  style: Styles.customNormalTextStyle(
+                                    color: AppColors.accentText,
+                                    fontSize: Sizes.TEXT_SIZE_14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            subtitle: Container(
+                              margin: EdgeInsets.only(top: 8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.42,
+                                    child: Text(
+                                      notilist[index]['subtitle'],
+                                      style: Styles.customNormalTextStyle(
+                                        color: AppColors.accentText,
+                                        fontSize: Sizes.TEXT_SIZE_14,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    DateFormat('h:mm a')
+                                        .format(DateTime.parse(
+                                            notilist[index]['created_at']))
+                                        .toString(),
+                                    style: Styles.customNormalTextStyle(
+                                      color: AppColors.accentText,
+                                      fontSize: Sizes.TEXT_SIZE_14,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                         Text(
-                          DateFormat('h:mm a')
-                                      .format(DateTime.parse(notilist[index]['created_at'])).toString(),
-                          style: Styles.customNormalTextStyle(
-                            color: AppColors.accentText,
-                            fontSize: Sizes.TEXT_SIZE_14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                        );
+                      }),
                 ),
-              );
-            }),
-      ),
     );
   }
 }

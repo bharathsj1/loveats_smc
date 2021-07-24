@@ -60,123 +60,124 @@ class _FilterScreenState extends State<FilterScreen> {
           ),
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
-            child: SingleChildScrollView(
+      body: SingleChildScrollView(
               child: Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Select Category',
-                        style: subTitleTextStyle,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 24.0),
-                  Wrap(
-                    direction: Axis.horizontal,
-                    spacing: 16,
-                    runAlignment: WrapAlignment.spaceBetween,
-                    children: createCategoryButtons(numberOfButtons: 9),
-                  ),
-                  SizedBox(height: 24.0),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Distance (km)',
-                        style: subTitleTextStyle,
-                      ),
-                      SizedBox(height: 60.0),
-                      SliderTheme(
-                        data: SliderTheme.of(context).copyWith(
-                          inactiveTrackColor: AppColors.purpleShade1,
-                          activeTrackColor: AppColors.secondaryElement,
-                          trackHeight: 8,
-                          valueIndicatorColor: AppColors.secondaryElement,
-                          showValueIndicator:
-                              ShowValueIndicator.onlyForContinuous,
-                          valueIndicatorTextStyle: TextStyle(),
-                          thumbColor: AppColors.secondaryElement,
-                          thumbShape: RetroSliderThumbShape(thumbRadius: 0),
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'Select Category',
+                          style: subTitleTextStyle,
                         ),
-                        child: Slider(
-//                          label: '$initialSliderValue players',
-                            min: 0,
-                            max: 100,
-                            value: initialSliderValue,
-                            onChanged: (value) {
-                              setState(() {
-                                initialSliderValue = value;
-                              });
-                            }),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(left: 24),
-                            child: Text(
-                              '0',
-                              style: lightTextStyle,
-                            ),
+                      ],
+                    ),
+                    SizedBox(height: 24.0),
+                    Wrap(
+                      direction: Axis.horizontal,
+                      spacing: 16,
+                      runAlignment: WrapAlignment.spaceBetween,
+                      children: createCategoryButtons(numberOfButtons: 9),
+                    ),
+                    SizedBox(height: 24.0),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'Distance (km)',
+                          style: subTitleTextStyle,
+                        ),
+                        SizedBox(height: 60.0),
+                        SliderTheme(
+                          data: SliderTheme.of(context).copyWith(
+                            inactiveTrackColor: AppColors.purpleShade1,
+                            activeTrackColor: AppColors.secondaryElement,
+                            trackHeight: 8,
+                            valueIndicatorColor: AppColors.secondaryElement,
+                            showValueIndicator:
+                                ShowValueIndicator.onlyForContinuous,
+                            valueIndicatorTextStyle: TextStyle(),
+                            thumbColor: AppColors.secondaryElement,
+                            thumbShape: RetroSliderThumbShape(thumbRadius: 0),
                           ),
-                          Container(
-                            margin: EdgeInsets.only(right: 24),
-                            child: Text(
-                              '100',
-                              style: lightTextStyle,
+                          child: Slider(
+                              min: 0,
+                              max: 100,
+                              value: initialSliderValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  initialSliderValue = value;
+                                });
+                              }),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.only(left: 24),
+                              child: Text(
+                                '0',
+                                style: lightTextStyle,
+                              ),
                             ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 24.0),
-                  RatingsBar(
-                    hasSubtitle: false,
-                  ),
-                ],
+                            Container(
+                              margin: EdgeInsets.only(right: 24),
+                              child: Text(
+                                '100',
+                                style: lightTextStyle,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 4.0),
+                    RatingsBar(
+                      hasSubtitle: false,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          Row(
-            children: <Widget>[
-              PotbellyButton(
-                'Reset',
-                buttonHeight: 65,
-                buttonWidth: (MediaQuery.of(context).size.width / 2) - 0.25,
-                decoration: Decorations.customHalfCurvedButtonDecoration(
-                  topleftRadius: Sizes.RADIUS_24,
+            Row(
+              children: <Widget>[
+                PotbellyButton(
+                  'Reset',
+                  buttonHeight: 65,
+                  buttonWidth: (MediaQuery.of(context).size.width / 2) - 0.25,
+                  decoration: Decorations.customHalfCurvedButtonDecoration(
+                    topleftRadius: Sizes.RADIUS_24,
+                  ),
+                  buttonTextStyle: buttonTextStyle,
                 ),
-                buttonTextStyle: buttonTextStyle,
-              ),
-              IntrinsicHeight(
-                child: VerticalDivider(
-                  width: 0.5,
-                  thickness: 1.0,
+                IntrinsicHeight(
+                  child: VerticalDivider(
+                    width: 0.5,
+                    thickness: 1.0,
+                  ),
                 ),
-              ),
-              PotbellyButton(
-                'Apply',
-                // onTap: () => AppRouter.navigator
-                //     .pushNamed(AppRouter.trendingRestaurantsScreen),
-                buttonHeight: 65,
-                buttonWidth: (MediaQuery.of(context).size.width / 2) - 0.25,
-                decoration: Decorations.customHalfCurvedButtonDecoration(
-                  topRightRadius: Sizes.RADIUS_24,
+                PotbellyButton(
+                  'Apply',
+                  // onTap: () => AppRouter.navigator
+                  //     .pushNamed(AppRouter.trendingRestaurantsScreen),
+                  buttonHeight: 65,
+                  buttonWidth: (MediaQuery.of(context).size.width / 2) - 0.25,
+                  decoration: Decorations.customHalfCurvedButtonDecoration(
+                    topRightRadius: Sizes.RADIUS_24,
+                  ),
+                  buttonTextStyle: buttonTextStyle,
                 ),
-                buttonTextStyle: buttonTextStyle,
-              ),
-            ],
-          )
-        ],
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

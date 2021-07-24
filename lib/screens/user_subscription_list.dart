@@ -30,7 +30,7 @@ class _UserSubscriptionListState extends State<UserSubscriptionList> {
           ? Center(
               child: Text('Please wait ...'),
             )
-          : _specificUserSubscriptionModel == null
+          : _specificUserSubscriptionModel == null || _specificUserSubscriptionModel.data.length==0
               ? Center(
                   child: Text('You have not subscribed'),
                 )

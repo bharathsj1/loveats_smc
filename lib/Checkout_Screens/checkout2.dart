@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/appServices.dart';
+import 'package:potbelly/services/cartservice.dart';
 import 'package:potbelly/services/paymentservice.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:toast/toast.dart';
@@ -21,56 +21,52 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
   bool isSwitched = false;
   var _paymentSheetData;
   double total;
-  bool loader=false;
+  bool loader = false;
 
   @override
   void initState() {
-    print(widget.checkoutdata['cartlist'].length);
     total = widget.checkoutdata['total'] +
         widget.checkoutdata['shipping'] +
         widget.checkoutdata['charges'];
     super.initState();
   }
 
-
-
   paynow() async {
     this.loader = true;
     setState(() {});
-    print(total.floor());
+
     var data = {
       'amount': (total.floor()).toString() + '00',
-      'currency': 'usd',
-      // 'receipt_email': 'miansaadhafeez@gmail.com'
+      'currency': 'gbp',
     };
     PaymentService().getIntent(data).then((value) async {
+      print('this is the value ');
       print(value);
-      
-      if (value == 'Error in payment') {
-        Toast.show('Error in payment', context, duration: 3);
-      } else {
-        _paymentSheetData = value;
+
+      _paymentSheetData = value;
+      setState(() {});
+      try {
+        await Stripe.instance.initPaymentSheet(
+            paymentSheetParameters: SetupPaymentSheetParameters(
+          paymentIntentClientSecret: _paymentSheetData['client_secret'],
+
+          // customerEphemeralKeySecret: _paymentSheetData['ephemeralKey'],
+          // customerId: _paymentSheetData['customer'],
+          applePay: true,
+          googlePay: true,
+          merchantCountryCode: 'UK',
+
+          // merchantDisplayName: 'saad',
+          // style:  ThemeMode.dark,
+        ));
         setState(() {});
-        try {
-          // intent=await  Stripe.instance.retrievePaymentIntent(_paymentSheetData['client_secret']);
-          //  print(intent);
-          setState(() {});
-          await Stripe.instance.initPaymentSheet(
-              paymentSheetParameters: SetupPaymentSheetParameters(
-            paymentIntentClientSecret: _paymentSheetData['client_secret'],
-            // customerEphemeralKeySecret: _paymentSheetData['ephemeralKey'],
-            // customerId: _paymentSheetData['customer'],
-            applePay: true,
-            googlePay: true,
-            merchantCountryCode: 'US',
-            // merchantDisplayName: 'saad',
-            // style:  ThemeMode.dark,
-          ));
-          setState(() {});
-          displayPayment();
-        } catch (error) {
-          print(error);
-        }
+// 4242 4242 4242 4242
+// 1224
+// 123
+// 49000
+        displayPayment();
+      } catch (error) {
+        print(error);
       }
     });
   }
@@ -78,113 +74,112 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
   Future<void> displayPayment() async {
     try {
       await Stripe.instance.presentPaymentSheet(
-          parameters: PresentPaymentSheetParameters(
-              clientSecret: _paymentSheetData['client_secret'],
-              confirmPayment: true));
+        parameters: PresentPaymentSheetParameters(
+            clientSecret: _paymentSheetData['client_secret'],
+            confirmPayment: true),
+      );
       setState(() {});
-      var orderId='';
-      print('mix');
-      print(widget.checkoutdata['mixmatch']);
-      if(widget.checkoutdata['mixmatch'] == true){
-         var data={
-        'total_amount': widget.checkoutdata['total'],
-        'payment_method':'card',
-        'payment_id':_paymentSheetData['client_secret'],
-        'customer_addressId': widget.checkoutdata['customer_addressId'],
-      };
-      AppService().addeorder(data).then((value) {
-      orderId= value['data']['id'];
-        print(value);
-        for (var i = 0; i < widget.checkoutdata['cartlist'].length; i++) {
-          for (var j = 0; j < widget.checkoutdata['cartlist'][i].length; j++) {
-            print(widget.checkoutdata['cartlist'][i][j]);
-              var data2={
-        'quantity': widget.checkoutdata['cartlist'][i][j]['qty'],
-        'total_price':  widget.checkoutdata['cartlist'][i][j]['payableAmount'],
-        'order_id': value['data']['id'],
-        'rest_menuId': widget.checkoutdata['cartlist'][i][j]['id'],
-        'rest_Id': widget.checkoutdata['cartlist'][i][j]['restaurantId'],
-      };
-       AppService().addorderdetails(data2).then((value) {
-         print(value);
-          if(i ==  widget.checkoutdata['cartlist'].length-1 && j == widget.checkoutdata['cartlist'][i].length-1){
-             var data={
-               'title':'New Order',
-               'body': 'User has been placed a new order',
-               'data':value.toString(),
-              //  ''
-             };
-             AppService().sendnotisuperadmin(data);
-             Navigator.of(context).pop();
-           Navigator.of(context).pop();
-             this.loader = false;
-            
-      setState(() {});
-           Navigator.pushNamed(context,AppRouter.CheckOut3, arguments: {
-        'type': widget.checkoutdata['type'],
-        'orderId': orderId
-      });
-         }
-       });
+      var orderId = '';
+
+      if (widget.checkoutdata['mixmatch'] == true) {
+        var data = {
+          'total_amount': widget.checkoutdata['total'],
+          'payment_method': 'card',
+          'payment_id': _paymentSheetData['client_secret'],
+          'customer_addressId': widget.checkoutdata['customer_addressId'],
+        };
+        AppService().addeorder(data).then((value) {
+          orderId = value['data']['id'];
+          print(value);
+          for (var i = 0; i < widget.checkoutdata['cartlist'].length; i++) {
+            for (var j = 0;
+                j < widget.checkoutdata['cartlist'][i].length;
+                j++) {
+              print(widget.checkoutdata['cartlist'][i][j]);
+              var data2 = {
+                'quantity': widget.checkoutdata['cartlist'][i][j]['qty'],
+                'total_price': widget.checkoutdata['cartlist'][i][j]
+                    ['payableAmount'],
+                'order_id': value['data']['id'],
+                'rest_menuId': widget.checkoutdata['cartlist'][i][j]['id'],
+                'rest_Id': widget.checkoutdata['cartlist'][i][j]
+                    ['restaurantId'],
+              };
+              AppService().addorderdetails(data2).then((value) {
+                print(value);
+                if (i == widget.checkoutdata['cartlist'].length - 1 &&
+                    j == widget.checkoutdata['cartlist'][i].length - 1) {
+                  var data = {
+                    'title': 'New Order',
+                    'body': 'User has been placed a new order',
+                    'data': value.toString(),
+                    //  ''
+                  };
+                  AppService().sendnotisuperadmin(data);
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  this.loader = false;
+
+                  setState(() {});
+                  Navigator.pushNamed(context, AppRouter.CheckOut3, arguments: {
+                    'type': widget.checkoutdata['type'],
+                    'orderId': orderId
+                  });
+                }
+              });
+            }
           }
-        }
-      //    AppRouter.navigator.pushNamed(AppRouter.CheckOut3, arguments: {
-      //   'type': widget.checkoutdata['type'],
-      //   'orderId': orderId
-      // });
         });
-      }
-      else{
+      } else {
         for (var i = 0; i < widget.checkoutdata['cartlist'].length; i++) {
-             var data={
-        'total_amount': widget.checkoutdata['total'],
-        'payment_method':'card',
-        'payment_id':_paymentSheetData['client_secret'],
-        'customer_addressId': widget.checkoutdata['customer_addressId'],
-      };
-      AppService().addeorder(data).then((value) {
-        orderId= value['data']['id'].toString() ;
-        print(orderId);
-          for (var j = 0; j < widget.checkoutdata['cartlist'][i].length; j++) {
-            print(widget.checkoutdata['cartlist'][i][j]);
-              var data2={
-        'quantity': widget.checkoutdata['cartlist'][i][j]['qty'],
-        'total_price':  widget.checkoutdata['cartlist'][i][j]['payableAmount'],
-        'order_id': value['data']['id'],
-        'rest_menuId': widget.checkoutdata['cartlist'][i][j]['id'],
-        'rest_Id': widget.checkoutdata['cartlist'][i][j]['restaurantId'],
-
-      };
-      print(data2);
-       AppService().addorderdetails(data2).then((value) {
-         print(value);
-         if(i ==  widget.checkoutdata['cartlist'].length-1 && j == widget.checkoutdata['cartlist'][i].length-1){
-             this.loader = false;
-             var data={
-               'title':'New Order',
-               'body': 'User has been placed a new order',
-               'data':value.toString(),
-              //  ''
-             };
-             AppService().sendnotisuperadmin(data);
-           Navigator.of(context).pop();
-           Navigator.of(context).pop();
-            this.loader = false;
-
-      setState(() {});
-           Navigator.pushNamed(context,AppRouter.CheckOut3, arguments: {
-        'type': widget.checkoutdata['type'],
-        'orderId': orderId
-      });
-         }
-       });
-          }
+          var data = {
+            'total_amount': widget.checkoutdata['total'],
+            'payment_method': 'card',
+            'payment_id': _paymentSheetData['client_secret'],
+            'customer_addressId': widget.checkoutdata['customer_addressId'],
+          };
+          AppService().addeorder(data).then((value) {
+            orderId = value['data']['id'].toString();
+            print(orderId);
+            for (var j = 0;
+                j < widget.checkoutdata['cartlist'][i].length;
+                j++) {
+              print(widget.checkoutdata['cartlist'][i][j]);
+              var data2 = {
+                'quantity': widget.checkoutdata['cartlist'][i][j]['qty'],
+                'total_price': widget.checkoutdata['cartlist'][i][j]
+                    ['payableAmount'],
+                'order_id': value['data']['id'],
+                'rest_menuId': widget.checkoutdata['cartlist'][i][j]['id'],
+                'rest_Id': widget.checkoutdata['cartlist'][i][j]
+                    ['restaurantId'],
+              };
+              AppService().addorderdetails(data2).then((value) async{
+                print(value);
+                if (i == widget.checkoutdata['cartlist'].length - 1 &&
+                    j == widget.checkoutdata['cartlist'][i].length - 1) {
+                  this.loader = false;
+                  var data = {
+                    'title': 'New Order',
+                    'body': 'User has been placed a new order',
+                    'data': value.toString(),
+                  };
+                  AppService().sendnotisuperadmin(data);
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  this.loader = false;
+                  await CartProvider().clearcart();
+                  setState(() {});
+                  Navigator.pushNamed(context, AppRouter.CheckOut3, arguments: {
+                    'type': widget.checkoutdata['type'],
+                    'orderId': orderId
+                  });
+                }
+              });
+            }
           });
         }
-        
       }
-     
-      Toast.show('Payment Success', context, duration: 3);
     } catch (error) {
       print(error);
     }
@@ -208,7 +203,6 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
               ),
               Container(
                 width: 100,
-                // color: Colors.red,
                 child: Row(
                   children: List.generate(
                       200 ~/ 10,
@@ -225,13 +219,6 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
             ],
           ),
         ),
-        // SizedBox(
-        //   height: 5,
-        // ),
-        // Text(
-        //   'Delivery address',
-        //   style: TextStyle(color: AppColors.secondaryElement, fontSize: 12),
-        // ),
       ],
     );
   }
@@ -258,7 +245,6 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
                 color: selectedmethod == index
                     ? AppColors.secondaryElement.withOpacity(0.2)
                     : null,
-                
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                   child: Padding(
@@ -304,28 +290,6 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
                                 : Container()
                           ],
                         ),
-                        // SizedBox(
-                        //   height: 5,
-                        // ),
-                        // Text(
-                        //   'Mian Saad Hafeez',
-                        //   style: TextStyle(
-                        //       fontWeight: FontWeight.w500,
-                        //       fontSize: 16,
-                        //       color: AppColors.black,
-                        //       fontFamily: 'roboto'),
-                        // ),
-                        // SizedBox(
-                        //   height: 5,
-                        // ),
-                        // Text(
-                        //   '+921235235523',
-                        //   style: TextStyle(
-                        //       fontWeight: FontWeight.w500,
-                        //       fontSize: 16,
-                        //       color: AppColors.black,
-                        //       fontFamily: 'roboto'),
-                        // ),
                         SizedBox(
                           height: 5,
                         ),
@@ -387,50 +351,50 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-             loader?  Padding(
-          padding: const EdgeInsets.only(bottom:8.0),
-          child: Center(
-              child: CircularProgressIndicator(
-                valueColor:
-                    AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
-              ),
-            ),
-        ): InkWell(
-                onTap: () {
-                  // AppRouter.navigator.pushNamed(AppRouter.CheckOut3);
-                   paynow();
-                  print(widget.checkoutdata['cartlist']);
-                },
-                child: Container(
-                  height: 45,
-                  width: MediaQuery.of(context).size.width * 0.89,
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: AppColors.secondaryElement),
-                  child:   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Place Order',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontFamily: 'roboto',
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+              loader
+                  ? Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              AppColors.secondaryElement),
+                        ),
                       ),
-                      Text(
-                       '\$'+ total.toStringAsFixed(2),
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontFamily: 'roboto',
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+                    )
+                  : InkWell(
+                      onTap: () {
+                        paynow();
+                      },
+                      child: Container(
+                        height: 45,
+                        width: MediaQuery.of(context).size.width * 0.89,
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: AppColors.secondaryElement),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Place Order',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: 'roboto',
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
+                            Text(
+                              '\$' + total.toStringAsFixed(2),
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: 'roboto',
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
             ],
           ),
         ),
@@ -471,14 +435,6 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
                             ],
                           ),
                         ),
-                        // SizedBox(
-                        //   height: 5,
-                        // ),
-                        // Text(
-                        //   'Delivery address',
-                        //   style: TextStyle(
-                        //       color: AppColors.secondaryElement, fontSize: 12),
-                        // ),
                       ],
                     ),
                   ],
@@ -556,8 +512,8 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
             widget.checkoutdata['cartlist'].length > 1
                 ? Container()
                 : Material(
-                  elevation: 1,
-                  child: Container(
+                    elevation: 1,
+                    child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                       color: Colors.grey[100],
                       child: Padding(
@@ -570,7 +526,8 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
                                 child: Image.network(
                                   widget.checkoutdata['cartlist'][0][0]
                                       ['restaurantdata']['rest_image'],
-                                  loadingBuilder: (BuildContext ctx, Widget child,
+                                  loadingBuilder: (BuildContext ctx,
+                                      Widget child,
                                       ImageChunkEvent loadingProgress) {
                                     if (loadingProgress == null) {
                                       return child;
@@ -637,7 +594,8 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
                                       ),
                                       Text(
                                           widget.checkoutdata['cartlist'][0][0]
-                                                  ['restaurantdata']['rest_city'] +
+                                                      ['restaurantdata']
+                                                  ['rest_city'] +
                                               ', ' +
                                               widget.checkoutdata['cartlist'][0]
                                                       [0]['restaurantdata']
@@ -659,8 +617,8 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
                                 onChanged: (value) {
                                   setState(() {
                                     isSwitched = value;
-                                    if(value == true){
-                                      total-=widget.checkoutdata['shipping'];
+                                    if (value == true) {
+                                      total -= widget.checkoutdata['shipping'];
                                     }
                                     print(isSwitched);
                                   });
@@ -673,7 +631,7 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
                         ),
                       ),
                     ),
-                )
+                  )
           ],
         ),
       ),

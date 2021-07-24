@@ -9,9 +9,7 @@ class CartProvider with ChangeNotifier {
   double totalAmount = 0.0;
 
   void addToCart(context, product) async {
-    // check array is empty
     await getcarts();
-    List data = [];
     int index = cartitems.indexWhere((x) {
       print('indexwhere');
       print(x.toString());
@@ -19,13 +17,13 @@ class CartProvider with ChangeNotifier {
       return x['id'] == product['id'] &&
           x['restaurantId'] == product['restaurantId'];
     });
-    var extraadd = cartitems.where((x) =>x['topping'].toString() == product['topping'].toString() &&  x['drink'].toString() == product['drink'].toString()).toList();
-    print(index);
-    // print(cartitems[index]['topping']);
-    // print(product['topping']);
-    // print(cartitems[index]['topping'].toString() == product['topping'].toString());
+    var extraadd = cartitems
+        .where((x) =>
+            x['topping'].toString() == product['topping'].toString() &&
+            x['drink'].toString() == product['drink'].toString())
+        .toList();
 
-    if (index == -1 || extraadd.length==0) {
+    if (index == -1 || extraadd.length == 0) {
       double total = 0.0;
       cartitems.add(product);
 
@@ -35,8 +33,7 @@ class CartProvider with ChangeNotifier {
         total += int.tryParse(f['price']) * int.tryParse((f['qty']));
       });
       totalAmount = total;
-      print('total');
-      print(totalAmount);
+
       notifyListeners();
       Toast.show('Product Added in Cart', context, duration: 3);
     } else {
@@ -45,7 +42,8 @@ class CartProvider with ChangeNotifier {
           (int.parse(cartitems[index]['qty']) + int.parse(product['qty']))
               .toString();
       cartitems[index]['payableAmount'] =
-          ((cartitems[index]['price']) * double.parse(cartitems[index]['qty']))
+          (int.tryParse((cartitems[index]['price'])) *
+                  double.parse(cartitems[index]['qty']))
               .toString();
       print('payable');
       print(cartitems[index]['payableAmount']);
@@ -53,7 +51,7 @@ class CartProvider with ChangeNotifier {
       notifyListeners();
       double total = 0;
       cartitems.forEach((f) {
-        total += (f['price']) * double.parse(f['qty']);
+        total += (int.tryParse(f['price'])) * double.parse(f['qty']);
       });
       totalAmount = total;
       print('total');
@@ -72,7 +70,7 @@ class CartProvider with ChangeNotifier {
     if (index == -1) {
       return;
     }
-    int ntotalAmount = 1 * cart['price'];
+    int ntotalAmount = 1 * int.tryParse(cart['price']);
     print(ntotalAmount);
     if (totalAmount > 0) {
       totalAmount = totalAmount - ntotalAmount;
@@ -138,7 +136,7 @@ class CartProvider with ChangeNotifier {
       print(cartitems.length);
       double total = 0;
       cartitems.forEach((f) {
-        total += (f['price']) * double.parse(f['qty']);
+        total += (double.tryParse(f['price'])) * double.parse(f['qty']);
       });
       totalAmount = total;
       print('total');

@@ -4,21 +4,17 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:potbelly/3D_card_widets/city_scenery.dart';
 import 'package:potbelly/models/restaurent_menu_model.dart';
 import 'package:potbelly/routes/router.dart';
-import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/bookmarkservice.dart';
 import 'package:potbelly/services/cartservice.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/swipe_particles/components/sprite_sheet.dart';
 import 'package:potbelly/swipe_particles/demo_data.dart';
-import 'package:potbelly/swipe_particles/list_model.dart';
 import 'package:potbelly/swipe_particles/particle_field.dart';
 import 'package:potbelly/swipe_particles/particle_field_painter.dart';
-import 'package:potbelly/swipe_particles/removed_swipe_item.dart';
 import 'package:potbelly/swipe_particles/swipe_item.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/card_tags.dart';
 import 'package:potbelly/widgets/dark_overlay.dart';
-import 'package:potbelly/widgets/heading_row.dart';
 import 'package:potbelly/widgets/ratings_widget.dart';
 import 'package:potbelly/widgets/spaces.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -45,7 +41,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
   double farLength = 120;
   double prodcutFontSize = 20.0;
   GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  ListModel _model;
   SpriteSheet _spriteSheet;
   ParticleField _particleField;
   List data = DemoData().getData();
@@ -89,10 +84,11 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     bottomRightRadius: 24,
   );
 
+  bool _isError = false;
+
   @override
   void initState() {
     controller.addListener(() {
-      // print(controller.offset);
       var currentOffset = controller.offset;
       var mse = controller.position.maxScrollExtent;
       var fsof = (currentOffset / mse) * 100;
@@ -110,40 +106,13 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
         });
       }
       prevOffset = currentOffset;
-      // print(fsof);
-      // print(prodcutFontSize);
-      // print(mse);
-
-      // if (controller.offset >= controller.position.maxScrollExtent -20 &&
-      //     !controller.position.outOfRange) {
-      //   setState(() {
-      //     prodcutFontSize = 22.0;
-      //     productContainerMarginTop = 30.0;
-      //   });
-      // } else {
-      //   setState(() {
-      //     prodcutFontSize = 15.0;
-      //     productContainerMarginTop = 0.0;
-      //   });
-      // }
     });
-    // Create the "sparkle" sprite sheet for the particles:
     _spriteSheet = SpriteSheet(
-      imageProvider: AssetImage("assets/swipe/circle_spritesheet.png"),
+      imageProvider: AssetImage("assets/grovey/Bg-Blue.png"),
       length: 15, // number of frames in the sprite sheet.
       frameWidth: 10,
       frameHeight: 10,
     );
-
-    // This synchronizes the data with the animated list:
-    // _model = ListModel(
-    //   initialItems: data,
-    //   listKey:
-    //       _listKey, // ListModel uses this to look up the list its acting on.
-    //   removedItemBuilder: (dynamic removedItem, BuildContext context,
-    //           Animation<double> animation) =>
-    //       RemovedSwipeItem(animation: animation),
-    // );
 
     _particleField = ParticleField();
     _ticker = createTicker(_particleField.tick)..start();
@@ -208,9 +177,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
 
   @override
   Widget build(BuildContext context) {
-//    final RestaurantDetails args = ModalRoute.of(context).settings.arguments;
-    var heightOfStack = MediaQuery.of(context).size.height / 2.8;
-    var aPieceOfTheHeightOfStack = heightOfStack - heightOfStack / 3.5;
     return Scaffold(
         body: Stack(
       children: [
@@ -226,601 +192,359 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
             return <Widget>[
               SliverAppBar(
                 elevation: 0.0,
-                expandedHeight: MediaQuery.of(context).size.height * 0.64,
-                collapsedHeight: MediaQuery.of(context).size.height*0.5,
-
+                expandedHeight: MediaQuery.of(context).size.height * 0.80,
+                collapsedHeight: MediaQuery.of(context).size.height * 0.5,
                 floating: true,
                 forceElevated: false,
                 pinned: false,
                 titleSpacing: 0,
-                automaticallyImplyLeading: false,
-                
+                // automaticallyImplyLeading: false,
+                leading: InkWell(
+                  onTap: () {
+                    print('Hello');
+                    Navigator.pop(context);
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Image.asset(
+                      ImagePath.arrowBackIcon,
+                    ),
+                  ),
+                ),
                 backgroundColor: Colors.white,
-                // leading: BackButton(
-                //   color: AppColors.white,
-                // ),
                 flexibleSpace: FlexibleSpaceBar(
-                  // title: Text("Hello Baby"),
-                  // centerTitle: true,
                   collapseMode: CollapseMode.parallax,
                   background: Column(
-                    // alignment: Alignment.bottomRight,
                     children: <Widget>[
+                      Stack(
+                        children: <Widget>[
+                          Positioned(child: _buildHeroWidget(context)),
+                          DarkOverLay(
+                              gradient: Gradients.restaurantDetailsGradient),
+                          Positioned(
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                right: Sizes.MARGIN_16,
+                                top: Sizes.MARGIN_40,
+                              ),
+                              child: Row(
+                                children: [
+                                  Spacer(),
+                                  InkWell(
+                                    onTap: () => print('Hellog'),
+                                    child: Icon(
+                                      FeatherIcons.share2,
+                                      color: AppColors.white,
+                                    ),
+                                  ),
+                                  SpaceW20(),
+                                  InkWell(
+                                    onTap: () {
+                                      BookmarkService()
+                                          .addbookmark(context,
+                                              widget.restaurantDetails.data)
+                                          .then((value) {
+                                        print(value);
+                                        if (value == 'success') {
+                                          bookmark = !bookmark;
+                                          setState(() {});
+                                        }
+                                      });
+                                    },
+                                    child: Image.asset(
+                                        bookmark
+                                            ? ImagePath.activeBookmarksIcon3
+                                            : ImagePath.bookmarksIcon,
+                                        color: bookmark
+                                            ? AppColors.secondaryElement
+                                            : Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                              bottom: 10,
+                              right: 15,
+                              child: Container(
+                                height: 30,
+                                width: 120,
+                                decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.7),
+                                    borderRadius: BorderRadius.circular(6)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.grid_view,
+                                      color: AppColors.white,
+                                      size: 16,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'View Gallery',
+                                      style: TextStyle(
+                                          fontSize: 15, color: AppColors.white),
+                                    )
+                                  ],
+                                ),
+                              ))
+                        ],
+                      ),
                       Container(
-                        height: MediaQuery.of(context).size.height * 0.64,
-                        // color: Colors.blue,
+                        margin: EdgeInsets.symmetric(
+                            horizontal: 0.0, vertical: 16.0),
                         child: Column(
                           children: <Widget>[
-                            Expanded(
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12.0),
                               child: Column(
-                                // shrinkWrap: true,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Stack(
+                                  Row(
                                     children: <Widget>[
-                                      Positioned(
-                                          child:
-                                              //  widget.restaurantDetails.imagePath
-                                              //             .substring(0, 4) ==
-                                              //         'http'
-                                              //     ? Image.network(
-                                              //         widget.restaurantDetails.imagePath,
-                                              //         width: MediaQuery.of(context).size.width,
-                                              //         height: heightOfStack,
-                                              //         fit: BoxFit.cover,
-                                              //       )
-                                              //     : Image.asset(
-                                              //         widget.restaurantDetails.imagePath,
-                                              //         width: MediaQuery.of(context).size.width,
-                                              //         height: heightOfStack,
-                                              //         fit: BoxFit.cover,
-                                              //       ),
-                                              _buildHeroWidget(context)),
-                                      DarkOverLay(
-                                          gradient: Gradients
-                                              .restaurantDetailsGradient),
-                                      Positioned(
-                                        child: Container(
-                                          padding: EdgeInsets.only(
-                                            right: Sizes.MARGIN_16,
-                                            top: Sizes.MARGIN_40,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              InkWell(
-                                                onTap: () =>
-                                                    Navigator.pop(context),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                    left: Sizes.MARGIN_16,
-                                                    right: Sizes.MARGIN_16,
-                                                  ),
-                                                  child: Image.asset(
-                                                      ImagePath.arrowBackIcon),
-                                                ),
-                                              ),
-                                              Spacer(flex: 1),
-                                              InkWell(
-                                                child: Icon(
-                                                  FeatherIcons.share2,
-                                                  color: AppColors.white,
-                                                ),
-                                              ),
-                                              SpaceW20(),
-                                              InkWell(
-                                                onTap: () {
-                                                  BookmarkService()
-                                                      .addbookmark(
-                                                          context,
-                                                          widget
-                                                              .restaurantDetails
-                                                              .data)
-                                                      .then((value) {
-                                                    print(value);
-                                                    if (value == 'success') {
-                                                      bookmark = !bookmark;
-                                                      setState(() {});
-                                                    }
-                                                  });
-                                                },
-                                                child: Image.asset(
-                                                    bookmark
-                                                        ? ImagePath
-                                                            .activeBookmarksIcon3
-                                                        : ImagePath
-                                                            .bookmarksIcon,
-                                                    color: bookmark
-                                                        ? AppColors
-                                                            .secondaryElement
-                                                        : Colors.white),
-                                              ),
-                                            ],
-                                          ),
+                                      Text(
+                                        widget.restaurantDetails.restaurantName,
+                                        textAlign: TextAlign.left,
+                                        style: Styles.customTitleTextStyle(
+                                          color: AppColors.headingText,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: Sizes.TEXT_SIZE_20,
                                         ),
                                       ),
-                                      Positioned(
-                                          bottom: 10,
-                                          right: 15,
-                                          child: Container(
-                                            height: 30,
-                                            width: 120,
-                                            decoration: BoxDecoration(
-                                                color: Colors.black
-                                                    .withOpacity(0.7),
-                                                borderRadius:
-                                                    BorderRadius.circular(6)),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.grid_view,
-                                                  color: AppColors.white,
-                                                  size: 16,
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(
-                                                  'View Gallery',
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      color: AppColors.white),
-                                                )
-                                              ],
-                                            ),
-                                          ))
-//                         Positioned(
-//                           top: aPieceOfTheHeightOfStack,
-//                           left: 24,
-//                           right: 24 - 0.5,
-//                           child: ClipRRect(
-//                             borderRadius: BorderRadius.circular(24.0),
-//                             child: BackdropFilter(
-//                               filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-//                               child: Container(
-//                                 padding: EdgeInsets.symmetric(vertical: 4.0),
-//                                 decoration: fullDecorations,
-//                                 child: Row(
-//                                   children: <Widget>[
-//                                     Container(
-//                                       padding: EdgeInsets.symmetric(
-//                                           horizontal: 8.0, vertical: 8.0),
-//                                       width:
-//                                           (MediaQuery.of(context).size.width /
-//                                                   2) -
-//                                               24,
-// //                                      decoration: leftSideDecorations,
-//                                       child: Row(
-//                                         children: [
-//                                           SizedBox(width: 4.0),
-//                                           Image.asset(ImagePath.callIcon),
-//                                           SizedBox(width: 8.0),
-//                                           Text(
-//                                             widget.restaurantDetails.data
-//                                                 .restPhone,
-//                                             style: Styles.normalTextStyle,
-//                                           ),
-//                                         ],
-//                                       ),
-//                                     ),
-//                                     IntrinsicHeight(
-//                                       child: VerticalDivider(
-//                                         width: 0.5,
-//                                         thickness: 3.0,
-//                                         color: Colors.red,
-//                                       ),
-//                                     ),
-//                                     Container(
-//                                       padding: EdgeInsets.symmetric(
-//                                           horizontal: 8.0, vertical: 8.0),
-//                                       child: Row(
-//                                         children: <Widget>[
-//                                           SizedBox(width: 4.0),
-//                                           Image.asset(
-//                                             ImagePath.directionIcon,
-//                                             color: AppColors.secondaryElement,
-//                                           ),
-//                                           SizedBox(width: 8.0),
-//                                           Text(
-//                                             'Direction',
-//                                             style: Styles.normalTextStyle,
-//                                           )
-//                                         ],
-//                                       ),
-//                                     ),
-//                                   ],
-//                                 ),
-//                               ),
-//                             ),
-//                           ),
-//                         )
+                                      SizedBox(width: 4.0),
+                                      CardTags(
+                                        title:
+                                            widget.restaurantDetails.category,
+                                        decoration: BoxDecoration(
+                                          gradient: Gradients.secondaryGradient,
+                                          boxShadow: [
+                                            Shadows.secondaryShadow,
+                                          ],
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(8.0)),
+                                        ),
+                                      ),
+                                      SizedBox(width: 4.0),
+                                      CardTags(
+                                        title:
+                                            widget.restaurantDetails.distance,
+                                        decoration: BoxDecoration(
+                                          // color: Color.fromARGB(255, 132, 141, 255),
+                                          color: AppColors.secondaryElement,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(8.0)),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Ratings(widget.restaurantDetails.rating)
                                     ],
                                   ),
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 0.0, vertical: 16.0),
-                                    child: Column(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 12.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Row(
-                                                children: <Widget>[
-                                                  Text(
-                                                    widget.restaurantDetails
-                                                        .restaurantName,
-                                                    textAlign: TextAlign.left,
-                                                    style: Styles
-                                                        .customTitleTextStyle(
-                                                      color:
-                                                          AppColors.headingText,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize:
-                                                          Sizes.TEXT_SIZE_20,
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 4.0),
-                                                  CardTags(
-                                                    title: widget
-                                                        .restaurantDetails
-                                                        .category,
-                                                    decoration: BoxDecoration(
-                                                      gradient: Gradients
-                                                          .secondaryGradient,
-                                                      boxShadow: [
-                                                        Shadows.secondaryShadow,
-                                                      ],
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  8.0)),
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 4.0),
-                                                  CardTags(
-                                                    title: widget
-                                                        .restaurantDetails
-                                                        .distance,
-                                                    decoration: BoxDecoration(
-                                                      // color: Color.fromARGB(255, 132, 141, 255),
-                                                      color: AppColors
-                                                          .secondaryElement,
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  8.0)),
-                                                    ),
-                                                  ),
-                                                  Spacer(flex: 1),
-                                                  Ratings(widget
-                                                      .restaurantDetails.rating)
-                                                ],
-                                              ),
-                                              SizedBox(height: 10.0),
-                                              Text(
-                                                widget.restaurantDetails
-                                                    .restaurantAddress,
-                                                style: addressTextStyle,
-                                              ),
-                                              SizedBox(height: 5.0),
-                                              RichText(
-                                                text: TextSpan(
-                                                  style: openingTimeTextStyle,
-                                                  children: [
-                                                    TextSpan(
-                                                        text: "Open Now - "),
-                                                    // TextSpan(
-                                                    //     text: "daily time ",
-                                                    //     style:
-                                                    //         addressTextStyle),
-                                                    TextSpan(
-                                                        text: widget
-                                                                .restaurantDetails
-                                                                .data
-                                                                .restOpenTime +
-                                                            "am - " +
-                                                            widget
-                                                                .restaurantDetails
-                                                                .data
-                                                                .restCloseTime +
-                                                            "am ",
-                                                        style:
-                                                            addressTextStyle),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(height: 10.0),
-                                              Text(
-                                                'The Baan Thai restaurant in Fort Wayne, Indiana makes great use of high-resolution pictures to draw in website visitors. Color abounds wherever you look and the vivid representations of the Thai region make you feel like you’re already there. Don’t settle for washed-out, blurry photos on your website. If need be, hire a professional photographer or purchase high-resolution photos online to give your website the extra kick it needs.',
-                                                textAlign: TextAlign.justify,
-                                                style: addressTextStyle,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        // SpaceH24(),
-                                        // _isLoading
-                                        //     ? Center(
-                                        //         child:
-                                        //             CircularProgressIndicator(
-                                        //           valueColor:
-                                        //               AlwaysStoppedAnimation<
-                                        //                   Color>(
-                                        //             AppColors
-                                        //                 .secondaryElement,
-                                        //           ),
-                                        //         ),
-                                        //       )
-                                        //     : Padding(
-                                        //         padding: EdgeInsets.symmetric(
-                                        //             horizontal: 12.0),
-                                        //         child: Column(
-                                        //           children: [
-                                        //             HeadingRow(
-                                        //               title: StringConst
-                                        //                   .MENU_AND_PHOTOS,
-                                        //               number: 'See All (' +
-                                        //                   _restaurentMenuModel
-                                        //                       .data.length
-                                        //                       .toString() +
-                                        //                   ')',
-                                        //               onTapOfNumber: () =>
-                                        //                   Navigator.pushNamed(
-                                        //                       context,
-                                        //                       AppRouter
-                                        //                           .menuPhotosScreen,
-                                        //                       arguments:
-                                        //                           _restaurentMenuModel
-                                        //                               .data),
-                                        //             ),
-                                        //             SizedBox(height: 16.0),
-                                        //             fooditems.length == 0
-                                        //                 ? Center(
-                                        //                     child: Text(
-                                        //                         'Not Available'),
-                                        //                   )
-                                        //                 : Container(
-                                        //                     height: 120,
-                                        //                     width:
-                                        //                         MediaQuery.of(
-                                        //                                 context)
-                                        //                             .size
-                                        //                             .width,
-                                        //                     child: ListView
-                                        //                         .builder(
-                                        //                       scrollDirection:
-                                        //                           Axis.horizontal,
-                                        //                       itemCount:
-                                        //                           _restaurentMenuModel
-                                        //                               .data
-                                        //                               .length,
-                                        //                       itemBuilder:
-                                        //                           (context,
-                                        //                               index) {
-                                        //                         var data =
-                                        //                             _restaurentMenuModel
-                                        //                                     .data[
-                                        //                                 index];
-                                        //                         return Container(
-                                        //                             margin: EdgeInsets.only(
-                                        //                                 right:
-                                        //                                     12.0),
-                                        //                             decoration: BoxDecoration(
-                                        //                                 borderRadius: BorderRadius.all(Radius.circular(
-                                        //                                     8))),
-                                        //                             child: Image
-                                        //                                 .network(
-                                        //                               data.menuImage,
-                                        //                               fit: BoxFit
-                                        //                                   .fill,
-                                        //                               loadingBuilder: (BuildContext ctx,
-                                        //                                   Widget
-                                        //                                       child,
-                                        //                                   ImageChunkEvent
-                                        //                                       loadingProgress) {
-                                        //                                 if (loadingProgress ==
-                                        //                                     null) {
-                                        //                                   return child;
-                                        //                                 } else {
-                                        //                                   return Container(
-                                        //                                     // height: ,
-                                        //                                     width: 160,
-                                        //                                     child: Center(
-                                        //                                       child: CircularProgressIndicator(
-                                        //                                         valueColor: AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
-                                        //                                       ),
-                                        //                                     ),
-                                        //                                   );
-                                        //                                 }
-                                        //                               },
-                                        //                               width:
-                                        //                                   160,
-                                        //                             ));
-                                        //                       },
-                                        //                     ),
-                                        //                   ),
-                                        //           ],
-                                        //         ),
-                                        //       )
+                                  SizedBox(height: 10.0),
+                                  Text(
+                                    widget.restaurantDetails.restaurantAddress,
+                                    style: addressTextStyle,
+                                  ),
+                                  SizedBox(height: 5.0),
+                                  RichText(
+                                    text: TextSpan(
+                                      style: openingTimeTextStyle,
+                                      children: [
+                                        TextSpan(text: "Open Now - "),
+                                        TextSpan(
+                                            text: widget.restaurantDetails.data
+                                                    .restOpenTime +
+                                                "am - " +
+                                                widget.restaurantDetails.data
+                                                    .restCloseTime +
+                                                "am ",
+                                            style: addressTextStyle),
                                       ],
                                     ),
-                                  )
+                                  ),
+                                  SizedBox(height: 10.0),
+                                  Text(
+                                    'The Baan Thai restaurant in Fort Wayne, Indiana makes great use of high-resolution pictures to draw in website visitors. Color abounds wherever you look and the vivid representations of the Thai region make you feel like you’re already there. Don’t settle for washed-out, blurry photos on your website. If need be, hire a professional photographer or purchase high-resolution photos online to give your website the extra kick it needs.',
+                                    textAlign: TextAlign.justify,
+                                    style: addressTextStyle,
+                                  ),
                                 ],
                               ),
                             ),
                           ],
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),
               ),
             ];
           },
-          body: SingleChildScrollView(
-              child: Container(
-                  // color: Colors.pink,
-                  child: Stack(children: [
-            // Positioned(
-            //     top: 0,
-            //     child: Container(
-            //         margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-            //         width: MediaQuery.of(context).size.width,
-            //         child: Image.asset("Assets/images/divider1.png"))),
-            AnimatedContainer(
-                duration: Duration(microseconds: 100),
-                padding:
-                    EdgeInsets.only(top: productContainerMarginTop, bottom: 60),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Container(
-                      //   margin: EdgeInsets.only(top: 10, left: 10),
-                      //   child: AnimatedDefaultTextStyle(
-                      //     duration: Duration(milliseconds: 100),
-                      //     child: Text("Products"),
-                      //     style: TextStyle(
-                      //         fontSize: prodcutFontSize,
-                      //         color: Colors.black,
-                      //         fontFamily: "Intro_Regular_Regular"),
-                      //   ),
-                      // ),
-                      // SizedBox(
-                      //   height: 10,
-                      // ),
-                      Container(
-                          child: DefaultTabController(
-                              length: 8,
-                              child: Column(children: [
-                                TabBar(
-                                  // isScrollable: true,
-                                  onTap: (index) {
-                                    print('indeeeeeeeeeeeeeeex');
-                                    print(index);
-                                  },
-                                  physics: BouncingScrollPhysics(),
-                                  indicatorColor: AppColors.black,
-                                  labelColor: AppColors.black,
-                                  isScrollable: true,
-                                  indicator: UnderlineTabIndicator(
-                                      borderSide: BorderSide(
-                                          width: 1.8, color: AppColors.black),
-                                      insets: EdgeInsets.symmetric(
-                                          horizontal: 20.0)),
-                                  // labelStyle: TextStyle(fontWeight: FontWeight.bold),
-                                  tabs: [
-                                    Tab(
-                                      text: "Starters",
-                                    ),
-                                    Tab(
-                                      text: "Fast Food",
-                                    ),
-                                    Tab(
-                                      text: "BBQ",
-                                    ),
-                                    Tab(
-                                      text: "Korean",
-                                    ),
-                                    Tab(
-                                      text: "Starters",
-                                    ),
-                                    Tab(
-                                      text: "Fast Food",
-                                    ),
-                                    Tab(
-                                      text: "BBQ",
-                                    ),
-                                    Tab(
-                                      text: "Korean",
-                                    ),
-                                  ],
-                                ),
-                                SingleChildScrollView(
-                                  child: Container(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.58,
-                                      color: Colors.transparent,
-                                      child: TabBarView(children: [
-                                        _isLoading
-                                            ? Container()
-                                            : fooditems.length > 0
-                                                ? Container(
-                                                    margin: EdgeInsets.only(
-                                                        top: 10),
-                                                    // width: MediaQuery.of(context).size.width,
-                                                    // height: 500,
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              0.0),
-                                                      child: _buildList(),
-                                                    ))
-                                                : Text(
-                                                    'No Items Avaialble Right Now'),
-                                        _isLoading
-                                            ? Container()
-                                            : fooditems.length > 0
-                                                ? Container(
-                                                    margin: EdgeInsets.only(
-                                                        top: 10),
-                                                    // width: MediaQuery.of(context).size.width,
-                                                    // height: 500,
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              0.0),
-                                                      child: _buildList(),
-                                                    ))
-                                                : Text(
-                                                    'No Items Avaialble Right Now'),
-                                        _isLoading
-                                            ? Container()
-                                            : fooditems.length > 0
-                                                ? Container(
-                                                    margin: EdgeInsets.only(
-                                                        top: 10),
-                                                    // width: MediaQuery.of(context).size.width,
-                                                    // height: 500,
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              0.0),
-                                                      child: _buildList(),
-                                                    ))
-                                                : Text(
-                                                    'No Items Avaialble Right Now'),
-                                        _isLoading
-                                            ? Container()
-                                            : fooditems.length > 0
-                                                ? Container(
-                                                    margin: EdgeInsets.only(
-                                                        top: 10),
-                                                    // width: MediaQuery.of(context).size.width,
-                                                    // height: 500,
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              0.0),
-                                                      child: _buildList(),
-                                                    ))
-                                                : Text(
-                                                    'No Items Avaialble Right Now'),
-                                        Container(),
-                                        Container(),
-                                        Container(),
-                                        Container(),
-                                      ])),
-                                )
-                              ])))
-                    ]))
-          ]))),
+          body: _isError
+              ? Center(
+                  child: Text('No Items Available Right Now'),
+                )
+              : SingleChildScrollView(
+                  child: Container(
+                      child: Stack(children: [
+                  AnimatedContainer(
+                      duration: Duration(microseconds: 100),
+                      padding: EdgeInsets.only(
+                          top: productContainerMarginTop, bottom: 60),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                                child: DefaultTabController(
+                                    length: 8,
+                                    child: Column(children: [
+                                      TabBar(
+                                        onTap: (index) {},
+                                        physics: BouncingScrollPhysics(),
+                                        indicatorColor: AppColors.black,
+                                        labelColor: AppColors.black,
+                                        isScrollable: true,
+                                        indicator: UnderlineTabIndicator(
+                                            borderSide: BorderSide(
+                                                width: 1.8,
+                                                color: AppColors.black),
+                                            insets: EdgeInsets.symmetric(
+                                                horizontal: 20.0)),
+                                        tabs: [
+                                          Tab(
+                                            text: "Starters",
+                                          ),
+                                          Tab(
+                                            text: "Fast Food",
+                                          ),
+                                          Tab(
+                                            text: "BBQ",
+                                          ),
+                                          Tab(
+                                            text: "Korean",
+                                          ),
+                                          Tab(
+                                            text: "Starters",
+                                          ),
+                                          Tab(
+                                            text: "Fast Food",
+                                          ),
+                                          Tab(
+                                            text: "BBQ",
+                                          ),
+                                          Tab(
+                                            text: "Korean",
+                                          ),
+                                        ],
+                                      ),
+                                      SingleChildScrollView(
+                                        child: Container(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.58,
+                                            color: Colors.transparent,
+                                            child: TabBarView(children: [
+                                              _isLoading
+                                                  ? Container()
+                                                  : fooditems.length > 0
+                                                      ? Container(
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  top: 10),
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(0.0),
+                                                            child: _buildList(),
+                                                          ))
+                                                      : Container(
+                                                          width:
+                                                              double.infinity,
+                                                          margin: EdgeInsets
+                                                              .symmetric(
+                                                                  vertical:
+                                                                      12.0),
+                                                          child: Text(
+                                                            'No Items Avaialble Right Now',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ),
+                                              _isLoading
+                                                  ? Container()
+                                                  : fooditems.length > 0
+                                                      ? Container(
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  top: 10),
+                                                          // width: MediaQuery.of(context).size.width,
+                                                          // height: 500,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(0.0),
+                                                            child: _buildList(),
+                                                          ))
+                                                      : Container(
+                                                          width:
+                                                              double.infinity,
+                                                          margin: EdgeInsets
+                                                              .symmetric(
+                                                                  vertical:
+                                                                      12.0),
+                                                          child: Text(
+                                                            'No Items Avaialble Right Now',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ),
+                                              _isLoading
+                                                  ? Container()
+                                                  : fooditems.length > 0
+                                                      ? Container(
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  top: 10),
+                                                          // width: MediaQuery.of(context).size.width,
+                                                          // height: 500,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(0.0),
+                                                            child: _buildList(),
+                                                          ))
+                                                      : Text(
+                                                          'No Items Avaialble Right Now'),
+                                              _isLoading
+                                                  ? Container()
+                                                  : fooditems.length > 0
+                                                      ? Container(
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  top: 10),
+                                                          // width: MediaQuery.of(context).size.width,
+                                                          // height: 500,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(0.0),
+                                                            child: _buildList(),
+                                                          ))
+                                                      : Text(
+                                                          'No Items Avaialble Right Now'),
+                                              Container(),
+                                              Container(),
+                                              Container(),
+                                              Container(),
+                                            ])),
+                                      )
+                                    ])))
+                          ]))
+                ]))),
         ),
       ],
     ));
@@ -832,15 +556,12 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     return AnimatedList(
       key: _listKey, // used by the ListModel to find this AnimatedList
       initialItemCount: fooditems.length,
-      // shrinkWrap: true,
+
       physics: ClampingScrollPhysics(),
       itemBuilder: (BuildContext context, int index, _) {
-        print(fooditems.length);
-        print(index);
         var item = fooditems[0];
         return SwipeItem(
             data: item,
-            // isEven: index.isEven,
             onSwipe: (key, {action}) {
               print('here');
               _performSwipeAction(index, item, key, action);
@@ -850,7 +571,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
   }
 
   void _performSwipeAction(index, data, GlobalKey key, SwipeAction action) {
-    // Get item's render box, and use it to calculate the position for the particle effect:
     final RenderBox box = key.currentContext.findRenderObject();
     Offset position =
         box.localToGlobal(Offset.zero, ancestor: context.findRenderObject());
@@ -859,17 +579,10 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     double w = box.size.width;
 
     if (action == SwipeAction.remove) {
-      // Delay the start of the effect a little bit, so the item is mostly closed before it begins.
       Future.delayed(Duration(milliseconds: 100))
           .then((_) => _particleField.lineExplosion(x, y, w));
 
-      // Remove the item (using the ItemModel to sync everything), and redraw the UI (to update count):
       setState(() {
-        // _model.removeAt(_model.indexOf(data),
-        // _model.removeAt(_model.indexOf(data),
-
-        //     duration: Duration(milliseconds: 600));
-        // this.data.remove(data);
         Map<String, dynamic> cartdata = {
           'id': data['id'],
           'restaurantId': data['restaurantId'],
@@ -882,7 +595,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
           'data': data,
           'restaurantdata': widget.restaurantDetails.data
         };
-        print(data['qty']);
+
         CartProvider().removeqtyCart(context, cartdata);
         print(fooditems[index]);
         if (fooditems[index]['cart'] != null &&
@@ -893,41 +606,12 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
           if (int.parse(fooditems[index]['qty2']) == 0) {
             fooditems[index]['cart'] = false;
           }
-        } else {
-          // fooditems[index]['qty2']= fooditems[index]['qty'] ;
-        }
+        } else {}
       });
     }
     if (action == SwipeAction.favorite) {
-      // Map<String, dynamic> cartdata = {
-      //   'id': data['id'],
-      //   'restaurantId': data['restaurantId'],
-      //   'image': data['image'],
-      //   'details': data['details'],
-      //   'name': data['name'],
-      //   'price': data['price'],
-      //   'payableAmount': data['price'].toString(),
-      //   'qty': data['qty'],
-      //   'data': data,
-      //   'restaurantdata': widget.restaurantDetails.data
-      // };
-      // print(data['qty']);
-      // CartProvider().addToCart(context, cartdata);
-      // if (fooditems[index]['cart'] != null &&
-      //     fooditems[index]['cart'] == true) {
-      //   var qtyy = int.parse(fooditems[index]['qty2']);
-      //   qtyy++;
-      //   fooditems[index]['qty2'] = qtyy.toString();
-      // } else {
-      //   fooditems[index]['qty2'] = fooditems[index]['qty'];
-      // }
-
-      // fooditems[index]['cart'] = true;
-      // print(fooditems[index]);
-      // setState(() {});
       bottomsheet(index, data);
       _particleField.pointExplosion(x + 60, y + 46, 100);
-      // }
     }
   }
 
@@ -1037,8 +721,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                               }
                               setState(() {});
                             }
-                            // Provider.of<CartProvider>(context, listen: false)
-                            //     .removeToCart(cartlist[i]);
                           },
                           child: Container(
                               alignment: Alignment.center,
@@ -1062,9 +744,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                                 (int.parse(fooditems[i]['qty']) + 1).toString();
                             print(fooditems[i]['qty']);
                             setState(() {});
-
-                            // Provider.of<CartProvider>(context, listen: false)
-                            //     .addToCart(context, data);
                           },
                           child: Container(
                               alignment: Alignment.center,
@@ -1082,19 +761,15 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                   ),
                 ),
                 Container(
-                  // color: Colors.red,
                   margin: EdgeInsets.only(left: 5),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: IconSlideAction(
-                      // caption: '+Cart',
                       color: AppColors.secondaryElement,
                       foregroundColor: AppColors.white,
                       icon: Icons.add_shopping_cart,
                       onTap: () {
-                        if (int.parse(fooditems[i]['qty']) >= 1) {
-                          // disabled = true;
-                        }
+                        if (int.parse(fooditems[i]['qty']) >= 1) {}
                         setState(() {});
                         Map<String, dynamic> data = {
                           'id': fooditems[i]['id'],
@@ -1126,7 +801,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                           return child;
                         } else {
                           return Container(
-                            // height: ,
                             width: 50,
                             height: 50,
                             child: Center(
@@ -1146,7 +820,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Container(
-                      // color: Colors.red,
                       width: MediaQuery.of(context).size.width * 0.6,
                       child: Text(
                         fooditems[i]['name'],
@@ -1164,7 +837,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                         SizedBox(
                           width: 10,
                         ),
-                        // Ratings(ratings[i]),
                       ],
                     ),
                   ],
@@ -1187,9 +859,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.white,
-        // backgroundColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-            // side: BorderSide(color: Colors.white70, width: 1),
             borderRadius: new BorderRadius.only(
                 topLeft: const Radius.circular(0.0),
                 topRight: const Radius.circular(0.0))),
@@ -1332,7 +1002,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                                       margin:
                                           EdgeInsets.symmetric(horizontal: 15),
                                       padding: EdgeInsets.zero,
-                                      // color: Colors.red,
                                       child: CheckboxListTile(
                                         tileColor: AppColors.white,
                                         title: Padding(
@@ -1389,7 +1058,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                                       margin:
                                           EdgeInsets.symmetric(horizontal: 15),
                                       padding: EdgeInsets.zero,
-                                      // color: Colors.red,
                                       child: CheckboxListTile(
                                         tileColor: AppColors.white,
                                         title: Padding(
@@ -1413,9 +1081,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                                             drinks[index]['check'] = newValue;
                                           });
                                         },
-
-                                        // controlAffinity:
-                                        //     ListTileControlAffinity.leading, //  <-- leading Checkbox
                                       )),
                                 )),
                               )
@@ -1427,52 +1092,42 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
           });
         }).whenComplete(() {
       print('here');
-      setState(() {
-        
-      });
+      setState(() {});
     });
   }
 
   void getProducts() async {
     _restaurentMenuModel =
         await Service().getMenus(widget.restaurantDetails.data.id);
-    print('this is a data');
-    print(_restaurentMenuModel.data);
-    _restaurentMenuModel.data.forEach((element) {
-      fooditems.add({
-        'name': element.menuName,
-        'image': element.menuImage,
-        'details': element.menuDetails,
-        'price': element.menuPrice,
-        'qty': '1',
-        'id': element.id,
-        'restaurantId': element.restId,
-        'restaurantdata': widget.restaurantDetails.data,
-        'foodCategoryName':element.foodCategory,
+    if (_restaurentMenuModel != null) {
+      _restaurentMenuModel.data.forEach((element) {
+        fooditems.add({
+          'name': element.menuName,
+          'image': element.menuImage,
+          'details': element.menuDetails,
+          'price': element.menuPrice,
+          'qty': '1',
+          'id': element.id,
+          'restaurantId': element.restId,
+          'restaurantdata': widget.restaurantDetails.data,
+          'foodCategoryName': element.foodCategory,
+        });
       });
-    });
+      setState(() {});
 
-    setState(() {
-      _isLoading = false;
-    });
-    //      _model = ListModel(
-    //   initialItems: fooditems,
-    //   listKey:
-    //       _listKey, // ListModel uses this to look up the list its acting on.
-    //   removedItemBuilder: (dynamic removedItem, BuildContext context,
-    //           Animation<double> animation) =>
-    //       RemovedSwipeItem(animation: animation),
-    // );
-    var cart;
-    cart = await CartProvider().getcartslist();
-    for (var i = 0; i < fooditems.length; i++) {
-      int index = cart.indexWhere((x) => x['id'] == fooditems[i]['id']);
-      if (index == -1) {
-      } else {
-        fooditems[i]['cart'] = true;
-        fooditems[i]['qty2'] = cart[index]['qty'];
+      var cart;
+      cart = await CartProvider().getcartslist();
+      for (var i = 0; i < fooditems.length; i++) {
+        int index = cart.indexWhere((x) => x['id'] == fooditems[i]['id']);
+        if (index == -1) {
+        } else {
+          fooditems[i]['cart'] = true;
+          fooditems[i]['qty2'] = cart[index]['qty'];
+        }
       }
-    }
+    } else
+      _isError = true;
+    _isLoading = false;
     setState(() {});
   }
 }

@@ -234,7 +234,6 @@ class AppService {
     try {
       FormData formData = new FormData.fromMap(data);
       var resp = await this.dio.post("/addOrderDetails", data: formData);
-      print(resp);
       return resp.data;
     } catch (e) {
       print(e);

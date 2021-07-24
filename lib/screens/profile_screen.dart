@@ -234,7 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 children: <Widget>[
                                   Container(
                                     width: MediaQuery.of(context).size.width *
-                                        0.50,
+                                        0.40,
                                     child: Text(
                                       notilist[index]['title'],
                                       style: Styles.customTitleTextStyle(
@@ -264,7 +264,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   children: [
                                     Container(
                                       width: MediaQuery.of(context).size.width *
-                                          0.52,
+                                          0.40,
                                       child: Text(
                                         notilist[index]['subtitle'],
                                         style: Styles.customNormalTextStyle(
@@ -358,7 +358,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         SpaceH8(),
                         Text(prefs.getString('email') ?? 'Not Available',
                             style: Styles.foodyBiteSubtitleTextStyle),
-                        _specificUserSubscriptionModel == null
+                        _specificUserSubscriptionModel == null ||
+                                _specificUserSubscriptionModel?.data?.length ==
+                                    0
                             ? const SizedBox()
                             : Container(
                                 width: double.infinity,
@@ -431,24 +433,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Container(
       child: Column(
         children: <Widget>[
-          // Container(
-          //   color: AppColors.secondaryColor,
-          //   padding: const EdgeInsets.symmetric(
-          //     horizontal: Sizes.MARGIN_16,
-          //     vertical: Sizes.MARGIN_16,
-          //   ),
-          //   child: Row(
-          //     children: <Widget>[
-          //       Text(
-          //         "Account",
-          //         style: textTheme.title.copyWith(
-          //           fontSize: Sizes.TEXT_SIZE_16,
-          //           color: AppColors.indigoShade1,
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
           ListView(
             shrinkWrap: true,
             children: ListTile.divideTiles(
@@ -663,18 +647,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         elevation: Sizes.ELEVATION_4,
         content: Container(
           height: Sizes.HEIGHT_150,
-          width: Sizes.WIDTH_300,
+          width: 350.0,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              SingleChildScrollView(
-                child: Center(
-                  child: Text(
-                    'Are you sure you want to Logout ?',
-                    style: textTheme.title.copyWith(
-                      fontSize: Sizes.TEXT_SIZE_20,
-                    ),
+              Center(
+                child: Text(
+                  'Are you sure you want to Logout ?',
+                  style: textTheme.title.copyWith(
+                    fontSize: Sizes.TEXT_SIZE_20,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ),
               Spacer(flex: 1),
@@ -682,7 +665,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: <Widget>[
                   AlertDialogButton(
                     buttonText: "No",
-                    width: Sizes.WIDTH_150,
+                    width: 150.0,
                     border: Border(
                       top: BorderSide(
                         width: 1,
@@ -699,7 +682,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   AlertDialogButton(
                     buttonText: "Yes",
-                    width: Sizes.WIDTH_150,
+                    width: 130.0,
                     border: Border(
                       top: BorderSide(
                         width: 1,

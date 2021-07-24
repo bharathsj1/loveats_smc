@@ -28,24 +28,22 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
   String selected_long = '';
   bool loader = true;
   final _formKey = GlobalKey<FormState>();
-  
-    @override
+
+  @override
   void initState() {
     getaddress();
     super.initState();
   }
 
   getaddress() async {
-    var respo= await AppService().getaddress();
+    var respo = await AppService().getaddress();
     print(respo);
-    myaddress=respo['data'];
+    myaddress = respo['data'];
     loader = false;
-    setState(() { });
+    setState(() {});
   }
 
-  getuser(){
-
-  }
+  getuser() {}
 
   nameValidator(String value) {
     if (value.isEmpty)
@@ -82,7 +80,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
     // }
   ];
 
-   showPlacePicker(context) async {
+  showPlacePicker(context) async {
     LocationResult result = await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => PlacePicker(
               "AIzaSyCkoLh9yZhcAtP9R-KsP90JaqFiooRuEmg",
@@ -104,13 +102,12 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
   bottomSheetForLocation(BuildContext context) {
     return showModalBottomSheet(
         context: context,
-        // backgroundColor: Colors.black54,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
         builder: (context) {
           return Container(
-            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -138,13 +135,11 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                             onTap: () {
                               if (_formKey.currentState.validate()) {
                                 FocusScope.of(context).unfocus();
-                                
-                                loader=true;
-                                setState(() {
-                                  
-                                });
-                                var data= {
-                                     'name': nameController.text,
+
+                                loader = true;
+                                setState(() {});
+                                var data = {
+                                  'name': nameController.text,
                                   'phone_no': phoneNoController.text,
                                   'latitude': selected_lat.toString(),
                                   'longitude': selected_long.toString(),
@@ -152,22 +147,19 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                                   'city': selected_city,
                                   'country': selected_country,
                                   'address_type': 'Other',
-                                  
                                 };
                                 AppService().setaddress(data).then((value) {
                                   print(value);
                                   myaddress.add(value['data']);
-                                  loader=false;
-                                  setState(() {
-                                    
-                                  });
+                                  loader = false;
+                                  setState(() {});
                                 });
-                                this.nameController.text='';
-                                this.phoneNoController.text='';
+                                this.nameController.text = '';
+                                this.phoneNoController.text = '';
                                 Navigator.of(context).pop();
                                 // Toast.show('New Address added', context,
                                 //     duration: 3);
-                                
+
                               }
                             },
                             child: Container(
@@ -239,21 +231,6 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                     SizedBox(
                       height: 10,
                     ),
-                    // InkWell(
-                    //   onTap: () =>
-                    //       AppRouter.navigator.pushNamed(AppRouter.googleMap),
-                    //   child: Row(
-                    //     children: [
-                    //       Icon(Icons.location_searching, size: 12.0),
-                    //       SizedBox(
-                    //         width: 5.0,
-                    //       ),
-                    //       Text('Use current location',
-                    //           style: Styles.customNormalTextStyle(
-                    //               color: Colors.indigo)),
-                    //     ],
-                    //   ),
-                    // ),
                     Divider(),
                     SizedBox(
                       height: 5.0,
@@ -262,20 +239,25 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                       'Selected Address',
                       style: Styles.customNormalTextStyle(color: Colors.black),
                     ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.place_outlined,
-                        color: AppColors.secondaryElement,
+                    Expanded(
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.place_outlined,
+                          color: AppColors.secondaryElement,
+                        ),
+                        title: Text('Other'),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        subtitle: Text(
+                          selected_address +
+                              ' ' +
+                              selected_city +
+                              ' ' +
+                              selected_country,
+                          style: TextStyle(fontSize: 12.0),
+                        ),
                       ),
-                      title: Text('Other'),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      subtitle: Text(selected_address +
-                          ' ' +
-                          selected_city +
-                          ' ' +
-                          selected_country),
                     ),
                     Divider(),
                   ],
@@ -366,7 +348,9 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                           Row(
                             children: [
                               Icon(
-                                myaddress[index]['address_type'] == 'Work'? Icons.work_outline_outlined: Icons.place_outlined,
+                                myaddress[index]['address_type'] == 'Work'
+                                    ? Icons.work_outline_outlined
+                                    : Icons.place_outlined,
                                 color: selectedaddress == index
                                     ? AppColors.secondaryElement
                                     : AppColors.black,
@@ -495,23 +479,22 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
               PotbellyButton(
                 'Proceed to payment',
                 onTap: () {
-                  if(myaddress.length!=0){
-                  var data = {
-                    'cartlist': widget.checkoutdata['cartlist'],
-                    'charges': widget.checkoutdata['charges'],
-                    'shipping': widget.checkoutdata['shipping'],
-                    'total': widget.checkoutdata['total'],
-                    'type': widget.checkoutdata['type'],
-                    'mixmatch': widget.checkoutdata['mixmatch'],
-                    'customer_addressId': myaddress[selectedaddress]['id'],
-                    'addressId': selectedaddress
-                  };
-                  Navigator
-                      .pushNamed(context,AppRouter.CheckOut2, arguments: data);
-                }
-                else{
-                   Toast.show('Add address to continue', context, duration: 3);
-                }
+                  if (myaddress.length != 0) {
+                    var data = {
+                      'cartlist': widget.checkoutdata['cartlist'],
+                      'charges': widget.checkoutdata['charges'],
+                      'shipping': widget.checkoutdata['shipping'],
+                      'total': widget.checkoutdata['total'],
+                      'type': widget.checkoutdata['type'],
+                      'mixmatch': widget.checkoutdata['mixmatch'],
+                      'customer_addressId': myaddress[selectedaddress]['id'],
+                      'addressId': selectedaddress
+                    };
+                    Navigator.pushNamed(context, AppRouter.CheckOut2,
+                        arguments: data);
+                  } else {
+                    Toast.show('Add address to continue', context, duration: 3);
+                  }
                 },
                 buttonHeight: 45,
                 buttonWidth: MediaQuery.of(context).size.width * 0.89,
@@ -522,7 +505,9 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                     color: Colors.white),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: myaddress.length!=0? AppColors.secondaryElement: AppColors.grey),
+                    color: myaddress.length != 0
+                        ? AppColors.secondaryElement
+                        : AppColors.grey),
               ),
             ],
           ),
@@ -632,24 +617,25 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
             SizedBox(
               height: 5,
             ),
-         loader
-        ? Padding(
-          padding: const EdgeInsets.only(top:40.0),
-          child: Center(
-              child: CircularProgressIndicator(
-                valueColor:
-                    AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
-              ),
-            ),
-        )
-        :myaddress.length == 0
-            ? Center(
-                child: Container(
-                  padding: const EdgeInsets.only(top:40.0),
-                  child: Text('No address available, Add new address to continue'),
-                ),
-              )
-            :   Column(children: addresscard())
+            loader
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 40.0),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.secondaryElement),
+                      ),
+                    ),
+                  )
+                : myaddress.length == 0
+                    ? Center(
+                        child: Container(
+                          padding: const EdgeInsets.only(top: 40.0),
+                          child: Text(
+                              'No address available, Add new address to continue'),
+                        ),
+                      )
+                    : Column(children: addresscard())
           ],
         ),
       ),

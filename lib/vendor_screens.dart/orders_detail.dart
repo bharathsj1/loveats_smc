@@ -2,9 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/values/values.dart';
@@ -120,8 +118,6 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                             fontSize: Sizes.TEXT_SIZE_16,
                           ),
                         ),
-
-                        // Ratings(ratings[i]),
                       ],
                     ),
                   ],
@@ -184,8 +180,6 @@ class _OrdersDetailsState extends State<OrdersDetails> {
   }
 
   _onAlertButtonsPressed(context, type, Api, detail) {
-    //  StatefulBuilder(
-    //       builder: (BuildContext context, StateSetter setState) {
     return Alert(
       context: context,
       type: AlertType.warning,
@@ -223,25 +217,21 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                       'title': 'Order Approved',
                       'body':
                           'Your order has been approved by admin. Your order will be ready in few minutes',
-                      // 'data': value.toString(),
                       'user_id': widget.orderdata['customer_id']
                     };
                     AppService().sendnotispecificuser(data);
-                     var data2 = {
-                        'title': 'New Order',
-                        'body':
-                            'Order#'+widget.orderdata['id']+' was assigned to you',
-                        // 'title': 'Order Delivered',
-                        // 'body': 'Thanks for ordering, Enjoy you meal',
-                        // 'data': value.toString(),
-                        'user_id': widget.orderdata['rest_details']['user_id']
-                      };
-                      AppService().sendnotispecificuser(data2);
+                    var data2 = {
+                      'title': 'New Order',
+                      'body': 'Order#' +
+                          widget.orderdata['id'] +
+                          ' was assigned to you',
+                      'user_id': widget.orderdata['rest_details']['user_id']
+                    };
+                    AppService().sendnotispecificuser(data2);
                   } else {
                     var data = {
                       'title': 'Order Rejected',
                       'body': 'Your order has been reject by admin',
-                      // 'data': value.toString(),
                       'user_id': widget.orderdata['customer_id']
                     };
                     AppService().sendnotispecificuser(data);
@@ -265,15 +255,14 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                     var data = {
                       'title': 'Order Ready',
                       'body': 'Your order is ready to deliver',
-                      // 'data': value.toString(),
                       'user_id': widget.orderdata['customer_id']
                     };
                     AppService().sendnotispecificuser(data);
                     var data2 = {
                       'title': 'New Order to Deliver',
-                      'body': 'Order#'+widget.orderdata['id']+' was assigned you to deliver',
-                      // 'data': value.toString(),
-                      // 'user_id': widget.orderdata['customer_id']
+                      'body': 'Order#' +
+                          widget.orderdata['id'] +
+                          ' was assigned you to deliver',
                     };
                     AppService().sendnotideliveryboy(data2);
                   }
@@ -289,46 +278,37 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                         'title': 'Out for Delivery',
                         'body':
                             'You can track live location of the order in orders list section',
-                        // 'title': 'Order Delivered',
-                        // 'body': 'Thanks for ordering, Enjoy you meal',
-                        // 'data': value.toString(),
                         'user_id': widget.orderdata['customer_id']
                       };
                       AppService().sendnotispecificuser(data);
                     }
                   });
-                   SharedPreferences pref = await SharedPreferences.getInstance();
-                    pref.setBool('driving', true);
-                    pref.setString('drivingorder', jsonEncode(widget.orderdata));
-                  // Navigator.pushNamed(context, AppRouter.Opendirection,
-                  //     arguments: {
-                  //       'lat': double.parse(
-                  //           widget.orderdata['user_address']['user_latitude']),
-                  //       'long': double.parse(
-                  //           widget.orderdata['user_address']['user_longitude']),
-                  //       'clat': location.latitude,
-                  //       'clong': location.longitude,
-                  //       'data': widget.orderdata,
-                  //       'driving': true
-                  //     });
-                  Navigator.pushAndRemoveUntil(context,  MaterialPageRoute(
-                builder: (_) => Open_direction(desdirection:  {
-                        'lat': double.parse(
-                            widget.orderdata['user_address']['user_latitude']),
-                        'long': double.parse(
-                            widget.orderdata['user_address']['user_longitude']),
-                        'clat': location.latitude,
-                        'clong': location.longitude,
-                        'data': widget.orderdata,
-                        'driving': true
-                      })), (route) => false);
+                  SharedPreferences pref =
+                      await SharedPreferences.getInstance();
+                  pref.setBool('driving', true);
+                  pref.setString('drivingorder', jsonEncode(widget.orderdata));
+
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => Open_direction(desdirection: {
+                                'lat': double.parse(
+                                    widget.orderdata['user_address']
+                                        ['user_latitude']),
+                                'long': double.parse(
+                                    widget.orderdata['user_address']
+                                        ['user_longitude']),
+                                'clat': location.latitude,
+                                'clong': location.longitude,
+                                'data': widget.orderdata,
+                                'driving': true
+                              })),
+                      (route) => false);
                 }
               }
               widget.orderdata['status'] = type;
               loader = false;
               setState(() {});
-              // Navigator.pop(context);
-
             }
           },
           color: AppColors.secondaryElement,
@@ -345,7 +325,6 @@ class _OrdersDetailsState extends State<OrdersDetails> {
       Toast.show(
           'Location services are disabled. Turn on your location', context,
           duration: 4);
-      // return Future.error('Location services are disabled.');
       return null;
     }
 
@@ -356,18 +335,14 @@ class _OrdersDetailsState extends State<OrdersDetails> {
         Toast.show(
             'Location permissions are denied. Turn on your location', context,
             duration: 4);
-        // return Future.error('Location permissions are denied');
         return null;
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
       Toast.show(
           'Location permissions are permanently denied, we cannot request permissions. Turn on your location',
           context,
           duration: 4);
-      // return Future.error(
-      //   'Location permissions are permanently denied, we cannot request permissions.');
       return null;
     }
     return await Geolocator.getCurrentPosition();
@@ -376,7 +351,6 @@ class _OrdersDetailsState extends State<OrdersDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Color(0xFFF0F0F0),
       appBar: AppBar(
         centerTitle: true,
         iconTheme: IconThemeData(color: AppColors.secondaryElement),
@@ -549,16 +523,6 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                                             'status',
                                             'Do you wants to start driving?');
                                       })
-                                // PotbellyButton('Delivered',
-                                //     buttonHeight: 50,
-                                //     buttonTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
-                                //     decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: AppColors.secondaryElement), onTap: () {
-                                //     _onAlertButtonsPressed(
-                                //         context,
-                                //         'delivered',
-                                //         'status',
-                                //         'Food has been delivered to the customer?');
-                                //   })
                                 : Container(),
                   ],
                 ),
@@ -590,7 +554,6 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
-                          // color: Colors.red,
                           width: MediaQuery.of(context).size.width * 0.55,
                           child: Text(
                             'Order #' + widget.orderdata['id'].toString(),
@@ -610,8 +573,6 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                                 fontSize: Sizes.TEXT_SIZE_16,
                               ),
                             ),
-
-                            // Ratings(ratings[i]),
                           ],
                         ),
                       ],
@@ -708,7 +669,6 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                             widget.orderdata['user_address']['name']),
                         style: TextStyle(
                             fontSize: 20,
-                            // fontWeight: FontWeight.bold,
                             fontFamily: 'roboto',
                             color: Colors.black87),
                         maxLines: 1,
@@ -724,7 +684,6 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                                 borderRadius: BorderRadius.circular(100)),
                             child: Icon(
                               Icons.person_outline,
-                              // size: 16,
                               color: Colors.black54,
                             ),
                           )),
@@ -746,20 +705,14 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                               widget.orderdata['user_address']['country'],
                           style: TextStyle(
                               fontSize: 20,
-                              // fontWeight: FontWeight.bold,
                               fontFamily: 'roboto',
                               color: Colors.black87),
-                          // maxLines: 1,
-                          // overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Padding(
                           padding: EdgeInsets.only(top: 0),
                           child: InkWell(
                             onTap: () async {
-                              // LocationData currentLocation;
-                              // Location location;
-                              // currentLocation = await location.getLocation();
                               if (accounttype == '3') {
                                 var location = await _determinePosition();
                                 print(location);
@@ -809,7 +762,6 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                                   borderRadius: BorderRadius.circular(100)),
                               child: Icon(
                                 Icons.directions_outlined,
-                                // size: 16,
                                 color: Colors.black54,
                               ),
                             ),
@@ -826,7 +778,6 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                         widget.orderdata['user_address']['phone_no'],
                         style: TextStyle(
                             fontSize: 20,
-                            // fontWeight: FontWeight.bold,
                             fontFamily: 'roboto',
                             color: Colors.black87),
                         maxLines: 1,
@@ -842,7 +793,6 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                                 borderRadius: BorderRadius.circular(100)),
                             child: Icon(
                               Icons.phone,
-                              // size: 16,
                               color: Colors.white,
                             ),
                           )),
