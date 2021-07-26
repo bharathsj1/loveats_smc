@@ -47,8 +47,8 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
       backgroundColor: AppColors.white,
       body: Center(
         child: Lottie.asset(
-          'assets/curryloveatsupdate.json',
-          // 'assets/food4.json',
+          // 'assets/curryloveatsupdate.json',
+          'assets/Loveats_change1.json',
           // 'assets/food2.json',
           // 'assets/food3.json',
           controller: animationcontroll,
