@@ -63,6 +63,9 @@ dependencies:
   webview_flutter: ^2.0.10
   lottie: ^1.1.0
   flutter_hooks: ^0.18.0
+  # flutter_swiper: ^1.1.6
+  flutter_swiper_null_safety: ^1.0.2
+  scroll_to_index: ^2.0.0
 
 #  flutter_launcher_icons: ^0.8.1
 dev_dependencies:

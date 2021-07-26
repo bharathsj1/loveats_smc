@@ -44,7 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
   bool search = true;
   List searchlist = [];
 
-  List subscription = ['assets/images/mainscreen.jpg'];
+  List subscription = [
+    'assets/images/sub3.png',
+    'assets/images/sub1.png',
+  ];
 
   RestaurentsModel _restaurentsModel;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -392,7 +395,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       // rating: hotspotlist[i]['rating'],
                       rating: '3.2',
                       category: '',
-                      distance: hotspotlist[i]['distance']+ ' Km',
+                      distance: hotspotlist[i]['distance'] + ' Km',
                       data: hotspotlist[i]),
                 );
               },
@@ -400,7 +403,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 250,
                 width: MediaQuery.of(context).size.width / 1.2,
                 child: Card(
-                  elevation: 1,
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6.0),
                   ),
@@ -413,7 +416,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(6),
                                 topRight: Radius.circular(6)),
-                            child: hotspotlist[i]['image'].substring(0, 4) == 'http'
+                            child: hotspotlist[i]['image'].substring(0, 4) ==
+                                    'http'
                                 ? Image.network(
                                     hotspotlist[i]['image'],
                                     loadingBuilder: (BuildContext ctx,
@@ -474,8 +478,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(hotspotlist[i]['name'] + '- Rose, Farrington',
+                            Text(hotspotlist[i]['name'],
                                 textAlign: TextAlign.left,
+                                overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.dmSerifDisplay(
                                   textStyle: Styles.customTitleTextStyle(
                                     color: Colors.black87,
@@ -496,8 +501,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Container(
                                     // width: MediaQuery.of(context).size.width*0.5,
                                     // color: Colors.red,
-                                    child: Text(
-                                        '4.4' + ' Very good',
+                                    child: Text('4.4' + ' Very good',
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.openSans(
                                           textStyle:
@@ -821,976 +825,545 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       },
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size(MediaQuery.of(context).size.width, 0),
-          child: AppBar(
-            elevation: 0,
-            // backwardsCompatibility: false,
-            // systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Colors.white),
-          ),
-        ),
-        body: Container(
-          margin: EdgeInsets.symmetric(
-            // horizontal: Sizes.MARGIN_16,
-            vertical: 2,
-          ),
-          child: ListView(
-            children: <Widget>[
-              InkWell(
-                onTap: () => bottomSheetForLocation(context),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 0.0),
-                            // child: Icon(Icons.share_location_outlined,
-                            //     color: AppColors.black),
-                            child: Image.asset(
-                              "assets/images/driver.gif",
-                              height: 40,
-                              width: 40,
+        // appBar: PreferredSize(
+        //   preferredSize: Size(MediaQuery.of(context).size.width, 0),
+        //   child: AppBar(
+        //     elevation: 0,
+        //     // backwardsCompatibility: false,
+        //     // systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Colors.white),
+        //   ),
+        // ),
+        body: NestedScrollView(
+          //  controller: controller,
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                pinned: true,
+                automaticallyImplyLeading: false,
+                // collapsedHeight: 40,
+                toolbarHeight: 135,
+                flexibleSpace: Padding(
+                  padding: const EdgeInsets.only(top: 25.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InkWell(
+                        onTap: () => bottomSheetForLocation(context),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 0.0),
+                                    // child: Icon(Icons.share_location_outlined,
+                                    //     color: AppColors.black),
+                                    child: Image.asset(
+                                      "assets/images/driver.gif",
+                                      height: 40,
+                                      width: 40,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 2,
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                      bottom: 0,
+                                    ),
+                                    // decoration: BoxDecoration(
+                                    //     border: Border(
+                                    //         bottom: BorderSide(
+                                    //   color: Colors.black38,
+                                    //   width: 0.0,
+                                    // ))),
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 2.0),
+                                          child: RotationTransition(
+                                            turns: new AlwaysStoppedAnimation(
+                                                40 / 360),
+                                            child: Icon(
+                                              Icons.navigation_rounded,
+                                              color: AppColors.black,
+                                              size: 14,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 2,
+                                        ),
+                                        Text(
+                                          "Preston, Liverpool",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 2.0),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      color: AppColors.black,
+                                      size: 18,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 2,
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(
-                              bottom: 0,
-                            ),
-                            // decoration: BoxDecoration(
-                            //     border: Border(
-                            //         bottom: BorderSide(
-                            //   color: Colors.black38,
-                            //   width: 0.0,
-                            // ))),
-                            child: Row(
+                            Row(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom: 2.0),
-                                  child: RotationTransition(
-                                    turns: new AlwaysStoppedAnimation(40 / 360),
-                                    child: Icon(
-                                      Icons.navigation_rounded,
-                                      color: AppColors.black,
-                                      size: 14,
+                                  padding: const EdgeInsets.only(right: 5.0),
+                                  child: InkWell(
+                                      onTap: () {
+                                        // search = !search;
+                                        // setState(() {});
+                                        Navigator.pushNamed(
+                                          context,
+                                          AppRouter.cart_Screen,
+                                          // arguments: SearchValue(
+                                          //   searchcontroller.text,
+                                          // ),
+                                        );
+                                      },
+                                      child: Icon(
+                                        OMIcons.shoppingCart,
+                                        color: AppColors.black,
+                                        size: 21,
+                                      )),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 10.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      // search = !search;
+                                      Navigator.pushNamed(
+                                        context,
+                                        AppRouter.profileScreen,
+                                        // arguments: SearchValue(
+                                        //   searchcontroller.text,
+                                        // ),
+                                      );
+                                      setState(() {});
+                                    },
+                                    // child: Icon(
+                                    //   Icons.person,
+                                    //   color: AppColors.black,
+                                    //   size: 22,
+                                    // )
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 4.0),
+                                      child: CircleAvatar(
+                                        backgroundImage: AssetImage(
+                                            'assets/images/andy.png'),
+                                        backgroundColor: Colors.transparent,
+                                        minRadius: Sizes.RADIUS_14,
+                                        maxRadius: Sizes.RADIUS_14,
+                                      ),
                                     ),
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Text(
-                                  "Preston, Liverpool",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 6,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              // filterswidget('Filters', 12.0, FontAwesomeIcons.slidersH,
+                              //     AppColors.secondaryElement, 75.0, true),
+                              // SizedBox(
+                              //   width: 10,
+                              // ),
+                              filterswidget(
+                                  0,
+                                  'Delivery',
+                                  16.0,
+                                  Icons.store_outlined,
+                                  deliverytype == 0
+                                      ? AppColors.secondaryElement
+                                      : AppColors.grey,
+                                  80.0,
+                                  deliverytype == 0 ? true : false),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              filterswidget(
+                                  1,
+                                  'Pickup',
+                                  16.0,
+                                  Icons.attach_money,
+                                  deliverytype == 1
+                                      ? AppColors.secondaryElement
+                                      : AppColors.grey,
+                                  75.0,
+                                  deliverytype == 1 ? true : false),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              filterswidget(
+                                  2,
+                                  'Table Service',
+                                  16.0,
+                                  Icons.attach_money,
+                                  deliverytype == 2
+                                      ? AppColors.secondaryElement
+                                      : AppColors.grey,
+                                  105.0,
+                                  deliverytype == 2 ? true : false),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 0,
+                      ),
+                      search
+                          ? Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    print('here');
+                                    Navigator.pushNamed(
+                                        context, AppRouter.newsearch);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(0),
+                                    ),
+
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0),
+                                    // width: MediaQuery.of(context).size.width * 0.82,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Material(
+                                      elevation: 3,
+                                      borderRadius: BorderRadius.circular(0),
+                                      child: Container(
+                                        color: Colors.grey[200],
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            FoodyBiteSearchInputField(
+                                                ImagePath.searchIcon,
+                                                borderRadius: 12,
+                                                controller: searchcontroller,
+                                                fillColor: Colors.grey[200],
+                                                filled: true,
+                                                borderColor: Colors.transparent,
+                                                contentPaddingVertical: 11,
+                                                contentPaddingHorizontal: 50,
+                                                textFormFieldStyle: Styles
+                                                    .customNormalTextStyle(
+                                                        color: Colors.black54),
+                                                hintText: StringConst
+                                                    .HINT_TEXT_HOME_SEARCH_BAR,
+                                                hintTextStyle: Styles
+                                                    .customNormalTextStyle(
+                                                        color: Colors.black54),
+                                                suffixIconImagePath:
+                                                    ImagePath.settingsIcon,
+                                                hasSuffixIcon: false,
+                                                borderWidth: 0.0,
+                                                onChanged: (value) {
+                                              searchfromlist();
+                                            }, onTapOfLeadingIcon: () {
+                                              pausevideo();
+                                              FocusScope.of(context).unfocus();
+                                              Navigator.pushNamed(
+                                                context,
+                                                AppRouter.searchResultsScreen,
+                                                arguments: SearchValue(
+                                                  searchcontroller.text,
+                                                ),
+                                              ).then((value) {
+                                                this.searchcontroller.text = '';
+                                                FocusScope.of(context)
+                                                    .unfocus();
+                                                setState(() {});
+                                                resumevideo();
+                                              });
+                                            }, onTapOfSuffixIcon: () {
+                                              // pausevideo();
+                                              print('herrrrr');
+                                              Navigator.pushNamed(context,
+                                                      AppRouter.Filter_Screens)
+                                                  .then(
+                                                      (value) => resumevideo());
+                                            }, borderStyle: BorderStyle.solid),
+                                            InkWell(
+                                              onTap: (){
+                                                 Navigator.pushNamed(context,
+                                                      AppRouter.Filter_Screens)
+                                                  .then(
+                                                      (value) => resumevideo());
+                                              },
+                                              child: Container(
+                                                
+                                                height: 46,
+                                                width: 50,
+                                                // margin: EdgeInsets.only(right: 15),
+                                                // color: Colors.red,
+                                                //   decoration: BoxDecoration(
+                                                //      boxShadow: [
+                                                //   BoxShadow(
+                                                //     color: Colors.grey.withOpacity(0.2),
+                                                //     spreadRadius: 0,
+                                                //     blurRadius: 2,
+                                                //     // offset: Offset(0, 3), // changes position of shadow
+                                                //   ),
+                                                // ],
+                                                //   ),
+                                                child: ImageIcon(
+                                                  AssetImage(
+                                                    ImagePath.settingsIcon,
+                                                  ),
+                                                  color: AppColors.black,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 2.0),
-                            child: Icon(
-                              Icons.keyboard_arrow_down_rounded,
-                              color: AppColors.black,
-                              size: 18,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(right: 15.0),
-                    //   child: InkWell(
-                    //       onTap: () {
-                    //         // search = !search;
-                    //         setState(() {});
-                    //       },
-                    //       child: Icon(
-                    //         Icons.search_rounded,
-                    //         color: AppColors.black,
-                    //       )),
-                    // )
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5.0),
-                          child: InkWell(
-                              onTap: () {
-                                // search = !search;
-                                // setState(() {});
-                                Navigator.pushNamed(
-                                  context,
-                                  AppRouter.cart_Screen,
-                                  // arguments: SearchValue(
-                                  //   searchcontroller.text,
-                                  // ),
-                                );
-                              },
-                              child: Icon(
-                                OMIcons.shoppingCart,
-                                color: AppColors.black,
-                                size: 21,
-                              )),
-                        ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(right: 5.0),
-                        //   child: InkWell(
-                        //       onTap: () {
-                        //         // search = !search;
-                        //         // setState(() {});
-                        //          Navigator.pushNamed(
-                        //           context,
-                        //           AppRouter.notificationsScreen,
-                        //           // arguments: SearchValue(
-                        //           //   searchcontroller.text,
-                        //           // ),
-                        //         );
-                        //       },
-                        //       child: Icon(
-                        //         Icons.notifications_none_rounded,
-                        //         color: AppColors.black,
-                        //         size: 21,
-                        //       )),
-                        // ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10.0),
-                          child: InkWell(
-                            onTap: () {
-                              // search = !search;
-                              Navigator.pushNamed(
-                                context,
-                                AppRouter.profileScreen,
-                                // arguments: SearchValue(
-                                //   searchcontroller.text,
-                                // ),
-                              );
-                              setState(() {});
-                            },
-                            // child: Icon(
-                            //   Icons.person,
-                            //   color: AppColors.black,
-                            //   size: 22,
-                            // )
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 4.0),
-                              child: CircleAvatar(
-                                backgroundImage:
-                                    AssetImage('assets/images/andy.png'),
-                                backgroundColor: Colors.transparent,
-                                minRadius: Sizes.RADIUS_14,
-                                maxRadius: Sizes.RADIUS_14,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 6,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      // filterswidget('Filters', 12.0, FontAwesomeIcons.slidersH,
-                      //     AppColors.secondaryElement, 75.0, true),
-                      // SizedBox(
-                      //   width: 10,
-                      // ),
-                      filterswidget(
-                          0,
-                          'Delivery',
-                          16.0,
-                          Icons.store_outlined,
-                          deliverytype == 0
-                              ? AppColors.secondaryElement
-                              : AppColors.grey,
-                          80.0,
-                          deliverytype == 0 ? true : false),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      filterswidget(
-                          1,
-                          'Pickup',
-                          16.0,
-                          Icons.attach_money,
-                          deliverytype == 1
-                              ? AppColors.secondaryElement
-                              : AppColors.grey,
-                          75.0,
-                          deliverytype == 1 ? true : false),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      filterswidget(
-                          2,
-                          'Table Service',
-                          16.0,
-                          Icons.attach_money,
-                          deliverytype == 2
-                              ? AppColors.secondaryElement
-                              : AppColors.grey,
-                          105.0,
-                          deliverytype == 2 ? true : false),
+                            )
+                          : Container(),
                     ],
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 2,
-              ),
-              search
-                  ? Row(
-                      children: [
-                        InkWell(
-                          onTap: (){
-                            print('here');
-                            Navigator.pushNamed(context, AppRouter.newsearch);
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                            // width: MediaQuery.of(context).size.width * 0.82,
-                            width: MediaQuery.of(context).size.width,
-                            child: Material(
-                              elevation: 0,
-                              borderRadius: BorderRadius.circular(6),
-                              child: FoodyBiteSearchInputField(
-                                  ImagePath.searchIcon,
-                                  
-                                  borderRadius: 6,
-                                  controller: searchcontroller,
-                                  fillColor: Colors.grey[200],
-                                  filled: true,
-                                  contentPaddingVertical: 6,
-                                  textFormFieldStyle:
-                                      Styles.customNormalTextStyle(
-                                          color: Colors.black54),
-                                  hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
-                                  hintTextStyle: Styles.customNormalTextStyle(
-                                      color: Colors.black54),
-                                  suffixIconImagePath: ImagePath.settingsIcon,
-                                  hasSuffixIcon: true,
-                                  borderWidth: 0.0, onChanged: (value) {
-                                searchfromlist();
-                              }, onTapOfLeadingIcon: () {
-                                pausevideo();
-                                FocusScope.of(context).unfocus();
-                                Navigator.pushNamed(
-                                  context,
-                                  AppRouter.searchResultsScreen,
-                                  arguments: SearchValue(
-                                    searchcontroller.text,
-                                  ),
-                                ).then((value) {
-                                  this.searchcontroller.text = '';
-                                  FocusScope.of(context).unfocus();
-                                  setState(() {});
-                                  resumevideo();
-                                });
-                              }, onTapOfSuffixIcon: () {
-                                pausevideo();
-                                Navigator.pushNamed(
-                                        context, AppRouter.filterScreen)
-                                    .then((value) => resumevideo());
-                              }, borderStyle: BorderStyle.solid),
-                            ),
-                          ),
-                        ),
-                        // Spacer(),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(right: 18.0),
-                        //   child: Material(
-                        //     elevation: 2,
-                        //     borderRadius: BorderRadius.circular(6),
-                        //     child: Padding(
-                        //       padding: const EdgeInsets.all(10.0),
-                        //       child: ImageIcon(
-                        //         AssetImage(ImagePath.settingsIcon),
-                        //         color: AppColors.secondaryElement,
-                        //       ),
-                        //     ),
-                        //   ),
-                        // )
-                      ],
-                    )
-                  : Container(),
-              SizedBox(
-                height: search ? 10 : 0,
-              ),
-
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 10.0, right: 10),
-              //   child: SingleChildScrollView(
-              //     scrollDirection: Axis.horizontal,
-              //     child: Row(
-              //       children: [
-              //         Padding(
-              //           padding: const EdgeInsets.only(bottom: 5.0),
-              //           child: Material(
-              //             elevation: 3,
-              //             shape: RoundedRectangleBorder(
-              //               side: BorderSide(
-              //                   width: 0.5, color: AppColors.secondaryElement),
-              //               borderRadius: BorderRadius.circular(6),
-              //             ),
-              //             child: Container(
-              //                 width: 80,
-              //                 height: 30,
-              //                 decoration: BoxDecoration(
-              //                   borderRadius: BorderRadius.circular(6),
-              //                   border: Border.all(
-              //                       width: 0.5,
-              //                       color: AppColors.secondaryElement),
-              //                 ),
-              //                 child: Center(
-              //                     child: Row(
-              //                   children: [
-              //                     SizedBox(
-              //                       width: 5,
-              //                     ),
-              //                     Icon(
-              //                       Icons.location_pin,
-              //                       size: 16,
-              //                       color: AppColors.secondaryElement,
-              //                     ),
-              //                     SizedBox(
-              //                       width: 5,
-              //                     ),
-              //                     Text(
-              //                       'Nearby',
-              //                       style: TextStyle(
-              //                           fontSize: 15,
-              //                           color: AppColors.black,
-              //                           fontWeight: FontWeight.bold),
-              //                     )
-              //                   ],
-              //                 ))),
-              //           ),
-              //         ),
-              //         SizedBox(
-              //           width: 12,
-              //         ),
-              //         filterswidget('Opened', Icons.store_outlined, AppColors.grey,80.0),
-              //         SizedBox(
-              //           width: 12,
-              //         ),
-              //         filterswidget('High to Low', Icons.attach_money, AppColors.grey,105.0),
-              //         SizedBox(
-              //           width: 12,
-              //         ),
-              //         filterswidget('Low to High', Icons.attach_money, AppColors.grey,105.0),
-
-              //         SizedBox(
-              //           width: 12,
-              //         ),
-              //         filterswidget('4+ Rating', Icons.star, AppColors.grey,105.0),
-
-              //       ],
-              //     ),
-              //   ),
-              // ),
-              // SizedBox(
-              //   height: 0,
-              // ),
-
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal:12.0),
-              //   child: Text('What you want to order next?', textAlign: TextAlign.left, style: GoogleFonts.dmSerifDisplay(textStyle:TextStyle(fontSize: 36,color: AppColors.black)),),
-              // ),
-              Padding(
-                padding: const EdgeInsets.only(left: 5.0, right: 5),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  physics: BouncingScrollPhysics(),
-                  child: Row(
-                    children: newcategorieslist(),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 0,
-              ),
-//
-              loader
-                  ? Container(
-                      height: 280,
-                      child: CarouselSlider(
-                          options: CarouselOptions(
-                              enableInfiniteScroll: true, height: 260),
-                          items: List.generate(
-                            1,
-                            (ind) => SkeletonAnimation(
-                              shimmerColor: Colors.grey[350],
-                              shimmerDuration: 1100,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                ),
-                                margin: EdgeInsets.symmetric(horizontal: 4),
-                              ),
-                            ),
-                          )),
-                    )
-                  :
-                  // SizedBox(height: 15.0),
-                  Column(
-                      // mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 5.0),
-                        Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 12.0),
-                            child: Text(
-                              'Resturant'.toUpperCase(),
-                              textAlign: TextAlign.left,
-                              style: Styles.customTitleTextStyle2(
-                                color: Colors.black87,
-                                fontWeight: FontWeight.bold,
-                                fontSize: Sizes.TEXT_SIZE_16,
-                              ),
-                            )),
-                        TravelCardList(
-                          cities: resturants,
-                          onCityChange: _handleCityChange,
-                        ),
-                        SizedBox(height: 5.0),
-                      ],
-                    ),
-//
-              SizedBox(height: 0.0),
-             loader3
-                  ? Container(
-                      height: 280,
-                      child: CarouselSlider(
-                          options: CarouselOptions(
-                              enableInfiniteScroll: true, height: 260),
-                          items: List.generate(
-                            1,
-                            (ind) => SkeletonAnimation(
-                              shimmerColor: Colors.grey[350],
-                              shimmerDuration: 1100,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                ),
-                                margin: EdgeInsets.symmetric(horizontal: 4),
-                              ),
-                            ),
-                          )),
-                    )
-                  : Column(
-                // mainAxisAlignment: MainAxisAlignment.start,
+              )
+            ];
+          },
+          body: Container(
+            margin: EdgeInsets.symmetric(
+              // horizontal: Sizes.MARGIN_16,
+              vertical: 2,
+            ),
+            child: SingleChildScrollView(
+              // physics: BouncingScrollPhysics(),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 5.0),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Text(
-                        'Hot Spot'.toUpperCase(),
-                        textAlign: TextAlign.left,
-                        style: Styles.customTitleTextStyle2(
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold,
-                          fontSize: Sizes.TEXT_SIZE_16,
-                        ),
-                      )),
-                  SizedBox(height: 5.0),
+                // shrinkWrap: true,
+                children: <Widget>[
+                  SizedBox(
+                    height: search ? 5 : 0,
+                  ),
 
-                  // TravelCardList(
-                  //   cities: resturants,
-                  //   onCityChange: _handleCityChange,
-                  // ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 5.0, right: 5),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: BouncingScrollPhysics(),
                       child: Row(
-                        children: hotspot(),
+                        children: newcategorieslist(),
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 0,
+                  ),
+                  loader
+                      ? Container(
+                          height: 280,
+                          child: CarouselSlider(
+                              options: CarouselOptions(
+                                  enableInfiniteScroll: true, height: 260),
+                              items: List.generate(
+                                1,
+                                (ind) => SkeletonAnimation(
+                                  shimmerColor: Colors.grey[350],
+                                  shimmerDuration: 1100,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                    ),
+                                    margin: EdgeInsets.symmetric(horizontal: 4),
+                                  ),
+                                ),
+                              )),
+                        )
+                      :
+                      // SizedBox(height: 15.0),
+                      Column(
+                          // mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 5.0),
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: Text(
+                                  'Resturant'.toUpperCase(),
+                                  textAlign: TextAlign.left,
+                                  style: Styles.customTitleTextStyle2(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: Sizes.TEXT_SIZE_16,
+                                  ),
+                                )),
+                            // SizedBox(height: 200.0),
+
+                            TravelCardList(
+                              cities: resturants,
+                              onCityChange: _handleCityChange,
+                            ),
+                            SizedBox(height: 5.0),
+                          ],
+                        ),
+                  //
+                  SizedBox(height: 0.0),
+                  loader3
+                      ? Container(
+                          height: 280,
+                          child: CarouselSlider(
+                              options: CarouselOptions(
+                                  enableInfiniteScroll: true, height: 260),
+                              items: List.generate(
+                                1,
+                                (ind) => SkeletonAnimation(
+                                  shimmerColor: Colors.grey[350],
+                                  shimmerDuration: 1100,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                    ),
+                                    margin: EdgeInsets.symmetric(horizontal: 4),
+                                  ),
+                                ),
+                              )),
+                        )
+                      : Column(
+                          // mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 5.0),
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: Text(
+                                  'Hot Spot'.toUpperCase(),
+                                  textAlign: TextAlign.left,
+                                  style: Styles.customTitleTextStyle2(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: Sizes.TEXT_SIZE_16,
+                                  ),
+                                )),
+                            SizedBox(height: 5.0),
+
+                            // TravelCardList(
+                            //   cities: resturants,
+                            //   onCityChange: _handleCityChange,
+                            // ),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Row(
+                                  children: hotspot(),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 5.0),
+                          ],
+                        ),
                   SizedBox(height: 5.0),
+                  Container(
+                    height: 180,
+                    //  width: 180,
+                    //  color: Colors.red,
+
+                    margin: EdgeInsets.symmetric(horizontal: 8),
+                    // padding: EdgeInsets.all(8),
+                    child: ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: subscription.length,
+                        itemBuilder: (context, i) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5.0, vertical: 2),
+                            width: MediaQuery.of(context).size.width / 1.1,
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, AppRouter.promotionScreen);
+                              },
+                              child: Material(
+                                elevation: 1,
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(6),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(6),
+                                  child: Stack(
+                                    children: [
+                                      Image.asset(
+                                        subscription[i],
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                1.08,
+                                        fit: BoxFit.contain,
+                                        // color: Colors.red,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+
+                  promolist.length == 0 ? Container() : SizedBox(height: 16.0),
+
+                  SizedBox(height: 16.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: HeadingRow(
+                      title: StringConst.FRIENDS,
+                      number: StringConst.SEE_ALL_56,
+                      onTapOfNumber: () => Navigator.pushNamed(
+                        context,
+                        AppRouter.findFriendsScreen,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children:
+                          createUserProfilePhotos(numberOfProfilePhotos: 6),
+                    ),
+                  ),
+                  SizedBox(height: 30.0),
                 ],
               ),
-              // HeadingRow(
-              //     title: StringConst.TRENDING_RESTAURANTS,
-              //     number: 'See all (' + resturants.length.toString() + ')',
-              //     onTapOfNumber: () {
-              //       pausevideo();
-              //       Navigator
-              //           .pushNamed(context,AppRouter.trendingRestaurantsScreen)
-              //           .then((value) {
-              //         resumevideo();
-              //       });
-              //     }),
-
-              // // SizedBox(height: 16.0),
-              // loader
-              //     ? Container(
-              //         height: 280,
-              //         child: CarouselSlider(
-              //             options: CarouselOptions(
-              //                 enableInfiniteScroll: true, height: 260),
-              //             items: List.generate(
-              //               1,
-              //               (ind) => SkeletonAnimation(
-              //                 shimmerColor: Colors.grey[350],
-              //                 shimmerDuration: 1100,
-              //                 child: Container(
-              //                   decoration: BoxDecoration(
-              //                     color: Colors.grey[300],
-              //                   ),
-              //                   margin: EdgeInsets.symmetric(horizontal: 4),
-              //                 ),
-              //               ),
-              //             )),
-              //       )
-              //     :
-              // Container(
-              //         height: 280,
-              //         width: MediaQuery.of(context).size.width,
-              //         child: ListView.builder(
-              //           physics: BouncingScrollPhysics(),
-              //           scrollDirection: Axis.horizontal,
-              //           itemCount: resturants.length,
-              //           itemBuilder: (context, index) {
-              //             var res = resturants[index];
-              //             return Container(
-              //               margin: EdgeInsets.only(right: 4.0),
-              //               child: FoodyBiteCard(
-              //                 onTap: () {
-              //                   if (_controller != null) {
-              //                     _controller.pause();
-              //                   }
-              //                   Navigator
-              //                       .pushNamed(context,
-              //                     AppRouter.restaurantDetailsScreen,
-              //                     arguments: RestaurantDetails(
-              //                         imagePath: res.restImage,
-              //                         restaurantName: res.restName,
-              //                         restaurantAddress: res.restAddress +
-              //                             res.restCity +
-              //                             ' ' +
-              //                             res.restCountry,
-              //                         rating: '0.0',
-              //                         category: res.restType,
-              //                         distance: '0 Km',
-              //                         data: res),
-              //                   )
-              //                       .then((value) {
-              //                     if (_controller != null) {
-              //                       _controller.play();
-              //                     }
-              //                   });
-              //                 },
-              //                 imagePath: res.restImage,
-              //                 status: res.restIsOpen == 1 ? "OPEN" : "CLOSE",
-              //                 cardTitle: res.restName,
-              //                 rating: '0.0',
-              //                 category: res.restType ?? 'Not Found',
-              //                 distance: '8 KM',
-              //                 address: res.restAddress ??
-              //                     'Not Found' + ' ' + res.restCity ??
-              //                     'Not Found' + ' ' + res.restCountry ??
-              //                     'Not Available',
-              //               ),
-              //             );
-              //           },
-              //         ),
-              //       ),
-
-              SizedBox(height: 5.0),
-              Container(
-                height: 160,
-                //  width: 180,
-                //  color: Colors.red,
-
-                margin: EdgeInsets.symmetric(horizontal: 12),
-                child: ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: subscription.length,
-                    itemBuilder: (context, i) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, AppRouter.promotionScreen);
-                        },
-                        child: Material(
-                          elevation: 4,
-                          borderRadius: BorderRadius.circular(8),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Stack(
-                              children: [
-                                Image.asset(
-                                  subscription[i],
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.08,
-                                  fit: BoxFit.cover,
-                                  // color: Colors.red,
-                                ),
-                                Positioned(
-                                  right: 10,
-                                  bottom: 10,
-                                  child:
-                                      Text('Subscription Offer!'.toUpperCase(),
-                                          style: TextStyle(
-                                            fontSize: 25,
-                                            fontWeight: FontWeight.w900,
-                                            color: Colors.white,
-                                            shadows: [
-                                              Shadow(
-                                                color: Colors.white
-                                                    .withOpacity(0.5),
-                                                offset: Offset(1.0, 1.0),
-                                                blurRadius: 5,
-                                              ),
-                                            ],
-                                          )),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
-              ),
-
-              promolist.length == 0 ? Container() : SizedBox(height: 16.0),
-              // promolist.length == 0
-              //     ? Container()
-              //     : loader
-              //         ? Container(
-              //             height: 190,
-              //             child: CarouselSlider(
-              //                 options: CarouselOptions(
-              //                   enableInfiniteScroll: true,
-              //                 ),
-              //                 items: List.generate(
-              //                   1,
-              //                   (ind) => SkeletonAnimation(
-              //                     shimmerColor: Colors.grey[350],
-              //                     shimmerDuration: 1100,
-              //                     child: Container(
-              //                       decoration: BoxDecoration(
-              //                         color: Colors.grey[300],
-              //                       ),
-              //                       margin: EdgeInsets.symmetric(horizontal: 4),
-              //                     ),
-              //                   ),
-              //                 )),
-              //           )
-              //         : Container(
-              //             height: 190,
-              //             width: 50,
-              //             child: CarouselSlider(
-              //                 options: CarouselOptions(
-              //                   enableInfiniteScroll: true,
-              //                   onPageChanged: (ind, reason) {
-              //                     print(ind);
-              //                     active_video = ind;
-              //                     if (_controller != null) {
-              //                       _controller.pause();
-              //                     }
-              //                     setState(() {});
-              //                     print(promolist[ind]);
-              //                     if (promolist[ind]['videoUrl'] != '') {
-              //                       print('here');
-              //                       print('here');
-              //                       initialize(promolist[ind]['videoUrl']);
-              //                     }
-              //                   },
-              //                 ),
-              //                 items: List.generate(
-              //                     this.promolist.length,
-              //                     (ind) => _controller == null
-              //                         ? Container()
-              //                         : SizedBox(
-              //                             height: 230,
-              //                             width: MediaQuery.of(context)
-              //                                     .size
-              //                                     .width /
-              //                                 1.2,
-              //                             child: Container(
-              //                               color: Colors.black,
-              //                               margin: EdgeInsets.only(right: 8.0),
-              //                               child: FittedBox(
-              //                                 child: active_video == ind &&
-              //                                         (promolist[ind]
-              //                                                 ['videoUrl'] !=
-              //                                             '')
-              //                                     ? SizedBox(
-              //                                         height: 50,
-              //                                         width: 50,
-              //                                         child: _controller == null
-              //                                             ? Container()
-              //                                             : InkWell(
-              //                                                 onTap: () {
-              //                                                   navigatortopromotion(
-              //                                                       ind);
-              //                                                 },
-              //                                                 child: VideoPlayer(
-              //                                                     _controller),
-              //                                               ))
-              //                                     : promolist[ind]['image'] !=
-              //                                                 null &&
-              //                                             promolist[ind]
-              //                                                     ['image'] !=
-              //                                                 ''
-              //                                         ? promolist[ind]['image']
-              //                                                     .substring(
-              //                                                         0, 4) ==
-              //                                                 'http'
-              //                                             ? InkWell(
-              //                                                 onTap: () {
-              //                                                   navigatortopromotion(
-              //                                                       ind);
-              //                                                 },
-              //                                                 child:
-              //                                                     Image.network(
-              //                                                   promolist[ind]
-              //                                                       ['image'],
-              //                                                   width: MediaQuery.of(
-              //                                                           context)
-              //                                                       .size
-              //                                                       .width,
-              //                                                   fit: BoxFit
-              //                                                       .cover,
-              //                                                 ),
-              //                                               )
-              //                                             : InkWell(
-              //                                                 onTap: () {
-              //                                                   navigatortopromotion(
-              //                                                       ind);
-              //                                                 },
-              //                                                 child:
-              //                                                     Image.asset(
-              //                                                   promolist[ind]
-              //                                                       ['image'],
-              //                                                   width: MediaQuery.of(
-              //                                                           context)
-              //                                                       .size
-              //                                                       .width,
-              //                                                   fit: BoxFit
-              //                                                       .cover,
-              //                                                 ),
-              //                                               )
-              //                                         : active_video != ind &&
-              //                                                 (promolist[ind][
-              //                                                             'videoUrl'] !=
-              //                                                         '' ||
-              //                                                     promolist[ind]
-              //                                                             ['videoUrl'] !=
-              //                                                         null)
-              //                                             ? InkWell(
-              //                                                 onTap: () {
-              //                                                   navigatortopromotion(
-              //                                                       ind);
-              //                                                 },
-              //                                                 child: Stack(
-              //                                                   children: [
-              //                                                     Padding(
-              //                                                       padding:
-              //                                                           const EdgeInsets.fromLTRB(
-              //                                                               5,
-              //                                                               3,
-              //                                                               5,
-              //                                                               3),
-              //                                                       child: promolist[ind]['thumbnailUrl'].substring(0,
-              //                                                                   4) ==
-              //                                                               'http'
-              //                                                           ? Image
-              //                                                               .network(
-              //                                                               promolist[ind]['thumbnailUrl'],
-              //                                                               width:
-              //                                                                   MediaQuery.of(context).size.width,
-              //                                                               height:
-              //                                                                   230,
-              //                                                               fit:
-              //                                                                   BoxFit.cover,
-              //                                                             )
-              //                                                           : Image
-              //                                                               .asset(
-              //                                                               promolist[ind]['thumbnailUrl'],
-              //                                                               width:
-              //                                                                   MediaQuery.of(context).size.width,
-              //                                                               height:
-              //                                                                   230,
-              //                                                               fit:
-              //                                                                   BoxFit.cover,
-              //                                                             ),
-              //                                                     ),
-              //                                                     Positioned(
-              //                                                         right: 0,
-              //                                                         child:
-              //                                                             Container(
-              //                                                           margin: EdgeInsets.only(
-              //                                                               top:
-              //                                                                   6),
-              //                                                           width:
-              //                                                               90,
-              //                                                           height:
-              //                                                               25,
-              //                                                           decoration: BoxDecoration(
-              //                                                               color:
-              //                                                                   Colors.black38,
-              //                                                               borderRadius: BorderRadius.circular(100)),
-              //                                                           child:
-              //                                                               Row(
-              //                                                             mainAxisAlignment:
-              //                                                                 MainAxisAlignment.center,
-              //                                                             children: [
-              //                                                               Text(
-              //                                                                 'Play',
-              //                                                                 style: TextStyle(color: AppColors.white, fontSize: 18, fontWeight: FontWeight.bold),
-              //                                                               ),
-              //                                                               SizedBox(
-              //                                                                 width: 2,
-              //                                                               ),
-              //                                                               Icon(
-              //                                                                 Icons.play_arrow_outlined,
-              //                                                                 size: 22,
-              //                                                                 color: AppColors.white,
-              //                                                               ),
-              //                                                             ],
-              //                                                           ),
-              //                                                         )),
-              //                                                   ],
-              //                                                 ),
-              //                                               )
-              //                                             : Container(),
-              //                                 fit: BoxFit.fill,
-              //                               ),
-              //                             ),
-              //                           ))),
-              //           ),
-
-              // SizedBox(height: 20.0),
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              //   child: HeadingRow(
-              //     title: StringConst.CATEGORY,
-              //     number: 'See all (' + categories.length.toString() + ')',
-              //     onTapOfNumber: () =>
-              //         Navigator.pushNamed(context, AppRouter.categoriesScreen),
-              //   ),
-              // ),
-
-              // SizedBox(height: 16.0),
-              // loader2
-              //     ? Container(
-              //         height: 200,
-              //         child: CarouselSlider(
-              //             options: CarouselOptions(
-              //                 // viewportFraction: 1.2,
-              //                 enableInfiniteScroll: true,
-              //                 height: 200),
-              //             items: List.generate(
-              //               2,
-              //               (ind) => SkeletonAnimation(
-              //                 shimmerColor: Colors.grey[350],
-              //                 shimmerDuration: 1100,
-              //                 child: Container(
-              //                   decoration: BoxDecoration(
-              //                     color: Colors.grey[300],
-              //                   ),
-              //                   margin: EdgeInsets.symmetric(horizontal: 4),
-              //                 ),
-              //               ),
-              //             )),
-              //       )
-              //     : Container(
-              //         height: 200,
-              //         margin: EdgeInsets.symmetric(horizontal: 12),
-              //         child: ListView.builder(
-              //           scrollDirection: Axis.horizontal,
-              //           itemCount: categories.length,
-              //           itemBuilder: (context, index) {
-              //             var data = categories[index];
-              //             return InkWell(
-              //               onTap: () => Navigator.pushNamed(
-              //                 context,
-              //                 AppRouter.categoryDetailScreen,
-              //                 arguments: CategoryDetailScreenArguments(
-              //                     categoryName: data.menuName,
-              //                     imagePath: data.menuTypeImage,
-              //                     selectedCategory: index,
-              //                     numberOfCategories: categories.length,
-              //                     gradient: gradients[index],
-              //                     restaurantdata: data),
-              //               ),
-              //               child: Container(
-              //                 margin: EdgeInsets.only(right: 12.0, bottom: 12),
-              //                 child: Material(
-              //                   elevation: 5,
-              //                   borderRadius: BorderRadius.circular(15),
-              //                   child: FoodyBiteCategoryCard(
-              //                     height: 200,
-              //                     borderRadius: 15,
-              //                     width:
-              //                         MediaQuery.of(context).size.width / 2.5,
-              //                     imagePath: data.menuTypeImage,
-              //                     // hasHandle: true,
-              //                     // gradient: gradients[index],
-              //                     gradient: LinearGradient(
-              //                       begin: Alignment.topCenter,
-              //                       end: Alignment.bottomCenter,
-              //                       stops: [0.5, 0.8],
-              //                       colors: [
-              //                         Colors.black12,
-              //                         Colors.black87,
-              //                       ],
-              //                     ),
-              //                     category: data.menuName,
-              //                   ),
-              //                 ),
-              //               ),
-              //             );
-              //           },
-              //         )),
-              SizedBox(height: 16.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: HeadingRow(
-                  title: StringConst.FRIENDS,
-                  number: StringConst.SEE_ALL_56,
-                  onTapOfNumber: () => Navigator.pushNamed(
-                    context,
-                    AppRouter.findFriendsScreen,
-                  ),
-                ),
-              ),
-              SizedBox(height: 16.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: createUserProfilePhotos(numberOfProfilePhotos: 6),
-                ),
-              ),
-              SizedBox(height: 30.0),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
-
-  
 
   bottomSheetForLocation(BuildContext context) {
     return showModalBottomSheet(

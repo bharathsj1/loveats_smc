@@ -28,27 +28,30 @@ class TravelCardRenderer extends StatelessWidget {
           // Card background color & decoration
 
           Container(
-            margin: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 10),
+            margin: EdgeInsets.only(top: 8, left: 5, right: 5, bottom: 10),
             decoration: BoxDecoration(
-              color: Color(0xffdaf3f7),
+              // color: Color(0xffdaf3f7),
+              color: Colors.grey.shade100,
               // color: city.color,
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(color: Colors.black12, blurRadius: 4 * offset.abs()),
-                BoxShadow(
-                    color: Colors.black12, blurRadius: 10 + 6 * offset.abs()),
-              ],
+              borderRadius: BorderRadius.circular(6),
+              // boxShadow: [
+              //   BoxShadow(color: Colors.black12, blurRadius: 1 * offset.abs()),
+              //   BoxShadow(
+              //       color: Colors.black12, blurRadius: 5 + 3 * offset.abs()),
+              // ],
             ),
           ),
           // City image, out of card by 15px
-          Positioned(top: -45, child: _buildCityImage()),
+          Positioned(top: -45, child: Hero(
+            tag: city.restName,
+            child: _buildCityImage())),
           // City information
           // _buildCityData(),
           Positioned(
             bottom: 40,
             right: 12,
             child: Card(
-              elevation: 0,
+              elevation: 0.5,
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                     horizontal: Sizes.WIDTH_14, vertical: Sizes.HEIGHT_8),
