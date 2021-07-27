@@ -5,6 +5,7 @@ import 'package:potbelly/3D_card_widets/city_scenery.dart';
 import 'package:potbelly/models/restaurent_menu_model.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/bookmarkservice.dart';
 import 'package:potbelly/services/cartservice.dart';
 // import 'package:flutter_swiper/flutter_swiper.dart';
@@ -27,6 +28,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
+import 'package:skeleton_text/skeleton_text.dart';
 // import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 
 class RestaurantDetailsScreen extends StatefulWidget {
@@ -96,9 +98,9 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
 
   @override
   void initState() {
-     _tabcontroller = TabController(length: catlist.length, vsync: this);
+    _tabcontroller = TabController(length: catlist.length, vsync: this);
     //  _tabcontroller.index=2;
-    
+
     _autoScrollController = AutoScrollController(
       viewportBoundaryGetter: () =>
           Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
@@ -158,7 +160,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
       item['restaurantId'] = widget.restaurantDetails.data.id.toString();
       print(item);
     }
-    getProducts();
+    getProducts2();
     super.initState();
   }
 
@@ -216,8 +218,8 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     if (_tabcontroller != null) {
       _tabcontroller.dispose();
     }
-    if(_ticker !=null){
-    _ticker.dispose();
+    if (_ticker != null) {
+      _ticker.dispose();
     }
     super.dispose();
   }
@@ -265,11 +267,9 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     // else{
     //   visible=false;
     // }
-    if(_autoScrollController.offset == 100){
-      _tabcontroller.index=1;
-      setState(() {
-        
-      });
+    if (_autoScrollController.offset == 100) {
+      _tabcontroller.index = 1;
+      setState(() {});
     }
     if (_isShrink != lastStatus) {
       setState(() {
@@ -312,7 +312,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     );
   }
 
-    List catlist = [
+  List catlist = [
     'Desi Food',
     'Fast Food',
     'Korean',
@@ -393,7 +393,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                                   //  outer: true,
 
                                   itemBuilder: (BuildContext context, int i) {
-                                    return  GestureDetector(
+                                    return GestureDetector(
                                       onTap: () {
                                         print('clicked');
                                         // Navigator.push(
@@ -448,7 +448,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                                               //         ),
                                               Image.asset(
                                             'assets/images/d${i + 1}.png',
-                                            width:180,
+                                            width: 180,
                                             height: 180,
                                             fit: BoxFit.cover,
                                           ),
@@ -546,19 +546,20 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                 child: DefaultTabController(
                   length: catlist.length,
                   child: Container(
-                    padding: const EdgeInsets.only(left:10.0,right: 10,bottom: 0),
+                    padding:
+                        const EdgeInsets.only(left: 10.0, right: 10, bottom: 0),
                     margin: EdgeInsets.all(5),
                     child: TabBar(
                       controller: _tabcontroller,
-                       unselectedLabelColor: AppColors.secondaryElement,
-              // indicatorSize: TabBarIndicatorSize.tab,
-              indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppColors.secondaryElement),
-                //      indicatorPadding: EdgeInsets.zero,
-                labelPadding: EdgeInsets.zero,
+                      unselectedLabelColor: AppColors.secondaryElement,
+                      // indicatorSize: TabBarIndicatorSize.tab,
+                      indicator: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: AppColors.secondaryElement),
+                      //      indicatorPadding: EdgeInsets.zero,
+                      labelPadding: EdgeInsets.zero,
 
-                labelColor: Colors.white,
+                      labelColor: Colors.white,
                       onTap: (index) async {
                         print('here');
                         _scrollToIndex(index);
@@ -587,208 +588,144 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
       body: CustomScrollView(
         controller: _autoScrollController,
         slivers: <Widget>[
-          _buildSliverAppbar(context,heightOfStack),
+          _buildSliverAppbar(context, heightOfStack),
           SliverList(
               delegate: SliverChildListDelegate([
             // SizedBox(height: 10,),
-             InkWell(
-               onTap: (){
-                 print('here');
-                 _tabcontroller.index=1;
-                 setState(() {
-                   
-                 });
-               },
-               child: Container(
-                    // color: Colors.red,
-                    margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+            InkWell(
+              onTap: () {
+                print('here');
+                _tabcontroller.index = 1;
+                setState(() {});
+              },
+              child: Container(
+                // color: Colors.red,
+                margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
                             children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Text(
-                                    widget.restaurantDetails.restaurantName,
-                                    textAlign: TextAlign.left,
-                                    style: Styles.customTitleTextStyle(
-                                      color: AppColors.headingText,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: Sizes.TEXT_SIZE_20,
-                                    ),
-                                  ),
-                                  SizedBox(width: 4.0),
-                                  CardTags(
-                                    title: widget.restaurantDetails.category,
-                                    decoration: BoxDecoration(
-                                      gradient: Gradients.secondaryGradient,
-                                      boxShadow: [
-                                        Shadows.secondaryShadow,
-                                      ],
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(8.0)),
-                                    ),
-                                  ),
-                                  SizedBox(width: 4.0),
-                                  CardTags(
-                                    title: widget.restaurantDetails.distance,
-                                    decoration: BoxDecoration(
-                                      // color: Color.fromARGB(255, 132, 141, 255),
-                                      color: AppColors.secondaryElement,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(8.0)),
-                                    ),
-                                  ),
-                                  Spacer(flex: 1),
-                                  Ratings(widget.restaurantDetails.rating)
-                                ],
-                              ),
-                              SizedBox(height: 10.0),
                               Text(
-                                widget.restaurantDetails.restaurantAddress,
-                                style: addressTextStyle,
-                              ),
-                              SizedBox(height: 5.0),
-                              RichText(
-                                text: TextSpan(
-                                  style: openingTimeTextStyle,
-                                  children: [
-                                    TextSpan(text: "Open Now - "),
-                                    // TextSpan(
-                                    //     text: "daily time ",
-                                    //     style:
-                                    //         addressTextStyle),
-                                    TextSpan(
-                                        text: widget.restaurantDetails.data
-                                                .restOpenTime +
-                                            "am - " +
-                                            widget.restaurantDetails.data
-                                                .restCloseTime +
-                                            "am ",
-                                        style: addressTextStyle),
-                                  ],
+                                widget.restaurantDetails.restaurantName,
+                                textAlign: TextAlign.left,
+                                style: Styles.customTitleTextStyle(
+                                  color: AppColors.headingText,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: Sizes.TEXT_SIZE_20,
                                 ),
                               ),
-                              SizedBox(height: 10.0),
-                              Text(
-                                'The Baan Thai restaurant in Fort Wayne, Indiana makes great use of high-resolution pictures to draw in website visitors. Color abounds wherever you look and the vivid representations of the Thai region make you feel like you’re already there. Don’t settle for washed-out, blurry photos on your website. If need be, hire a professional photographer or purchase high-resolution photos online to give your website the extra kick it needs.',
-                                textAlign: TextAlign.justify,
-                                style: addressTextStyle,
+                              SizedBox(width: 4.0),
+                              CardTags(
+                                title: widget.restaurantDetails.category,
+                                decoration: BoxDecoration(
+                                  gradient: Gradients.secondaryGradient,
+                                  boxShadow: [
+                                    Shadows.secondaryShadow,
+                                  ],
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8.0)),
+                                ),
                               ),
+                              SizedBox(width: 4.0),
+                              CardTags(
+                                title: widget.restaurantDetails.distance,
+                                decoration: BoxDecoration(
+                                  // color: Color.fromARGB(255, 132, 141, 255),
+                                  color: AppColors.secondaryElement,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8.0)),
+                                ),
+                              ),
+                              Spacer(flex: 1),
+                              Ratings(widget.restaurantDetails.rating)
                             ],
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 10.0),
+                          Text(
+                            widget.restaurantDetails.restaurantAddress,
+                            style: addressTextStyle,
+                          ),
+                          SizedBox(height: 5.0),
+                          RichText(
+                            text: TextSpan(
+                              style: openingTimeTextStyle,
+                              children: [
+                                TextSpan(text: "Open Now - "),
+                                // TextSpan(
+                                //     text: "daily time ",
+                                //     style:
+                                //         addressTextStyle),
+                                TextSpan(
+                                    text: widget.restaurantDetails.data
+                                            .restOpenTime +
+                                        "am - " +
+                                        widget.restaurantDetails.data
+                                            .restCloseTime +
+                                        "am ",
+                                    style: addressTextStyle),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 10.0),
+                          Text(
+                            'The Baan Thai restaurant in Fort Wayne, Indiana makes great use of high-resolution pictures to draw in website visitors. Color abounds wherever you look and the vivid representations of the Thai region make you feel like you’re already there. Don’t settle for washed-out, blurry photos on your website. If need be, hire a professional photographer or purchase high-resolution photos online to give your website the extra kick it needs.',
+                            textAlign: TextAlign.justify,
+                            style: addressTextStyle,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-             ),
-            SizedBox(
-              height: 10,
-            ),
-
-            _wrapScrollTag(
-              index: 0,
-              child: Column(
-                children: [
-                  Container(
-                    color: AppColors.secondaryColor,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: Sizes.MARGIN_16,
-                      vertical: Sizes.MARGIN_16,
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          "Desi Food",
-                          style: Theme.of(context).textTheme.title.copyWith(
-                                fontSize: Sizes.TEXT_SIZE_16,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.black.withOpacity(0.6),
-                              ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  _isLoading
-                      ? Container()
-                      : fooditems.length > 0
-                          ? Column(children: _buildList())
-                          : Text('No Items Avaialble Right Now'),
-                ],
+                  ],
+                ),
               ),
             ),
             SizedBox(
               height: 10,
             ),
 
-            _wrapScrollTag(
-              index: 1,
-              child: Column(
-                children: [
-                  Container(
-                    color: AppColors.secondaryColor,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: Sizes.MARGIN_16,
-                      vertical: Sizes.MARGIN_16,
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          "Fast Food",
-                          style: Theme.of(context).textTheme.title.copyWith(
-                                fontSize: Sizes.TEXT_SIZE_16,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.black.withOpacity(0.6),
-                              ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  _isLoading
-                      ? Container()
-                      : fooditems.length > 0
-                          ? Column(children: _buildList())
-                          : Text('No Items Avaialble Right Now'),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            _wrapScrollTag(
-              index: 2,
-              child: Column(
-                children: [
-                  Container(
-                    color: AppColors.secondaryColor,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: Sizes.MARGIN_16,
-                      vertical: Sizes.MARGIN_16,
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          "Korean",
-                          style: Theme.of(context).textTheme.title.copyWith(
-                                fontSize: Sizes.TEXT_SIZE_16,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.black.withOpacity(0.6),
-                              ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  _isLoading
-                      ? Container()
-                      : fooditems.length > 0
-                          ? Column(children: _buildList())
-                          : Text('No Items Avaialble Right Now'),
-                ],
-              ),
-            ),
+             _isLoading
+                      ? Column(children:loading()): Column(children: mainfoodlist(context),),
+
+            
+
+          
+            // _wrapScrollTag(
+            //   index: 2,
+            //   child: Column(
+            //     children: [
+            //       Container(
+            //         color: AppColors.secondaryColor,
+            //         padding: const EdgeInsets.symmetric(
+            //           horizontal: Sizes.MARGIN_16,
+            //           vertical: Sizes.MARGIN_16,
+            //         ),
+            //         child: Row(
+            //           children: <Widget>[
+            //             Text(
+            //               "Korean",
+            //               style: Theme.of(context).textTheme.title.copyWith(
+            //                     fontSize: Sizes.TEXT_SIZE_16,
+            //                     fontWeight: FontWeight.bold,
+            //                     color: AppColors.black.withOpacity(0.6),
+            //                   ),
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //       !_isLoading
+            //           ? Column(children:loading())
+            //           : fooditems.length > 0
+            //               ? Column(children: itemsListTiles2(context))
+            //               : Text('No Items Avaialble Right Now'),
+            //     ],
+            //   ),
+            // ),
+           
             SizedBox(
               height: 10,
             ),
@@ -798,8 +735,28 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     );
   }
 
-
   int deliverytype;
+
+  loading() {
+    return List.generate(
+        4,
+        (index) => Padding(
+          padding: const EdgeInsets.symmetric(vertical:2.0,horizontal: 0),
+          child: SkeletonAnimation(
+            // shimmerDuration: 1500,
+
+                borderRadius: BorderRadius.circular(5.0),
+                shimmerColor: Colors.grey.shade300,
+                child: Container(
+                  height: 70,
+                  width: MediaQuery.of(context).size.width*0.95,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.0),
+                      color: Colors.grey[200]),
+                ),
+              ),
+        ));
+  }
 
   filterswidget(id, name, iconsize, icon, border, width, active) {
     return Padding(
@@ -890,18 +847,18 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     return List.generate(
         fooditems.length + 5,
         (index) => InkWell(
-          onTap: (){
-            Navigator.pushNamed(context, AppRouter.Add_Extra);
-          },
-          child: SwipeItem(
-              data: fooditems[0],
-              // isEven: index.isEven,
-              // onSwipe: (key, {action}) {
-              //   print('here');
-              //   _performSwipeAction(0, fooditems[0], key, action);
-              // }
+              onTap: () {
+                Navigator.pushNamed(context, AppRouter.Add_Extra);
+              },
+              child: SwipeItem(
+                data: fooditems[0],
+                // isEven: index.isEven,
+                // onSwipe: (key, {action}) {
+                //   print('here');
+                //   _performSwipeAction(0, fooditems[0], key, action);
+                // }
               ),
-        ));
+            ));
   }
 
   void _performSwipeAction(index, data, GlobalKey key, SwipeAction action) {
@@ -1235,6 +1192,156 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
             ));
   }
 
+  List<BoxShadow> shadowList = [
+    BoxShadow(color: Colors.grey[300], blurRadius: 30, offset: Offset(0, 10))
+  ];
+
+  List<Widget> itemsListTiles2(
+    context, newfooditems
+  ) {
+    return List.generate(
+      newfooditems.length,
+      (i) => InkWell(
+        onTap: () {
+          Navigator.pushNamed(context, AppRouter.Add_Extra, arguments: {
+            'item': newfooditems[i],
+            'restaurant': widget.restaurantDetails.data
+          }).then((value) {
+            checkchanges(newfooditems);
+          });
+        },
+        child: Material(
+          elevation: 0.5,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  children: [
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          newfooditems[i]['menu_image'],
+                          loadingBuilder: (BuildContext ctx, Widget child,
+                              ImageChunkEvent loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            } else {
+                              return Container(
+                                // height: ,
+                                width: 50,
+                                height: 50,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.secondaryElement),
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          fit: BoxFit.cover,
+                          height: 50,
+                          width: 50,
+                        )),
+                    SizedBox(
+                      width: 16.0,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Container(
+                                child: Text(newfooditems[i]['menu_name'],
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      letterSpacing: .3,
+                                    )),
+                              ),
+                              const SizedBox(
+                                width: 10.0,
+                              ),
+                              newfooditems[i]['foodCategoryName'] != null &&
+                                      newfooditems[i]['foodCategoryName']
+                                              .isDiscount ==
+                                          'true'
+                                  ? Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                          color: Colors.red,
+                                        ),
+                                        padding: EdgeInsets.all(3.0),
+                                        child: Text(
+                                          '100% discount for subscribers',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10.0),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox(),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text('\$' + newfooditems[i]['menu_price'].toString(),
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    letterSpacing: .3,
+                                  )),
+                              Text(newfooditems[i]['menu_details'],
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    letterSpacing: .3,
+                                  )),
+                              if (newfooditems[i]['cart'] != null &&
+                                  newfooditems[i]['cart'] == true)
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 2.0),
+                                      child: Text('x' + newfooditems[i]['qty2'],
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              letterSpacing: .3,
+                                              color: Color(0xff55c8d4)
+                                              // color: AppColors.secondaryElement
+                                              )),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Icon(Icons.add_shopping_cart_sharp,
+                                        size: 18.0, color: Color(0xff55c8d4)),
+                                  ],
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   bool mixmatch = false;
   bottomsheet(index, data) {
     var textTheme = Theme.of(context).textTheme;
@@ -1524,6 +1631,94 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
       } else {
         fooditems[i]['cart'] = true;
         fooditems[i]['qty2'] = cart[index]['qty'];
+      }
+    }
+    setState(() {});
+  }
+
+  List fooditemswithcat=[];
+
+   List<Widget> mainfoodlist(
+    context,
+  ) {
+    return List.generate(
+      fooditemswithcat.length,
+      (i) =>  _wrapScrollTag(
+              index: i,
+              child: Column(
+                children: [
+                  Container(
+                    color: AppColors.secondaryColor,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Sizes.MARGIN_16,
+                      vertical: Sizes.MARGIN_16,
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          fooditemswithcat[i]['menutype']['menu_name'],
+                          style: Theme.of(context).textTheme.title.copyWith(
+                                fontSize: Sizes.TEXT_SIZE_16,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.black.withOpacity(0.6),
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                 
+                      fooditemswithcat[i]['menuItems'].length > 0
+                          ? Column(children: itemsListTiles2(context, fooditemswithcat[i]['menuItems']))
+                          : Text('No Items Avaialble Right Now'),
+                ],
+              ),
+            ),);}
+
+  void getProducts2() async {
+    print(widget.restaurantDetails.data.id);
+    var data =
+        await AppService().menuwithcat(widget.restaurantDetails.data.id.toString());
+    // print('this is a data');
+    print(data);
+    fooditemswithcat= data['data'];
+    print(fooditemswithcat);
+
+    setState(() {
+      _isLoading = false;
+    });
+    //      _model = ListModel(
+    //   initialItems: fooditems,
+    //   listKey:
+    //       _listKey, // ListModel uses this to look up the list its acting on.
+    //   removedItemBuilder: (dynamic removedItem, BuildContext context,
+    //           Animation<double> animation) =>
+    //       RemovedSwipeItem(animation: animation),
+    // );
+    var cart;
+    cart = await CartProvider().getcartslist();
+    for (var j = 0; j < fooditemswithcat.length; j++) {
+       for (var i = 0; i < fooditemswithcat[j]['menuItems'].length; i++) {
+      int index = cart.indexWhere((x) => x['id'] == fooditemswithcat[j]['menuItems'][i]['id']);
+      if (index == -1) {
+      } else {
+        fooditemswithcat[j]['menuItems'][i]['cart'] = true;
+        fooditemswithcat[j]['menuItems'][i]['qty2'] = cart[index]['qty'];
+      }
+    }
+    }
+   
+    setState(() {});
+  }
+
+  checkchanges(newfooditems) async {
+    var cart;
+    cart = await CartProvider().getcartslist();
+    for (var i = 0; i < newfooditems.length; i++) {
+      int index = cart.indexWhere((x) => x['id'] == newfooditems[i]['id']);
+      if (index == -1) {
+      } else {
+        newfooditems[i]['cart'] = true;
+        newfooditems[i]['qty2'] = cart[index]['qty'];
       }
     }
     setState(() {});

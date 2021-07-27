@@ -32,7 +32,7 @@ class CartProvider with ChangeNotifier {
       // also save into sqflite
       notifyListeners();
       cartitems.forEach((f) {
-        total += int.tryParse(f['price']) * int.tryParse((f['qty']));
+        total += (f['price']) * int.tryParse((f['qty']));
       });
       totalAmount = total;
       print('total');
@@ -135,6 +135,7 @@ class CartProvider with ChangeNotifier {
     if (cartlist != null) {
       this.cartitems = JsonDecoder().convert(cartlist);
       print('cartitems');
+      print(cartitems);
       print(cartitems.length);
       double total = 0;
       cartitems.forEach((f) {

@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lottie/lottie.dart';
 import './ProviderService.dart';
 import 'package:provider/provider.dart';
 import 'gooey_carousel.dart';
@@ -105,7 +106,13 @@ class _ContentCardState extends State<ContentCard> {
                   flex: 3,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Image.asset('assets/grovey/Illustration-${widget.color}.png', fit: BoxFit.contain,),
+                    child: widget.color == 'Red'? Lottie.asset(
+          // 'assets/food.json',
+          'assets/login1.json',
+          // 'assets/food2.json',
+          // 'assets/food3.json',
+          fit: BoxFit.contain,
+        ): Image.asset('assets/grovey/Illustration-${widget.color}.png', fit: BoxFit.contain,),
                   ),
                 ),
 
