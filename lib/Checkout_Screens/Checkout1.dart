@@ -27,6 +27,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
   String selected_lat = '';
   String selected_long = '';
   bool loader = true;
+  bool isError = false;
   final _formKey = GlobalKey<FormState>();
   
     @override

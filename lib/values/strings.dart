@@ -9,7 +9,7 @@ class StringConst {
 
   static const String LOCAL_PICTURE_URL = 'http://loveats.test/';
   static const String LIVE_PICTURE_URL =
-      'http://love.signaturemediachannel.com/';
+      'https://love.signaturemediachannel.com/';
       
 
   static const String PROMOTIONS = "Promotions";

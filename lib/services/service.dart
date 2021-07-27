@@ -30,9 +30,10 @@ class Service {
     BaseOptions(
       baseUrl: StringConst.BASE_URL,
       connectTimeout: 5000,
-      receiveTimeout: 3000,
+      receiveTimeout: 5000,
     ),
   );
+  SharedPreferences storagePref;
 
   Future<SharedPreferences> initializdPrefs() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -81,11 +82,14 @@ class Service {
         _isEverthingFine = true;
         accessToken = value.data['access_token'];
         message = 'success';
+        var pref = await initializdPrefs();
+
         _user = UserData.fromJson(value.data);
+        await pref.setInt('USERID', _user.data.id);
         await setKeyData('accessToken', accessToken);
         await setKeyData('accounttype', _user.data.custAccountType);
-        await setKeyData('photo', _user.data.custProfileImage);
-        await setKeyData('userId', _user.data.id.toString());
+        await setKeyData('photo', _user.data.custProfileImage ?? '');
+
         await setKeyData('userdata', jsonEncode(value.data['data']));
       } else {
         print(value.data['message']);
@@ -93,14 +97,7 @@ class Service {
         message = value.data['message'];
         print(message);
       }
-    }).catchError((onError) {
-      print(onError.toString());
-      message = 'server error';
-    }).timeout(
-      Duration(seconds: 15),
-      onTimeout: () {},
-    );
-
+    });
     if (_isEverthingFine) {
       var pref = await initializdPrefs();
       pref.setString('accessToken', accessToken);
@@ -212,15 +209,13 @@ class Service {
         message = 'success';
         _user = UserData.fromJson(value.data);
         pref.setInt('USERID', _user.data.id);
-        pref.setString('STRIPE_CUS_ID', _user.data.stripeCusId);
+        pref.setString('STRIPE_CUS_ID', _user.data.stripeCusId ?? '');
         print('thats the user id is ${_user.data.id}');
         await setKeyData('accessToken', _user.accessToken);
         await setKeyData('name', _user.data.custFirstName);
         await setKeyData('email', _user.data.email);
         await setKeyData('accounttype', _user.data.custAccountType);
-        if(_user.data.custProfileImage !=null){
-        await setKeyData('photo', _user.data.custProfileImage);
-        }
+        await setKeyData('photo', _user.data.custProfileImage ?? '');
         await setKeyData('userId', _user.data.id.toString());
         await setKeyData('userdata', jsonEncode(value.data['data']));
       }
@@ -269,13 +264,15 @@ class Service {
         var pref = await initializdPrefs();
 
         _user = UserData.fromJson(value.data);
+        print(_user.data);
         await setKeyData('accessToken', _user.accessToken);
         await setKeyData('name', _user.data.custFirstName);
         await setKeyData('email', _user.data.email);
         await setKeyData('accounttype', _user.data.custAccountType);
-        await setKeyData('photo', _user.data.custProfileImage);
-        await setKeyData('userId', _user.data.id.toString());
-        pref.setString('STRIPE_CUS_ID', _user.data.stripeCusId);
+        await setKeyData('photo', _user.data.custProfileImage ?? '');
+        await pref.setInt('USERID', value.data['data']['id']);
+        if (_user.data.stripeCusId != null)
+          await setKeyData('STRIPE_CUS_ID', _user.data.stripeCusId);
 
         await setKeyData('userdata', jsonEncode(value.data['data']));
       }
@@ -314,6 +311,7 @@ class Service {
 
   Future<void> setKeyData(String key, String value) async {
     final shared = await initializdPrefs();
+    print(key);
     await shared.setString(key, value);
   }
 
@@ -508,4 +506,85 @@ class Service {
     final shared = await initializdPrefs();
     return shared.getString('STRIPE_CUS_ID');
   }
+
+  Future<bool> cancelStripeSubscription(subsID) async {
+    try {
+      Response response = await dio.request('/cancel-subscription/$subsID');
+      print(response.data);
+      if (response.data['success'] == true)
+        return true;
+      else
+        return false;
+    } catch (onError) {
+      print(onError.toString());
+      return false;
+    }
+  }
+
+  Future<bool> checkAlreadyHaveSubscription(userId, planId) async {
+    print(userId + ' ' + planId);
+    FormData data = FormData.fromMap({
+      'user_id': userId,
+      'plan_id': planId,
+    });
+    try {
+      Response response = await dio.request('/checkAlreadySubscribed',
+          options: Options(method: 'post'), data: data);
+      print(response.data);
+      return response.data['success'];
+    } catch (onError) {
+      print(onError);
+      return null;
+    }
+  }
+
+  Future<bool> updateProfile(Map<String, dynamic> data) async {
+    var pref = await initializdPrefs();
+    FormData _formData = FormData.fromMap(data);
+    String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      Response response = await dio.request('/updateUser',
+          options: Options(method: 'POST'), data: _formData);
+      if (response.data['success'] == true) {
+        await setKeyData('userdata', jsonEncode(response.data['data']));
+        return true;
+      } else {
+        return false;
+      }
+    } catch (onError) {
+      print(onError.toString());
+      return false;
+    }
+  }
+
+  Future<Map<String, dynamic>> changePassword(Map<String, dynamic> data) async {
+    var pref = await initializdPrefs();
+    FormData _formData = FormData.fromMap(data);
+    String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      Response response = await dio.request('/changePassword',
+          options: Options(method: 'POST'), data: _formData);
+      if (response.data['success'] == true) {
+        return {'success': true, 'message': response.data['message']};
+      } else {
+        return {'success': false, 'message': response.data['message']};
+      }
+    } catch (onError) {
+      print(onError.toString());
+
+      return {
+        'success': false,
+        'message': onError.toString(),
+      };
+    }
+  }
+
+
+  
+
+
+  
+  
 }

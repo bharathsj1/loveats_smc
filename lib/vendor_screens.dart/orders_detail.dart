@@ -132,7 +132,7 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width * 0.54,
+                          width: MediaQuery.of(context).size.width * 0.40,
                           child: Text(
                             widget.orderdata['order_detail'][0]['rest_menu']
                                 ['menu_details'],

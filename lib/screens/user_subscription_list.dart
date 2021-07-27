@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:potbelly/models/specific_user_subscription_model.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
+import 'package:toast/toast.dart';
 
 class UserSubscriptionList extends StatefulWidget {
   const UserSubscriptionList({Key key}) : super(key: key);
@@ -30,7 +31,8 @@ class _UserSubscriptionListState extends State<UserSubscriptionList> {
           ? Center(
               child: Text('Please wait ...'),
             )
-          : _specificUserSubscriptionModel == null
+          : _specificUserSubscriptionModel == null ||
+                  _specificUserSubscriptionModel.data.length == 0
               ? Center(
                   child: Text('You have not subscribed'),
                 )
@@ -52,6 +54,20 @@ class _UserSubscriptionListState extends State<UserSubscriptionList> {
                                 padding: EdgeInsets.all(20.0),
                                 child: Column(
                                   children: [
+                                    data.status == 'active'
+                                        ? Align(
+                                            alignment: Alignment.topRight,
+                                            child: IconButton(
+                                              icon: Icon(
+                                                Icons.delete_outlined,
+                                                color: Colors.red,
+                                              ),
+                                              onPressed: () {
+                                                cancelSubsc(data.id);
+                                              },
+                                            ),
+                                          )
+                                        : const SizedBox(),
                                     Row(
                                       children: [
                                         Text('Interval'),
@@ -147,5 +163,14 @@ class _UserSubscriptionListState extends State<UserSubscriptionList> {
         await Service().getSpecificUserSubscriptionData();
     _isLoading = false;
     setState(() {});
+  }
+
+  cancelSubsc(id) async {
+    bool isOK = await Service().cancelStripeSubscription(id);
+    if (isOK) {
+      Toast.show('Subscription Canceled', context);
+      getCurrentUserSubscription();
+    } else
+      Toast.show('Some Error Occured', context);
   }
 }

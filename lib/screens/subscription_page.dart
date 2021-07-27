@@ -8,6 +8,7 @@ import 'package:potbelly/services/service.dart';
 import 'package:potbelly/subscription_webview.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
+import 'package:potbelly/widgets/toaster.dart';
 import 'package:toast/toast.dart';
 
 class SubscriptionScreen extends StatefulWidget {
@@ -53,7 +54,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                     ),
                   ),
                 ),
-             const   SizedBox(
+                const SizedBox(
                   height: 20.0,
                 ),
                 Expanded(
@@ -91,15 +92,30 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
               height: 20.0,
             ),
             PotbellyButton('Subscribe', onTap: () async {
-              var userId = await Service().getUserId();
+              String userId = await Service().getUserId();
+              print(userId);
 
-              Navigator.push(
+              if (userId == null) {
+                showToaster('Some Error Occured');
+                return;
+              }
+
+              bool isDone = await checkAlreadyApplied(userId, data.id);
+              if (isDone) {
+                Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (_) => SubscriptionWebview(
-                            planId: data.id,
-                            userId: userId,
-                          )));
+                    builder: (_) => SubscriptionWebview(
+                      planId: data.id,
+                      userId: userId,
+                    ),
+                  ),
+                );
+              } else {
+                Toast.show(
+                    'You are already subscribed for this package', context);
+                return;
+              }
               //   paynow(price.toStringAsFixed(0).toString());
             }),
             const SizedBox(
@@ -186,5 +202,13 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     } catch (error) {
       print(error);
     }
+  }
+
+  Future<bool> checkAlreadyApplied(userId, planId) async {
+    bool isOk = await Service().checkAlreadyHaveSubscription(userId, planId);
+    if (isOk == null) {
+      Toast.show('SOme Error Occured', context);
+    }
+    return isOk;
   }
 }

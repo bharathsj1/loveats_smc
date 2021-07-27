@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/appServices.dart';
+import 'package:potbelly/services/cartservice.dart';
 import 'package:potbelly/services/paymentservice.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:toast/toast.dart';
@@ -45,11 +46,22 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
     };
     PaymentService().getIntent(data).then((value) async {
       print(value);
-      
-      if (value == 'Error in payment') {
-        Toast.show('Error in payment', context, duration: 3);
-      } else {
-        _paymentSheetData = value;
+
+      _paymentSheetData = value;
+      setState(() {});
+      try {
+        await Stripe.instance.initPaymentSheet(
+            paymentSheetParameters: SetupPaymentSheetParameters(
+          paymentIntentClientSecret: _paymentSheetData['client_secret'],
+          // customerEphemeralKeySecret: _paymentSheetData['ephemeralKey'],
+          // customerId: _paymentSheetData['customer'],
+          applePay: true,
+          googlePay: true,
+          merchantCountryCode: 'UK',
+
+          // merchantDisplayName: 'saad',
+          // style:  ThemeMode.dark,
+        ));
         setState(() {});
         try {
           // intent=await  Stripe.instance.retrievePaymentIntent(_paymentSheetData['client_secret']);
@@ -71,6 +83,9 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
         } catch (error) {
           print(error);
         }
+      }catch(_)
+      {
+
       }
     });
   }
@@ -136,49 +151,51 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
       }
       else{
         for (var i = 0; i < widget.checkoutdata['cartlist'].length; i++) {
-             var data={
-        'total_amount': widget.checkoutdata['total'],
-        'payment_method':'card',
-        'payment_id':_paymentSheetData['client_secret'],
-        'customer_addressId': widget.checkoutdata['customer_addressId'],
-      };
-      AppService().addeorder(data).then((value) {
-        orderId= value['data']['id'].toString() ;
-        print(orderId);
-          for (var j = 0; j < widget.checkoutdata['cartlist'][i].length; j++) {
-            print(widget.checkoutdata['cartlist'][i][j]);
-              var data2={
-        'quantity': widget.checkoutdata['cartlist'][i][j]['qty'],
-        'total_price':  widget.checkoutdata['cartlist'][i][j]['payableAmount'],
-        'order_id': value['data']['id'],
-        'rest_menuId': widget.checkoutdata['cartlist'][i][j]['id'],
-        'rest_Id': widget.checkoutdata['cartlist'][i][j]['restaurantId'],
-
-      };
-      print(data2);
-       AppService().addorderdetails(data2).then((value) {
-         print(value);
-         if(i ==  widget.checkoutdata['cartlist'].length-1 && j == widget.checkoutdata['cartlist'][i].length-1){
-             this.loader = false;
-             var data={
-               'title':'New Order',
-               'body': 'User has been placed a new order',
-               'data':value.toString(),
-              //  ''
-             };
-             AppService().sendnotisuperadmin(data);
-           Navigator.of(context).pop();
-           Navigator.of(context).pop();
-            this.loader = false;
-
-      setState(() {});
-           Navigator.pushNamed(context,AppRouter.CheckOut3, arguments: {
-        'type': widget.checkoutdata['type'],
-        'orderId': orderId
-      });
-         }
-       });
-          }
+          var data = {
+            'total_amount': widget.checkoutdata['total'],
+            'payment_method': 'card',
+            'payment_id': _paymentSheetData['client_secret'],
+            'customer_addressId': widget.checkoutdata['customer_addressId'],
+          };
+          AppService().addeorder(data).then((value) {
+            orderId = value['data']['id'].toString();
+            print(orderId);
+            for (var j = 0;
+                j < widget.checkoutdata['cartlist'][i].length;
+                j++) {
+              print(widget.checkoutdata['cartlist'][i][j]);
+              var data2 = {
+                'quantity': widget.checkoutdata['cartlist'][i][j]['qty'],
+                'total_price': widget.checkoutdata['cartlist'][i][j]
+                    ['payableAmount'],
+                'order_id': value['data']['id'],
+                'rest_menuId': widget.checkoutdata['cartlist'][i][j]['id'],
+                'rest_Id': widget.checkoutdata['cartlist'][i][j]
+                    ['restaurantId'],
+              };
+              AppService().addorderdetails(data2).then((value) async {
+                print(value);
+                if (i == widget.checkoutdata['cartlist'].length - 1 &&
+                    j == widget.checkoutdata['cartlist'][i].length - 1) {
+                  this.loader = false;
+                  var data = {
+                    'title': 'New Order',
+                    'body': 'User has been placed a new order',
+                    'data': value.toString(),
+                  };
+                  AppService().sendnotisuperadmin(data);
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  this.loader = false;
+                  await CartProvider().clearcart();
+                  setState(() {});
+                  Navigator.pushNamed(context, AppRouter.CheckOut3, arguments: {
+                    'type': widget.checkoutdata['type'],
+                    'orderId': orderId
+                  });
+                }
+              });
+            }
           });
         }
         
@@ -186,6 +203,7 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
      
       Toast.show('Payment Success', context, duration: 3);
     } catch (error) {
+      print('ERROR AGYA HAIIIII');
       print(error);
     }
   }
