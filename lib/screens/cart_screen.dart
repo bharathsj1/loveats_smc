@@ -79,7 +79,7 @@ class _CartScreenState extends State<CartScreen> {
   calculate() {
     double total = 0;
     cartlist.forEach((f) {
-      total += double.parse(f['price']) * double.parse(f['qty']);
+      total += (f['price']) * double.parse(f['qty']);
     });
     totalAmount = total;
     print('total');
@@ -98,7 +98,7 @@ class _CartScreenState extends State<CartScreen> {
         ? (int.parse(newcart[i1][i2]['qty']) + 1).toString()
         : (int.parse(newcart[i1][i2]['qty']) - 1).toString();
     newcart[i1][i2]['payableAmount'] =
-        ((double.tryParse(newcart[i1][i2]['price']) *
+        (((newcart[i1][i2]['price']) *
                 int.parse(newcart[i1][i2]['qty'])))
             .toString();
   }
@@ -214,6 +214,9 @@ class _CartScreenState extends State<CartScreen> {
                                         print('here');
                                         await CartProvider()
                                             .removeToCart(cartlist[index]);
+                                        // await CartProvider()
+                                        //     .clearcart();
+
                                         getcartlist();
                                       },
                                       child: Row(

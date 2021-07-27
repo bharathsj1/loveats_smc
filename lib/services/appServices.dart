@@ -39,6 +39,33 @@ class AppService {
     }
   }
 
+  Future<dynamic> menuwithcat(id) async {
+    // String accessToken = await getAccessToken();
+    // dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      var resp = await this.dio.get(
+            "/menuItemsWithTypesForSpecificRes/"+id,
+          );
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+  Future<dynamic> filtercats() async {
+    // String accessToken = await getAccessToken();
+    // dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      var resp = await this.dio.get(
+            "/MenuTypesWithAtleastOneItem/",
+          );
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   Future<dynamic> getallitems() async {
     // String accessToken = await getAccessToken();
     // dio.options.headers['Authorization'] = "Bearer " + accessToken;

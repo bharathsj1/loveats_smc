@@ -207,7 +207,7 @@ class _CheckOutScreen3State extends State<CheckOutScreen3> {
                PotbellyButton(
               widget.checkoutdata['type'] =='subscription'? 'Continue' : 'Continue',
                 onTap: () {
-                  Navigator.pushNamedAndRemoveUntil(context,AppRouter.rootScreen, (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(context,AppRouter.homeScreen, (route) => false);
                 },
                 buttonHeight: 45,
                 buttonWidth:  MediaQuery.of(context).size.width/2.5,

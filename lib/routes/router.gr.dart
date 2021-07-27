@@ -7,6 +7,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:potbelly/screens/Filter_sort.dart';
 import 'package:potbelly/screens/Filters_Screen.dart';
 import 'package:potbelly/screens/NewSearch_screen.dart';
 import 'package:potbelly/screens/New_splash_Screen.dart';
@@ -110,6 +111,7 @@ class AppRouter {
   static const userSubscriptionList = '/user-subscription-list';
   static const Add_Extra = '/Add_Extra';
   static const Filter_Screens = '/Filter_Screen';
+  static const Filter_SortScreen = '/Filter_ortScreen';
 
   Navigator navigator = Navigator();
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -145,9 +147,14 @@ class AppRouter {
           builder: (_) => SetLocationScreen(),
           settings: settings,
         );
+      case AppRouter.Filter_SortScreen:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => FilterSort(sort: args,),
+          settings: settings,
+        );
       case AppRouter.Add_Extra:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => AddExtraScreen(),
+          builder: (_) => AddExtraScreen(data: args,),
           settings: settings,
         );
       case AppRouter.Filter_Screens:
