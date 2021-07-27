@@ -218,7 +218,9 @@ class Service {
         await setKeyData('name', _user.data.custFirstName);
         await setKeyData('email', _user.data.email);
         await setKeyData('accounttype', _user.data.custAccountType);
+        if(_user.data.custProfileImage !=null){
         await setKeyData('photo', _user.data.custProfileImage);
+        }
         await setKeyData('userId', _user.data.id.toString());
         await setKeyData('userdata', jsonEncode(value.data['data']));
       }

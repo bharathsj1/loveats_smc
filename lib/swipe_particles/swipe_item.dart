@@ -70,8 +70,9 @@ class SwipeItemState extends State<SwipeItem> {
     return Container(
       key: _key,
       alignment: Alignment.center,
-      height: SwipeItem.nominalHeight - 20,
+      height: SwipeItem.nominalHeight - 50,
       decoration: BoxDecoration(
+      // color: Colors.red,
         gradient: SwipeItem.getGradient(indicatorColor, swipeRatio, swipeSign),
       ),
 

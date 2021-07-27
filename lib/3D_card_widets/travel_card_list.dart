@@ -97,16 +97,14 @@ class TravelCardListState extends State<TravelCardList>
       child: Container(
         child: Rotation3d(
           rotationY: _normalizedOffset * _maxRotation,
-          child: Hero(
-            tag: widget.cities[itemIndex].restName,
-            child: TravelCardRenderer(
-              //Pass in the offset, renderer can update it's own view from there
-              _normalizedOffset,
-              //Pass in city path for the image asset links
-              city: widget.cities[itemIndex % widget.cities.length],
-              cardWidth: _cardWidth,
-              cardHeight: _cardHeight,
-            ),
+            // tag: widget.cities[itemIndex].restName,
+          child: TravelCardRenderer(
+            //Pass in the offset, renderer can update it's own view from there
+            _normalizedOffset,
+            //Pass in city path for the image asset links
+            city: widget.cities[itemIndex % widget.cities.length],
+            cardWidth: _cardWidth,
+            cardHeight: _cardHeight,
           ),
         ),
       ),

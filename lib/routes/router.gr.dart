@@ -7,8 +7,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:potbelly/screens/Filters_Screen.dart';
 import 'package:potbelly/screens/NewSearch_screen.dart';
 import 'package:potbelly/screens/New_splash_Screen.dart';
+import 'package:potbelly/screens/add_extra.dart';
 import 'package:potbelly/screens/google_map.dart';
 import 'package:potbelly/screens/Promotionalert.dart';
 import 'package:potbelly/screens/checkoutScreen.dart';
@@ -106,6 +108,8 @@ class AppRouter {
   static const live_tracking = '/live_tracking';
   static const subscriptionPage = '/subscription-page';
   static const userSubscriptionList = '/user-subscription-list';
+  static const Add_Extra = '/Add_Extra';
+  static const Filter_Screens = '/Filter_Screen';
 
   Navigator navigator = Navigator();
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -139,6 +143,16 @@ class AppRouter {
       case AppRouter.setLocationScreen:
         return CupertinoPageRoute<dynamic>(
           builder: (_) => SetLocationScreen(),
+          settings: settings,
+        );
+      case AppRouter.Add_Extra:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => AddExtraScreen(),
+          settings: settings,
+        );
+      case AppRouter.Filter_Screens:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => NewFilterScreen(),
           settings: settings,
         );
       case AppRouter.homeScreen:
