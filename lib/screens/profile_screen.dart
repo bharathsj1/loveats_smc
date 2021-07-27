@@ -335,10 +335,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: <Widget>[
                     Column(
                       children: [
-                        prefs.getString('photo') != null
+                        prefs.getString('photo') != null &&
+                                prefs.getString('photo') != ''
                             ? CircleAvatar(
                                 backgroundImage: NetworkImage(
-                                  StringConst.LOCAL_URL +
+                                  StringConst.LIVE_PICTURE_URL +
                                       prefs.getString('photo'),
                                 ),
                                 backgroundColor: Colors.transparent,
@@ -456,21 +457,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
               tiles: <Widget>[
                 SettingsListTile(
                   title: "Edit Profile",
-                  // onTap: () => AppRouter.navigator
-                  //     .pushNamed(AppRouter.changePasswordScreen),
+                  onTap: () => Navigator.pushNamed(context, AppRouter.editProfileScreen),
                 ),
                 SettingsListTile(
                   title: "Change Password",
-                  // onTap: () => AppRouter.navigator
-                  //     .pushNamed(AppRouter.changePasswordScreen),
+                  onTap: () => Navigator.pushNamed(context, AppRouter.changePasswordScreen)
                 ),
-                SettingsListTile(
-                    title: "Change Language",
-                    titleColor: AppColors.black,
-                    onTap: () => Navigator.pushNamed(
-                        context, AppRouter.changeLanguageScreen)
-                    // .pushNamed(AppRouter.changeLanguageScreen),
-                    ),
+                // SettingsListTile(
+                //     title: "Change Language",
+                //     titleColor: AppColors.black,
+                //     onTap: () => Navigator.pushNamed(
+                //         context, AppRouter.changeLanguageScreen)
+                //     // .pushNamed(AppRouter.changeLanguageScreen),
+                //     ),
                 // SettingsListTile(
                 //   title: "Order List",
                 //   titleColor: AppColors.black,

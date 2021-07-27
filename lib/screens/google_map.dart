@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -14,6 +16,7 @@ class _GoogleMapsState extends State<GoogleMaps> {
   double latitude = 24.90;
   double longitude = 73.33;
   GoogleMapController _controller;
+  Set<Marker> _markers = HashSet<Marker>();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -32,25 +35,28 @@ class _GoogleMapsState extends State<GoogleMaps> {
                 myLocationButtonEnabled: false,
                 buildingsEnabled: true,
                 mapToolbarEnabled: true,
+                onCameraIdle: () {
+                  _markers.add(Marker(
+                    draggable: true,
+                    markerId: MarkerId("1"),
+                    icon: BitmapDescriptor.defaultMarker,
+                    position: LatLng(latitude, longitude),
+                  ));
+                },
                 onCameraMove: (position) {
-                  print(position.target.latitude);
+                  latitude = position.target.latitude;
+                  longitude = position.target.longitude;
+                  _markers.add(Marker(
+                    draggable: true,
+                    markerId: MarkerId("1"),
+                    icon: BitmapDescriptor.defaultMarker,
+                    position: LatLng(latitude, longitude),
+                  ));
+                  setState(() {});
                 },
                 initialCameraPosition: CameraPosition(
                     target: LatLng(latitude, longitude), zoom: 10),
-                markers: Set<Marker>.of(
-                  <Marker>[
-                    Marker(
-                      draggable: true,
-                      markerId: MarkerId("1"),
-                      icon: BitmapDescriptor.defaultMarker,
-                      position: LatLng(latitude, longitude),
-                      onDragEnd: (value) {
-                        print(value.latitude);
-                        print(value.longitude);
-                      },
-                    )
-                  ],
-                ),
+                markers: _markers,
                 onMapCreated: (controller) {
                   setState(() {
                     _controller = controller;
@@ -84,6 +90,14 @@ class _GoogleMapsState extends State<GoogleMaps> {
         CameraUpdate.newLatLngZoom(
             LatLng(position.latitude, position.longitude), 25.0),
       );
+
+      _markers.add(Marker(
+        draggable: true,
+        markerId: MarkerId("1"),
+        icon: BitmapDescriptor.defaultMarker,
+        position: LatLng(position.latitude, position.longitude),
+      ));
+      setState(() {});
     }).timeout(
       Duration(seconds: 30),
       onTimeout: () {

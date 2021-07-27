@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -116,6 +118,7 @@ class AppService {
       print(resp);
       return resp.data;
     } catch (e) {
+      print('error hao');
       print(e);
       return null;
     }
@@ -308,5 +311,10 @@ class AppService {
       print(e);
       return null;
     }
+  }
+
+  getCurrentUserData() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return JsonDecoder().convert(sharedPreferences.getString('userdata'));
   }
 }

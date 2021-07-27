@@ -14,7 +14,7 @@ class Vendor_Home_screen extends StatefulWidget {
 }
 
 class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
-  List orderslist=[];
+  List orderslist = [];
   bool loader = true;
   bool reloader = true;
   TextStyle subHeadingTextStyle = Styles.customTitleTextStyle(
@@ -37,36 +37,35 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
   //   });
   // }
 
-  
   @override
   void initState() {
-  //  _register();
-   getorders();
+    //  _register();
+    getorders();
     super.initState();
-    }
+  }
 
-    getorders() async {
-    
-    var orders= await AppService().getOrdersRestaurent();
+  getorders() async {
+    var orders = await AppService().getOrdersRestaurent();
     print(orders);
-    orderslist= orders['data'];
-    loader= false;
-    reloader= false;
+    orderslist = orders['data'];
+    loader = false;
+    reloader = false;
     setState(() {});
-    }
+  }
 
   List<Widget> card() {
     return List.generate(
         orderslist.length,
         (i) => InkWell(
               onTap: () {
-               Navigator
-                    .pushNamed(context,AppRouter.OrdersDetailScreen,arguments: orderslist[i]).then((value) {
-                      setState(() {
-                        reloader=true;
-                        getorders();
-                      });
-                    });
+                Navigator.pushNamed(context, AppRouter.OrdersDetailScreen,
+                        arguments: orderslist[i])
+                    .then((value) {
+                  setState(() {
+                    reloader = true;
+                    getorders();
+                  });
+                });
               },
               child: Card(
                 margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -76,14 +75,14 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
                         child: Image.network(
-                          orderslist[i]['order_detail'][0]['rest_menu']['menu_image'],
+                          orderslist[i]['order_detail'][0]['rest_menu']
+                              ['menu_image'],
                           loadingBuilder: (BuildContext ctx, Widget child,
                               ImageChunkEvent loadingProgress) {
                             if (loadingProgress == null) {
                               return child;
                             } else {
                               return Container(
-                                // height: ,
                                 width: 50,
                                 height: 50,
                                 child: Center(
@@ -105,9 +104,10 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                     children: <Widget>[
                       Container(
                         // color: Colors.red,
-                        width: MediaQuery.of(context).size.width * 0.55,
+                        width: MediaQuery.of(context).size.width * 0.50,
                         child: Text(
-                           orderslist[i]['order_detail'][0]['rest_menu']['menu_name'],
+                          orderslist[i]['order_detail'][0]['rest_menu']
+                              ['menu_name'],
                           style: subHeadingTextStyle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -116,7 +116,8 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                       Row(
                         children: [
                           Text(
-                            '\$' + orderslist[i]['order_detail'][0]['total_price'],
+                            '\$' +
+                                orderslist[i]['order_detail'][0]['total_price'],
                             style: TextStyle(
                               color: AppColors.secondaryElement,
                               fontWeight: FontWeight.bold,
@@ -136,9 +137,10 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            width: MediaQuery.of(context).size.width*0.54,
+                            width: MediaQuery.of(context).size.width * 0.40,
                             child: Text(
-                               orderslist[i]['order_detail'][0]['rest_menu']['menu_details'],
+                              orderslist[i]['order_detail'][0]['rest_menu']
+                                  ['menu_details'],
                               style: addressTextStyle,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -146,7 +148,9 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                           ),
                           Text(
                             DateFormat.yMMMMd('en_US')
-                                    .format(DateTime.parse(orderslist[i]['created_at'])).toString(),
+                                .format(
+                                    DateTime.parse(orderslist[i]['created_at']))
+                                .toString(),
                             style: addressTextStyle,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -159,14 +163,17 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Quantity: ' + orderslist[i]['order_detail'][0]['quantity'],
+                              'Quantity: ' +
+                                  orderslist[i]['order_detail'][0]['quantity'],
                               style: addressTextStyle,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
                               DateFormat.Hm()
-                                    .format(DateTime.parse(orderslist[i]['created_at'])).toString(),
+                                  .format(DateTime.parse(
+                                      orderslist[i]['created_at']))
+                                  .toString(),
                               style: addressTextStyle,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -197,53 +204,56 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
         ),
       ),
       body: loader
-        ? Center(
-            child: CircularProgressIndicator(
-              valueColor:
-                  AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
-            ),
-          ): reloader
-        ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
-                ),
-                SizedBox(height: 40,),
-                 Text(
-          'Reloading...',
-          style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'roboto',
-              color: AppColors.secondaryElement),
-        ),
-              ],
-            ),
-          )
-        :orderslist.length == 0
-            ? Center(
-                child: Container(
-                  child: Text('No order available'),
-                ),
-              )
-            :  SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 8,
-            ),
-            Column(
-              children: card(),
-            ),
-             SizedBox(
-              height: 30,
-            ),
-          ],
-        ),
-      ),
+          ? Center(
+              child: CircularProgressIndicator(
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
+              ),
+            )
+          : reloader
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.secondaryElement),
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Text(
+                        'Reloading...',
+                        style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'roboto',
+                            color: AppColors.secondaryElement),
+                      ),
+                    ],
+                  ),
+                )
+              : orderslist.length == 0
+                  ? Center(
+                      child: Container(
+                        child: Text('No order available'),
+                      ),
+                    )
+                  : SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Column(
+                            children: card(),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                        ],
+                      ),
+                    ),
     );
   }
 }

@@ -2,7 +2,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
+import 'package:place_picker/entities/location_result.dart';
+import 'package:place_picker/widgets/place_picker.dart';
 import 'package:potbelly/3D_card_widets/demo_data.dart';
 import 'package:potbelly/3D_card_widets/travel_card_list.dart';
 import 'package:potbelly/models/promotions.dart';
@@ -43,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
   City _currentCity;
   bool search = true;
   List searchlist = [];
-
+  String selected_address = 'Your Location';
   List subscription = [
     'assets/images/sub3.png',
     'assets/images/sub1.png',
@@ -897,11 +900,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                         SizedBox(
                                           width: 2,
                                         ),
-                                        Text(
-                                          "Preston, Liverpool",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold),
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.50,
+                                          child: Text(
+                                            selected_address,
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -1367,84 +1377,97 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  bottomSheetForLocation(BuildContext context) {
-    return showModalBottomSheet(
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        builder: (context) {
-          return Container(
-            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(10.0),
-                  topRight: const Radius.circular(10.0),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Search Location',
-                    style: Styles.customNormalTextStyle(color: Colors.black),
-                  ),
-                  Divider(),
-                  TextField(
-                    decoration: InputDecoration(
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child: Image.asset(
-                            ImagePath.searchIcon,
-                          ),
-                        ),
-                        hintText: 'Search for your location',
-                        hintStyle: TextStyle(
-                          color: Colors.black26,
-                          fontSize: 16,
-                        ),
-                        border: InputBorder.none),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  InkWell(
-                    onTap: () =>
-                        Navigator.pushNamed(context, AppRouter.googleMap),
-                    child: Row(
-                      children: [
-                        Icon(Icons.location_searching, size: 12.0),
-                        SizedBox(
-                          width: 5.0,
-                        ),
-                        Text('Use current location',
-                            style: Styles.customNormalTextStyle(
-                                color: Colors.indigo)),
-                      ],
-                    ),
-                  ),
-                  Divider(),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  Text(
-                    'Saved Addresses',
-                    style: Styles.customNormalTextStyle(color: Colors.black),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.home),
-                    title: Text('Home'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    subtitle: Text('Habib Street, Banigala'),
-                  ),
-                  Divider(),
-                ],
-              ),
-            ),
-          );
-        });
+  bottomSheetForLocation(BuildContext context) async {
+    LocationResult result = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => PlacePicker(
+              "AIzaSyCkoLh9yZhcAtP9R-KsP90JaqFiooRuEmg",
+              displayLocation: LatLng(53.4083714, -2.991572600000012),
+            )));
+
+    // Handle the result in your way
+    if (result != null) {
+      print(result.latLng);
+      selected_address = result.formattedAddress;
+      setState(() {});
+    }
+
+    // return showModalBottomSheet(
+    //     context: context,
+    //     shape: RoundedRectangleBorder(
+    //       borderRadius: BorderRadius.circular(10.0),
+    //     ),
+    //     builder: (context) {
+    //       return Container(
+    //         margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+    //         child: Container(
+    //           decoration: BoxDecoration(
+    //             borderRadius: BorderRadius.only(
+    //               topLeft: const Radius.circular(10.0),
+    //               topRight: const Radius.circular(10.0),
+    //             ),
+    //           ),
+    //           child: Column(
+    //             crossAxisAlignment: CrossAxisAlignment.start,
+    //             children: [
+    //               Text(
+    //                 'Search Location',
+    //                 style: Styles.customNormalTextStyle(color: Colors.black),
+    //               ),
+    //               Divider(),
+    //               TextField(
+    //                 decoration: InputDecoration(
+    //                     prefixIcon: Padding(
+    //                       padding: const EdgeInsets.all(0.0),
+    //                       child: Image.asset(
+    //                         ImagePath.searchIcon,
+    //                       ),
+    //                     ),
+    //                     hintText: 'Search for your location',
+    //                     hintStyle: TextStyle(
+    //                       color: Colors.black26,
+    //                       fontSize: 16,
+    //                     ),
+    //                     border: InputBorder.none),
+    //               ),
+    //               SizedBox(
+    //                 height: 10,
+    //               ),
+    //               InkWell(
+    //                 onTap: () =>
+    //                     Navigator.pushNamed(context, AppRouter.googleMap),
+    //                 child: Row(
+    //                   children: [
+    //                     Icon(Icons.location_searching, size: 12.0),
+    //                     SizedBox(
+    //                       width: 5.0,
+    //                     ),
+    //                     Text('Use current location',
+    //                         style: Styles.customNormalTextStyle(
+    //                             color: Colors.indigo)),
+    //                   ],
+    //                 ),
+    //               ),
+    //               Divider(),
+    //               SizedBox(
+    //                 height: 5.0,
+    //               ),
+    //               Text(
+    //                 'Saved Addresses',
+    //                 style: Styles.customNormalTextStyle(color: Colors.black),
+    //               ),
+    //               ListTile(
+    //                 leading: Icon(Icons.home),
+    //                 title: Text('Home'),
+    //                 onTap: () {
+    //                   Navigator.pop(context);
+    //                 },
+    //                 subtitle: Text('Habib Street, Banigala'),
+    //               ),
+    //               Divider(),
+    //             ],
+    //           ),
+    //         ),
+    //       );
+    //     });
   }
 }

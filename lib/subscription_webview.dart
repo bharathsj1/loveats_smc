@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/screens/home_screen.dart';
 import 'package:potbelly/widgets/toaster.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -33,6 +35,13 @@ class _SubscriptionWebviewState extends State<SubscriptionWebview> {
           if (url.contains('success')) {
             Navigator.pop(context);
             showToaster('Your subscription has been done successfully');
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (_) =>
+                        // BubbleTabBarDemo(type: '2')
+                        HomeScreen()),
+                (route) => false);
           }
         },
         onProgress: (progress) => print(progress),

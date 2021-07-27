@@ -58,11 +58,11 @@ class SettingsScreen extends StatelessWidget {
                   // onTap: () => AppRouter.navigator
                   //     .pushNamed(AppRouter.changePasswordScreen),
                 ),
-                SettingsListTile(
-                  title: "Change Language",
-                  // onTap: () => AppRouter.navigator
-                  //     .pushNamed(AppRouter.changeLanguageScreen),
-                ),
+                // SettingsListTile(
+                //   title: "Change Language",
+                //   // onTap: () => AppRouter.navigator
+                //   //     .pushNamed(AppRouter.changeLanguageScreen),
+                // ),
                 SettingsListTile(
                   title: "Order List",
                   onTap: () => Navigator
