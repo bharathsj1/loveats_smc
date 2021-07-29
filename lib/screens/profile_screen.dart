@@ -12,6 +12,7 @@ import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/bookmarkservice.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
+import 'package:potbelly/widgets/circularIndicator.dart';
 import 'package:potbelly/widgets/foody_bite_card.dart';
 import 'package:potbelly/widgets/spaces.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -326,9 +327,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         bottomNavigationBar: navBar,
         body: _isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
+            ?CircularIndicator()
             : Container(
                 margin: EdgeInsets.only(top: Sizes.MARGIN_8),
                 child: ListView(
@@ -359,7 +358,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         SpaceH8(),
                         Text(prefs.getString('email') ?? 'Not Available',
                             style: Styles.foodyBiteSubtitleTextStyle),
-                        _specificUserSubscriptionModel == null
+                        _specificUserSubscriptionModel == null ||
+                                _specificUserSubscriptionModel.data.length <= 0
                             ? const SizedBox()
                             : Container(
                                 width: double.infinity,
@@ -424,7 +424,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _specificUserSubscriptionModel =
         await Service().getSpecificUserSubscriptionData();
     print(_specificUserSubscriptionModel.data.length);
+      _isLoading = false;
     setState(() {});
+    
   }
 
   Widget _buildAccountSettings({@required BuildContext context}) {
@@ -457,12 +459,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               tiles: <Widget>[
                 SettingsListTile(
                   title: "Edit Profile",
-                  onTap: () => Navigator.pushNamed(context, AppRouter.editProfileScreen),
+                  onTap: () =>
+                      Navigator.pushNamed(context, AppRouter.editProfileScreen),
                 ),
                 SettingsListTile(
-                  title: "Change Password",
-                  onTap: () => Navigator.pushNamed(context, AppRouter.changePasswordScreen)
-                ),
+                    title: "Change Password",
+                    onTap: () => Navigator.pushNamed(
+                        context, AppRouter.changePasswordScreen)),
                 // SettingsListTile(
                 //     title: "Change Language",
                 //     titleColor: AppColors.black,
@@ -521,8 +524,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SettingsListTile(
                   titleColor: AppColors.black,
                   title: "Cart",
-                  // onTap: () => AppRouter.navigator
-                  //     .pushNamed(AppRouter.changePasswordScreen),
+                  onTap: () =>Navigator.pushNamed(context, AppRouter.cart_Screen)
                 ),
                 SettingsListTile(
                   titleColor: AppColors.black,
@@ -533,8 +535,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SettingsListTile(
                   titleColor: AppColors.black,
                   title: "My Address",
-                  //  onTap: () => Navigator
-                  //     .pushNamed(context,AppRouter.order_list),
+                   onTap: () => Navigator
+                      .pushNamed(context,AppRouter.userAddresses),
                 ),
                 SettingsListTile(
                   titleColor: AppColors.black,
@@ -720,9 +722,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   getUserDetail() async {
     prefs = await Service().initializdPrefs();
-    setState(() {
-      _isLoading = false;
-    });
+   
   }
 
   Widget detail({@required String number, @required String text}) {

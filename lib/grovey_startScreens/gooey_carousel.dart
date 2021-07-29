@@ -7,13 +7,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:potbelly/Flip_nav_bar/demo.dart';
 import 'package:potbelly/models/UserModel.dart';
 import 'package:potbelly/screens/home_screen.dart';
-import 'package:potbelly/screens/root_screen.dart';
-import 'package:potbelly/screens/root_screen2.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
@@ -21,10 +17,8 @@ import 'package:potbelly/vendor_screens.dart/Home_screen.dart';
 import 'package:potbelly/widgets/snackbar.dart';
 import './ProviderService.dart';
 import 'package:provider/provider.dart';
-import 'side.dart';
 import 'sun_moon.dart';
 
-import 'gooey_edge.dart';
 import 'gooey_edge_clipper.dart';
 
 // int pageindex = 0;
@@ -167,7 +161,6 @@ class GooeyCarouselState extends State<GooeyCarousel>
     return showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        
         backgroundColor: Colors.white.withOpacity(0.3),
         // backgroundColor: Colors.transparent,
         shape: RoundedRectangleBorder(
@@ -183,15 +176,14 @@ class GooeyCarouselState extends State<GooeyCarousel>
                   bottom: MediaQuery.of(context).viewInsets.bottom),
               child: ClipRRect(
                 borderRadius: new BorderRadius.only(
-                topLeft: const Radius.circular(30.0),
-                topRight: const Radius.circular(30.0)),
-              child: new BackdropFilter(
-                filter: new ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
-                
+                    topLeft: const Radius.circular(30.0),
+                    topRight: const Radius.circular(30.0)),
+                child: new BackdropFilter(
+                  filter: new ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
                   child: new Container(
                     height: MediaQuery.of(context).size.height / 2.1,
-                    color: Colors
-                        .white.withOpacity(0.2), //could change this to Color(0xFF737373),
+                    color: Colors.white.withOpacity(
+                        0.2), //could change this to Color(0xFF737373),
                     //so you don't have to change MaterialApp canvasColor
                     //   child: new Container(
                     //       decoration: new BoxDecoration(
@@ -242,7 +234,10 @@ class GooeyCarouselState extends State<GooeyCarousel>
                               margin: EdgeInsets.symmetric(horizontal: 30),
                               child: Padding(
                                 padding: EdgeInsets.only(
-                                    top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
+                                    top: 0.0,
+                                    bottom: 0.0,
+                                    left: 0.0,
+                                    right: 0.0),
                                 child: Theme(
                                   data: ThemeData(
                                     primaryColor: Colors.white,
@@ -251,7 +246,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                   child: TextFormField(
                                     controller: emailController,
                                     keyboardType: TextInputType.emailAddress,
-                                    validator: (value) => emailValidation(value),
+                                    validator: (value) =>
+                                        emailValidation(value),
                                     style: TextStyle(
                                         // fontFamily: "WorkSansSemiBold",
                                         fontSize: 14.0,
@@ -264,7 +260,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                       //     borderSide:
                                       //         BorderSide(color: Colors.white)),
                                       hintText: "Email Address",
-                        
+
                                       hintStyle: TextStyle(
                                           fontSize: 14.0,
                                           color: Colors.white.withOpacity(0.8)),
@@ -295,7 +291,10 @@ class GooeyCarouselState extends State<GooeyCarousel>
                               margin: EdgeInsets.symmetric(horizontal: 30),
                               child: Padding(
                                 padding: EdgeInsets.only(
-                                    top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
+                                    top: 0.0,
+                                    bottom: 0.0,
+                                    left: 0.0,
+                                    right: 0.0),
                                 child: Theme(
                                   data: ThemeData(
                                     primaryColor: Colors.white,
@@ -305,7 +304,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                     // focusNode: myFocusNodePassword,
                                     controller: passwordController,
                                     keyboardType: TextInputType.visiblePassword,
-                                    validator: (value) => passwordValidation(value),
+                                    validator: (value) =>
+                                        passwordValidation(value),
                                     obscureText: true,
                                     style: TextStyle(
                                         // fontFamily: "WorkSansSemiBold",
@@ -369,6 +369,47 @@ class GooeyCarouselState extends State<GooeyCarousel>
                               ),
                             ),
                             SizedBox(
+                              height: 10,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 32),
+                              child: InkWell(
+                                onTap: () {
+                                  Service().saveGuest();
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => HomeScreen()),
+                                      (route) => false);
+                                },
+                                child: Material(
+                                  elevation: 5,
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.transparent,
+                                  // shape: RoundedRectangleBorder(
+                                  //   side: BorderSide(width: 1,color: AppColors.black,),
+                                  // ),
+                                  child: Container(
+                                    height: 50,
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        color: AppColors.black,
+                                        // border: Border.all(width: 1,color: AppColors.black),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: Center(
+                                      child: Text(
+                                        'Sign in as a Guest',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
                               height: 20,
                             ),
                             Row(
@@ -376,10 +417,10 @@ class GooeyCarouselState extends State<GooeyCarousel>
                               children: [
                                 Platform.isIOS
                                     ? InkWell(
-                                      onTap: (){
-                                        _signInWithApple(context);
-                                      },
-                                      child: Container(
+                                        onTap: () {
+                                          _signInWithApple(context);
+                                        },
+                                        child: Container(
                                           padding: const EdgeInsets.fromLTRB(
                                               10, 5, 10, 10),
                                           decoration: new BoxDecoration(
@@ -393,7 +434,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                           ),
                                           // child: Image.asset('assets/images/apple.png',height: 30,width: 30,),
                                         ),
-                                    )
+                                      )
                                     : Container(),
                                 Platform.isIOS
                                     ? SizedBox(
@@ -435,18 +476,20 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                 InkWell(
                                     onTap: () {
                                       Navigator.of(context).pop();
-                                      newemailController.text='';
-                                      uid=null;
-                                      type=null;
-                                            setState(() {});
+                                      newemailController.text = '';
+                                      uid = null;
+                                      type = null;
+                                      setState(() {});
                                       bottomsheet2();
                                       Provider.of<ProviderService>(context,
                                               listen: false)
                                           .changessignuptatus();
-                                      print(Provider.of<ProviderService>(context,
+                                      print(Provider.of<ProviderService>(
+                                              context,
                                               listen: false)
                                           .login);
-                                      print(Provider.of<ProviderService>(context,
+                                      print(Provider.of<ProviderService>(
+                                              context,
                                               listen: false)
                                           .signup);
                                     },
@@ -468,7 +511,6 @@ class GooeyCarouselState extends State<GooeyCarousel>
               ),
             );
           });
-          
         }).whenComplete(() {
       print('here');
       Provider.of<ProviderService>(context, listen: false).allfalse();
@@ -493,12 +535,12 @@ class GooeyCarouselState extends State<GooeyCarousel>
             return Padding(
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom),
-              child:  ClipRRect(
+              child: ClipRRect(
                 borderRadius: new BorderRadius.only(
-                topLeft: const Radius.circular(30.0),
-                topRight: const Radius.circular(30.0)),
-              child: new BackdropFilter(
-                filter: new ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
+                    topLeft: const Radius.circular(30.0),
+                    topRight: const Radius.circular(30.0)),
+                child: new BackdropFilter(
+                  filter: new ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
                   child: new Container(
                     height: MediaQuery.of(context).size.height / 2,
                     color: Colors.white.withOpacity(0.2),
@@ -543,7 +585,10 @@ class GooeyCarouselState extends State<GooeyCarousel>
                               margin: EdgeInsets.symmetric(horizontal: 30),
                               child: Padding(
                                 padding: EdgeInsets.only(
-                                    top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
+                                    top: 0.0,
+                                    bottom: 0.0,
+                                    left: 0.0,
+                                    right: 0.0),
                                 child: Theme(
                                   data: ThemeData(
                                     primaryColor: Colors.white,
@@ -596,7 +641,10 @@ class GooeyCarouselState extends State<GooeyCarousel>
                               margin: EdgeInsets.symmetric(horizontal: 30),
                               child: Padding(
                                 padding: EdgeInsets.only(
-                                    top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
+                                    top: 0.0,
+                                    bottom: 0.0,
+                                    left: 0.0,
+                                    right: 0.0),
                                 child: Theme(
                                   data: ThemeData(
                                     primaryColor: Colors.white,
@@ -649,7 +697,10 @@ class GooeyCarouselState extends State<GooeyCarousel>
                               margin: EdgeInsets.symmetric(horizontal: 30),
                               child: Padding(
                                 padding: EdgeInsets.only(
-                                    top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
+                                    top: 0.0,
+                                    bottom: 0.0,
+                                    left: 0.0,
+                                    right: 0.0),
                                 child: Theme(
                                   data: ThemeData(
                                     primaryColor: Colors.white,
@@ -659,7 +710,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                     // focusNode: myFocusNodeEmailLogin,
                                     controller: newemailController,
                                     keyboardType: TextInputType.emailAddress,
-                                    validator: (value) => emailValidation(value),
+                                    validator: (value) =>
+                                        emailValidation(value),
                                     style: TextStyle(
                                         // fontFamily: "WorkSansSemiBold",
                                         fontSize: 14.0,
@@ -702,7 +754,10 @@ class GooeyCarouselState extends State<GooeyCarousel>
                               margin: EdgeInsets.symmetric(horizontal: 30),
                               child: Padding(
                                 padding: EdgeInsets.only(
-                                    top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
+                                    top: 0.0,
+                                    bottom: 0.0,
+                                    left: 0.0,
+                                    right: 0.0),
                                 child: Theme(
                                   data: ThemeData(
                                     primaryColor: Colors.white,
@@ -712,7 +767,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                     // focusNode: myFocusNodeEmailLogin,
                                     controller: newpasswordController,
                                     keyboardType: TextInputType.visiblePassword,
-                                    validator: (value) => passwordValidation(value),
+                                    validator: (value) =>
+                                        passwordValidation(value),
                                     obscureText: true,
                                     style: TextStyle(
                                         // fontFamily: "WorkSansSemiBold",
@@ -874,10 +930,9 @@ class GooeyCarouselState extends State<GooeyCarousel>
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (_) => 
-                  // BubbleTabBarDemo(type: type,)
-                   type == '2'? HomeScreen():  Vendor_Home_screen()
-                  ),
+                  builder: (_) =>
+                      // BubbleTabBarDemo(type: type,)
+                      type == '2' ? HomeScreen() : Vendor_Home_screen()),
               (route) => false);
         });
       });
@@ -930,10 +985,12 @@ class GooeyCarouselState extends State<GooeyCarousel>
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                    builder: (_) =>  
-                    // BubbleTabBarDemo(type: response['user'].data.custAccountType)
-                    response['user'].data.custAccountType == '2'? HomeScreen():  Vendor_Home_screen()
-                        ),
+                  builder: (_) =>
+                      // BubbleTabBarDemo(type: response['user'].data.custAccountType)
+                      response['user'].data.custAccountType == '2'
+                          ? HomeScreen()
+                          : Vendor_Home_screen(),
+                ),
                 (route) => false);
           });
         });
@@ -967,10 +1024,9 @@ class GooeyCarouselState extends State<GooeyCarousel>
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (_) =>  
-                  // BubbleTabBarDemo(type: type)
-                  type == '2'? HomeScreen():  Vendor_Home_screen()
-                  ),
+                  builder: (_) =>
+                      // BubbleTabBarDemo(type: type)
+                      type == '2' ? HomeScreen() : Vendor_Home_screen()),
               (route) => false);
         });
       });
@@ -1009,53 +1065,50 @@ class GooeyCarouselState extends State<GooeyCarousel>
   ) async {
     print('In Validating form section');
 
-    if (_formKey.currentState.validate()) {
-      UserModel userModel = UserModel(
-          '',
-          fullnameController.text,
-          newemailController.text,
-          newpasswordController.text,
-          phoneController.text,
-          '');
-      // String uid = uid;
-      print(uid);
-      var message = await _service.registerUserWithEmail(
-          userModel, _profilePicture, uid, type ?? 0);
-      print(message);
-      if (message == 'success') {
-        final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-        var udid;
-        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-        if (Platform.isAndroid) {
-          AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-          udid = androidInfo.id;
-        } else {
-          IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-          udid = iosInfo.identifierForVendor;
-        }
-        _firebaseMessaging.getToken().then((tokeen) {
-          var data = {'device_id': udid, 'firebase_token': tokeen};
-          AppService().savedeicetoken(data).then((value) {
-            print(value);
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => 
-                // BubbleTabBarDemo(type: '2')
-                HomeScreen()
-                ),
-                (route) => false);
-          });
-        });
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => 
-            // BubbleTabBarDemo(type: '2')
-            HomeScreen()
-            ));
+    UserModel userModel = UserModel(
+        '',
+        fullnameController.text,
+        newemailController.text,
+        newpasswordController.text,
+        phoneController.text,
+        '');
+    // String uid = uid;
+    print(uid);
+    var message = await _service.registerUserWithEmail(
+        userModel, _profilePicture, uid, type ?? 0);
+    print(message);
+    if (message == 'success') {
+      final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+      var udid;
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        udid = androidInfo.id;
       } else {
-        showSnackBar(context, message);
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        udid = iosInfo.identifierForVendor;
       }
+      _firebaseMessaging.getToken().then((tokeen) {
+        var data = {'device_id': udid, 'firebase_token': tokeen};
+        AppService().savedeicetoken(data).then((value) {
+          print(value);
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (_) =>
+                      // BubbleTabBarDemo(type: '2')
+                      HomeScreen()),
+              (route) => false);
+        });
+      });
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (_) =>
+                  // BubbleTabBarDemo(type: '2')
+                  HomeScreen()));
     } else {
-      print('Not Validate');
+      showSnackBar(context, message);
     }
   }
 }

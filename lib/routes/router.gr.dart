@@ -56,6 +56,7 @@ import 'package:potbelly/screens/new_review_screen.dart';
 import 'package:potbelly/Checkout_Screens/Checkout1.dart';
 import 'package:potbelly/Checkout_Screens/Checkout2.dart';
 import 'package:potbelly/Checkout_Screens/Checkout3.dart';
+import 'package:potbelly/screens/user_address.dart';
 import 'package:potbelly/screens/user_subscription_list.dart';
 import 'package:potbelly/vendor_screens.dart/open_direction.dart';
 import 'package:potbelly/vendor_screens.dart/open_map.dart';
@@ -117,6 +118,7 @@ class AppRouter {
   static const Restaurant_info = '/Restaurant_info';
   static const Add_new_Payment = '/Add_new_Payment';
 
+  static const userAddresses = '/user_addresses';
   Navigator navigator = Navigator();
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -158,7 +160,9 @@ class AppRouter {
         );
       case AppRouter.Filter_SortScreen:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => FilterSort(sort: args,),
+          builder: (_) => FilterSort(
+            sort: args,
+          ),
           settings: settings,
         );
       case AppRouter.Restaurant_info:
@@ -168,7 +172,9 @@ class AppRouter {
         );
       case AppRouter.Add_Extra:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => AddExtraScreen(data: args,),
+          builder: (_) => AddExtraScreen(
+            data: args,
+          ),
           settings: settings,
         );
       case AppRouter.Filter_Screens:
@@ -456,9 +462,15 @@ class AppRouter {
           settings: settings,
         );
 
-        case AppRouter.userSubscriptionList:
-         return CupertinoPageRoute<dynamic>(
+      case AppRouter.userSubscriptionList:
+        return CupertinoPageRoute<dynamic>(
           builder: (_) => UserSubscriptionList(),
+          settings: settings,
+        );
+
+      case AppRouter.userAddresses:
+       return CupertinoPageRoute<dynamic>(
+          builder: (_) => UserAddresses(),
           settings: settings,
         );
 

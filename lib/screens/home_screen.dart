@@ -9,17 +9,22 @@ import 'package:place_picker/entities/location_result.dart';
 import 'package:place_picker/widgets/place_picker.dart';
 import 'package:potbelly/3D_card_widets/demo_data.dart';
 import 'package:potbelly/3D_card_widets/travel_card_list.dart';
+import 'package:potbelly/grovey_startScreens/ProviderService.dart';
+import 'package:potbelly/grovey_startScreens/demo.dart';
 import 'package:potbelly/models/promotions.dart';
 import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/screens/settings_screen.dart';
 import 'package:potbelly/services/DatabaseManager.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/heading_row.dart';
 import 'package:potbelly/widgets/search_input_field.dart';
+import 'package:provider/provider.dart';
 import 'package:skeleton_text/skeleton_text.dart';
+import 'package:toast/toast.dart';
 import 'package:video_player/video_player.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -47,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
   City _currentCity;
   bool search = true;
   List searchlist = [];
+  bool _isGuest = false;
   String selected_address = 'Your Location';
   List subscription = [
     'assets/images/sub3.png',
@@ -74,7 +80,13 @@ class _HomeScreenState extends State<HomeScreen> {
     getRestaurent();
     getcateory();
     gethotspot();
+    isUserGuest();
     super.initState();
+  }
+
+  isUserGuest() async {
+    print('Checking if user is guest');
+    _isGuest = await Service().isGuest();
   }
 
   checkpromo() async {
@@ -933,15 +945,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Padding(
                                   padding: const EdgeInsets.only(right: 5.0),
                                   child: InkWell(
-                                      onTap: () {
-                                        // search = !search;
-                                        // setState(() {});
+                                      onTap: () async {
                                         Navigator.pushNamed(
                                           context,
                                           AppRouter.cart_Screen,
-                                          // arguments: SearchValue(
-                                          //   searchcontroller.text,
-                                          // ),
                                         );
                                       },
                                       child: Icon(
@@ -953,15 +960,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Padding(
                                   padding: const EdgeInsets.only(right: 10.0),
                                   child: InkWell(
-                                    onTap: () {
-                                      // search = !search;
-                                      Navigator.pushNamed(
-                                        context,
-                                        AppRouter.profileScreen,
-                                        // arguments: SearchValue(
-                                        //   searchcontroller.text,
-                                        // ),
-                                      );
+                                    onTap: () async {
+                                      _isGuest = await Service().isGuest();
+                                      // print(_isGuest);
+                                      // return;
+                                      if (!_isGuest) {
+                                        Navigator.pushNamed(
+                                          context,
+                                          AppRouter.profileScreen,
+                                        );
+                                      } else
+                                        _askLoginDialog(context);
+
                                       setState(() {});
                                     },
                                     // child: Icon(
@@ -1531,5 +1541,94 @@ class _HomeScreenState extends State<HomeScreen> {
     //         ),
     //       );
     //     });
+  }
+
+  Future<void> _askLoginDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return _buildAlertDialog(context);
+      },
+    );
+  }
+
+  Widget _buildAlertDialog(BuildContext context) {
+    var textTheme = Theme.of(context).textTheme;
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(
+          Radius.circular(Sizes.RADIUS_32),
+        ),
+      ),
+      child: AlertDialog(
+        contentPadding: EdgeInsets.fromLTRB(
+          Sizes.PADDING_0,
+          Sizes.PADDING_36,
+          Sizes.PADDING_0,
+          Sizes.PADDING_0,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Sizes.RADIUS_20),
+        ),
+        elevation: Sizes.ELEVATION_4,
+        content: Container(
+          height: Sizes.HEIGHT_150,
+          width: Sizes.WIDTH_300,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              SingleChildScrollView(
+                child: Center(
+                  child: Text(
+                    'You have to login first',
+                    style: textTheme.title.copyWith(
+                      fontSize: Sizes.TEXT_SIZE_20,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: AppColors.secondaryElement,
+                        minimumSize: Size(200.0, 30),
+                      ),
+                      child: Text(
+                        'Go to Login Screen',
+                        style: TextStyle(fontSize: 15.0),
+                      ),
+                      onPressed: () {
+                        Provider.of<ProviderService>(context, listen: false).allfalse();
+                        Provider.of<ProviderService>(context, listen: false).reset();
+                        Navigator.push(
+                            context,
+                            // MaterialPageRoute(builder: (_) => BackgroundVideo()), (route) => false);
+                            MaterialPageRoute(builder: (_) => GooeyEdgeDemo()));
+                            
+                      }),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: AppColors.secondaryElement,
+                      minimumSize: Size(200.0, 30),
+                    ),
+                    child: Text(
+                      'Close ',
+                      style: TextStyle(fontSize: 15.0),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -2049,6 +2049,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     print(data);
     fooditemswithcat = data;
     print(fooditemswithcat);
+    print('Helol');
 
     setState(() {
       _isLoading = false;

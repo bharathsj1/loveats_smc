@@ -30,6 +30,7 @@ import 'package:potbelly/screens/splash_screen.dart';
 import 'package:potbelly/screens/subscription_page.dart';
 import 'package:potbelly/screens/trending_restaurant_screen.dart';
 import 'package:meta/meta.dart';
+import 'package:potbelly/screens/user_address.dart';
 import 'package:potbelly/screens/user_subscription_list.dart';
 
 //@MaterialAutoRouter()
@@ -87,6 +88,10 @@ class $Router {
   GoogleMaps googleMaps;
   SubscriptionScreen subscriptionScreen;
   UserSubscriptionList userSubscriptionList;
+
+  //User address
+
+  UserAddresses userAddresses;
 }
 
 class SearchValue {
