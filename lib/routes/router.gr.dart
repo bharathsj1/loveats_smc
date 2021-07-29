@@ -7,6 +7,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:potbelly/screens/Addnewpayment.dart';
 import 'package:potbelly/screens/Filter_sort.dart';
 import 'package:potbelly/screens/Filters_Screen.dart';
 import 'package:potbelly/screens/NewSearch_screen.dart';
@@ -21,6 +22,7 @@ import 'package:potbelly/screens/login_screen.dart';
 import 'package:potbelly/screens/myorder_details.dart';
 import 'package:potbelly/screens/orderlist.dart';
 import 'package:potbelly/screens/paymentsuccess.dart';
+import 'package:potbelly/screens/resturant_info.dart';
 import 'package:potbelly/screens/splash_screen.dart';
 import 'package:potbelly/screens/forgot_password_screen.dart';
 import 'package:potbelly/screens/register_screen.dart';
@@ -111,7 +113,9 @@ class AppRouter {
   static const userSubscriptionList = '/user-subscription-list';
   static const Add_Extra = '/Add_Extra';
   static const Filter_Screens = '/Filter_Screen';
-  static const Filter_SortScreen = '/Filter_ortScreen';
+  static const Filter_SortScreen = '/Filter_sortScreen';
+  static const Restaurant_info = '/Restaurant_info';
+  static const Add_new_Payment = '/Add_new_Payment';
 
   Navigator navigator = Navigator();
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -142,6 +146,11 @@ class AppRouter {
           builder: (_) => RegisterScreen(),
           settings: settings,
         );
+      case AppRouter.Add_new_Payment:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => AddNewPayment(),
+          settings: settings,
+        );
       case AppRouter.setLocationScreen:
         return CupertinoPageRoute<dynamic>(
           builder: (_) => SetLocationScreen(),
@@ -150,6 +159,11 @@ class AppRouter {
       case AppRouter.Filter_SortScreen:
         return CupertinoPageRoute<dynamic>(
           builder: (_) => FilterSort(sort: args,),
+          settings: settings,
+        );
+      case AppRouter.Restaurant_info:
+        return CupertinoPageRoute<dynamic>(
+          builder: (_) => RestaurantInfo(restaurantdata: args,),
           settings: settings,
         );
       case AppRouter.Add_Extra:

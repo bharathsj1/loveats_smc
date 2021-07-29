@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:potbelly/3D_card_widets/city_scenery.dart';
@@ -11,6 +12,8 @@ import 'package:potbelly/services/cartservice.dart';
 // import 'package:flutter_swiper/flutter_swiper.dart';
 // import 'package:flutter_page_indicator/flutter_page_indicator.dart';
 import 'package:potbelly/services/service.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:potbelly/services/url_launcher.dart';
 import 'package:potbelly/swipe_particles/components/sprite_sheet.dart';
 import 'package:potbelly/swipe_particles/demo_data.dart';
 import 'package:potbelly/swipe_particles/list_model.dart';
@@ -25,6 +28,7 @@ import 'package:potbelly/widgets/heading_row.dart';
 import 'package:potbelly/widgets/ratings_widget.dart';
 import 'package:potbelly/widgets/spaces.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
@@ -312,6 +316,38 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     );
   }
 
+  bool showrating = false;
+  ratelist(name, slide) {
+    return Row(
+      children: [
+        Text(
+          name,
+          style: TextStyle(
+              fontSize: 12,
+              fontFamily: 'roboto',
+              color: AppColors.black,
+              fontWeight: FontWeight.bold),
+        ),
+        SizedBox(
+          width: 5,
+        ),
+        Container(
+          height: 3,
+          width: 150,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+              color: Colors.grey.shade300),
+          child: Container(
+            margin: EdgeInsets.only(right: slide),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: AppColors.secondaryElement),
+          ),
+        ),
+      ],
+    );
+  }
+
   List catlist = [
     'Desi Food',
     'Fast Food',
@@ -592,108 +628,401 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
           SliverList(
               delegate: SliverChildListDelegate([
             // SizedBox(height: 10,),
-            InkWell(
-              onTap: () {
-                print('here');
-                _tabcontroller.index = 1;
-                setState(() {});
-              },
-              child: Container(
-                // color: Colors.red,
-                margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                widget.restaurantDetails.restaurantName,
-                                textAlign: TextAlign.left,
-                                style: Styles.customTitleTextStyle(
-                                  color: AppColors.headingText,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: Sizes.TEXT_SIZE_20,
-                                ),
-                              ),
-                              SizedBox(width: 4.0),
-                              CardTags(
-                                title: widget.restaurantDetails.category,
-                                decoration: BoxDecoration(
-                                  gradient: Gradients.secondaryGradient,
-                                  boxShadow: [
-                                    Shadows.secondaryShadow,
-                                  ],
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8.0)),
-                                ),
-                              ),
-                              SizedBox(width: 4.0),
-                              CardTags(
-                                title: widget.restaurantDetails.distance,
-                                decoration: BoxDecoration(
-                                  // color: Color.fromARGB(255, 132, 141, 255),
-                                  color: AppColors.secondaryElement,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8.0)),
-                                ),
-                              ),
-                              Spacer(flex: 1),
-                              Ratings(widget.restaurantDetails.rating)
-                            ],
-                          ),
-                          SizedBox(height: 10.0),
-                          Text(
-                            widget.restaurantDetails.restaurantAddress,
-                            style: addressTextStyle,
-                          ),
-                          SizedBox(height: 5.0),
-                          RichText(
-                            text: TextSpan(
-                              style: openingTimeTextStyle,
+            // InkWell(
+            //   onTap: () {
+            //     // print('here');
+            //     // _tabcontroller.index = 1;
+            //     // setState(() {});
+            //   },
+            //   child: Container(
+            //     // color: Colors.red,
+            //     margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
+            //     child: Column(
+            //       children: <Widget>[
+            //         Padding(
+            //           padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            //           child: Column(
+            //             crossAxisAlignment: CrossAxisAlignment.start,
+            //             children: <Widget>[
+            //               Row(
+            //                 children: <Widget>[
+            //                   Text(
+            //                     widget.restaurantDetails.restaurantName,
+            //                     textAlign: TextAlign.left,
+            //                     style: Styles.customTitleTextStyle(
+            //                       color: AppColors.headingText,
+            //                       fontWeight: FontWeight.w600,
+            //                       fontSize: Sizes.TEXT_SIZE_20,
+            //                     ),
+            //                   ),
+            //                   SizedBox(width: 4.0),
+            //                   CardTags(
+            //                     title: widget.restaurantDetails.category,
+            //                     decoration: BoxDecoration(
+            //                       gradient: Gradients.secondaryGradient,
+            //                       boxShadow: [
+            //                         Shadows.secondaryShadow,
+            //                       ],
+            //                       borderRadius:
+            //                           BorderRadius.all(Radius.circular(8.0)),
+            //                     ),
+            //                   ),
+            //                   SizedBox(width: 4.0),
+            //                   CardTags(
+            //                     title: widget.restaurantDetails.distance,
+            //                     decoration: BoxDecoration(
+            //                       // color: Color.fromARGB(255, 132, 141, 255),
+            //                       color: AppColors.secondaryElement,
+            //                       borderRadius:
+            //                           BorderRadius.all(Radius.circular(8.0)),
+            //                     ),
+            //                   ),
+            //                   Spacer(flex: 1),
+            //                   Ratings(widget.restaurantDetails.rating)
+            //                 ],
+            //               ),
+            //               SizedBox(height: 10.0),
+            //               Text(
+            //                 widget.restaurantDetails.restaurantAddress,
+            //                 style: addressTextStyle,
+            //               ),
+            //               SizedBox(height: 5.0),
+            //               RichText(
+            //                 text: TextSpan(
+            //                   style: openingTimeTextStyle,
+            //                   children: [
+            //                     TextSpan(text: "Open Now - "),
+            //                     // TextSpan(
+            //                     //     text: "daily time ",
+            //                     //     style:
+            //                     //         addressTextStyle),
+            //                     TextSpan(
+            //                         text: widget.restaurantDetails.data
+            //                                 .restOpenTime +
+            //                             "am - " +
+            //                             widget.restaurantDetails.data
+            //                                 .restCloseTime +
+            //                             "am ",
+            //                         style: addressTextStyle),
+            //                   ],
+            //                 ),
+            //               ),
+            //               SizedBox(height: 10.0),
+            //               Text(
+            //                 'The Baan Thai restaurant in Fort Wayne, Indiana makes great use of high-resolution pictures to draw in website visitors. Color abounds wherever you look and the vivid representations of the Thai region make you feel like you’re already there. Don’t settle for washed-out, blurry photos on your website. If need be, hire a professional photographer or purchase high-resolution photos online to give your website the extra kick it needs.',
+            //                 textAlign: TextAlign.justify,
+            //                 style: addressTextStyle,
+            //               ),
+            //             ],
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10),
+                  Text(
+                    widget.restaurantDetails.restaurantName,
+                    style: TextStyle(
+                        fontSize: 25,
+                        color: Colors.black87,
+                        fontFamily: 'roboto',
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Text(
+                        'Lebanese' + ' , ',
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontFamily: 'roboto',
+                            color: AppColors.grey),
+                      ),
+                      Text(
+                        'Vegen Friendly' + ' , ',
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontFamily: 'roboto',
+                            color: AppColors.grey),
+                      ),
+                      Text(
+                        'Mezze' + ' ',
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontFamily: 'roboto',
+                            color: AppColors.grey),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: Wrap(
+                          runAlignment: WrapAlignment.start,
+                          // crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              // crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                TextSpan(text: "Open Now - "),
-                                // TextSpan(
-                                //     text: "daily time ",
-                                //     style:
-                                //         addressTextStyle),
-                                TextSpan(
-                                    text: widget.restaurantDetails.data
-                                            .restOpenTime +
-                                        "am - " +
-                                        widget.restaurantDetails.data
-                                            .restCloseTime +
-                                        "am ",
-                                    style: addressTextStyle),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 0.0),
+                                  child: Icon(
+                                    Icons.place_outlined,
+                                    size: 22,
+                                    color: AppColors.grey,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Flexible(
+                                  child: RichText(
+                                    text: TextSpan(
+                                      // text: 'Hello ',
+                                      style: TextStyle(
+                                          fontSize: 15, fontFamily: 'roboto'),
+                                      children: [
+                                        TextSpan(
+                                          text: '0.75 miles away' +
+                                              ' , ' +
+                                              'Free delivery' +
+                                              ' ',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontFamily: 'roboto',
+                                              color: AppColors.grey),
+                                        ),
+                                        TextSpan(
+                                          text: widget.restaurantDetails
+                                              .restaurantAddress,
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontFamily: 'roboto',
+                                              color: AppColors.grey),
+                                        ),
+                                        
+                                        TextSpan(
+                                          text: ' View Map',
+                                          recognizer: new TapGestureRecognizer()..onTap = () {
+                                            print('here');
+                                            // MapsLauncher.launchCoordinates(37.4220041, -122.0862462);
+                                            print(widget.restaurantDetails.data.restLatitude);
+                                            print(widget.restaurantDetails.data.restLongitude);
+                                            MapUtils.openMap(widget.restaurantDetails.data.restLatitude,widget.restaurantDetails.data.restLongitude);
+                                          },
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontFamily: 'roboto',
+                                              color:
+                                                  AppColors.secondaryElement),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
                               ],
                             ),
+                            //  Text('0.75 miles away'+' , '+ 'Free delivery delivery delivery'+' , '+widget.restaurantDetails.restaurantAddress+' ',style: TextStyle(fontSize: 15,fontFamily:'roboto',color: AppColors.grey),),
+                            //          Text('View Map',style: TextStyle(fontSize: 15,fontFamily:'roboto',color: AppColors.secondaryElement),),
+                          ],
+                        ),
+                      ),
+                      //
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'The Baan Thai restaurant in Fort Wayne, Indiana makes great use of high-resolution pictures to draw in website visitors. Color abounds wherever you look and the vivid representations of the Thai region make you feel like you’re already there. Don’t settle for washed-out, blurry photos on your website. If need be, hire a professional photographer or purchase high-resolution photos online to give your website the extra kick it needs.',
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'roboto',
+                        color: AppColors.grey),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      RatingBarIndicator(
+                        rating: 4.4,
+                        itemBuilder: (context, index) => Icon(
+                          Icons.star,
+                          color: AppColors.secondaryElement,
+                        ),
+                        itemCount: 5,
+                        itemSize: 15.0,
+                        direction: Axis.horizontal,
+                      ),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      Text(
+                        '4.4 ',
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontFamily: 'roboto',
+                            color: AppColors.black),
+                      ),
+                      Text(
+                        '(500+)',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'roboto',
+                            color: AppColors.grey),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      showrating = !showrating;
+                      setState(() {});
+                    },
+                    child: Container(
+                      child: Text(
+                        'Show rating details',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'roboto',
+                            color: AppColors.secondaryElement),
+                      ),
+                    ),
+                  ),
+                  showrating
+                      ? Container(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 5,
+                              ),
+                              ratelist('5', 40.0),
+                              ratelist('4', 80.0),
+                              ratelist('3', 100.0),
+                              ratelist('2', 130.0),
+                              ratelist('1', 140.0),
+                            ],
                           ),
-                          SizedBox(height: 10.0),
+                        )
+                      : Container(),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Image.asset(
+                            "assets/images/driver.gif",
+                            height: 40,
+                            width: 40,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
                           Text(
-                            'The Baan Thai restaurant in Fort Wayne, Indiana makes great use of high-resolution pictures to draw in website visitors. Color abounds wherever you look and the vivid representations of the Thai region make you feel like you’re already there. Don’t settle for washed-out, blurry photos on your website. If need be, hire a professional photographer or purchase high-resolution photos online to give your website the extra kick it needs.',
-                            textAlign: TextAlign.justify,
-                            style: addressTextStyle,
+                            'Delivery in 15 - 30 min',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'roboto',
+                                color: Colors.grey.shade700),
+                          ),
+                        ],
+                      ),
+                      InkWell(
+                        onTap: () {
+                          showrating = !showrating;
+                          setState(() {});
+                        },
+                        child: Container(
+                          child: Text(
+                            'Change',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'roboto',
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.secondaryElement),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  InkWell(
+                    onTap: (){
+                      Navigator.pushNamed(context, AppRouter.Restaurant_info,arguments: widget.restaurantDetails);
+                    },
+                    child: Container(
+                      color: Colors.grey.shade50,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 2,
+                        vertical: Sizes.MARGIN_12,
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.info_outline,
+                            color: AppColors.black.withOpacity(0.2),
+                            size: 25,
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Restaurant info",
+                                style: Theme.of(context).textTheme.title.copyWith(
+                                      fontSize: Sizes.TEXT_SIZE_14,
+                                      // fontWeight: FontWeight.bold,
+                                      color: AppColors.black.withOpacity(0.8),
+                                    ),
+                              ),
+                              Text(
+                                'Maps, Allergens and hygiene rating',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: 'roboto',
+                                    color: AppColors.grey),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
+
             SizedBox(
               height: 10,
             ),
 
-             _isLoading
-                      ? Column(children:loading()): Column(children: mainfoodlist(context),),
+            _isLoading
+                ? Column(children: loading())
+                : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal:15.0),
+                  child: Column(
+                      children: mainfoodlist(context),
+                    ),
+                ),
 
-            
-
-          
             // _wrapScrollTag(
             //   index: 2,
             //   child: Column(
@@ -725,7 +1054,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
             //     ],
             //   ),
             // ),
-           
+
             SizedBox(
               height: 10,
             ),
@@ -741,21 +1070,21 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     return List.generate(
         4,
         (index) => Padding(
-          padding: const EdgeInsets.symmetric(vertical:2.0,horizontal: 0),
-          child: SkeletonAnimation(
-            // shimmerDuration: 1500,
+              padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 0),
+              child: SkeletonAnimation(
+                // shimmerDuration: 1500,
 
                 borderRadius: BorderRadius.circular(5.0),
                 shimmerColor: Colors.grey.shade300,
                 child: Container(
                   height: 70,
-                  width: MediaQuery.of(context).size.width*0.95,
+                  width: MediaQuery.of(context).size.width * 0.95,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5.0),
                       color: Colors.grey[200]),
                 ),
               ),
-        ));
+            ));
   }
 
   filterswidget(id, name, iconsize, icon, border, width, active) {
@@ -1196,9 +1525,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     BoxShadow(color: Colors.grey[300], blurRadius: 30, offset: Offset(0, 10))
   ];
 
-  List<Widget> itemsListTiles2(
-    context, newfooditems
-  ) {
+  List<Widget> itemsListTiles2(context, newfooditems) {
     return List.generate(
       newfooditems.length,
       (i) => InkWell(
@@ -1210,45 +1537,20 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
             checkchanges(newfooditems);
           });
         },
-        child: Material(
-          elevation: 0.5,
+        child: Container(
+          // elevation: 0,
+          // shape: RoundedRectangleBorder(side: BorderSide(color: Colors.grey.shade200)),
+          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey.shade200))),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Row(
                   children: [
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          newfooditems[i]['menu_image'],
-                          loadingBuilder: (BuildContext ctx, Widget child,
-                              ImageChunkEvent loadingProgress) {
-                            if (loadingProgress == null) {
-                              return child;
-                            } else {
-                              return Container(
-                                // height: ,
-                                width: 50,
-                                height: 50,
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppColors.secondaryElement),
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                          fit: BoxFit.cover,
-                          height: 50,
-                          width: 50,
-                        )),
-                    SizedBox(
-                      width: 16.0,
-                    ),
+                   
+                   
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1259,9 +1561,10 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                               Container(
                                 child: Text(newfooditems[i]['menu_name'],
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w600,
                                       fontSize: 16,
                                       letterSpacing: .3,
+                                      color: Colors.grey.shade800
                                     )),
                               ),
                               const SizedBox(
@@ -1274,7 +1577,8 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                                   ? Expanded(
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           color: Colors.red,
                                         ),
                                         padding: EdgeInsets.all(3.0),
@@ -1293,28 +1597,37 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                           SizedBox(
                             height: 5.0,
                           ),
+                          Text(newfooditems[i]['menu_details'],
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: AppColors.grey,
+                                    letterSpacing: .3,
+                                  )),
+                                  SizedBox(
+                            height: 15.0,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text('\$' + newfooditems[i]['menu_price'].toString(),
+                              Text(
+                                  '\$' +
+                                      newfooditems[i]['menu_price'].toString(),
                                   style: TextStyle(
-                                    fontSize: 11,
+                                    fontSize: 15,
+                                    color: AppColors.grey,
                                     letterSpacing: .3,
                                   )),
-                              Text(newfooditems[i]['menu_details'],
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    letterSpacing: .3,
-                                  )),
+                              
                               if (newfooditems[i]['cart'] != null &&
                                   newfooditems[i]['cart'] == true)
                                 Row(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(bottom: 2.0),
+                                      padding:
+                                          const EdgeInsets.only(bottom: 2.0),
                                       child: Text('x' + newfooditems[i]['qty2'],
                                           style: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: 18,
                                               letterSpacing: .3,
                                               color: Color(0xff55c8d4)
                                               // color: AppColors.secondaryElement
@@ -1324,7 +1637,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                                       width: 5,
                                     ),
                                     Icon(Icons.add_shopping_cart_sharp,
-                                        size: 18.0, color: Color(0xff55c8d4)),
+                                        size: 16.0, color: Color(0xff55c8d4)),
                                   ],
                                 ),
                             ],
@@ -1332,6 +1645,37 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                         ],
                       ),
                     ),
+                     SizedBox(
+                      width: 16.0,
+                    ),
+                     ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          newfooditems[i]['menu_image'],
+                          cacheHeight: 70,
+                          cacheWidth: 70,
+                          loadingBuilder: (BuildContext ctx, Widget child,
+                              ImageChunkEvent loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            } else {
+                              return Container(
+                                // height: ,
+                                width: 70,
+                                height: 70,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.secondaryElement),
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          fit: BoxFit.cover,
+                          height: 70,
+                          width: 70,
+                        )),
                   ],
                 ),
               ],
@@ -1636,51 +1980,74 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     setState(() {});
   }
 
-  List fooditemswithcat=[];
+  List fooditemswithcat = [];
 
-   List<Widget> mainfoodlist(
+  List<Widget> mainfoodlist(
     context,
   ) {
     return List.generate(
       fooditemswithcat.length,
-      (i) =>  _wrapScrollTag(
-              index: i,
-              child: Column(
-                children: [
-                  Container(
-                    color: AppColors.secondaryColor,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: Sizes.MARGIN_16,
-                      vertical: Sizes.MARGIN_16,
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          fooditemswithcat[i]['menutype']['menu_name'],
-                          style: Theme.of(context).textTheme.title.copyWith(
-                                fontSize: Sizes.TEXT_SIZE_16,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.black.withOpacity(0.6),
-                              ),
+      (i) => _wrapScrollTag(
+        index: i,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Container(
+            //   color: AppColors.secondaryColor,
+            //   padding: const EdgeInsets.symmetric(
+            //     horizontal: Sizes.MARGIN_16,
+            //     vertical: Sizes.MARGIN_16,
+            //   ),
+            //   child: Row(
+            //     children: <Widget>[
+            //       Text(
+            //         fooditemswithcat[i]['menutype']['menu_name'],
+            //         style: Theme.of(context).textTheme.title.copyWith(
+            //               fontSize: Sizes.TEXT_SIZE_16,
+            //               fontWeight: FontWeight.bold,
+            //               color: AppColors.black.withOpacity(0.6),
+            //             ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            SizedBox(height: 12,),
+             Text(
+                    fooditemswithcat[i]['menutype']['menu_name'],
+                    style: Theme.of(context).textTheme.title.copyWith(
+                          fontSize: Sizes.TEXT_SIZE_20,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.black.withOpacity(0.8),
                         ),
-                      ],
-                    ),
                   ),
-                 
-                      fooditemswithcat[i]['menuItems'].length > 0
-                          ? Column(children: itemsListTiles2(context, fooditemswithcat[i]['menuItems']))
-                          : Text('No Items Avaialble Right Now'),
-                ],
-              ),
-            ),);}
+                  SizedBox(height: 4,),
+                  Text(
+                              'Made with high quality prime beef, Customize your choice with 15 free toppings.',
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontFamily: 'roboto',
+                                  color: Colors.grey.shade600),
+                            ),
+                            SizedBox(height: 5,),
+                            Divider(color: Colors.grey.shade200,height: 6,),
+            fooditemswithcat[i]['menuItems'].length > 0
+                ? Column(
+                    children: itemsListTiles2(
+                        context, fooditemswithcat[i]['menuItems']))
+                : Text('No Items Avaialble Right Now'),
+          ],
+        ),
+      ),
+    );
+  }
 
   void getProducts2() async {
     print(widget.restaurantDetails.data.id);
-    var data =
-        await AppService().menuwithcat(widget.restaurantDetails.data.id.toString());
+    var data = await AppService()
+        .menuwithcat(widget.restaurantDetails.data.id.toString());
     // print('this is a data');
     print(data);
-    fooditemswithcat= data['data'];
+    fooditemswithcat = data;
     print(fooditemswithcat);
 
     setState(() {
@@ -1697,16 +2064,17 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     var cart;
     cart = await CartProvider().getcartslist();
     for (var j = 0; j < fooditemswithcat.length; j++) {
-       for (var i = 0; i < fooditemswithcat[j]['menuItems'].length; i++) {
-      int index = cart.indexWhere((x) => x['id'] == fooditemswithcat[j]['menuItems'][i]['id']);
-      if (index == -1) {
-      } else {
-        fooditemswithcat[j]['menuItems'][i]['cart'] = true;
-        fooditemswithcat[j]['menuItems'][i]['qty2'] = cart[index]['qty'];
+      for (var i = 0; i < fooditemswithcat[j]['menuItems'].length; i++) {
+        int index = cart.indexWhere(
+            (x) => x['id'] == fooditemswithcat[j]['menuItems'][i]['id']);
+        if (index == -1) {
+        } else {
+          fooditemswithcat[j]['menuItems'][i]['cart'] = true;
+          fooditemswithcat[j]['menuItems'][i]['qty2'] = cart[index]['qty'];
+        }
       }
     }
-    }
-   
+
     setState(() {});
   }
 

@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:lottie/lottie.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:place_picker/entities/location_result.dart';
 import 'package:place_picker/widgets/place_picker.dart';
@@ -1178,6 +1179,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: search ? 5 : 0,
                   ),
 
+                  
+
                   Padding(
                     padding: const EdgeInsets.only(left: 5.0, right: 5),
                     child: SingleChildScrollView(
@@ -1189,56 +1192,115 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 0,
+                    height: 10,
                   ),
-                  loader
-                      ? Container(
-                          height: 280,
-                          child: CarouselSlider(
-                              options: CarouselOptions(
-                                  enableInfiniteScroll: true, height: 260),
-                              items: List.generate(
-                                1,
-                                (ind) => SkeletonAnimation(
-                                  shimmerColor: Colors.grey[350],
-                                  shimmerDuration: 1100,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                    ),
-                                    margin: EdgeInsets.symmetric(horizontal: 4),
-                                  ),
-                                ),
-                              )),
-                        )
-                      :
-                      // SizedBox(height: 15.0),
-                      Column(
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 5.0),
                             Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12.0),
-                                child: Text(
-                                  'Resturant'.toUpperCase(),
-                                  textAlign: TextAlign.left,
-                                  style: Styles.customTitleTextStyle2(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: Sizes.TEXT_SIZE_16,
-                                  ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      'Eat In /'.toUpperCase(),
+                                      textAlign: TextAlign.left,
+                                      style: GoogleFonts.dmSerifDisplay(textStyle:Styles.customTitleTextStyle2(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: Sizes.TEXT_SIZE_32,
+                                      ),)
+                                    ),
+                                    Text(
+                                      ' Eat out'.toUpperCase(),
+                                      textAlign: TextAlign.left,
+                                      style: GoogleFonts.dmSerifDisplay(textStyle:Styles.customTitleTextStyle2(
+                                        color: Colors.black54,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: Sizes.TEXT_SIZE_32,
+                                      ),)
+                                    ),
+                                  ],
                                 )),
-                            // SizedBox(height: 200.0),
-
-                            TravelCardList(
-                              cities: resturants,
-                              onCityChange: _handleCityChange,
+                                SizedBox(
+                    height: 10,
+                  ),
+                 !loader? Center(
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.pushNamed(
+          context,
+          AppRouter.restaurantDetailsScreen,
+          arguments: RestaurantDetails(
+              imagePath: resturants[0].restImage,
+              restaurantName: resturants[0].restName,
+              restaurantAddress: resturants[0].restAddress +
+                  resturants[0].restCity +
+                  ' ' +
+                  resturants[0].restCountry,
+              rating: '0.0',
+              category: resturants[0].restType,
+              distance: '0 Km',
+              data: resturants[0]),
+        );
+                      },
+                      child: Lottie.asset(
+                              // 'assets/food.json',
+                              'assets/restaurant.json',
+                              // 'assets/food2.json',
+                              // 'assets/food3.json',
+                              
+                              width: MediaQuery.of(context).size.width-25,
+                              height: 500,
+                              fit: BoxFit.fill,
                             ),
-                            SizedBox(height: 5.0),
-                          ],
-                        ),
+                    ),
+                  ):Container(),
+                  // loader
+                  //     ? Container(
+                  //         height: 280,
+                  //         child: CarouselSlider(
+                  //             options: CarouselOptions(
+                  //                 enableInfiniteScroll: true, height: 260),
+                  //             items: List.generate(
+                  //               1,
+                  //               (ind) => SkeletonAnimation(
+                  //                 shimmerColor: Colors.grey[350],
+                  //                 shimmerDuration: 1100,
+                  //                 child: Container(
+                  //                   decoration: BoxDecoration(
+                  //                     color: Colors.grey[300],
+                  //                   ),
+                  //                   margin: EdgeInsets.symmetric(horizontal: 4),
+                  //                 ),
+                  //               ),
+                  //             )),
+                  //       )
+                  //     :
+                  //     // SizedBox(height: 15.0),
+                  //     Column(
+                  //         // mainAxisAlignment: MainAxisAlignment.start,
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           SizedBox(height: 5.0),
+                  //           Padding(
+                  //               padding: const EdgeInsets.symmetric(
+                  //                   horizontal: 12.0),
+                  //               child: Text(
+                  //                 'Resturant'.toUpperCase(),
+                  //                 textAlign: TextAlign.left,
+                  //                 style: Styles.customTitleTextStyle2(
+                  //                   color: Colors.black87,
+                  //                   fontWeight: FontWeight.bold,
+                  //                   fontSize: Sizes.TEXT_SIZE_16,
+                  //                 ),
+                  //               )),
+                  //           // SizedBox(height: 200.0),
+
+                  //           TravelCardList(
+                  //             cities: resturants,
+                  //             onCityChange: _handleCityChange,
+                  //           ),
+                  //           SizedBox(height: 5.0),
+                  //         ],
+                  //       ),
                   //
                   SizedBox(height: 0.0),
                   loader3

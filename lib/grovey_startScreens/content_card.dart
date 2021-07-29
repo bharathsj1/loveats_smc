@@ -108,7 +108,7 @@ class _ContentCardState extends State<ContentCard> {
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: widget.color == 'Red'? Lottie.asset(
           // 'assets/food.json',
-          'assets/login1.json',
+          'assets/login2.json',
           // 'assets/food2.json',
           // 'assets/food3.json',
           fit: BoxFit.contain,
