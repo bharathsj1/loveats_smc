@@ -32,7 +32,7 @@ class AppService {
     // dio.options.headers['Authorization'] = "Bearer " + accessToken;
     try {
       var resp = await this.dio.get(
-            "/get-hotspot-restaurent/"+id,
+            "/get-hotspot-restaurent/" + id,
           );
       return resp.data;
     } catch (e) {
@@ -46,14 +46,17 @@ class AppService {
     // dio.options.headers['Authorization'] = "Bearer " + accessToken;
     try {
       var resp = await this.dio.get(
-            "/menuItemsWithTypesForSpecificRes/"+id,
+            "/menuItemsWithTypesForSpecificRes/" + id,
           );
+      print('THIS IS MENU WITH CAT DATA');
+      print(resp.data);
       return resp.data;
     } catch (e) {
       print(e);
       return null;
     }
   }
+
   Future<dynamic> filtercats() async {
     // String accessToken = await getAccessToken();
     // dio.options.headers['Authorization'] = "Bearer " + accessToken;
@@ -81,6 +84,7 @@ class AppService {
       return null;
     }
   }
+
   Future<dynamic> getallhotspot() async {
     // String accessToken = await getAccessToken();
     // dio.options.headers['Authorization'] = "Bearer " + accessToken;

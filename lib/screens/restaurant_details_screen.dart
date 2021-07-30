@@ -400,175 +400,161 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
       flexibleSpace: FlexibleSpaceBar(
         collapseMode: CollapseMode.parallax,
         titlePadding: EdgeInsets.zero,
-        background: Column(
-          // alignment: Alignment.bottomRight,
-          children: <Widget>[
-            Expanded(
-              // height: MediaQuery.of(context).size.height * 0.64,
-              // color: Colors.blue,
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: Column(
-                      // shrinkWrap: true,
-                      children: <Widget>[
-                        Stack(
-                          children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.only(bottom: 0),
-                              height: 250,
-                              child: Hero(
-                                tag: widget.restaurantDetails.restaurantName,
-                                child: new Swiper(
-                                  autoplay: true,
-                                  autoplayDelay: 4000,
-                                  // index: indxx,
-                                  // curve:  Curves.easeInBack,
-                                  duration: 1500,
-                                  //  outer: true,
+        background: Expanded(
+          child: Column(
+            // shrinkWrap: true,
+            children: <Widget>[
+              Expanded(
+                flex: 1,
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      height: 250,
+                      child: Hero(
+                        tag: widget.restaurantDetails.restaurantName,
+                        child: new Swiper(
+                          autoplay: true,
+                          autoplayDelay: 4000,
+                          // index: indxx,
+                          // curve:  Curves.easeInBack,
+                          duration: 1500,
+                          //  outer: true,
 
-                                  itemBuilder: (BuildContext context, int i) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        print('clicked');
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         builder: (context) => ProductPage(
-                                        //             id: this.banner[i]['id'],
-                                        //             name: this.banner[i]['name'],
-                                        //             api: 'banner',
-                                        //             arabicname: this.banner[i]['name'],
-                                        //             maincat: '',
-                                        //             maincatAR: '',
-                                        //             mainid: null,
-                                        //             catlist: null)));
-                                      },
-                                      child: Center(
-                                        child: new ClipRRect(
-                                          borderRadius: BorderRadius.only(
-                                              bottomLeft: Radius.circular(0)
-                                              // topLeft: Radius.circular(8)
-                                              ),
-                                          child:
-                                              // widget.restaurantDetails
-                                              //             .imagePath
-                                              //             .substring(
-                                              //                 0, 4) !=
-                                              //         'http'
-                                              //     ? Image
-                                              //         .network(
-                                              //       widget
-                                              //           .restaurantDetails
-                                              //           .imagePath,
-                                              //       width: MediaQuery.of(
-                                              //               context)
-                                              //           .size
-                                              //           .width,
-                                              //       height:
-                                              //           250,
-                                              //       fit: BoxFit
-                                              //           .cover,
-                                              //     )
-                                              //     : Image.asset(
-                                              //           'assets/images/logo.png',
-                                              //           width: MediaQuery.of(
-                                              //           context)
-                                              //       .size
-                                              //       .width,
-                                              //           height:
-                                              //       250,
-                                              //           fit: BoxFit
-                                              //       .cover,
-                                              //         ),
-                                              Image.asset(
-                                            'assets/images/d${i + 1}.png',
-                                            width: 180,
-                                            height: 180,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
+                          itemBuilder: (BuildContext context, int i) {
+                            return GestureDetector(
+                              onTap: () {
+                                print('clicked');
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => ProductPage(
+                                //             id: this.banner[i]['id'],
+                                //             name: this.banner[i]['name'],
+                                //             api: 'banner',
+                                //             arabicname: this.banner[i]['name'],
+                                //             maincat: '',
+                                //             maincatAR: '',
+                                //             mainid: null,
+                                //             catlist: null)));
+                              },
+                              child: Center(
+                                child: new ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(0)
+                                      // topLeft: Radius.circular(8)
                                       ),
-                                    );
-                                  },
-                                  // onIndexChanged: (value) {
-                                  //   // print(value);
-                                  //   if (mounted) {
-                                  //     setState(() {
-                                  //       // indxx = value;
-                                  //     });
-                                  //   }
-                                  // },
-                                  loop: true,
-                                  indicatorLayout: PageIndicatorLayout.COLOR,
-                                  // customLayoutOption: CustomLayoutOption(),
-                                  // autoplay: true,
-                                  // controller: _controller,
-                                  itemCount: catlist.length,
-                                  scrollDirection: Axis.horizontal,
-                                  pagination: new SwiperPagination(
-                                      alignment: Alignment.bottomCenter,
-                                      // margin: EdgeInsets.only(right: 20, bottom: 8),
-                                      builder: new DotSwiperPaginationBuilder(
-                                        activeColor: AppColors.secondaryElement,
-                                        color:
-                                            Color(0xFF858585).withOpacity(0.8),
-                                        // space: 5,
-                                      )),
-                                ),
-                              ),
-                            ),
-                            DarkOverLay(
-                                gradient: Gradients.restaurantDetailsGradient),
-                            Positioned(
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                  right: Sizes.MARGIN_16,
-                                  top: Sizes.MARGIN_40,
-                                ),
-                                child: Row(
-                                  children: [],
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                                bottom: 10,
-                                right: 15,
-                                child: Container(
-                                  height: 30,
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.7),
-                                      borderRadius: BorderRadius.circular(6)),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.grid_view,
-                                        color: AppColors.white,
-                                        size: 16,
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        'View Gallery',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: AppColors.white),
-                                      )
-                                    ],
+                                  child:
+                                      // widget.restaurantDetails
+                                      //             .imagePath
+                                      //             .substring(
+                                      //                 0, 4) !=
+                                      //         'http'
+                                      //     ? Image
+                                      //         .network(
+                                      //       widget
+                                      //           .restaurantDetails
+                                      //           .imagePath,
+                                      //       width: MediaQuery.of(
+                                      //               context)
+                                      //           .size
+                                      //           .width,
+                                      //       height:
+                                      //           250,
+                                      //       fit: BoxFit
+                                      //           .cover,
+                                      //     )
+                                      //     : Image.asset(
+                                      //           'assets/images/logo.png',
+                                      //           width: MediaQuery.of(
+                                      //           context)
+                                      //       .size
+                                      //       .width,
+                                      //           height:
+                                      //       250,
+                                      //           fit: BoxFit
+                                      //       .cover,
+                                      //         ),
+                                      Image.asset(
+                                    'assets/images/d${i + 1}.png',
+                                    width: 180,
+                                    height: 180,
+                                    fit: BoxFit.cover,
                                   ),
-                                ))
-                          ],
+                                ),
+                              ),
+                            );
+                          },
+                          // onIndexChanged: (value) {
+                          //   // print(value);
+                          //   if (mounted) {
+                          //     setState(() {
+                          //       // indxx = value;
+                          //     });
+                          //   }
+                          // },
+                          loop: true,
+                          indicatorLayout: PageIndicatorLayout.COLOR,
+                          // customLayoutOption: CustomLayoutOption(),
+                          // autoplay: true,
+                          // controller: _controller,
+                          itemCount: catlist.length,
+                          scrollDirection: Axis.horizontal,
+                          pagination: new SwiperPagination(
+                              alignment: Alignment.bottomCenter,
+                              // margin: EdgeInsets.only(right: 20, bottom: 8),
+                              builder: new DotSwiperPaginationBuilder(
+                                activeColor: AppColors.secondaryElement,
+                                color: Color(0xFF858585).withOpacity(0.8),
+                                // space: 5,
+                              )),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
+                    DarkOverLay(gradient: Gradients.restaurantDetailsGradient),
+                    Positioned(
+                      child: Container(
+                        padding: EdgeInsets.only(
+                          right: Sizes.MARGIN_16,
+                          top: Sizes.MARGIN_40,
+                        ),
+                        child: Row(
+                          children: [],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                        bottom: 10,
+                        right: 15,
+                        child: Container(
+                          height: 30,
+                          width: 120,
+                          decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.7),
+                              borderRadius: BorderRadius.circular(6)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.grid_view,
+                                color: AppColors.white,
+                                size: 16,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'View Gallery',
+                                style: TextStyle(
+                                    fontSize: 15, color: AppColors.white),
+                              )
+                            ],
+                          ),
+                        ))
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
 
@@ -590,16 +576,17 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                       // indicatorWeight: 0,
                       // indicatorPadding: EdgeInsets.all(0),
                       // indicatorSize: TabBarIndicatorSize.tab,
-                      
+
                       isScrollable: true,
                       // indicatorPadding:EdgeInsets.zero ,
-                      
-                      indicatorSize: TabBarIndicatorSize.tab ,
+
+                      indicatorSize: TabBarIndicatorSize.tab,
                       indicator: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: AppColors.secondaryElement),
                       //      indicatorPadding: EdgeInsets.zero,
-                      labelPadding: EdgeInsets.symmetric(horizontal:20,vertical: 0),
+                      labelPadding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 0),
 
                       labelColor: Colors.white,
                       onTap: (index) async {
@@ -610,7 +597,8 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                         fooditemswithcat.length,
                         (i) {
                           return Tab(
-                            text: fooditemswithcat[i]['foodCategory']['name'].toUpperCase(),
+                            text: fooditemswithcat[i]['foodCategory']['name']
+                                .toUpperCase(),
                           );
                         },
                       ),
@@ -813,16 +801,22 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                                               fontFamily: 'roboto',
                                               color: AppColors.grey),
                                         ),
-                                        
                                         TextSpan(
                                           text: ' View Map',
-                                          recognizer: new TapGestureRecognizer()..onTap = () {
-                                            print('here');
-                                            // MapsLauncher.launchCoordinates(37.4220041, -122.0862462);
-                                            print(widget.restaurantDetails.data.restLatitude);
-                                            print(widget.restaurantDetails.data.restLongitude);
-                                            MapUtils.openMap(widget.restaurantDetails.data.restLatitude,widget.restaurantDetails.data.restLongitude);
-                                          },
+                                          recognizer: new TapGestureRecognizer()
+                                            ..onTap = () {
+                                              print('here');
+                                              // MapsLauncher.launchCoordinates(37.4220041, -122.0862462);
+                                              print(widget.restaurantDetails
+                                                  .data.restLatitude);
+                                              print(widget.restaurantDetails
+                                                  .data.restLongitude);
+                                              MapUtils.openMap(
+                                                  widget.restaurantDetails.data
+                                                      .restLatitude,
+                                                  widget.restaurantDetails.data
+                                                      .restLongitude);
+                                            },
                                           style: TextStyle(
                                               fontSize: 12,
                                               fontFamily: 'roboto',
@@ -969,8 +963,9 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                     height: 5,
                   ),
                   InkWell(
-                    onTap: (){
-                      Navigator.pushNamed(context, AppRouter.Restaurant_info,arguments: widget.restaurantDetails);
+                    onTap: () {
+                      Navigator.pushNamed(context, AppRouter.Restaurant_info,
+                          arguments: widget.restaurantDetails);
                     },
                     child: Container(
                       color: Colors.grey.shade50,
@@ -993,7 +988,10 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                             children: [
                               Text(
                                 "Restaurant info",
-                                style: Theme.of(context).textTheme.title.copyWith(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .title
+                                    .copyWith(
                                       fontSize: Sizes.TEXT_SIZE_14,
                                       // fontWeight: FontWeight.bold,
                                       color: AppColors.black.withOpacity(0.8),
@@ -1023,11 +1021,11 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
             _isLoading
                 ? Column(children: loading())
                 : Padding(
-                  padding: const EdgeInsets.symmetric(horizontal:15.0),
-                  child: Column(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Column(
                       children: mainfoodlist(context),
                     ),
-                ),
+                  ),
 
             // _wrapScrollTag(
             //   index: 2,
@@ -1547,7 +1545,8 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
         child: Container(
           // elevation: 0,
           // shape: RoundedRectangleBorder(side: BorderSide(color: Colors.grey.shade200)),
-          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey.shade200))),
+          decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: Colors.grey.shade200))),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10),
             child: Column(
@@ -1556,8 +1555,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
               children: <Widget>[
                 Row(
                   children: [
-                   
-                   
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1568,11 +1565,10 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                               Container(
                                 child: Text(newfooditems[i]['menu_name'],
                                     style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16,
-                                      letterSpacing: .3,
-                                      color: Colors.grey.shade800
-                                    )),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                        letterSpacing: .3,
+                                        color: Colors.grey.shade800)),
                               ),
                               const SizedBox(
                                 width: 10.0,
@@ -1605,12 +1601,12 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                             height: 5.0,
                           ),
                           Text(newfooditems[i]['menu_details'],
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: AppColors.grey,
-                                    letterSpacing: .3,
-                                  )),
-                                  SizedBox(
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: AppColors.grey,
+                                letterSpacing: .3,
+                              )),
+                          SizedBox(
                             height: 15.0,
                           ),
                           Row(
@@ -1624,7 +1620,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                                     color: AppColors.grey,
                                     letterSpacing: .3,
                                   )),
-                              
                               if (newfooditems[i]['cart'] != null &&
                                   newfooditems[i]['cart'] == true)
                                 Row(
@@ -1652,10 +1647,10 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                         ],
                       ),
                     ),
-                     SizedBox(
+                    SizedBox(
                       width: 16.0,
                     ),
-                     ClipRRect(
+                    ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
                           newfooditems[i]['menu_image'],
@@ -2018,26 +2013,35 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
             //     ],
             //   ),
             // ),
-            SizedBox(height: 12,),
-             Text(
-                    // fooditemswithcat[i]['menutype']['menu_name'],
-                    fooditemswithcat[i]['foodCategory']['name'].toUpperCase(),
-                    style: Theme.of(context).textTheme.title.copyWith(
-                          fontSize: Sizes.TEXT_SIZE_20,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.black.withOpacity(0.8),
-                        ),
+            SizedBox(
+              height: 12,
+            ),
+            Text(
+              // fooditemswithcat[i]['menutype']['menu_name'],
+              fooditemswithcat[i]['foodCategory']['name'].toUpperCase(),
+              style: Theme.of(context).textTheme.title.copyWith(
+                    fontSize: Sizes.TEXT_SIZE_20,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.black.withOpacity(0.8),
                   ),
-                  SizedBox(height: 4,),
-                  Text(
-                              'Made with high quality prime beef, Customize your choice with 15 free toppings.',
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  fontFamily: 'roboto',
-                                  color: Colors.grey.shade600),
-                            ),
-                            SizedBox(height: 5,),
-                            Divider(color: Colors.grey.shade200,height: 6,),
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Text(
+              'Made with high quality prime beef, Customize your choice with 15 free toppings.',
+              style: TextStyle(
+                  fontSize: 13,
+                  fontFamily: 'roboto',
+                  color: Colors.grey.shade600),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Divider(
+              color: Colors.grey.shade200,
+              height: 6,
+            ),
             fooditemswithcat[i]['menuItems'].length > 0
                 ? Column(
                     children: itemsListTiles2(
@@ -2058,7 +2062,8 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     fooditemswithcat = data['data'];
     print(fooditemswithcat);
     print('Helol');
-    _tabcontroller = TabController(length: fooditemswithcat.length, vsync: this);
+    _tabcontroller =
+        TabController(length: fooditemswithcat.length, vsync: this);
     setState(() {
       _isLoading = false;
     });

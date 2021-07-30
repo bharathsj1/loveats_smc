@@ -1189,8 +1189,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: search ? 5 : 0,
                   ),
 
-                  
-
                   Padding(
                     padding: const EdgeInsets.only(left: 5.0, right: 5),
                     child: SingleChildScrollView(
@@ -1204,65 +1202,67 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                            Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'Eat In /'.toUpperCase(),
-                                      textAlign: TextAlign.left,
-                                      style: GoogleFonts.dmSerifDisplay(textStyle:Styles.customTitleTextStyle2(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: Sizes.TEXT_SIZE_32,
-                                      ),)
-                                    ),
-                                    Text(
-                                      ' Eat out'.toUpperCase(),
-                                      textAlign: TextAlign.left,
-                                      style: GoogleFonts.dmSerifDisplay(textStyle:Styles.customTitleTextStyle2(
-                                        color: Colors.black54,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: Sizes.TEXT_SIZE_32,
-                                      ),)
-                                    ),
-                                  ],
-                                )),
-                                SizedBox(
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: Row(
+                        children: [
+                          Text('Eat In /'.toUpperCase(),
+                              textAlign: TextAlign.left,
+                              style: GoogleFonts.dmSerifDisplay(
+                                textStyle: Styles.customTitleTextStyle2(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: Sizes.TEXT_SIZE_32,
+                                ),
+                              )),
+                          Text(' Eat out'.toUpperCase(),
+                              textAlign: TextAlign.left,
+                              style: GoogleFonts.dmSerifDisplay(
+                                textStyle: Styles.customTitleTextStyle2(
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: Sizes.TEXT_SIZE_32,
+                                ),
+                              )),
+                        ],
+                      )),
+                  SizedBox(
                     height: 10,
                   ),
-                 !loader? Center(
-                    child: InkWell(
-                      onTap: (){
-                        Navigator.pushNamed(
-          context,
-          AppRouter.restaurantDetailsScreen,
-          arguments: RestaurantDetails(
-              imagePath: resturants[0].restImage,
-              restaurantName: resturants[0].restName,
-              restaurantAddress: resturants[0].restAddress +
-                  resturants[0].restCity +
-                  ' ' +
-                  resturants[0].restCountry,
-              rating: '0.0',
-              category: resturants[0].restType,
-              distance: '0 Km',
-              data: resturants[0]),
-        );
-                      },
-                      child: Lottie.asset(
+                  !loader
+                      ? Center(
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppRouter.restaurantDetailsScreen,
+                                arguments: RestaurantDetails(
+                                    imagePath: resturants[0].restImage,
+                                    restaurantName: resturants[0].restName,
+                                    restaurantAddress:
+                                        resturants[0].restAddress +
+                                            resturants[0].restCity +
+                                            ' ' +
+                                            resturants[0].restCountry,
+                                    rating: '0.0',
+                                    category: resturants[0].restType,
+                                    distance: '0 Km',
+                                    data: resturants[0]),
+                              );
+                            },
+                            child: Lottie.asset(
                               // 'assets/food.json',
                               'assets/restaurant.json',
                               // 'assets/food2.json',
                               // 'assets/food3.json',
-                              
-                              width: MediaQuery.of(context).size.width-25,
+
+                              width: MediaQuery.of(context).size.width - 25,
                               height: 500,
                               fit: BoxFit.fill,
                             ),
-                    ),
-                  ):Container(),
+                          ),
+                        )
+                      : Container(),
                   // loader
                   //     ? Container(
                   //         height: 280,
@@ -1581,9 +1581,9 @@ class _HomeScreenState extends State<HomeScreen> {
               SingleChildScrollView(
                 child: Center(
                   child: Text(
-                    'You have to login first',
-                    style: textTheme.title.copyWith(
-                      fontSize: Sizes.TEXT_SIZE_20,
+                    'Please login to access full features',
+                    style: textTheme.headline6.copyWith(
+                      fontSize: Sizes.TEXT_SIZE_16,
                     ),
                   ),
                 ),
@@ -1595,23 +1595,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: AppColors.secondaryElement,
-                        minimumSize: Size(200.0, 30),
-                      ),
-                      child: Text(
-                        'Go to Login Screen',
-                        style: TextStyle(fontSize: 15.0),
-                      ),
-                      onPressed: () {
-                        Provider.of<ProviderService>(context, listen: false).allfalse();
-                        Provider.of<ProviderService>(context, listen: false).reset();
-                        Navigator.push(
-                            context,
-                            // MaterialPageRoute(builder: (_) => BackgroundVideo()), (route) => false);
-                            MaterialPageRoute(builder: (_) => GooeyEdgeDemo()));
-                            
-                      }),
+                    style: ElevatedButton.styleFrom(
+                      primary: AppColors.secondaryElement,
+                      minimumSize: Size(200.0, 30),
+                    ),
+                    child: Text(
+                      'Go to Login Screen',
+                      style: TextStyle(fontSize: 15.0),
+                    ),
+                    onPressed: () {
+                      Provider.of<ProviderService>(context, listen: false)
+                          .allfalse();
+                      Provider.of<ProviderService>(context, listen: false)
+                          .reset();
+                      Navigator.push(
+                          context,
+                          // MaterialPageRoute(builder: (_) => BackgroundVideo()), (route) => false);
+                          MaterialPageRoute(builder: (_) => GooeyEdgeDemo()));
+                    },
+                  ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: AppColors.secondaryElement,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:potbelly/grovey_startScreens/ProviderService.dart';
+import 'package:potbelly/grovey_startScreens/demo.dart';
 import 'package:potbelly/models/free_meal_model.dart';
 import 'package:potbelly/models/specific_user_subscription_model.dart';
 import 'package:potbelly/routes/router.gr.dart';
@@ -6,6 +8,8 @@ import 'package:potbelly/services/cartservice.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
+import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key key}) : super(key: key);
@@ -29,12 +33,16 @@ class _CartScreenState extends State<CartScreen> {
   int totalitems = 0;
   SpecificUserSubscriptionModel _specificUserSubscriptionModel;
   FreemealModel _freemealModel;
+  bool isGuest = false;
 
   void getSpecificUserSubscription() async {
-    _specificUserSubscriptionModel =
-        await Service().getSpecificUserSubscriptionData();
-    _freemealModel = await Service().checkFreeMeal();
-    print(_specificUserSubscriptionModel.data.length);
+    isGuest = await Service().isGuest();
+    if (!isGuest) {
+      _specificUserSubscriptionModel =
+          await Service().getSpecificUserSubscriptionData();
+      _freemealModel = await Service().checkFreeMeal();
+      print(_specificUserSubscriptionModel.data.length);
+    }
     loader = false;
     setState(() {});
   }
@@ -111,7 +119,7 @@ class _CartScreenState extends State<CartScreen> {
         newcart[i].length,
         (index) => InkWell(
               onTap: () {
-                updateitem(context, (newcart[i][index]),i,index);
+                updateitem(context, (newcart[i][index]), i, index);
               },
               child: Container(
                 color: Colors.white,
@@ -500,7 +508,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  updateitem(BuildContext context, item,i,index) {
+  updateitem(BuildContext context, item, i, index) {
     return showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -568,12 +576,13 @@ class _CartScreenState extends State<CartScreen> {
                   height: 10,
                 ),
                 InkWell(
-                  onTap: (){
-                    Navigator.pushNamed(context, AppRouter.Add_Extra,arguments: {
-                      'update': true,
-                      'drink': item['drink'],
-                      'topping': item['topping']
-                    });
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRouter.Add_Extra,
+                        arguments: {
+                          'update': true,
+                          'drink': item['drink'],
+                          'topping': item['topping']
+                        });
                   },
                   child: Container(
                     child: Text(
@@ -660,20 +669,20 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ],
                 ),
-              SizedBox(
+                SizedBox(
                   height: 0,
                 ),
-                 Text('Price: \$' +
-                                            double.tryParse(newcart[i][index]
-                                                    ['payableAmount'])
-                                                .toStringAsFixed(2),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: AppColors.grey,
-                                letterSpacing: .3,
-                              )),
-              SizedBox(
+                Text(
+                    'Price: \$' +
+                        double.tryParse(newcart[i][index]['payableAmount'])
+                            .toStringAsFixed(2),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppColors.grey,
+                      letterSpacing: .3,
+                    )),
+                SizedBox(
                   height: 10,
                 ),
 
@@ -870,31 +879,37 @@ class _CartScreenState extends State<CartScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 0.0),
-                      child: PotbellyButton(
-                        'Go to Checkout',
-                        onTap: () {
-                          var data = {
-                            'cartlist': newcart,
-                            'charges': charges,
-                            'shipping': shipping,
-                            'total': totalAmount,
-                            'type': 'cart',
-                            'mixmatch': mixmatch,
-                          };
-                          Navigator.pushNamed(context, AppRouter.CheckOut1,
-                              arguments: data);
-                        },
-                        buttonHeight: 45,
-                        buttonWidth: MediaQuery.of(context).size.width * 0.85,
-                        buttonTextStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            color: AppColors.secondaryElement),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 0.0),
+                        child: PotbellyButton(
+                          'Go to Checkout',
+                          onTap: () {
+                            if (isGuest) {
+                              _askLoginDialog(context);
+                            } else {
+                              var data = {
+                                'cartlist': newcart,
+                                'charges': charges,
+                                'shipping': shipping,
+                                'total': totalAmount,
+                                'type': 'cart',
+                                'mixmatch': mixmatch,
+                              };
+                              Navigator.pushNamed(context, AppRouter.CheckOut1,
+                                  arguments: data);
+                            }
+                          },
+                          buttonHeight: 45,
+                          buttonWidth: MediaQuery.of(context).size.width * 0.85,
+                          buttonTextStyle: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              color: AppColors.secondaryElement),
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -1457,6 +1472,96 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ),
             ));
+  }
+
+  Future<void> _askLoginDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return _buildAlertDialog(context);
+      },
+    );
+  }
+
+  Widget _buildAlertDialog(BuildContext context) {
+    var textTheme = Theme.of(context).textTheme;
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(
+          Radius.circular(Sizes.RADIUS_32),
+        ),
+      ),
+      child: AlertDialog(
+        contentPadding: EdgeInsets.fromLTRB(
+          Sizes.PADDING_0,
+          Sizes.PADDING_36,
+          Sizes.PADDING_0,
+          Sizes.PADDING_0,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Sizes.RADIUS_20),
+        ),
+        elevation: Sizes.ELEVATION_4,
+        content: Container(
+          height: Sizes.HEIGHT_150,
+          width: Sizes.WIDTH_300,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              SingleChildScrollView(
+                child: Center(
+                  child: Text(
+                    'You have to login first',
+                    style: textTheme.title.copyWith(
+                      fontSize: Sizes.TEXT_SIZE_20,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: AppColors.secondaryElement,
+                        minimumSize: Size(200.0, 30),
+                      ),
+                      child: Text(
+                        'Go to Login Screen',
+                        style: TextStyle(fontSize: 15.0),
+                      ),
+                      onPressed: () {
+                        Provider.of<ProviderService>(context, listen: false)
+                            .allfalse();
+                        Provider.of<ProviderService>(context, listen: false)
+                            .reset();
+                        Navigator.push(
+                            context,
+                            // MaterialPageRoute(builder: (_) => BackgroundVideo()), (route) => false);
+                            MaterialPageRoute(builder: (_) => GooeyEdgeDemo()));
+                      }),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: AppColors.secondaryElement,
+                      minimumSize: Size(200.0, 30),
+                    ),
+                    child: Text(
+                      'Close ',
+                      style: TextStyle(fontSize: 15.0),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
