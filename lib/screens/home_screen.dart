@@ -553,11 +553,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                             hotlist[i]['delivery'] +
                                             ' Delivery',
                                         textAlign: TextAlign.center,
-                                        style: GoogleFonts.openSans(
+                                        style: GoogleFonts.josefinSans(
                                           textStyle:
                                               Styles.customNormalTextStyle(
                                             color: Colors.black54,
-                                            fontSize: Sizes.TEXT_SIZE_14,
+                                            fontSize: Sizes.TEXT_SIZE_16,
                                           ),
                                         )),
                                   ),
@@ -846,7 +846,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 // collapsedHeight: 40,
                 toolbarHeight: 135,
                 flexibleSpace: Padding(
-                  padding: const EdgeInsets.only(top: 25.0),
+                  padding: const EdgeInsets.only(top: 35.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -909,7 +909,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             selected_address,
                                             style: TextStyle(
                                                 color: Colors.black,
-                                                fontWeight: FontWeight.bold),
+                                                fontFamily: "Josefin Sans Thin",
+                                                fontSize: 16
+                                                // fontWeight: FontWeight.bold
+                                                ),
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
