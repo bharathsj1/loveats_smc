@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:potbelly/models/free_meal_model.dart';
 import 'package:potbelly/models/specific_user_subscription_model.dart';
@@ -9,14 +7,14 @@ import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
 
-class CartScreen extends StatefulWidget {
-  const CartScreen({Key key}) : super(key: key);
+class OldCartScreen extends StatefulWidget {
+  const OldCartScreen({Key key}) : super(key: key);
 
   @override
-  _CartScreenState createState() => _CartScreenState();
+  _OldCartScreenState createState() => _OldCartScreenState();
 }
 
-class _CartScreenState extends State<CartScreen> {
+class _OldCartScreenState extends State<OldCartScreen> {
   bool mixmatch = false;
   List cartlist = [];
   List newcart = [];
@@ -27,18 +25,12 @@ class _CartScreenState extends State<CartScreen> {
   int totalitems = 0;
   SpecificUserSubscriptionModel _specificUserSubscriptionModel;
   FreemealModel _freemealModel;
-  bool _isGuest = false;
 
   void getSpecificUserSubscription() async {
-    _isGuest = await Service().isGuest();
-    if (!_isGuest) {
-      print('You are not logged in as a guest');
-      _specificUserSubscriptionModel =
-          await Service().getSpecificUserSubscriptionData();
-      _freemealModel = await Service().checkFreeMeal();
-      print(_specificUserSubscriptionModel.data.length);
-    }
-   
+    _specificUserSubscriptionModel =
+        await Service().getSpecificUserSubscriptionData();
+    _freemealModel = await Service().checkFreeMeal();
+    print(_specificUserSubscriptionModel.data.length);
     loader = false;
     setState(() {});
   }
@@ -81,7 +73,7 @@ class _CartScreenState extends State<CartScreen> {
       calculate();
     }
     print(cartlist);
-    setState(() {});
+    //setState(() {});
   }
 
   calculate() {
@@ -97,7 +89,6 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void initState() {
     getcartlist();
-
     getSpecificUserSubscription();
     super.initState();
   }
@@ -107,7 +98,8 @@ class _CartScreenState extends State<CartScreen> {
         ? (int.parse(newcart[i1][i2]['qty']) + 1).toString()
         : (int.parse(newcart[i1][i2]['qty']) - 1).toString();
     newcart[i1][i2]['payableAmount'] =
-        (((newcart[i1][i2]['price']) * int.parse(newcart[i1][i2]['qty'])))
+        (((newcart[i1][i2]['price']) *
+                int.parse(newcart[i1][i2]['qty'])))
             .toString();
   }
 
@@ -522,7 +514,7 @@ class _CartScreenState extends State<CartScreen> {
                           child: Column(
                             children: [
                               Text(
-                                _freemealModel.message ?? '',
+                                _freemealModel.message,
                                 style: TextStyle(color: Colors.white),
                               ),
                             ],

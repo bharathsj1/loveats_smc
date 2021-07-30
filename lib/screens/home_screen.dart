@@ -3,22 +3,28 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:lottie/lottie.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:place_picker/entities/location_result.dart';
 import 'package:place_picker/widgets/place_picker.dart';
 import 'package:potbelly/3D_card_widets/demo_data.dart';
 import 'package:potbelly/3D_card_widets/travel_card_list.dart';
+import 'package:potbelly/grovey_startScreens/ProviderService.dart';
+import 'package:potbelly/grovey_startScreens/demo.dart';
 import 'package:potbelly/models/promotions.dart';
 import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/screens/settings_screen.dart';
 import 'package:potbelly/services/DatabaseManager.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/heading_row.dart';
 import 'package:potbelly/widgets/search_input_field.dart';
+import 'package:provider/provider.dart';
 import 'package:skeleton_text/skeleton_text.dart';
+import 'package:toast/toast.dart';
 import 'package:video_player/video_player.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -46,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
   City _currentCity;
   bool search = true;
   List searchlist = [];
+  bool _isGuest = false;
   String selected_address = 'Your Location';
   List subscription = [
     'assets/images/sub3.png',
@@ -73,7 +80,13 @@ class _HomeScreenState extends State<HomeScreen> {
     getRestaurent();
     getcateory();
     gethotspot();
+    isUserGuest();
     super.initState();
+  }
+
+  isUserGuest() async {
+    print('Checking if user is guest');
+    _isGuest = await Service().isGuest();
   }
 
   checkpromo() async {
@@ -935,15 +948,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Padding(
                                   padding: const EdgeInsets.only(right: 5.0),
                                   child: InkWell(
-                                      onTap: () {
-                                        // search = !search;
-                                        // setState(() {});
+                                      onTap: () async {
                                         Navigator.pushNamed(
                                           context,
                                           AppRouter.cart_Screen,
-                                          // arguments: SearchValue(
-                                          //   searchcontroller.text,
-                                          // ),
                                         );
                                       },
                                       child: Icon(
@@ -955,15 +963,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Padding(
                                   padding: const EdgeInsets.only(right: 10.0),
                                   child: InkWell(
-                                    onTap: () {
-                                      // search = !search;
-                                      Navigator.pushNamed(
-                                        context,
-                                        AppRouter.profileScreen,
-                                        // arguments: SearchValue(
-                                        //   searchcontroller.text,
-                                        // ),
-                                      );
+                                    onTap: () async {
+                                      _isGuest = await Service().isGuest();
+                                      // print(_isGuest);
+                                      // return;
+                                      if (!_isGuest) {
+                                        Navigator.pushNamed(
+                                          context,
+                                          AppRouter.profileScreen,
+                                        );
+                                      } else
+                                        _askLoginDialog(context);
+
                                       setState(() {});
                                     },
                                     // child: Icon(
@@ -1192,56 +1203,117 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 0,
+                    height: 10,
                   ),
-                  loader
-                      ? Container(
-                          height: 280,
-                          child: CarouselSlider(
-                              options: CarouselOptions(
-                                  enableInfiniteScroll: true, height: 260),
-                              items: List.generate(
-                                1,
-                                (ind) => SkeletonAnimation(
-                                  shimmerColor: Colors.grey[350],
-                                  shimmerDuration: 1100,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                    ),
-                                    margin: EdgeInsets.symmetric(horizontal: 4),
-                                  ),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: Row(
+                        children: [
+                          Text('Eat In /'.toUpperCase(),
+                              textAlign: TextAlign.left,
+                              style: GoogleFonts.dmSerifDisplay(
+                                textStyle: Styles.customTitleTextStyle2(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: Sizes.TEXT_SIZE_32,
                                 ),
                               )),
-                        )
-                      :
-                      // SizedBox(height: 15.0),
-                      Column(
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 5.0),
-                            Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0),
-                                child: Text(
-                                  'Resturant'.toUpperCase(),
-                                  textAlign: TextAlign.left,
-                                  style: Styles.customTitleTextStyle2(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: Sizes.TEXT_SIZE_16,
-                                  ),
-                                )),
-                            // SizedBox(height: 200.0),
+                          Text(' Eat out'.toUpperCase(),
+                              textAlign: TextAlign.left,
+                              style: GoogleFonts.dmSerifDisplay(
+                                textStyle: Styles.customTitleTextStyle2(
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: Sizes.TEXT_SIZE_32,
+                                ),
+                              )),
+                        ],
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  !loader
+                      ? Center(
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppRouter.restaurantDetailsScreen,
+                                arguments: RestaurantDetails(
+                                    imagePath: resturants[0].restImage,
+                                    restaurantName: resturants[0].restName,
+                                    restaurantAddress:
+                                        resturants[0].restAddress +
+                                            resturants[0].restCity +
+                                            ' ' +
+                                            resturants[0].restCountry,
+                                    rating: '0.0',
+                                    category: resturants[0].restType,
+                                    distance: '0 Km',
+                                    data: resturants[0]),
+                              );
+                            },
+                            child: Lottie.asset(
+                              // 'assets/food.json',
+                              'assets/rest2.json',
+                              // 'assets/food2.json',
+                              // 'assets/food3.json',
 
-                            TravelCardList(
-                              cities: resturants,
-                              onCityChange: _handleCityChange,
+                              width: MediaQuery.of(context).size.width - 25,
+                              height: 220,
+                              fit: BoxFit.fill,
                             ),
-                            SizedBox(height: 5.0),
-                          ],
-                        ),
+                          ),
+                        )
+                      : Container(),
+                  // loader
+                  //     ? Container(
+                  //         height: 280,
+                  //         child: CarouselSlider(
+                  //             options: CarouselOptions(
+                  //                 enableInfiniteScroll: true, height: 260),
+                  //             items: List.generate(
+                  //               1,
+                  //               (ind) => SkeletonAnimation(
+                  //                 shimmerColor: Colors.grey[350],
+                  //                 shimmerDuration: 1100,
+                  //                 child: Container(
+                  //                   decoration: BoxDecoration(
+                  //                     color: Colors.grey[300],
+                  //                   ),
+                  //                   margin: EdgeInsets.symmetric(horizontal: 4),
+                  //                 ),
+                  //               ),
+                  //             )),
+                  //       )
+                  //     :
+                  //     // SizedBox(height: 15.0),
+                  //     Column(
+                  //         // mainAxisAlignment: MainAxisAlignment.start,
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           SizedBox(height: 5.0),
+                  //           Padding(
+                  //               padding: const EdgeInsets.symmetric(
+                  //                   horizontal: 12.0),
+                  //               child: Text(
+                  //                 'Resturant'.toUpperCase(),
+                  //                 textAlign: TextAlign.left,
+                  //                 style: Styles.customTitleTextStyle2(
+                  //                   color: Colors.black87,
+                  //                   fontWeight: FontWeight.bold,
+                  //                   fontSize: Sizes.TEXT_SIZE_16,
+                  //                 ),
+                  //               )),
+                  //           // SizedBox(height: 200.0),
+
+                  //           TravelCardList(
+                  //             cities: resturants,
+                  //             onCityChange: _handleCityChange,
+                  //           ),
+                  //           SizedBox(height: 5.0),
+                  //         ],
+                  //       ),
                   //
                   SizedBox(height: 0.0),
                   loader3
@@ -1472,5 +1544,95 @@ class _HomeScreenState extends State<HomeScreen> {
     //         ),
     //       );
     //     });
+  }
+
+  Future<void> _askLoginDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return _buildAlertDialog(context);
+      },
+    );
+  }
+
+  Widget _buildAlertDialog(BuildContext context) {
+    var textTheme = Theme.of(context).textTheme;
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(
+          Radius.circular(Sizes.RADIUS_32),
+        ),
+      ),
+      child: AlertDialog(
+        contentPadding: EdgeInsets.fromLTRB(
+          Sizes.PADDING_0,
+          Sizes.PADDING_36,
+          Sizes.PADDING_0,
+          Sizes.PADDING_0,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Sizes.RADIUS_20),
+        ),
+        elevation: Sizes.ELEVATION_4,
+        content: Container(
+          height: Sizes.HEIGHT_150,
+          width: Sizes.WIDTH_300,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              SingleChildScrollView(
+                child: Center(
+                  child: Text(
+                    'You have to login first',
+                    style: textTheme.title.copyWith(
+                      fontSize: Sizes.TEXT_SIZE_20,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: AppColors.secondaryElement,
+                        minimumSize: Size(200.0, 30),
+                      ),
+                      child: Text(
+                        'Go to Login Screen',
+                        style: TextStyle(fontSize: 15.0),
+                      ),
+                      onPressed: () {
+                        Provider.of<ProviderService>(context, listen: false)
+                            .allfalse();
+                        Provider.of<ProviderService>(context, listen: false)
+                            .reset();
+                        Navigator.push(
+                            context,
+                            // MaterialPageRoute(builder: (_) => BackgroundVideo()), (route) => false);
+                            MaterialPageRoute(builder: (_) => GooeyEdgeDemo()));
+                      }),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: AppColors.secondaryElement,
+                      minimumSize: Size(200.0, 30),
+                    ),
+                    child: Text(
+                      'Close ',
+                      style: TextStyle(fontSize: 15.0),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

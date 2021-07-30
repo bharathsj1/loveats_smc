@@ -304,6 +304,22 @@ class Service {
     return sharedPreferences.getBool('driving');
   }
 
+  Future<void> saveGuest() async {
+    print('SAVING ISGUEST TO TRUE');
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setBool('ISGUEST', true);
+  }
+
+  Future<void> removeGuest() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setBool('ISGUEST', false);
+  }
+
+  Future<bool> isGuest() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getBool('ISGUEST');
+  }
+
   Future<void> clearAllPrefs() async {
     final shared = await initializdPrefs();
     await shared.clear();
@@ -580,11 +596,4 @@ class Service {
       };
     }
   }
-
-
-  
-
-
-  
-  
 }

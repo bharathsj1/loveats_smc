@@ -29,6 +29,10 @@ Ticker ticker;
     edge.tick(duration);
     notifyListeners();
   }
+  reset(){
+    pageindex=0;
+    dragOffset=null;
+  }
 
   
   
