@@ -1606,7 +1606,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       'Go to Login Screen',
                       style: TextStyle(fontSize: 15.0),
                     ),
-                    onPressed: () {
+                    onPressed: ()async {
+                      await Service().removeGuest();
                       Provider.of<ProviderService>(context, listen: false)
                           .allfalse();
                       Provider.of<ProviderService>(context, listen: false)
