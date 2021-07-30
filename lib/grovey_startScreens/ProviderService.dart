@@ -31,6 +31,7 @@ Ticker ticker;
   }
   reset(){
     pageindex=0;
+    ind=0;
     dragOffset=null;
   }
 
