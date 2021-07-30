@@ -1535,6 +1535,7 @@ class _CartScreenState extends State<CartScreen> {
                         style: TextStyle(fontSize: 15.0),
                       ),
                       onPressed: () {
+                         await Service().removeGuest();
                         Provider.of<ProviderService>(context, listen: false)
                             .allfalse();
                         Provider.of<ProviderService>(context, listen: false)

@@ -2018,7 +2018,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
             ),
             Text(
               // fooditemswithcat[i]['menutype']['menu_name'],
-              fooditemswithcat[i]['foodCategory']['name'].toUpperCase(),
+              fooditemswithcat[i]['foodCategory']['name'].toUpperCase() ?? '',
               style: Theme.of(context).textTheme.title.copyWith(
                     fontSize: Sizes.TEXT_SIZE_20,
                     fontWeight: FontWeight.bold,
