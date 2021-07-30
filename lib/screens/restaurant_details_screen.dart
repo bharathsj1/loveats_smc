@@ -102,7 +102,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
 
   @override
   void initState() {
-    _tabcontroller = TabController(length: catlist.length, vsync: this);
     //  _tabcontroller.index=2;
 
     _autoScrollController = AutoScrollController(
@@ -580,7 +579,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                 duration: Duration(milliseconds: 500),
                 opacity: isExpaned ? 0.0 : 1,
                 child: DefaultTabController(
-                  length: catlist.length,
+                  length: fooditemswithcat.length,
                   child: Container(
                     padding:
                         const EdgeInsets.only(left: 10.0, right: 10, bottom: 0),
@@ -588,12 +587,19 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                     child: TabBar(
                       controller: _tabcontroller,
                       unselectedLabelColor: AppColors.secondaryElement,
+                      // indicatorWeight: 0,
+                      // indicatorPadding: EdgeInsets.all(0),
                       // indicatorSize: TabBarIndicatorSize.tab,
+                      
+                      isScrollable: true,
+                      // indicatorPadding:EdgeInsets.zero ,
+                      
+                      indicatorSize: TabBarIndicatorSize.tab ,
                       indicator: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: AppColors.secondaryElement),
                       //      indicatorPadding: EdgeInsets.zero,
-                      labelPadding: EdgeInsets.zero,
+                      labelPadding: EdgeInsets.symmetric(horizontal:20,vertical: 0),
 
                       labelColor: Colors.white,
                       onTap: (index) async {
@@ -601,10 +607,10 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                         _scrollToIndex(index);
                       },
                       tabs: List.generate(
-                        catlist.length,
+                        fooditemswithcat.length,
                         (i) {
                           return Tab(
-                            text: catlist[i],
+                            text: fooditemswithcat[i]['foodCategory']['name'].toUpperCase(),
                           );
                         },
                       ),
@@ -1531,6 +1537,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
       (i) => InkWell(
         onTap: () {
           Navigator.pushNamed(context, AppRouter.Add_Extra, arguments: {
+            'update': false,
             'item': newfooditems[i],
             'restaurant': widget.restaurantDetails.data
           }).then((value) {
@@ -2013,7 +2020,8 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
             // ),
             SizedBox(height: 12,),
              Text(
-                    fooditemswithcat[i]['menutype']['menu_name'],
+                    // fooditemswithcat[i]['menutype']['menu_name'],
+                    fooditemswithcat[i]['foodCategory']['name'].toUpperCase(),
                     style: Theme.of(context).textTheme.title.copyWith(
                           fontSize: Sizes.TEXT_SIZE_20,
                           fontWeight: FontWeight.bold,
@@ -2047,10 +2055,10 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
         .menuwithcat(widget.restaurantDetails.data.id.toString());
     // print('this is a data');
     print(data);
-    fooditemswithcat = data;
+    fooditemswithcat = data['data'];
     print(fooditemswithcat);
     print('Helol');
-
+    _tabcontroller = TabController(length: fooditemswithcat.length, vsync: this);
     setState(() {
       _isLoading = false;
     });
