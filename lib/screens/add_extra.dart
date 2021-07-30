@@ -64,13 +64,14 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
         actions: [
           InkWell(
               onTap: () {
+                print(widget.data['item']);
                 Map<String, dynamic> cartdata = {
                   'id': widget.data['item']['id'],
                   'restaurantId': widget.data['item']['rest_id'],
                   'image': widget.data['item']['menu_image'],
                   'details': widget.data['item']['menu_details'],
                   'name': widget.data['item']['menu_name'],
-                  'price': int.tryParse(widget.data['item']['menu_price']),
+                  'price': double.parse(widget.data['item']['menu_price']),
                   'payableAmount': widget.data['item']['menu_price'].toString(),
                   'qty': this.itemqty,
                   'data': widget.data['item'],

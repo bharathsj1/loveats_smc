@@ -1584,9 +1584,9 @@ class _HomeScreenState extends State<HomeScreen> {
               SingleChildScrollView(
                 child: Center(
                   child: Text(
-                    'You have to login first',
-                    style: textTheme.title.copyWith(
-                      fontSize: Sizes.TEXT_SIZE_20,
+                    'Please login to access full features',
+                    style: textTheme.headline6.copyWith(
+                      fontSize: Sizes.TEXT_SIZE_16,
                     ),
                   ),
                 ),
@@ -1598,24 +1598,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: AppColors.secondaryElement,
-                        minimumSize: Size(200.0, 30),
-                      ),
-                      child: Text(
-                        'Go to Login Screen',
-                        style: TextStyle(fontSize: 15.0),
-                      ),
-                      onPressed: () {
-                        Provider.of<ProviderService>(context, listen: false)
-                            .allfalse();
-                        Provider.of<ProviderService>(context, listen: false)
-                            .reset();
-                        Navigator.push(
-                            context,
-                            // MaterialPageRoute(builder: (_) => BackgroundVideo()), (route) => false);
-                            MaterialPageRoute(builder: (_) => GooeyEdgeDemo()));
-                      }),
+                    style: ElevatedButton.styleFrom(
+                      primary: AppColors.secondaryElement,
+                      minimumSize: Size(200.0, 30),
+                    ),
+                    child: Text(
+                      'Go to Login Screen',
+                      style: TextStyle(fontSize: 15.0),
+                    ),
+                    onPressed: () {
+                      Provider.of<ProviderService>(context, listen: false)
+                          .allfalse();
+                      Provider.of<ProviderService>(context, listen: false)
+                          .reset();
+                      Navigator.push(
+                          context,
+                          // MaterialPageRoute(builder: (_) => BackgroundVideo()), (route) => false);
+                          MaterialPageRoute(builder: (_) => GooeyEdgeDemo()));
+                    },
+                  ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: AppColors.secondaryElement,

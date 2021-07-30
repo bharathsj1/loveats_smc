@@ -549,10 +549,9 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
     return showModalBottomSheet(
         context: context,
         // backgroundColor: Colors.black54,
-
         builder: (context) {
           return StatefulBuilder(builder: (BuildContext context,
-              StateSetter mysetState /*You can rename this!*/) {
+              StateSetter mysetState) {
             return SingleChildScrollView(
                 child: Column(
                   children: [
