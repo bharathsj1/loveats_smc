@@ -34,6 +34,7 @@ import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/screens/profile_screen.dart';
 import 'package:potbelly/screens/notification_screen.dart';
 import 'package:potbelly/screens/subscription_page.dart';
+import 'package:potbelly/screens/testing.dart';
 import 'package:potbelly/screens/trending_restaurant_screen.dart';
 import 'package:potbelly/screens/restaurant_details_screen.dart';
 import 'package:potbelly/screens/promotions_detail_page.dart';
@@ -117,6 +118,7 @@ class AppRouter {
   static const Filter_SortScreen = '/Filter_sortScreen';
   static const Restaurant_info = '/Restaurant_info';
   static const Add_new_Payment = '/Add_new_Payment';
+  static const testing = '/testing';
 
   static const userAddresses = '/user_addresses';
   Navigator navigator = Navigator();
@@ -151,6 +153,11 @@ class AppRouter {
       case AppRouter.Add_new_Payment:
         return MaterialPageRoute<dynamic>(
           builder: (_) => AddNewPayment(),
+          settings: settings,
+        );
+      case AppRouter.testing:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => AddNewCart(data: args,),
           settings: settings,
         );
       case AppRouter.setLocationScreen:

@@ -1647,37 +1647,37 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                         ],
                       ),
                     ),
-                    SizedBox(
-                      width: 16.0,
-                    ),
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          newfooditems[i]['menu_image'],
-                          cacheHeight: 70,
-                          cacheWidth: 70,
-                          loadingBuilder: (BuildContext ctx, Widget child,
-                              ImageChunkEvent loadingProgress) {
-                            if (loadingProgress == null) {
-                              return child;
-                            } else {
-                              return Container(
-                                // height: ,
-                                width: 70,
-                                height: 70,
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppColors.secondaryElement),
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                          fit: BoxFit.cover,
-                          height: 70,
-                          width: 70,
-                        )),
+                    //  SizedBox(
+                    //   width: 16.0,
+                    // ),
+                    //  ClipRRect(
+                    //     borderRadius: BorderRadius.circular(8),
+                    //     child: Image.network(
+                    //       newfooditems[i]['menu_image'],
+                    //       cacheHeight: 70,
+                    //       cacheWidth: 70,
+                    //       loadingBuilder: (BuildContext ctx, Widget child,
+                    //           ImageChunkEvent loadingProgress) {
+                    //         if (loadingProgress == null) {
+                    //           return child;
+                    //         } else {
+                    //           return Container(
+                    //             // height: ,
+                    //             width: 70,
+                    //             height: 70,
+                    //             child: Center(
+                    //               child: CircularProgressIndicator(
+                    //                 valueColor: AlwaysStoppedAnimation<Color>(
+                    //                     AppColors.secondaryElement),
+                    //               ),
+                    //             ),
+                    //           );
+                    //         }
+                    //       },
+                    //       fit: BoxFit.cover,
+                    //       height: 70,
+                    //       width: 70,
+                    //     )),
                   ],
                 ),
               ],

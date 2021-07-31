@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:potbelly/main.dart';
+import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/cartservice.dart';
 import 'package:potbelly/values/values.dart';
+import 'package:skeleton_text/skeleton_text.dart';
 
 class AddExtraScreen extends StatefulWidget {
   var data;
@@ -13,12 +15,31 @@ class AddExtraScreen extends StatefulWidget {
 
 class _AddExtraScreenState extends State<AddExtraScreen> {
   var itemqty = '1';
+  List addons=[];
+  bool _isLoading=true;
+
 
   @override
   void initState() {
+    getaddson();
     // widget.data['item']['qty']='1';
     setState(() {});
     super.initState();
+  }
+
+    getaddson() async {
+    var response = await AppService().getaddon(widget.data['restaurant'].id.toString());
+    // addons= response['data'];
+    print(response);
+    for (var item in response['data']) {
+      addons.add({
+        'data': item,
+        'check': false
+      });
+    }
+    print(addons);
+    _isLoading = false;
+    setState(() {});
   }
 
   List toppings = [
@@ -38,6 +59,27 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
     {'name': 'Pepsi 1.5ltr', 'check': false},
     {'name': 'Tango Orange 1.5ltr', 'check': false},
   ];
+
+   loading() {
+    return List.generate(
+        6,
+        (index) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 0),
+              child: SkeletonAnimation(
+                // shimmerDuration: 1500,
+
+                borderRadius: BorderRadius.circular(5.0),
+                shimmerColor: Colors.grey.shade300,
+                child: Container(
+                  height: 60,
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(0.0),
+                      color: Colors.grey[200]),
+                ),
+              ),
+            ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,10 +118,13 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
                   'qty': this.itemqty,
                   'data': widget.data['item'],
                   'restaurantdata': widget.data['restaurant'],
-                  'topping': toppings
-                      .where((product) => product['check'] == true)
-                      .toList(),
-                  'drink': drinks
+                  // 'topping': toppings
+                  //     .where((product) => product['check'] == true)
+                  //     .toList(),
+                  // 'drink': drinks
+                  //     .where((product) => product['check'] == true)
+                  //     .toList()
+                  'addon': addons
                       .where((product) => product['check'] == true)
                       .toList()
                 };
@@ -210,20 +255,21 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
               child: Row(
                 children: <Widget>[
                   Text(
-                    "Please Choose Up To 2 Toppings",
+                    "What would you like to add?",
                     style: textTheme.title.copyWith(
                       fontSize: Sizes.TEXT_SIZE_16,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.indigoShade1,
+                      // fontWeight: FontWeight.bold,
+                      color: Colors.grey.shade600,
                     ),
                   ),
                 ],
               ),
             ),
-            SingleChildScrollView(
+          _isLoading
+                ? Column(children: loading()):   SingleChildScrollView(
               child: Column(
                   children: List.generate(
-                toppings.length,
+                addons.length,
                 (index) => Container(
                     margin: EdgeInsets.symmetric(horizontal: 15),
                     padding: EdgeInsets.zero,
@@ -232,13 +278,13 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
                       tileColor: AppColors.white,
                       title: Padding(
                         padding: const EdgeInsets.only(top: 2.0),
-                        child: Text(toppings[index]['name'],
+                        child: Text(addons[index]['data']['name'] + '  ( \$'+addons[index]['data']['price']+' )',
                             style: TextStyle(
                                 color: Colors.black54,
                                 fontSize: 17,
                                 fontWeight: FontWeight.normal)),
                       ),
-                      value: toppings[index]['check'],
+                      value: addons[index]['check'],
 
                       activeColor: AppColors.secondaryElement,
                       //  selectedTileColor: Colors.red,
@@ -246,7 +292,7 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
                       checkColor: AppColors.white,
                       onChanged: (newValue) {
                         setState(() {
-                          toppings[index]['check'] = newValue;
+                          addons[index]['check'] = newValue;
                         });
                       },
 
@@ -255,60 +301,60 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
                     )),
               )),
             ),
-            Container(
-              color: AppColors.secondaryColor,
-              padding: const EdgeInsets.symmetric(
-                horizontal: Sizes.MARGIN_16,
-                vertical: Sizes.MARGIN_16,
-              ),
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    "Please Choose Soft Drink",
-                    style: textTheme.title.copyWith(
-                      fontSize: Sizes.TEXT_SIZE_16,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.indigoShade1,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SingleChildScrollView(
-              child: Column(
-                  children: List.generate(
-                drinks.length,
-                (index) => Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15),
-                    padding: EdgeInsets.zero,
-                    // color: Colors.red,
-                    child: CheckboxListTile(
-                      tileColor: AppColors.white,
-                      title: Padding(
-                        padding: const EdgeInsets.only(top: 2.0),
-                        child: Text(drinks[index]['name'],
-                            style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 17,
-                                fontWeight: FontWeight.normal)),
-                      ),
-                      value: drinks[index]['check'],
+            // Container(
+            //   color: AppColors.secondaryColor,
+            //   padding: const EdgeInsets.symmetric(
+            //     horizontal: Sizes.MARGIN_16,
+            //     vertical: Sizes.MARGIN_16,
+            //   ),
+            //   child: Row(
+            //     children: <Widget>[
+            //       Text(
+            //         "Please Choose Soft Drink",
+            //         style: textTheme.title.copyWith(
+            //           fontSize: Sizes.TEXT_SIZE_16,
+            //           fontWeight: FontWeight.bold,
+            //           color: AppColors.indigoShade1,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // SingleChildScrollView(
+            //   child: Column(
+            //       children: List.generate(
+            //     drinks.length,
+            //     (index) => Container(
+            //         margin: EdgeInsets.symmetric(horizontal: 15),
+            //         padding: EdgeInsets.zero,
+            //         // color: Colors.red,
+            //         child: CheckboxListTile(
+            //           tileColor: AppColors.white,
+            //           title: Padding(
+            //             padding: const EdgeInsets.only(top: 2.0),
+            //             child: Text(drinks[index]['name'],
+            //                 style: TextStyle(
+            //                     color: Colors.black54,
+            //                     fontSize: 17,
+            //                     fontWeight: FontWeight.normal)),
+            //           ),
+            //           value: drinks[index]['check'],
 
-                      activeColor: AppColors.secondaryElement,
-                      //  selectedTileColor: Colors.red,
-                      contentPadding: EdgeInsets.all(0),
-                      checkColor: AppColors.white,
-                      onChanged: (newValue) {
-                        setState(() {
-                          drinks[index]['check'] = newValue;
-                        });
-                      },
+            //           activeColor: AppColors.secondaryElement,
+            //           //  selectedTileColor: Colors.red,
+            //           contentPadding: EdgeInsets.all(0),
+            //           checkColor: AppColors.white,
+            //           onChanged: (newValue) {
+            //             setState(() {
+            //               drinks[index]['check'] = newValue;
+            //             });
+            //           },
 
-                      // controlAffinity:
-                      //     ListTileControlAffinity.leading, //  <-- leading Checkbox
-                    )),
-              )),
-            )
+            //           // controlAffinity:
+            //           //     ListTileControlAffinity.leading, //  <-- leading Checkbox
+            //         )),
+            //   )),
+            // )
           ],
         ),
       ),

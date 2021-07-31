@@ -53,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool search = true;
   List searchlist = [];
   bool _isGuest = false;
+  bool lottie = false;
   String selected_address = 'Your Location';
   List subscription = [
     'assets/images/sub3.png',
@@ -1229,8 +1230,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  !loader
+                  loader || lottie ==false
                       ? Center(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width - 16,
+                            height: 200,
+                            child: SkeletonAnimation(
+                              shimmerColor: Colors.grey[350],
+                              shimmerDuration: 1100,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 4),
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container(),
+
+                   Center(
                           child: InkWell(
                             onTap: () {
                               Navigator.pushNamed(
@@ -1251,18 +1270,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             },
                             child: Lottie.asset(
-                              // 'assets/food.json',
-                              'assets/restaurant.json',
-                              // 'assets/food2.json',
-                              // 'assets/food3.json',
+                                // 'assets/food.json',
+                                'assets/restaurant2.json',
+                                // 'assets/food2.json',
+                                // 'assets/food3.json',
 
-                              width: MediaQuery.of(context).size.width - 25,
-                              height: 500,
-                              fit: BoxFit.fill,
-                            ),
+                                width: MediaQuery.of(context).size.width - 25,
+                                height:lottie && !loader? 200:0,
+                                fit: BoxFit.fill, onLoaded: (value) {
+                              setState(() {
+                                lottie = true;
+                              });
+                              print('value');
+                            }),
                           ),
-                        )
-                      : Container(),
+                        ),
+                      // : Container(),
                   // loader
                   //     ? Container(
                   //         height: 280,

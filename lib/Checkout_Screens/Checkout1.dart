@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/appServices.dart';
+import 'package:potbelly/services/cartservice.dart';
+import 'package:potbelly/services/paymentservice.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/custom_text_form_field.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
@@ -30,8 +33,12 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
   String selected_lat = '';
   String selected_long = '';
   bool loader = true;
+  bool loader2 = true;
+  bool loader3 = false;
   bool isError = false;
   bool marketing = false;
+  var selectedcard;
+  var _paymentSheetData;
   final _formKey = GlobalKey<FormState>();
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   LatLng _initialcameraposition;
@@ -43,6 +50,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
   void initState() {
     _controller = Completer();
     getaddress();
+    getsavedcards();
     super.initState();
   }
 
@@ -94,6 +102,19 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
     setState(() {});
   }
 
+  getsavedcards() async {
+    var respo = await AppService().getallmethod();
+    print(respo);
+
+    mycards = respo['data']['data'];
+    if (mycards.length > 0) {
+      // selectedcard = mycards[0]['id'];
+      selectedcard = 0;
+    }
+    loader2 = false;
+    setState(() {});
+  }
+
   getuser() {}
 
   nameValidator(String value) {
@@ -108,28 +129,8 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
     else if (value.length < 10) return 'Invalid Phone Number';
   }
 
-  List myaddress = [
-    // {
-    //   'id': '1',
-    //   'type': 'Work',
-    //   'name': 'Mian Saad Hafeez',
-    //   'phone': '+922234829393',
-    //   'address':
-    //       '1188  Bird Spring Lane, Cleveland, Texas 1188  Bird Spring Lane',
-    //   'city': 'Cleveland',
-    //   'country': 'Texas',
-    // },
-    // {
-    //   'id': '2',
-    //   'type': 'Home',
-    //   'name': 'Mian Saad',
-    //   'phone': '+928334738939',
-    //   'address':
-    //       '1188  Bird Spring Lane, Cleveland, Texas 1188  Bird Spring Lane',
-    //   'city': 'Cleveland',
-    //   'country': 'Texas',
-    // }
-  ];
+  List mycards = [];
+  List myaddress = [];
 
   void updatePinOnMap(lat, long) async {
     // create a new CameraPosition instance
@@ -424,16 +425,16 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                   selectedaddress = index;
                 });
               },
-              child: Card(
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                      color: selectedaddress == index
-                          ? AppColors.secondaryElement
-                          : AppColors.grey,
-                      width: selectedaddress == index ? 1 : 0),
-                  borderRadius: BorderRadius.circular(10),
-                ),
+              child: Container(
+                // elevation: 0,
+                // shape: RoundedRectangleBorder(
+                //   side: BorderSide(
+                //       color: selectedaddress == index
+                //           ? AppColors.secondaryElement
+                //           : AppColors.grey,
+                //       width: selectedaddress == index ? 1 : 0),
+                //   borderRadius: BorderRadius.circular(10),
+                // ),
                 color: selectedaddress == index
                     ? AppColors.secondaryElement.withOpacity(0.2)
                     : null,
@@ -550,103 +551,102 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
         context: context,
         // backgroundColor: Colors.black54,
         builder: (context) {
-          return StatefulBuilder(builder: (BuildContext context,
-              StateSetter mysetState) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter mysetState) {
             return SingleChildScrollView(
                 child: Column(
-                  children: [
-                    Column(
-                        children: List.generate(
-                            myaddress.length,
-                            (index) => Container(
-                                margin: EdgeInsets.symmetric(horizontal: 16),
-                                padding: EdgeInsets.zero,
-                                // decoration: BoxDecoration(
-                                //     border: Border(
-                                //         bottom: BorderSide(
-                                //             width: 0.5,
-                                //             color: AppColors.grey.withOpacity(0.5)))),
-                                // color: Colors.red,
-                                child: RadioListTile(
-                                  tileColor: AppColors.white,
+              children: [
+                Column(
+                    children: List.generate(
+                        myaddress.length,
+                        (index) => Container(
+                            margin: EdgeInsets.symmetric(horizontal: 16),
+                            padding: EdgeInsets.zero,
+                            // decoration: BoxDecoration(
+                            //     border: Border(
+                            //         bottom: BorderSide(
+                            //             width: 0.5,
+                            //             color: AppColors.grey.withOpacity(0.5)))),
+                            // color: Colors.red,
+                            child: RadioListTile(
+                              tileColor: AppColors.white,
 
-                                  title: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.place_outlined,
-                                        color: AppColors.grey,
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width * 0.7,
-                                        child: Text(myaddress[index]['address'],
-                                            style: TextStyle(
-                                                color: Colors.black54,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.normal)),
-                                      ),
-                                    ],
+                              title: Row(
+                                children: [
+                                  Icon(
+                                    Icons.place_outlined,
+                                    color: AppColors.grey,
                                   ),
-                                  value: index,
-                                  activeColor: AppColors.secondaryElement,
-                                  //  selectedTileColor: Colors.red,
-                                  contentPadding: EdgeInsets.all(0),
-                                  // checkColor: AppColors.white,
-                                  onChanged: (newValue) {
-                                    mysetState(() {
-                                      selectedaddress = newValue;
-                                    });
-                                    setState(() {});
-                                  },
-                                  groupValue: selectedaddress,
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.7,
+                                    child: Text(myaddress[index]['address'],
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.normal)),
+                                  ),
+                                ],
+                              ),
+                              value: index,
+                              activeColor: AppColors.secondaryElement,
+                              //  selectedTileColor: Colors.red,
+                              contentPadding: EdgeInsets.all(0),
+                              // checkColor: AppColors.white,
+                              onChanged: (newValue) {
+                                mysetState(() {
+                                  selectedaddress = newValue;
+                                });
+                                setState(() {});
+                              },
+                              groupValue: selectedaddress,
 
-                                  controlAffinity: ListTileControlAffinity
-                                      .trailing, //  <-- leading Checkbox
-                                )))
-                                ),
-                                Center(
-                    child: InkWell(
-                      onTap: () {
-                        showPlacePicker(context);
-                      },
-                      child: Container(
-                        height: 55,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                            color: AppColors.white,
-                            // border: Border.all(color: Colors.grey, width: 0),
-                            borderRadius: BorderRadius.circular(8)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Icon(
-                              Icons.place_outlined,
-                              color: AppColors.secondaryElement,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'Add a new address',
-                              style: TextStyle(
-                                  color: AppColors.secondaryElement,
-                                  fontSize: 16,
-                                  // fontWeight: FontWeight.bold,
-                                  fontFamily: 'roboto'),
-                            ),
-                          ],
-                        ),
+                              controlAffinity: ListTileControlAffinity
+                                  .trailing, //  <-- leading Checkbox
+                            )))),
+                Center(
+                  child: InkWell(
+                    onTap: () {
+                      showPlacePicker(context);
+                    },
+                    child: Container(
+                      height: 55,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                          color: AppColors.white,
+                          // border: Border.all(color: Colors.grey, width: 0),
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Icon(
+                            Icons.place_outlined,
+                            color: AppColors.secondaryElement,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            'Add a new address',
+                            style: TextStyle(
+                                color: AppColors.secondaryElement,
+                                fontSize: 16,
+                                // fontWeight: FontWeight.bold,
+                                fontFamily: 'roboto'),
+                          ),
+                        ],
                       ),
                     ),
-                  )
-                  ],
-                ));
+                  ),
+                )
+              ],
+            ));
           });
         }).whenComplete(() {
       setState(() {
@@ -667,14 +667,14 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
           onTap: () => Navigator.pop(context),
           child: Image.asset(
             ImagePath.arrowBackIcon,
-            color: AppColors.headingText,
+            color: AppColors.black,
           ),
         ),
         // centerTitle: true,
         title: Text(
           'Checkout',
           style: Styles.customTitleTextStyle(
-            color: AppColors.headingText,
+            color: AppColors.black,
             fontWeight: FontWeight.bold,
             fontSize: Sizes.TEXT_SIZE_16,
           ),
@@ -685,43 +685,271 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
         child: Container(
           color: AppColors.white,
           margin: EdgeInsets.only(top: 5),
-          height: 65,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+          height: 75,
+          child: Column(
             children: [
-              PotbellyButton(
-                'Proceed to payment',
-                onTap: () {
-                  if (myaddress.length != 0) {
-                    var data = {
-                      'cartlist': widget.checkoutdata['cartlist'],
-                      'charges': widget.checkoutdata['charges'],
-                      'shipping': widget.checkoutdata['shipping'],
-                      'total': widget.checkoutdata['total'],
-                      'type': widget.checkoutdata['type'],
-                      'mixmatch': widget.checkoutdata['mixmatch'],
-                      'customer_addressId': myaddress[selectedaddress]['id'],
-                      'addressId': selectedaddress
-                    };
-                    Navigator.pushNamed(context, AppRouter.CheckOut2,
-                        arguments: data);
-                  } else {
-                    Toast.show('Add address to continue', context, duration: 3);
-                  }
-                },
-                buttonHeight: 45,
-                buttonWidth: MediaQuery.of(context).size.width * 0.89,
-                buttonTextStyle: TextStyle(
-                    fontSize: 18,
-                    fontFamily: 'roboto',
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    color: myaddress.length != 0
-                        ? AppColors.secondaryElement
-                        : AppColors.grey),
+              SizedBox(
+                height: 2,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0, right: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Total',
+                        style: TextStyle(
+                            color: AppColors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold)),
+                    Text('\$' + widget.checkoutdata['total'].toStringAsFixed(2),
+                        style: TextStyle(
+                            color: AppColors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  loader3?  Padding(
+          padding: const EdgeInsets.only(bottom:8.0),
+          child: Center(
+              child: CircularProgressIndicator(
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
+              ),
+            ),
+        ):    PotbellyButton(
+                    'Proceed to payment',
+                    onTap: () async {
+                      if (myaddress.length != 0 && selectedcard != null) {
+                        loader3=true;
+                        setState(() {
+                          
+                        });
+                        var data = {
+                          'cartlist': widget.checkoutdata['cartlist'],
+                          'charges': widget.checkoutdata['charges'],
+                          'shipping': widget.checkoutdata['shipping'],
+                          'total': widget.checkoutdata['total'],
+                          'type': widget.checkoutdata['type'],
+                          'mixmatch': widget.checkoutdata['mixmatch'],
+                          'customer_addressId': myaddress[selectedaddress]
+                              ['id'],
+                          'addressId': selectedaddress
+                        };
+                        var data2 = {
+                          'amount': (widget.checkoutdata['total'].floor())
+                                  .toString() +
+                              '00',
+                          'currency': 'usd',
+                          'customer': mycards[selectedcard]['customer']
+                          // 'receipt_email': 'miansaadhafeez@gmail.com'
+                        };
+                        await PaymentService()
+                            .getIntent(data2)
+                            .then((value) async {
+                          print(value);
+                          _paymentSheetData = value;
+                          print(_paymentSheetData['client_secret']);
+                          print(mycards[selectedcard]['customer']);
+                          setState(() {});
+                          var resp = await Stripe.instance.confirmPaymentMethod(
+                              _paymentSheetData['client_secret'],
+                              PaymentMethodParams.cardFromMethodId(
+                                  paymentMethodId: mycards[selectedcard]['id'].toString(),
+                                  cvc: '123'));
+                          
+
+                          if (resp.status == PaymentIntentsStatus.Succeeded) {
+                            print('here');
+                            var orderId = '';
+                            if (widget.checkoutdata['mixmatch'] == true) {
+                              var data = {
+                                'total_amount': widget.checkoutdata['total'],
+                                'payment_method': 'card',
+                                'payment_id':
+                                    _paymentSheetData['client_secret'],
+                                'customer_addressId':
+                                    myaddress[selectedaddress]['id'],
+                              };
+                              AppService().addeorder(data).then((value) {
+                                orderId = value['data']['id'];
+                                print(value);
+                                for (var i = 0;
+                                    i < widget.checkoutdata['cartlist'].length;
+                                    i++) {
+                                  for (var j = 0;
+                                      j <
+                                          widget.checkoutdata['cartlist'][i]
+                                              .length;
+                                      j++) {
+                                    print(
+                                        widget.checkoutdata['cartlist'][i][j]);
+                                    var data2 = {
+                                      'quantity':
+                                          widget.checkoutdata['cartlist'][i][j]
+                                              ['qty'],
+                                      'total_price':
+                                          widget.checkoutdata['cartlist'][i][j]
+                                              ['payableAmount'],
+                                      'order_id': value['data']['id'],
+                                      'rest_menuId': widget
+                                          .checkoutdata['cartlist'][i][j]['id'],
+                                      'rest_Id': widget.checkoutdata['cartlist']
+                                          [i][j]['restaurantId'],
+                                    };
+                                    AppService()
+                                        .addorderdetails(data2)
+                                        .then((value) {
+                                      print(value);
+                                      if (i ==
+                                              widget.checkoutdata['cartlist']
+                                                      .length -
+                                                  1 &&
+                                          j ==
+                                              widget.checkoutdata['cartlist'][i]
+                                                      .length -
+                                                  1) {
+                                        var data = {
+                                          'title': 'New Order',
+                                          'body':
+                                              'User has been placed a new order',
+                                          'data': value.toString(),
+                                          //  ''
+                                        };
+                                        AppService().sendnotisuperadmin(data);
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
+                                        this.loader3 = false;
+
+                                        setState(() {});
+                                        Navigator.pushNamed(
+                                            context, AppRouter.CheckOut3,
+                                            arguments: {
+                                              'type':
+                                                  widget.checkoutdata['type'],
+                                              'orderId': orderId
+                                            });
+                                      }
+                                    });
+                                  }
+                                }
+                                //    AppRouter.navigator.pushNamed(AppRouter.CheckOut3, arguments: {
+                                //   'type': widget.checkoutdata['type'],
+                                //   'orderId': orderId
+                                // });
+                              });
+                            } else {
+                              for (var i = 0;
+                                  i < widget.checkoutdata['cartlist'].length;
+                                  i++) {
+                                var data = {
+                                  'total_amount': widget.checkoutdata['total'],
+                                  'payment_method': 'card',
+                                  'payment_id':
+                                      _paymentSheetData['client_secret'],
+                                  'customer_addressId':
+                                      myaddress[selectedaddress]['id'],
+                                };
+                                AppService().addeorder(data).then((value) {
+                                  orderId = value['data']['id'].toString();
+                                  print(orderId);
+                                  for (var j = 0;
+                                      j <
+                                          widget.checkoutdata['cartlist'][i]
+                                              .length;
+                                      j++) {
+                                    print(
+                                        widget.checkoutdata['cartlist'][i][j]);
+                                    var data2 = {
+                                      'quantity':
+                                          widget.checkoutdata['cartlist'][i][j]
+                                              ['qty'],
+                                      'total_price':
+                                          widget.checkoutdata['cartlist'][i][j]
+                                              ['payableAmount'],
+                                      'order_id': value['data']['id'],
+                                      'rest_menuId': widget
+                                          .checkoutdata['cartlist'][i][j]['id'],
+                                      'rest_Id': widget.checkoutdata['cartlist']
+                                          [i][j]['restaurantId'],
+                                    };
+                                    AppService()
+                                        .addorderdetails(data2)
+                                        .then((value) async {
+                                      print(value);
+                                      if (i ==
+                                              widget.checkoutdata['cartlist']
+                                                      .length -
+                                                  1 &&
+                                          j ==
+                                              widget.checkoutdata['cartlist'][i]
+                                                      .length -
+                                                  1) {
+                                        this.loader3 = false;
+                                        var data = {
+                                          'title': 'New Order',
+                                          'body':
+                                              'User has been placed a new order',
+                                          'data': value.toString(),
+                                        };
+                                        AppService().sendnotisuperadmin(data);
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
+                                        this.loader3 = false;
+                                        await CartProvider().clearcart();
+                                        setState(() {});
+                                        Navigator.pushNamed(
+                                            context, AppRouter.CheckOut3,
+                                            arguments: {
+                                              'type':
+                                                  widget.checkoutdata['type'],
+                                              'orderId': orderId
+                                            });
+                                      }
+                                    });
+                                  }
+                                });
+                              }
+                            }
+                          }
+                          ;
+                        });
+
+                        // var respo = await Stripe.instance.presentPaymentSheet(
+                        //     parameters: PresentPaymentSheetParameters(
+                        //       confirmPayment: true,
+                        //         clientSecret:
+                        //             _paymentSheetData['client_secret']));
+                        //             print(respo);
+                        // Navigator.pushNamed(context, AppRouter.CheckOut2,
+                        //     arguments: data);
+
+                      } else {
+                        Toast.show('Add address to continue', context,
+                            duration: 3);
+                      }
+                    },
+                    buttonHeight: 45,
+                    buttonWidth: MediaQuery.of(context).size.width * 0.89,
+                    buttonTextStyle: TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'roboto',
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: myaddress.length != 0
+                            ? AppColors.secondaryElement
+                            : AppColors.grey),
+                  ),
+                ],
               ),
             ],
           ),
@@ -1045,10 +1273,106 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
             SizedBox(
               height: 20,
             ),
+
+            !loader
+                ? SingleChildScrollView(
+                    child: Column(
+                        children: List.generate(
+                            mycards.length,
+                            (index) => Container(
+                                margin: EdgeInsets.symmetric(horizontal: 15),
+                                padding: EdgeInsets.zero,
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            width: 0.5,
+                                            color: AppColors.grey
+                                                .withOpacity(0.5)))),
+                                // color: Colors.red,
+                                child: RadioListTile(
+                                  tileColor: AppColors.white,
+
+                                  title: Padding(
+                                    padding: const EdgeInsets.only(top: 2.0),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Image.asset(
+                                          mycards[index]['card']['brand'] ==
+                                                  'visa'
+                                              ? 'assets/images/visa2.png'
+                                              : 'assets/images/master.png',
+                                          height: 20,
+                                          width: 30,
+                                        ),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                                mycards[index]['card']['brand']
+                                                    .toUpperCase(),
+                                                style: TextStyle(
+                                                    color: Colors.black54,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            Text(
+                                                '**** **** **** ' +
+                                                    mycards[index]['card']
+                                                        ['last4'],
+                                                style: TextStyle(
+                                                    color: Colors.black54,
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.normal)),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  value: index,
+                                  activeColor: AppColors.secondaryElement,
+                                  //  selectedTileColor: Colors.red,
+                                  contentPadding: EdgeInsets.all(0),
+                                  // checkColor: AppColors.white,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      selectedcard = newValue;
+                                    });
+                                  },
+                                  groupValue: selectedcard,
+
+                                  controlAffinity: ListTileControlAffinity
+                                      .trailing, //  <-- leading Checkbox
+                                )))))
+                : Container(),
+            SizedBox(
+              height: 5,
+            ),
+
             Center(
               child: InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, AppRouter.Add_new_Payment);
+                onTap: () async {
+                  // Navigator.pushNamed(context, AppRouter.Add_new_Payment);
+                  Navigator.pushNamed(context, AppRouter.testing,
+                          arguments: null)
+                      .then((value) {
+                    getsavedcards();
+                  });
+                  // final paymentMethod =
+                  // await Stripe.instance.createPaymentMethod(PaymentMethodParams.card(
+
+                  // ));
+                  // print(paymentMethod);
+                  //  await Stripe.instance.createPaymentMethod({
+                  //    'card':''
+                  //  });
                 },
                 child: Container(
                   height: 55,
@@ -1085,47 +1409,47 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 5,
-            ),
-            Center(
-              child: InkWell(
-                onTap: () {
-                  showPlacePicker(context);
-                },
-                child: Container(
-                  height: 55,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                      color: AppColors.white,
-                      // border: Border.all(color: Colors.grey, width: 0),
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Icon(
-                        Icons.credit_card_outlined,
-                        color: Colors.grey.shade600,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'Debit/Credit Card',
-                        style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: 16,
-                            // fontWeight: FontWeight.bold,
-                            fontFamily: 'roboto'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            // SizedBox(
+            //   height: 5,
+            // ),
+            // Center(
+            //   child: InkWell(
+            //     onTap: () {
+            //       showPlacePicker(context);
+            //     },
+            //     child: Container(
+            //       height: 55,
+            //       width: MediaQuery.of(context).size.width,
+            //       decoration: BoxDecoration(
+            //           color: AppColors.white,
+            //           // border: Border.all(color: Colors.grey, width: 0),
+            //           borderRadius: BorderRadius.circular(8)),
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.start,
+            //         children: [
+            //           SizedBox(
+            //             width: 20,
+            //           ),
+            //           Icon(
+            //             Icons.credit_card_outlined,
+            //             color: Colors.grey.shade600,
+            //           ),
+            //           SizedBox(
+            //             width: 10,
+            //           ),
+            //           Text(
+            //             'Debit/Credit Card',
+            //             style: TextStyle(
+            //                 color: Colors.grey.shade600,
+            //                 fontSize: 16,
+            //                 // fontWeight: FontWeight.bold,
+            //                 fontFamily: 'roboto'),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
             SizedBox(
               height: 20,
             ),
