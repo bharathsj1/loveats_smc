@@ -107,6 +107,7 @@ class Service {
   }
 
   Future<String> signInWithGoogle() async {
+    await Service().removeGuest();
     try {
       GoogleSignInAccount googleSignIn = await GoogleSignIn().signIn();
       GoogleSignInAuthentication googleSignInAuthentication =
@@ -129,6 +130,8 @@ class Service {
   }
 
   Future<String> signInWithApple() async {
+        await Service().removeGuest();
+
     final result = await TheAppleSignIn.performRequests([
       AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
     ]);
@@ -177,6 +180,8 @@ class Service {
   }
 
   Future<void> logout(BuildContext context) async {
+        await Service().removeGuest();
+
     await _auth.signOut();
     loggedoutr();
     Navigator.pushAndRemoveUntil(
@@ -218,6 +223,7 @@ class Service {
         await setKeyData('photo', _user.data.custProfileImage ?? '');
         await setKeyData('userId', _user.data.id.toString());
         await setKeyData('userdata', jsonEncode(value.data['data']));
+
       }
     }).catchError((onError) {
       print('Here it is');
