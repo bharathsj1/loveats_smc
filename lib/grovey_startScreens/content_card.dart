@@ -5,6 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
+import 'package:video_player/video_player.dart';
 import './ProviderService.dart';
 import 'package:provider/provider.dart';
 import 'gooey_carousel.dart';
@@ -46,6 +47,7 @@ class _ContentCardState extends State<ContentCard> {
   bool _obscureTextSignup = true;
   bool _obscureTextSignupConfirm = true;
   bool login = false;
+  VideoPlayerController _controller;
 
   TextEditingController signupEmailController = new TextEditingController();
   TextEditingController signupNameController = new TextEditingController();
@@ -60,6 +62,7 @@ class _ContentCardState extends State<ContentCard> {
 
   @override
   void initState() {
+    // initialize();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -74,8 +77,22 @@ class _ContentCardState extends State<ContentCard> {
 
   @override
   void dispose() {
+    // _controller.dispose();
     _ticker.dispose();
     super.dispose();
+  }
+
+  initialize() {
+    // print(videourl);
+    if (_controller != null) {
+      _controller.dispose();
+    }
+    _controller = VideoPlayerController.asset('assets/loginvideo.mp4')
+      ..initialize().then((_) {
+        _controller.play();
+        _controller.setLooping(true);
+        setState(() {});
+      });
   }
 
   @override
@@ -90,17 +107,61 @@ class _ContentCardState extends State<ContentCard> {
         alignment: Alignment.center,
         fit: StackFit.expand,
         children: <Widget>[
-          Transform(
-            transform: Matrix4.diagonal3Values(scaleX, scaleY, 1),
-            child: Transform.translate(
-              offset: Offset(-(scaleX - 1) / 2 * size.width,
-                  -(scaleY - 1) / 2 * size.height + offsetY),
-              child: Image.asset(
-                'assets/grovey/Bg-${widget.color}.png',
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
+          widget.color == 'Red'
+              ?
+              // SizedBox(
+              //         child: FittedBox(
+              //           child: SizedBox(
+              //             child: VideoPlayer(_controller),
+              //             height: MediaQuery.of(context).size.height,
+              //             width: MediaQuery.of(context).size.width,
+              //           ),
+              //           fit: BoxFit.fill,
+              //         ),
+              //       )
+              Image.asset(
+                  //  'assets/loginvideo2.gif',
+                  'assets/login6.gif',
+                  fit: BoxFit.fill,
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  filterQuality: FilterQuality.high,
+                )
+              : Transform(
+                  transform: Matrix4.diagonal3Values(scaleX, scaleY, 1),
+                  child: Transform.translate(
+                    offset: Offset(-(scaleX - 1) / 2 * size.width,
+                        -(scaleY - 1) / 2 * size.height + offsetY),
+                    child:
+                        // widget.color == 'Red'?
+                        //     Lottie.asset(
+                        //   // 'assets/food.json',
+                        //   'assets/login5.json',
+                        //   // 'assets/food2.json',
+                        //   // 'assets/food3.json',
+                        //   fit: BoxFit.fill,
+                        // )
+                        // SizedBox(
+                        //         child: FittedBox(
+                        //           child: SizedBox(
+                        //             child: VideoPlayer(_controller),
+                        //             height: MediaQuery.of(context).size.height,
+                        //             width: MediaQuery.of(context).size.width,
+                        //           ),
+                        //           fit: BoxFit.cover,
+                        //         ),
+                        //       )
+                        // Image.asset('assets/loginvideo.gif',
+                        // //  fit: BoxFit.contain,
+                        //  height: MediaQuery.of(context).size.height,
+                        //             width: MediaQuery.of(context).size.width, )
+                        // :
+                        Image.asset(
+                      'assets/grovey/Bg-${widget.color}.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
           Container(
             alignment: Alignment.center,
             child: Padding(
@@ -113,13 +174,14 @@ class _ContentCardState extends State<ContentCard> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: widget.color == 'Red'
-                          ? Lottie.asset(
-                              // 'assets/Loveats_change20.json',
-                              'assets/login2.json',
-                              // 'assets/food2.json',
-                              // 'assets/food3.json',
-                              fit: BoxFit.fill,
-                            )
+                          ? Container()
+                          //             Lottie.asset(
+                          //   // 'assets/food.json',
+                          //   'assets/login3.json',
+                          //   // 'assets/food2.json',
+                          //   // 'assets/food3.json',
+                          //   fit: BoxFit.contain,
+                          // )
                           : Image.asset(
                               'assets/grovey/Illustration-${widget.color}.png',
                               fit: BoxFit.contain,
@@ -224,22 +286,29 @@ class _ContentCardState extends State<ContentCard> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Text(widget.title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                height: 1.2,
-                fontSize: 30.0,
-                fontFamily: 'DMSerifDisplay',
-                color: Colors.white,
-              )),
-          Text(widget.subtitle,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14.0,
-                fontWeight: FontWeight.w300,
-                fontFamily: 'OpenSans',
-                color: Colors.white,
-              )),
+          widget.color == 'Red'
+              ? Container()
+              : Text(widget.title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    height: 1.2,
+                    fontSize: 30.0,
+                    fontFamily: 'DMSerifDisplay',
+                    color: Colors.white,
+                  )),
+          widget.color == 'Red'
+              ? Container()
+              : Text(widget.subtitle,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w300,
+                    fontFamily: 'OpenSans',
+                    color: Colors.white,
+                  )),
+          SizedBox(
+            height: widget.color == 'Red' ? 70 : 0,
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 36.0),
             child: MaterialButton(

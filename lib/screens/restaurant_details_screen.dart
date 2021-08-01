@@ -400,161 +400,159 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
       flexibleSpace: FlexibleSpaceBar(
         collapseMode: CollapseMode.parallax,
         titlePadding: EdgeInsets.zero,
-        background: Expanded(
-          child: Column(
-            // shrinkWrap: true,
-            children: <Widget>[
-              Expanded(
-                flex: 1,
-                child: Stack(
-                  children: <Widget>[
-                    Container(
-                      height: 250,
-                      child: Hero(
-                        tag: widget.restaurantDetails.restaurantName,
-                        child: new Swiper(
-                          autoplay: true,
-                          autoplayDelay: 4000,
-                          // index: indxx,
-                          // curve:  Curves.easeInBack,
-                          duration: 1500,
-                          //  outer: true,
+        background: Column(
+          // shrinkWrap: true,
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    height: 250,
+                    child: Hero(
+                      tag: widget.restaurantDetails.restaurantName,
+                      child: new Swiper(
+                        autoplay: true,
+                        autoplayDelay: 4000,
+                        // index: indxx,
+                        // curve:  Curves.easeInBack,
+                        duration: 1500,
+                        //  outer: true,
 
-                          itemBuilder: (BuildContext context, int i) {
-                            return GestureDetector(
-                              onTap: () {
-                                print('clicked');
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => ProductPage(
-                                //             id: this.banner[i]['id'],
-                                //             name: this.banner[i]['name'],
-                                //             api: 'banner',
-                                //             arabicname: this.banner[i]['name'],
-                                //             maincat: '',
-                                //             maincatAR: '',
-                                //             mainid: null,
-                                //             catlist: null)));
-                              },
-                              child: Center(
-                                child: new ClipRRect(
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(0)
-                                      // topLeft: Radius.circular(8)
-                                      ),
-                                  child:
-                                      // widget.restaurantDetails
-                                      //             .imagePath
-                                      //             .substring(
-                                      //                 0, 4) !=
-                                      //         'http'
-                                      //     ? Image
-                                      //         .network(
-                                      //       widget
-                                      //           .restaurantDetails
-                                      //           .imagePath,
-                                      //       width: MediaQuery.of(
-                                      //               context)
-                                      //           .size
-                                      //           .width,
-                                      //       height:
-                                      //           250,
-                                      //       fit: BoxFit
-                                      //           .cover,
-                                      //     )
-                                      //     : Image.asset(
-                                      //           'assets/images/logo.png',
-                                      //           width: MediaQuery.of(
-                                      //           context)
-                                      //       .size
-                                      //       .width,
-                                      //           height:
-                                      //       250,
-                                      //           fit: BoxFit
-                                      //       .cover,
-                                      //         ),
-                                      Image.asset(
-                                    'assets/images/d${i + 1}.png',
-                                    width: 180,
-                                    height: 180,
-                                    fit: BoxFit.cover,
-                                  ),
+                        itemBuilder: (BuildContext context, int i) {
+                          return GestureDetector(
+                            onTap: () {
+                              print('clicked');
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => ProductPage(
+                              //             id: this.banner[i]['id'],
+                              //             name: this.banner[i]['name'],
+                              //             api: 'banner',
+                              //             arabicname: this.banner[i]['name'],
+                              //             maincat: '',
+                              //             maincatAR: '',
+                              //             mainid: null,
+                              //             catlist: null)));
+                            },
+                            child: Center(
+                              child: new ClipRRect(
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(0)
+                                    // topLeft: Radius.circular(8)
+                                    ),
+                                child:
+                                    // widget.restaurantDetails
+                                    //             .imagePath
+                                    //             .substring(
+                                    //                 0, 4) !=
+                                    //         'http'
+                                    //     ? Image
+                                    //         .network(
+                                    //       widget
+                                    //           .restaurantDetails
+                                    //           .imagePath,
+                                    //       width: MediaQuery.of(
+                                    //               context)
+                                    //           .size
+                                    //           .width,
+                                    //       height:
+                                    //           250,
+                                    //       fit: BoxFit
+                                    //           .cover,
+                                    //     )
+                                    //     : Image.asset(
+                                    //           'assets/images/logo.png',
+                                    //           width: MediaQuery.of(
+                                    //           context)
+                                    //       .size
+                                    //       .width,
+                                    //           height:
+                                    //       250,
+                                    //           fit: BoxFit
+                                    //       .cover,
+                                    //         ),
+                                    Image.asset(
+                                  'assets/images/d${i + 1}.png',
+                                  width: 180,
+                                  height: 180,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                            );
-                          },
-                          // onIndexChanged: (value) {
-                          //   // print(value);
-                          //   if (mounted) {
-                          //     setState(() {
-                          //       // indxx = value;
-                          //     });
-                          //   }
-                          // },
-                          loop: true,
-                          indicatorLayout: PageIndicatorLayout.COLOR,
-                          // customLayoutOption: CustomLayoutOption(),
-                          // autoplay: true,
-                          // controller: _controller,
-                          itemCount: catlist.length,
-                          scrollDirection: Axis.horizontal,
-                          pagination: new SwiperPagination(
-                              alignment: Alignment.bottomCenter,
-                              // margin: EdgeInsets.only(right: 20, bottom: 8),
-                              builder: new DotSwiperPaginationBuilder(
-                                activeColor: AppColors.secondaryElement,
-                                color: Color(0xFF858585).withOpacity(0.8),
-                                // space: 5,
-                              )),
-                        ),
+                            ),
+                          );
+                        },
+                        // onIndexChanged: (value) {
+                        //   // print(value);
+                        //   if (mounted) {
+                        //     setState(() {
+                        //       // indxx = value;
+                        //     });
+                        //   }
+                        // },
+                        loop: true,
+                        indicatorLayout: PageIndicatorLayout.COLOR,
+                        // customLayoutOption: CustomLayoutOption(),
+                        // autoplay: true,
+                        // controller: _controller,
+                        itemCount: catlist.length,
+                        scrollDirection: Axis.horizontal,
+                        pagination: new SwiperPagination(
+                            alignment: Alignment.bottomCenter,
+                            // margin: EdgeInsets.only(right: 20, bottom: 8),
+                            builder: new DotSwiperPaginationBuilder(
+                              activeColor: AppColors.secondaryElement,
+                              color: Color(0xFF858585).withOpacity(0.8),
+                              // space: 5,
+                            )),
                       ),
                     ),
-                    DarkOverLay(gradient: Gradients.restaurantDetailsGradient),
-                    Positioned(
+                  ),
+                  DarkOverLay(gradient: Gradients.restaurantDetailsGradient),
+                  Positioned(
+                    child: Container(
+                      padding: EdgeInsets.only(
+                        right: Sizes.MARGIN_16,
+                        top: Sizes.MARGIN_40,
+                      ),
+                      child: Row(
+                        children: [],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                      bottom: 10,
+                      right: 15,
                       child: Container(
-                        padding: EdgeInsets.only(
-                          right: Sizes.MARGIN_16,
-                          top: Sizes.MARGIN_40,
-                        ),
+                        height: 30,
+                        width: 120,
+                        decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.7),
+                            borderRadius: BorderRadius.circular(6)),
                         child: Row(
-                          children: [],
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.grid_view,
+                              color: AppColors.white,
+                              size: 16,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              'View Gallery',
+                              style: TextStyle(
+                                  fontSize: 15, color: AppColors.white),
+                            )
+                          ],
                         ),
-                      ),
-                    ),
-                    Positioned(
-                        bottom: 10,
-                        right: 15,
-                        child: Container(
-                          height: 30,
-                          width: 120,
-                          decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.7),
-                              borderRadius: BorderRadius.circular(6)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.grid_view,
-                                color: AppColors.white,
-                                size: 16,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                'View Gallery',
-                                style: TextStyle(
-                                    fontSize: 15, color: AppColors.white),
-                              )
-                            ],
-                          ),
-                        ))
-                  ],
-                ),
+                      ))
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
 

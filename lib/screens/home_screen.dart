@@ -43,11 +43,13 @@ class _HomeScreenState extends State<HomeScreen> {
   int active_video = 0;
   bool loader = true;
   bool loader3 = true;
+  bool loader4 = true;
   bool loader2 = true;
   int totalRestaurent = 0;
   List resturants = [];
   List categories = [];
   List hotspotlist = [];
+  List popularitem = [];
   List<City> _cityList;
   City _currentCity;
   bool search = true;
@@ -81,6 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
     getRestaurent();
     getcateory();
     gethotspot();
+    getpopularitem();
     isUserGuest();
     super.initState();
   }
@@ -133,6 +136,14 @@ class _HomeScreenState extends State<HomeScreen> {
     hotspotlist = response['data'];
     print(hotspotlist);
     loader3 = false;
+    setState(() {});
+  }
+
+  getpopularitem() async {
+    var response = await AppService().getpopularitem();
+    popularitem = response['data'];
+    print(popularitem);
+    loader4 = false;
     setState(() {});
   }
 
@@ -539,16 +550,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Container(
                                     // width: MediaQuery.of(context).size.width*0.5,
                                     // color: Colors.red,
-                                    child:
-                                        Text(hotlist[i]['address'] + ' (500+)',
-                                            textAlign: TextAlign.center,
-                                            style: GoogleFonts.openSans(
-                                              textStyle:
-                                                  Styles.customNormalTextStyle(
-                                                color: Colors.black54,
-                                                fontSize: Sizes.TEXT_SIZE_14,
-                                              ),
-                                            )),
+                                    child: Text(
+                                        hotspotlist[i]['address'] + ' (500+)',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.openSans(
+                                          textStyle:
+                                              Styles.customNormalTextStyle(
+                                            color: Colors.black54,
+                                            fontSize: Sizes.TEXT_SIZE_14,
+                                          ),
+                                        )),
                                   ),
                                 ),
                               ],
@@ -572,6 +583,210 @@ class _HomeScreenState extends State<HomeScreen> {
                                               Styles.customNormalTextStyle(
                                             color: Colors.black54,
                                             fontSize: Sizes.TEXT_SIZE_16,
+                                          ),
+                                        )),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ));
+  }
+
+  popular() {
+    return List.generate(
+        popularitem.length,
+        (i) => InkWell(
+              onTap: () {
+                // Navigator.pushNamed(
+                //   context,
+                //   AppRouter.HotspotsDetailsScreen,
+                //   arguments: RestaurantDetails(
+                //       imagePath: hotspotlist[i]['image'],
+                //       restaurantName: hotspotlist[i]['name'],
+                //       restaurantAddress: hotspotlist[i]['address'],
+                //       // rating: hotspotlist[i]['rating'],
+                //       rating: '3.2',
+                //       category: '',
+                //       distance: hotspotlist[i]['distance'] + ' Km',
+                //       data: hotspotlist[i]),
+                // );
+                var data = RestaurentsModel.fromJson({
+                  'data': [popularitem[i]['restaurant']],
+                  'success': true,
+                  'message': 'ok'
+                });
+                print(popularitem[i]['restaurant']);
+                Navigator.pushNamed(context, AppRouter.Add_Extra, arguments: {
+                  'update': false,
+                  'item': popularitem[i],
+                  // 'restaurant': widget.restaurantDetails.data
+                  'restaurant': data.data[0]
+                });
+              },
+              child: Container(
+                height: 250,
+                width: MediaQuery.of(context).size.width / 1.2,
+                child: Card(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6.0),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(6),
+                                topRight: Radius.circular(6)),
+                            child: popularitem[i]['menu_image']
+                                        .substring(0, 4) ==
+                                    'http'
+                                ? Image.network(
+                                    popularitem[i]['menu_image'],
+                                    loadingBuilder: (BuildContext ctx,
+                                        Widget child,
+                                        ImageChunkEvent loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return Container(
+                                          height: 150,
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      AppColors
+                                                          .secondaryElement),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 150,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.asset(
+                                    popularitem[i]['menu_image'],
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 150,
+                                    fit: BoxFit.cover,
+                                  ),
+                          ),
+                          Positioned(
+                              right: 5,
+                              bottom: 5,
+                              child: Container(
+                                width: 90,
+                                padding: EdgeInsets.symmetric(vertical: 2),
+                                decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.7),
+                                    borderRadius: BorderRadius.circular(100)),
+                                child: Text('15 - 20\nMins',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.openSans(
+                                      textStyle: Styles.customNormalTextStyle(
+                                        color: AppColors.white,
+                                        fontSize: Sizes.TEXT_SIZE_12,
+                                      ),
+                                    )),
+                              ))
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(popularitem[i]['menu_name'],
+                                textAlign: TextAlign.left,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.dmSerifDisplay(
+                                  textStyle: Styles.customTitleTextStyle(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: Sizes.TEXT_SIZE_22,
+                                  ),
+                                )),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.star,
+                                  color: AppColors.secondaryElement,
+                                  size: 16,
+                                ),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    // width: MediaQuery.of(context).size.width*0.5,
+                                    // color: Colors.red,
+                                    child: Text('4.4' + ' Very good',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.openSans(
+                                          textStyle:
+                                              Styles.customNormalTextStyle(
+                                            color: AppColors.secondaryElement,
+                                            fontSize: Sizes.TEXT_SIZE_14,
+                                          ),
+                                        )),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    // width: MediaQuery.of(context).size.width*0.5,
+                                    // color: Colors.red,
+                                    child: Text(
+                                        popularitem[i]['restaurant']
+                                                ['rest_address'] +
+                                            ' (500+)',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.openSans(
+                                          textStyle:
+                                              Styles.customNormalTextStyle(
+                                            color: Colors.black54,
+                                            fontSize: Sizes.TEXT_SIZE_14,
+                                          ),
+                                        )),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    // width: MediaQuery.of(context).size.width*0.5,
+                                    // color: Colors.red,
+                                    child: Text(
+                                        // hotlist[i]['distance'] +
+                                        '\$' + popularitem[i]['menu_price'],
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.openSans(
+                                          textStyle:
+                                              Styles.customNormalTextStyle(
+                                            color: Colors.black54,
+                                            fontSize: Sizes.TEXT_SIZE_14,
                                           ),
                                         )),
                                   ),
@@ -865,83 +1080,83 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       InkWell(
-                        onTap: () => bottomSheetForLocation(context),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(left: 8.0),
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 0.0),
-                                    // child: Icon(Icons.share_location_outlined,
-                                    //     color: AppColors.black),
-                                    child: Image.asset(
-                                      "assets/images/driver.gif",
-                                      height: 40,
-                                      width: 40,
+                              child: InkWell(
+                                onTap: () => bottomSheetForLocation(context),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 0.0),
+                                      // child: Icon(Icons.share_location_outlined,
+                                      //     color: AppColors.black),
+                                      child: Image.asset(
+                                        "assets/images/driver.gif",
+                                        height: 40,
+                                        width: 40,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 2,
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.only(
-                                      bottom: 0,
+                                    SizedBox(
+                                      width: 2,
                                     ),
-                                    // decoration: BoxDecoration(
-                                    //     border: Border(
-                                    //         bottom: BorderSide(
-                                    //   color: Colors.black38,
-                                    //   width: 0.0,
-                                    // ))),
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 2.0),
-                                          child: RotationTransition(
-                                            turns: new AlwaysStoppedAnimation(
-                                                40 / 360),
-                                            child: Icon(
-                                              Icons.navigation_rounded,
-                                              color: AppColors.black,
-                                              size: 14,
+                                    Container(
+                                      padding: EdgeInsets.only(
+                                        bottom: 0,
+                                      ),
+                                      // decoration: BoxDecoration(
+                                      //     border: Border(
+                                      //         bottom: BorderSide(
+                                      //   color: Colors.black38,
+                                      //   width: 0.0,
+                                      // ))),
+                                      child: Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 2.0),
+                                            child: RotationTransition(
+                                              turns: new AlwaysStoppedAnimation(
+                                                  40 / 360),
+                                              child: Icon(
+                                                Icons.navigation_rounded,
+                                                color: AppColors.black,
+                                                size: 14,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: 2,
-                                        ),
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.50,
-                                          child: Text(
-                                            selected_address,
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontFamily: "Josefin Sans Thin",
-                                                fontSize: 16
-                                                // fontWeight: FontWeight.bold
-                                                ),
-                                            overflow: TextOverflow.ellipsis,
+                                          SizedBox(
+                                            width: 2,
                                           ),
-                                        ),
-                                      ],
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.50,
+                                            child: Text(
+                                              selected_address,
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 2.0),
-                                    child: Icon(
-                                      Icons.keyboard_arrow_down_rounded,
-                                      color: AppColors.black,
-                                      size: 18,
-                                    ),
-                                  )
-                                ],
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 2.0),
+                                      child: Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        color: AppColors.black,
+                                        size: 18,
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                             Row(
@@ -1364,7 +1579,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           // mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 5.0),
+                            SizedBox(height: 15.0),
                             Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12.0),
@@ -1393,10 +1608,66 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 5.0),
+                            SizedBox(height: 0.0),
                           ],
                         ),
-                  SizedBox(height: 5.0),
+                  loader4
+                      ? Container(
+                          height: 280,
+                          child: CarouselSlider(
+                              options: CarouselOptions(
+                                  enableInfiniteScroll: true, height: 260),
+                              items: List.generate(
+                                1,
+                                (ind) => SkeletonAnimation(
+                                  shimmerColor: Colors.grey[350],
+                                  shimmerDuration: 1100,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                    ),
+                                    margin: EdgeInsets.symmetric(horizontal: 4),
+                                  ),
+                                ),
+                              )),
+                        )
+                      : Column(
+                          // mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 0.0),
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: Text(
+                                  'Most Popular'.toUpperCase(),
+                                  textAlign: TextAlign.left,
+                                  style: Styles.customTitleTextStyle2(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: Sizes.TEXT_SIZE_16,
+                                  ),
+                                )),
+                            SizedBox(height: 5.0),
+
+                            // TravelCardList(
+                            //   cities: resturants,
+                            //   onCityChange: _handleCityChange,
+                            // ),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Row(
+                                  children: popular(),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 0.0),
+                          ],
+                        ),
+                  SizedBox(height: 0.0),
                   Container(
                     height: 180,
                     //  width: 180,

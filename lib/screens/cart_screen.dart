@@ -540,11 +540,11 @@ class _CartScreenState extends State<CartScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: List.generate(
-                      item['topping'].length,
+                      item['addon'].length,
                       (ind) => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(item['topping'][ind]['name'],
+                          Text(item['addon'][ind]['data']['name'],
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 16,
@@ -556,27 +556,27 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ),
                 ),
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: List.generate(
-                      item['drink'].length,
-                      (ind) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(item['drink'][ind]['name'],
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: AppColors.grey,
-                                letterSpacing: .3,
-                              )),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                // Center(
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.start,
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: List.generate(
+                //       item['drink'].length,
+                //       (ind) => Column(
+                //         crossAxisAlignment: CrossAxisAlignment.start,
+                //         children: [
+                //           Text(item['drink'][ind]['name'],
+                //               textAlign: TextAlign.center,
+                //               style: TextStyle(
+                //                 fontSize: 16,
+                //                 color: AppColors.grey,
+                //                 letterSpacing: .3,
+                //               )),
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 SizedBox(
                   height: 10,
                 ),

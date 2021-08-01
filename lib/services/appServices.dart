@@ -99,6 +99,20 @@ class AppService {
     }
   }
 
+  Future<dynamic> getpopularitem() async {
+    // String accessToken = await getAccessToken();
+    // dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      var resp = await this.dio.get(
+            "/demoRecommendedItems",
+          );
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   Future<dynamic> getaddon(id) async {
     // String accessToken = await getAccessToken();
     // dio.options.headers['Authorization'] = "Bearer " + accessToken;
