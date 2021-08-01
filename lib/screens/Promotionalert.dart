@@ -9,7 +9,8 @@ import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:toast/toast.dart';
 
 final List<String> images = [
-  'assets/images/main2.png',
+  // 'assets/images/main2.png',
+  'assets/loginvideo2.gif',
   'assets/images/Slide1.jpg',
   'assets/images/Slide2.jpg',
   'assets/images/Slide3.jpg',
