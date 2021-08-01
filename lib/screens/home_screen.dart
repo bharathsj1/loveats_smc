@@ -444,7 +444,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(6),
                                 topRight: Radius.circular(6)),
-                            child: hotspotlist[i]['image'].substring(0, 4) ==
+                            child: hotspotlist[i]['image'].substring(0, 4) !=
                                     'http'
                                 ? Image.network(
                                     hotspotlist[i]['image'],
@@ -472,10 +472,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fit: BoxFit.cover,
                                   )
                                 : Image.asset(
-                                    hotspotlist[i]['image'],
+                                    'assets/images/hot${i+1}.jpeg',
                                     width: MediaQuery.of(context).size.width,
                                     height: 150,
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.fill,
                                   ),
                           ),
                           Positioned(
@@ -573,9 +573,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     // width: MediaQuery.of(context).size.width*0.5,
                                     // color: Colors.red,
                                     child: Text(
-                                        hotlist[i]['distance'] +
+                                        hotspotlist[i]['distance'] +
                                             ' - \$' +
-                                            hotlist[i]['delivery'] +
+                                            hotspotlist[i]['charges'] +
                                             ' Delivery',
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.openSans(
@@ -627,8 +627,8 @@ class _HomeScreenState extends State<HomeScreen> {
           });
               },
               child: Container(
-                height: 250,
-                width: MediaQuery.of(context).size.width / 1.2,
+                height: 245,
+                width: MediaQuery.of(context).size.width / 1,
                 child: Card(
                   elevation: 0,
                   shape: RoundedRectangleBorder(
@@ -1605,63 +1605,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(height: 0.0),
                           ],
                         ),
-                  loader4
-                      ? Container(
-                          height: 280,
-                          child: CarouselSlider(
-                              options: CarouselOptions(
-                                  enableInfiniteScroll: true, height: 260),
-                              items: List.generate(
-                                1,
-                                (ind) => SkeletonAnimation(
-                                  shimmerColor: Colors.grey[350],
-                                  shimmerDuration: 1100,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                    ),
-                                    margin: EdgeInsets.symmetric(horizontal: 4),
-                                  ),
-                                ),
-                              )),
-                        )
-                      : Column(
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 0.0),
-                            Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0),
-                                child: Text(
-                                  'Most Popular'.toUpperCase(),
-                                  textAlign: TextAlign.left,
-                                  style: Styles.customTitleTextStyle2(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: Sizes.TEXT_SIZE_16,
-                                  ),
-                                )),
-                            SizedBox(height: 5.0),
-
-                            // TravelCardList(
-                            //   cities: resturants,
-                            //   onCityChange: _handleCityChange,
-                            // ),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Row(
-                                  children: popular(),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 0.0),
-                          ],
-                        ),
-                  SizedBox(height: 0.0),
+                 
                   Container(
                     height: 180,
                     //  width: 180,
@@ -1707,6 +1651,64 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         }),
                   ),
+                  SizedBox(height: 10.0),
+                   loader4
+                      ? Container(
+                          height: 280,
+                          child: CarouselSlider(
+                              options: CarouselOptions(
+                                  enableInfiniteScroll: true, height: 260),
+                              items: List.generate(
+                                1,
+                                (ind) => SkeletonAnimation(
+                                  shimmerColor: Colors.grey[350],
+                                  shimmerDuration: 1100,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                    ),
+                                    margin: EdgeInsets.symmetric(horizontal: 4),
+                                  ),
+                                ),
+                              )),
+                        )
+                      : Column(
+                          // mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 0.0),
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: Text(
+                                  'Most Popular'.toUpperCase(),
+                                  textAlign: TextAlign.left,
+                                  style: Styles.customTitleTextStyle2(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: Sizes.TEXT_SIZE_16,
+                                  ),
+                                )),
+                            SizedBox(height: 5.0),
+
+                            // TravelCardList(
+                            //   cities: resturants,
+                            //   onCityChange: _handleCityChange,
+                            // ),
+                            SingleChildScrollView(
+                              // scrollDirection: Axis.horizontal,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Column(
+                                  children: popular(),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 0.0),
+                          ],
+                        ),
+                  SizedBox(height: 0.0),
 
                   promolist.length == 0 ? Container() : SizedBox(height: 16.0),
 
@@ -1731,6 +1733,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           createUserProfilePhotos(numberOfProfilePhotos: 6),
                     ),
                   ),
+                  
                   SizedBox(height: 30.0),
                 ],
               ),
