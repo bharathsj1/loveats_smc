@@ -121,7 +121,7 @@ class _ContentCardState extends State<ContentCard> {
               //       )
               Image.asset(
                   //  'assets/loginvideo2.gif',
-                  'assets/login6.gif',
+                  'assets/login7.gif',
                   fit: BoxFit.fill,
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,

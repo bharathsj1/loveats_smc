@@ -141,6 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   getpopularitem() async {
     var response = await AppService().getpopularitem();
+
     popularitem = response['data'];
     print(popularitem);
     loader4 = false;
@@ -428,7 +429,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
               child: Container(
-                height: 250,
+                height: 260,
                 width: MediaQuery.of(context).size.width / 1.2,
                 child: Card(
                   elevation: 0,
@@ -444,39 +445,40 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(6),
                                 topRight: Radius.circular(6)),
-                            child: hotspotlist[i]['image'].substring(0, 4) ==
-                                    'http'
-                                ? Image.network(
-                                    hotspotlist[i]['image'],
-                                    loadingBuilder: (BuildContext ctx,
-                                        Widget child,
-                                        ImageChunkEvent loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child;
-                                      } else {
-                                        return Container(
-                                          height: 150,
-                                          child: Center(
-                                            child: CircularProgressIndicator(
-                                              valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
-                                                      AppColors
-                                                          .secondaryElement),
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Image.asset(
-                                    hotspotlist[i]['image'],
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  ),
+                            // child: hotspotlist[i]['image'].substring(0, 4) !=
+                            //         'http'
+                            //     ? Image.network(
+                            //         hotspotlist[i]['image'],
+                            //         loadingBuilder: (BuildContext ctx,
+                            //             Widget child,
+                            //             ImageChunkEvent loadingProgress) {
+                            //           if (loadingProgress == null) {
+                            //             return child;
+                            //           } else {
+                            //             return Container(
+                            //               height: 150,
+                            //               child: Center(
+                            //                 child: CircularProgressIndicator(
+                            //                   valueColor:
+                            //                       AlwaysStoppedAnimation<Color>(
+                            //                           AppColors
+                            //                               .secondaryElement),
+                            //                 ),
+                            //               ),
+                            //             );
+                            //           }
+                            //         },
+                            //         width: MediaQuery.of(context).size.width,
+                            //         height: 150,
+                            //         fit: BoxFit.cover,
+                            //       )
+
+                            child: Image.asset(
+                              'assets/images/hot${i + 1}.jpeg',
+                              width: MediaQuery.of(context).size.width,
+                              height: 170,
+                              fit: BoxFit.fill,
+                            ),
                           ),
                           Positioned(
                               right: 5,
@@ -516,32 +518,32 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontSize: Sizes.TEXT_SIZE_22,
                                   ),
                                 )),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.star,
-                                  color: AppColors.secondaryElement,
-                                  size: 16,
-                                ),
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Container(
-                                    // width: MediaQuery.of(context).size.width*0.5,
-                                    // color: Colors.red,
-                                    child: Text('4.4' + ' Very good',
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.openSans(
-                                          textStyle:
-                                              Styles.customNormalTextStyle(
-                                            color: AppColors.secondaryElement,
-                                            fontSize: Sizes.TEXT_SIZE_14,
-                                          ),
-                                        )),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.start,
+                            //   children: <Widget>[
+                            //     Icon(
+                            //       Icons.star,
+                            //       color: AppColors.secondaryElement,
+                            //       size: 16,
+                            //     ),
+                            //     Align(
+                            //       alignment: Alignment.topLeft,
+                            //       child: Container(
+                            //         // width: MediaQuery.of(context).size.width*0.5,
+                            //         // color: Colors.red,
+                            //         child: Text('4.4' + ' Very good',
+                            //             textAlign: TextAlign.center,
+                            //             style: GoogleFonts.openSans(
+                            //               textStyle:
+                            //                   Styles.customNormalTextStyle(
+                            //                 color: AppColors.secondaryElement,
+                            //                 fontSize: Sizes.TEXT_SIZE_14,
+                            //               ),
+                            //             )),
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
@@ -564,31 +566,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ],
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Container(
-                                    // width: MediaQuery.of(context).size.width*0.5,
-                                    // color: Colors.red,
-                                    child: Text(
-                                        hotlist[i]['distance'] +
-                                            ' - \$' +
-                                            hotlist[i]['delivery'] +
-                                            ' Delivery',
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.josefinSans(
-                                          textStyle:
-                                              Styles.customNormalTextStyle(
-                                            color: Colors.black54,
-                                            fontSize: Sizes.TEXT_SIZE_16,
-                                          ),
-                                        )),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.start,
+                            //   children: <Widget>[
+                            //     Align(
+                            //       alignment: Alignment.topLeft,
+                            //       child: Container(
+                            //         // width: MediaQuery.of(context).size.width*0.5,
+                            //         // color: Colors.red,
+                            //         child: Text(
+                            //             hotspotlist[i]['distance'] +
+                            //                 ' - \$' +
+                            //                 hotspotlist[i]['charges'] +
+                            //                 ' Delivery',
+                            //             textAlign: TextAlign.center,
+                            //             style: GoogleFonts.josefinSans(
+                            //               textStyle:
+                            //                   Styles.customNormalTextStyle(
+                            //                 color: Colors.black54,
+                            //                 fontSize: Sizes.TEXT_SIZE_16,
+                            //               ),
+                            //             )),
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
                           ],
                         ),
                       ),
@@ -632,7 +634,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: Container(
                 height: 250,
-                width: MediaQuery.of(context).size.width / 1.2,
+                width: MediaQuery.of(context).size.width / 1,
                 child: Card(
                   elevation: 0,
                   shape: RoundedRectangleBorder(
@@ -1611,63 +1613,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(height: 0.0),
                           ],
                         ),
-                  loader4
-                      ? Container(
-                          height: 280,
-                          child: CarouselSlider(
-                              options: CarouselOptions(
-                                  enableInfiniteScroll: true, height: 260),
-                              items: List.generate(
-                                1,
-                                (ind) => SkeletonAnimation(
-                                  shimmerColor: Colors.grey[350],
-                                  shimmerDuration: 1100,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                    ),
-                                    margin: EdgeInsets.symmetric(horizontal: 4),
-                                  ),
-                                ),
-                              )),
-                        )
-                      : Column(
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 0.0),
-                            Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0),
-                                child: Text(
-                                  'Most Popular'.toUpperCase(),
-                                  textAlign: TextAlign.left,
-                                  style: Styles.customTitleTextStyle2(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: Sizes.TEXT_SIZE_16,
-                                  ),
-                                )),
-                            SizedBox(height: 5.0),
 
-                            // TravelCardList(
-                            //   cities: resturants,
-                            //   onCityChange: _handleCityChange,
-                            // ),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Row(
-                                  children: popular(),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 0.0),
-                          ],
-                        ),
-                  SizedBox(height: 0.0),
                   Container(
                     height: 180,
                     //  width: 180,
@@ -1713,6 +1659,64 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         }),
                   ),
+                  SizedBox(height: 10.0),
+                  loader4
+                      ? Container(
+                          height: 280,
+                          child: CarouselSlider(
+                              options: CarouselOptions(
+                                  enableInfiniteScroll: true, height: 260),
+                              items: List.generate(
+                                1,
+                                (ind) => SkeletonAnimation(
+                                  shimmerColor: Colors.grey[350],
+                                  shimmerDuration: 1100,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                    ),
+                                    margin: EdgeInsets.symmetric(horizontal: 4),
+                                  ),
+                                ),
+                              )),
+                        )
+                      : Column(
+                          // mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 0.0),
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: Text(
+                                  'Most Popular'.toUpperCase(),
+                                  textAlign: TextAlign.left,
+                                  style: Styles.customTitleTextStyle2(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: Sizes.TEXT_SIZE_16,
+                                  ),
+                                )),
+                            SizedBox(height: 5.0),
+
+                            // TravelCardList(
+                            //   cities: resturants,
+                            //   onCityChange: _handleCityChange,
+                            // ),
+                            SingleChildScrollView(
+                              // scrollDirection: Axis.horizontal,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Column(
+                                  children: popular(),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 0.0),
+                          ],
+                        ),
+                  SizedBox(height: 0.0),
 
                   promolist.length == 0 ? Container() : SizedBox(height: 16.0),
 
@@ -1737,6 +1741,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           createUserProfilePhotos(numberOfProfilePhotos: 6),
                     ),
                   ),
+
                   SizedBox(height: 30.0),
                 ],
               ),

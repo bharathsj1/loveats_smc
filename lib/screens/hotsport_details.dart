@@ -703,31 +703,28 @@ class _HotSpotDetailsScreenState extends State<HotSpotDetailsScreen> {
 
   void getrest() async {
     fooditems.clear();
-    var data = await AppService().gethotspotRestaurant(widget.restaurantDetails.data['id'].toString());
+    var data = await AppService()
+        .gethotspotRestaurant(widget.restaurantDetails.data['id'].toString());
     print('this is a data');
     print(data);
-    if(data !=null){
- 
-    data.forEach((element) {
-      fooditems.add({
-        'name': element['restaurent_hotspot']['rest_name'],
-        'image': element['restaurent_hotspot']['rest_image'],
-        // 'image': 'assets/demo_card/Budapest/Budapest-Front.png',
-        // 'image': 'https://www.abeautifulplate.com/wp-content/uploads/2015/08/the-best-homemade-margherita-pizza-1-4-480x480.jpg',
-        'details':
-            'The Baan Thai restaurant in Fort Wayne, Indiana makes great use of high-resolution pictures to draw in website visitors.',
-        'price': '',
-        'qty': '1',
-        // 'id': element['restaurent_hotspot'].id,
-        'restaurantId': element['restaurent_hotspot']['id'],
-        'restaurantdata': element['restaurent_hotspot']
+    if (data != null) {
+      data.forEach((element) {
+        fooditems.add({
+          'name': element['restaurent_hotspot']['rest_name'],
+          'image': element['restaurent_hotspot']['rest_image'],
+          // 'image': 'assets/demo_card/Budapest/Budapest-Front.png',
+          // 'image': 'https://www.abeautifulplate.com/wp-content/uploads/2015/08/the-best-homemade-margherita-pizza-1-4-480x480.jpg',
+          'details':
+              'The Baan Thai restaurant in Fort Wayne, Indiana makes great use of high-resolution pictures to draw in website visitors.',
+          'price': '',
+          'qty': '1',
+          // 'id': element['restaurent_hotspot'].id,
+          'restaurantId': element['restaurent_hotspot']['id'],
+          'restaurantdata': element['restaurent_hotspot']
+        });
       });
-    });
-         
     }
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   List<Widget> itemsListTiles(context) {
@@ -840,32 +837,30 @@ class _HotSpotDetailsScreenState extends State<HotSpotDetailsScreen> {
           // child:
           InkWell(
         onTap: () {
-          Navigator.pushNamed(
-            context,
-            AppRouter.restaurantDetailsScreen,
-            arguments: RestaurantDetails(
-                // imagePath: fooditems[i]['restaurantdata']['rest_image'],
-                // restaurantName: fooditems[i]['restaurantdata']['rest_name'],
-                // restaurantAddress: fooditems[i]['restaurantdata']['rest_address'] +
-                //     fooditems[i]['restaurantdata']['rest_city'] +
-                //     ' ' +
-                //     fooditems[i]['restaurantdata']['rest_country'],
-                // rating: '0.0',
-                // category: fooditems[i]['restaurantdata']['rest_type'],
-                // distance: '0 Km',
-                // data: fooditems[i]['restaurantdata']
-                imagePath: fooditems[i]['restaurantdata'].restImage,
-                                      restaurantName: fooditems[i]['restaurantdata'].restName,
-                                      restaurantAddress: fooditems[i]['restaurantdata'].restAddress +
-                                          fooditems[i]['restaurantdata'].restCity +
-                                          ' ' +
-                                          fooditems[i]['restaurantdata'].restCountry,
-                                      rating: '0.0',
-                                      category: fooditems[i]['restaurantdata'].restType,
-                                      distance: '0 Km',
-                                      data: fooditems[i]['restaurantdata']
-            )
-          );
+          Navigator.pushNamed(context, AppRouter.restaurantDetailsScreen,
+              arguments: RestaurantDetails(
+                  // imagePath: fooditems[i]['restaurantdata']['rest_image'],
+                  // restaurantName: fooditems[i]['restaurantdata']['rest_name'],
+                  // restaurantAddress: fooditems[i]['restaurantdata']['rest_address'] +
+                  //     fooditems[i]['restaurantdata']['rest_city'] +
+                  //     ' ' +
+                  //     fooditems[i]['restaurantdata']['rest_country'],
+                  // rating: '0.0',
+                  // category: fooditems[i]['restaurantdata']['rest_type'],
+                  // distance: '0 Km',
+                  // data: fooditems[i]['restaurantdata']
+                  // imagePath: fooditems[i]['restaurantdata'].restImage,
+                  imagePath: "",
+                  restaurantName: fooditems[i]['restaurantdata'].restName,
+                  restaurantAddress:
+                      fooditems[i]['restaurantdata'].restAddress +
+                          fooditems[i]['restaurantdata'].restCity +
+                          ' ' +
+                          fooditems[i]['restaurantdata'].restCountry,
+                  rating: '0.0',
+                  category: fooditems[i]['restaurantdata'].restType,
+                  distance: '0 Km',
+                  data: fooditems[i]['restaurantdata']));
         },
         child: ListTile(
           leading: ClipRRect(
@@ -983,5 +978,4 @@ class _HotSpotDetailsScreenState extends State<HotSpotDetailsScreen> {
       // )
     );
   }
-
 }
