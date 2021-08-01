@@ -118,7 +118,7 @@ class _ContentCardState extends State<ContentCard> {
                               'assets/login2.json',
                               // 'assets/food2.json',
                               // 'assets/food3.json',
-                              fit: BoxFit.contain,
+                              fit: BoxFit.fill,
                             )
                           : Image.asset(
                               'assets/grovey/Illustration-${widget.color}.png',

@@ -118,8 +118,13 @@ class _CartScreenState extends State<CartScreen> {
     return List.generate(
         newcart[i].length,
         (index) => InkWell(
-              onTap: () {
-                updateitem(context, (newcart[i][index]), i, index);
+              onTap: () async {
+                updateitem(context, (newcart[i][index]),i,index);
+                //  await CartProvider().clearcart();
+                //  getcartlist();
+                //  setState(() {
+                   
+                //  });
               },
               child: Container(
                 color: Colors.white,
@@ -244,13 +249,13 @@ class _CartScreenState extends State<CartScreen> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: List.generate(
-                                    newcart[i][index]['topping'].length,
+                                    newcart[i][index]['addon'].length,
                                     (ind) => Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                            newcart[i][index]['topping'][ind]
+                                            newcart[i][index]['addon'][ind]['data']
                                                 ['name'],
                                             style: TextStyle(
                                               fontSize: 12,
@@ -261,27 +266,27 @@ class _CartScreenState extends State<CartScreen> {
                                     ),
                                   ),
                                 ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: List.generate(
-                                    newcart[i][index]['drink'].length,
-                                    (ind) => Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            newcart[i][index]['drink'][ind]
-                                                ['name'],
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: AppColors.secondaryElement,
-                                              letterSpacing: .3,
-                                            )),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                                // Column(
+                                //   mainAxisAlignment: MainAxisAlignment.start,
+                                //   crossAxisAlignment: CrossAxisAlignment.start,
+                                //   children: List.generate(
+                                //     newcart[i][index]['drink'].length,
+                                //     (ind) => Column(
+                                //       crossAxisAlignment:
+                                //           CrossAxisAlignment.start,
+                                //       children: [
+                                //         Text(
+                                //             newcart[i][index]['drink'][ind]
+                                //                 ['name'],
+                                //             style: TextStyle(
+                                //               fontSize: 12,
+                                //               color: AppColors.secondaryElement,
+                                //               letterSpacing: .3,
+                                //             )),
+                                //       ],
+                                //     ),
+                                //   ),
+                                // ),
                                 SizedBox(
                                   height: 15,
                                 ),
@@ -720,7 +725,7 @@ class _CartScreenState extends State<CartScreen> {
           onTap: () => Navigator.pop(context),
           child: Image.asset(
             ImagePath.arrowBackIcon,
-            color: AppColors.headingText,
+            color: AppColors.black,
           ),
         ),
         // centerTitle: true,

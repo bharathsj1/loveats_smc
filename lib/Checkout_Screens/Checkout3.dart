@@ -73,7 +73,7 @@ class _CheckOutScreen3State extends State<CheckOutScreen3> {
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: widget.checkoutdata['type'] =='subscription'?null: Text(
-          'Checkout (3/3)',
+          'Order Placed',
           style: Styles.customTitleTextStyle(
             color: AppColors.headingText,
             fontWeight: FontWeight.w500,
@@ -85,54 +85,54 @@ class _CheckOutScreen3State extends State<CheckOutScreen3> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-           widget.checkoutdata['type'] =='subscription'? Container(): Material(
-              elevation: 0.5,
-              child: Container(
-                height: 60,
-                color: AppColors.white,
-                // padding: EdgeInsets.only(top: 12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    createrow(AppColors.grey),
-                    Container(
-                        margin: EdgeInsets.only(left: 5),
-                        child: createrow(AppColors.grey)),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5.0),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.radio_button_checked_rounded,
-                                color: AppColors.secondaryElement,
-                              ),
-                            ],
-                          ),
-                        ),
-                        // SizedBox(
-                        //   height: 5,
-                        // ),
-                        // Text(
-                        //   'Delivery address',
-                        //   style: TextStyle(
-                        //       color: AppColors.secondaryElement, fontSize: 12),
-                        // ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
+          //  widget.checkoutdata['type'] =='subscription'? Container(): Material(
+          //     elevation: 0.5,
+          //     child: Container(
+          //       height: 60,
+          //       color: AppColors.white,
+          //       // padding: EdgeInsets.only(top: 12),
+          //       child: Row(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           createrow(AppColors.grey),
+          //           Container(
+          //               margin: EdgeInsets.only(left: 5),
+          //               child: createrow(AppColors.grey)),
+          //           SizedBox(
+          //             width: 8,
+          //           ),
+          //           Column(
+          //             crossAxisAlignment: CrossAxisAlignment.start,
+          //             mainAxisAlignment: MainAxisAlignment.center,
+          //             children: [
+          //               Padding(
+          //                 padding: const EdgeInsets.only(left: 5.0),
+          //                 child: Row(
+          //                   children: [
+          //                     Icon(
+          //                       Icons.radio_button_checked_rounded,
+          //                       color: AppColors.secondaryElement,
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //               // SizedBox(
+          //               //   height: 5,
+          //               // ),
+          //               // Text(
+          //               //   'Delivery address',
+          //               //   style: TextStyle(
+          //               //       color: AppColors.secondaryElement, fontSize: 12),
+          //               // ),
+          //             ],
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
             SizedBox(
-              height: 20,
+              height: 70,
             ),
            widget.checkoutdata['type'] =='subscription'? Center(child: Image.asset('assets/images/congras.gif')): Image.asset('assets/images/cooking.gif'),
             SizedBox(

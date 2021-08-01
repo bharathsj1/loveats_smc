@@ -130,7 +130,7 @@ class Service {
   }
 
   Future<String> signInWithApple() async {
-        await Service().removeGuest();
+    await Service().removeGuest();
 
     final result = await TheAppleSignIn.performRequests([
       AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
@@ -180,7 +180,7 @@ class Service {
   }
 
   Future<void> logout(BuildContext context) async {
-        await Service().removeGuest();
+    await Service().removeGuest();
 
     await _auth.signOut();
     loggedoutr();
@@ -193,6 +193,7 @@ class Service {
 
   Future signInWithEmail(
       BuildContext context, String email, String password) async {
+    await Service().removeGuest();
     print('SIGNIN_WITH_EMAIL');
     String message;
     UserData _user;
@@ -223,7 +224,6 @@ class Service {
         await setKeyData('photo', _user.data.custProfileImage ?? '');
         await setKeyData('userId', _user.data.id.toString());
         await setKeyData('userdata', jsonEncode(value.data['data']));
-
       }
     }).catchError((onError) {
       print('Here it is');

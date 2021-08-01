@@ -99,6 +99,20 @@ class AppService {
     }
   }
 
+  Future<dynamic> getaddon(id) async {
+    // String accessToken = await getAccessToken();
+    // dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      var resp = await this.dio.get(
+            "/getAddOns/"+id,
+          );
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   Future<String> getAccessToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString('accessToken');
@@ -172,6 +186,20 @@ class AppService {
       return null;
     }
   }
+  Future<dynamic> getallmethod() async {
+    String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      var resp = await this.dio.get(
+            "/getPaymentMethod",
+          );
+      print(resp);
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
 
   Future<dynamic> setaddress(data) async {
     String accessToken = await getAccessToken();
@@ -179,6 +207,20 @@ class AppService {
     try {
       FormData formData = new FormData.fromMap(data);
       var resp = await this.dio.post("/addUserAddress", data: formData);
+      print(resp);
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future<dynamic> savecard(data) async {
+    String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      FormData formData = new FormData.fromMap(data);
+      var resp = await this.dio.post("/storePaymentMethod", data: formData);
       print(resp);
       return resp.data;
     } catch (e) {

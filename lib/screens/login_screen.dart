@@ -1,4 +1,3 @@
-
 import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -26,9 +25,9 @@ import 'dart:io' show Platform;
 
 void main() => runApp(BackgroundVideo());
 
-    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  var token;
- 
+final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+var token;
+
 class BackgroundVideo extends StatefulWidget {
   @override
   _BackgroundVideoState createState() => _BackgroundVideoState();
@@ -117,8 +116,8 @@ class _BackgroundVideoState extends State<BackgroundVideo>
                     _buildHeader(),
                     SizedBox(height: Sizes.HEIGHT_130),
                     isLogin
-                        ? _buildForm(context,
-                            emailController, passwordController, _formKey)
+                        ? _buildForm(context, emailController,
+                            passwordController, _formKey)
                         : Container(),
                     SpaceH36(),
                     isLogin
@@ -129,7 +128,7 @@ class _BackgroundVideoState extends State<BackgroundVideo>
                 ),
               ),
               !isSignIn && !isLogin
-                  ?  Positioned(
+                  ? Positioned(
                       bottom: 90,
                       left: 20,
                       right: 20,
@@ -139,8 +138,13 @@ class _BackgroundVideoState extends State<BackgroundVideo>
                           // StringConst.SUBSCRIPTION,
                           'Create Account',
                           buttonHeight: 50,
-                           buttonTextStyle: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),color: AppColors.secondaryElement),
+                          buttonTextStyle: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: AppColors.secondaryElement),
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(builder: (_) => RegisterScreen()
@@ -161,13 +165,16 @@ class _BackgroundVideoState extends State<BackgroundVideo>
                       child: InkWell(
                         onTap: () => _signIn(),
                         child: Container(
-                           margin: EdgeInsets.symmetric(horizontal: 30),
+                          margin: EdgeInsets.symmetric(horizontal: 30),
                           child: PotbellyButton('Sign in',
-                          buttonHeight: 50,
-                          buttonTextStyle: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(100)),
-
-                           onTap: () => _signIn()
+                              buttonHeight: 50,
+                              buttonTextStyle: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100)),
+                              onTap: () => _signIn()
 
                               // style: TextStyle(
                               //     fontSize: 18.0, color: Colors.white),
@@ -217,7 +224,10 @@ class _BackgroundVideoState extends State<BackgroundVideo>
                             InkWell(
                                 onTap: () => _signIn(),
                                 child: Text('Back',
-                                     style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white)))
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white)))
                           ],
                         ),
                       ),
@@ -252,6 +262,7 @@ class _BackgroundVideoState extends State<BackgroundVideo>
     _controller.dispose();
   }
 }
+
 _signInWithEmail(BuildContext context, TextEditingController emailCont,
     TextEditingController passwordCont, key) async {
   if (key.currentState.validate()) {
@@ -260,30 +271,31 @@ _signInWithEmail(BuildContext context, TextEditingController emailCont,
     if (response['message'].contains('success')) {
       var udid;
       print(response['user']);
-       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      udid = androidInfo.id;
-    } else {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      udid = iosInfo.identifierForVendor;
-    }
-     _firebaseMessaging.getToken().then((tokeen) {
-      var data={
-        'device_id':udid,
-        'firebase_token':tokeen
-      };
-      AppService().savedeicetoken(data).then((value){
-        print(value);
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (_) => response['user'].data.custAccountType =='2'? RootScreen():RootScreen2()), (route) => false);
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        udid = androidInfo.id;
+      } else {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        udid = iosInfo.identifierForVendor;
+      }
+      _firebaseMessaging.getToken().then((tokeen) {
+        var data = {'device_id': udid, 'firebase_token': tokeen};
+        AppService().savedeicetoken(data).then((value) {
+          print(value);
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => response['user'].data.custAccountType == '2'
+                      ? RootScreen()
+                      : RootScreen2()),
+              (route) => false);
+        });
       });
-     });
     } else
       showSnackBar(context, response['message']);
   }
 }
-
 
 @override
 Widget _buildHeader() {
@@ -312,8 +324,8 @@ passwordValidation(String value) {
   else if (value.length < 8) return 'Password is wrong';
 }
 
-Widget _buildForm(context,
-    TextEditingController email, TextEditingController password, _key) {
+Widget _buildForm(context, TextEditingController email,
+    TextEditingController password, _key) {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: Sizes.MARGIN_48),
     child: Column(
@@ -341,8 +353,8 @@ Widget _buildForm(context,
               Align(
                 alignment: Alignment.topRight,
                 child: InkWell(
-                  onTap: () => Navigator
-                      .pushNamed(context,AppRouter.forgotPasswordScreen),
+                  onTap: () => Navigator.pushNamed(
+                      context, AppRouter.forgotPasswordScreen),
                   child: Container(
                     margin: EdgeInsets.only(top: Sizes.MARGIN_16),
                     child: Text(
@@ -365,10 +377,10 @@ _signInWithGoogle(BuildContext context) async {
   String message = await Service().signInWithGoogle();
   print(message);
 
-  if (message.contains('successfully')){
-    var type= await AppService().gettype();
-          var udid;
-       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  if (message.contains('successfully')) {
+    var type = await AppService().gettype();
+    var udid;
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       udid = androidInfo.id;
@@ -376,20 +388,18 @@ _signInWithGoogle(BuildContext context) async {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       udid = iosInfo.identifierForVendor;
     }
-     _firebaseMessaging.getToken().then((tokeen) {
-      var data={
-        'device_id':udid,
-        'firebase_token':tokeen
-      };
-      AppService().savedeicetoken(data).then((value){
+    _firebaseMessaging.getToken().then((tokeen) {
+      var data = {'device_id': udid, 'firebase_token': tokeen};
+      AppService().savedeicetoken(data).then((value) {
         print(value);
-      Navigator.pushAndRemoveUntil(context,
-         MaterialPageRoute(builder: (_) => type=='2'? RootScreen():RootScreen2()), (route) => false);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (_) => type == '2' ? RootScreen() : RootScreen2()),
+            (route) => false);
       });
-     });
-  }
-  
-  else if (message.contains('register screen')) {
+    });
+  } else if (message.contains('register screen')) {
     FirebaseAuth _auth = FirebaseAuth.instance;
     var currUser = await _auth.currentUser;
     print(currUser.uid);
@@ -411,10 +421,10 @@ _signInWithApple(BuildContext context) async {
   String message = await Service().signInWithApple();
   print(message);
 
-  if (message.contains('successfully')){
-     var type= await AppService().gettype();
-          var udid;
-       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  if (message.contains('successfully')) {
+    var type = await AppService().gettype();
+    var udid;
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       udid = androidInfo.id;
@@ -422,28 +432,27 @@ _signInWithApple(BuildContext context) async {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       udid = iosInfo.identifierForVendor;
     }
-     _firebaseMessaging.getToken().then((tokeen) {
-      var data={
-        'device_id':udid,
-        'firebase_token':tokeen
-      };
-      AppService().savedeicetoken(data).then((value){
+    _firebaseMessaging.getToken().then((tokeen) {
+      var data = {'device_id': udid, 'firebase_token': tokeen};
+      AppService().savedeicetoken(data).then((value) {
         print(value);
-      Navigator.pushAndRemoveUntil(context,
-         MaterialPageRoute(builder: (_) => type=='2'? RootScreen():RootScreen2()), (route) => false);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (_) => type == '2' ? RootScreen() : RootScreen2()),
+            (route) => false);
       });
-     });
-  }
-  else if (message.contains('register screen')) {
+    });
+  } else if (message.contains('register screen')) {
     FirebaseAuth _auth = FirebaseAuth.instance;
-    var currUser =  _auth.currentUser;
+    var currUser = _auth.currentUser;
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
           builder: (_) => RegisterScreen(
             email: currUser.email,
-             uid: currUser.uid,
-             type: 2,
+            uid: currUser.uid,
+            type: 2,
           ),
         ),
         (route) => false);
