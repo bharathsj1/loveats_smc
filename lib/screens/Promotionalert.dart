@@ -10,7 +10,8 @@ import 'package:toast/toast.dart';
 
 final List<String> images = [
   // 'assets/images/main2.png',
-  'assets/loginvideo2.gif',
+  // 'assets/loginvideo2.gif',
+  'assets/sub1.gif',
   'assets/images/Slide1.jpg',
   'assets/images/Slide2.jpg',
   'assets/images/Slide3.jpg',
@@ -224,7 +225,12 @@ class _PromotionPhotosScreenState extends State<PromotionPhotosScreen> {
                       ),
                     )
                   : PotbellyButton(
+
                       StringConst.SUBSCRIPTION,
+                      buttonHeight: 50,
+                      decoration: BoxDecoration(color: AppColors.white,borderRadius: BorderRadius.circular(10)),
+                      buttonTextStyle: TextStyle(color: AppColors.secondaryElement,fontSize: 16),
+                    
                       onTap: () {
                         Navigator.pushNamed(
                             context, AppRouter.subscriptionPage);
