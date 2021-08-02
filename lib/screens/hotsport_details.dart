@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/appServices.dart';
@@ -709,9 +710,18 @@ class _HotSpotDetailsScreenState extends State<HotSpotDetailsScreen> {
     print(data);
     if (data != null) {
       data.forEach((element) {
+        var data = RestaurentsModel.fromJson({
+          'data': [element['restaurent_hotspot']],
+          'success': true,
+          'message': 'ok'
+        });
         fooditems.add({
           'name': element['restaurent_hotspot']['rest_name'],
           'image': element['restaurent_hotspot']['rest_image'],
+          'address': element['restaurent_hotspot']['rest_address'],
+          'city': element['restaurent_hotspot']['rest_city'],
+          'country': element['restaurent_hotspot']['rest_country'],
+          'type': element['restaurent_hotspot']['rest_country'],
           // 'image': 'assets/demo_card/Budapest/Budapest-Front.png',
           // 'image': 'https://www.abeautifulplate.com/wp-content/uploads/2015/08/the-best-homemade-margherita-pizza-1-4-480x480.jpg',
           'details':
@@ -720,7 +730,7 @@ class _HotSpotDetailsScreenState extends State<HotSpotDetailsScreen> {
           'qty': '1',
           // 'id': element['restaurent_hotspot'].id,
           'restaurantId': element['restaurent_hotspot']['id'],
-          'restaurantdata': element['restaurent_hotspot']
+          'restaurantdata': data.data[0]
         });
       });
     }
@@ -849,16 +859,12 @@ class _HotSpotDetailsScreenState extends State<HotSpotDetailsScreen> {
                   // category: fooditems[i]['restaurantdata']['rest_type'],
                   // distance: '0 Km',
                   // data: fooditems[i]['restaurantdata']
-                  // imagePath: fooditems[i]['restaurantdata'].restImage,
-                  imagePath: "",
-                  restaurantName: fooditems[i]['restaurantdata'].restName,
-                  restaurantAddress:
-                      fooditems[i]['restaurantdata'].restAddress +
-                          fooditems[i]['restaurantdata'].restCity +
-                          ' ' +
-                          fooditems[i]['restaurantdata'].restCountry,
-                  rating: '0.0',
-                  category: fooditems[i]['restaurantdata'].restType,
+
+                  imagePath: fooditems[i]['image'],
+                  restaurantName: fooditems[i]['name'],
+                  restaurantAddress: fooditems[i]['address'],
+                  rating: '3.0',
+                  category: fooditems[i]['address'],
                   distance: '0 Km',
                   data: fooditems[i]['restaurantdata']));
         },
