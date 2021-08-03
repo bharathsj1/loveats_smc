@@ -249,7 +249,7 @@ class _NewSearchScreenState extends State<NewSearchScreen> {
                         // width: MediaQuery.of(context).size.width*0.5,
                         // color: Colors.red,
                         child: Text(
-                            '0.2 Miles away' + ' - \$' + '0.22' + ' Delivery',
+                            '0.2 Miles away' + ' - ${StringConst.currency}' + '0.22' + ' Delivery',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.openSans(
                               textStyle: Styles.customNormalTextStyle(
@@ -357,7 +357,7 @@ class _NewSearchScreenState extends State<NewSearchScreen> {
               children: [
                 // SizedBox(height: 4,),
                 Text(
-                  '\$' +
+                  '${StringConst.currency}' +
                       itemlist[i]['menu_price'] +
                       ' - ' +
                       itemlist[i]['menu_details'],

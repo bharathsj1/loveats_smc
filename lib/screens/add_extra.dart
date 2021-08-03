@@ -287,7 +287,7 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
                               padding: const EdgeInsets.only(top: 2.0),
                               child: Text(
                                   addons[index]['data']['name'] +
-                                      '  ( \$' +
+                                      '  ( ${StringConst.currency}' +
                                       addons[index]['data']['price'] +
                                       ' )',
                                   style: TextStyle(

@@ -183,7 +183,7 @@ class _AddNewCartState extends State<AddNewCart> {
                           //     child: Row(
                           //       mainAxisAlignment: MainAxisAlignment.center,
                           //       children: [
-                          //         Text('\$'+this.totalprice.toStringAsFixed(2),
+                          //         Text('${StringConst.currency}'+this.totalprice.toStringAsFixed(2),
                           //             style: TextStyle(
                           //                 fontSize: 40, color: Colors.black45)),
                           //       ],
@@ -278,7 +278,7 @@ class _AddNewCartState extends State<AddNewCart> {
                                                       decoration: BoxDecoration(
                                                           image: DecorationImage(
                                                               image: AssetImage(
-                                                                  'assets/images/visa.jpg'))),
+                                                                  'assets/images/visa2.jpg'))),
                                                     )),
                                                 Container(
                                                     width: 40,

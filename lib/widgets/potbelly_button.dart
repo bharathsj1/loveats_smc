@@ -32,6 +32,7 @@ class PotbellyButton extends StatelessWidget {
               buttonText,
               textAlign: TextAlign.center,
               style: buttonTextStyle,
+              
             ),
           ],
         ),

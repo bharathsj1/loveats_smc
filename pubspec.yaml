@@ -102,8 +102,6 @@ flutter:
     - assets/swipe/
     - assets/images/
     - assets/launcher/
-    - assets/demo_card/London/
-    - assets/demo_card/Pisa/
     - assets/demo_card/Budapest/
     - assets/demo_card/
     - assets/hero_card/

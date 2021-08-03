@@ -193,7 +193,7 @@ class _Myorder_DetailState extends State<Myorder_Detail> {
                               height: 6,
                             ),
                             Text(
-                              '\$' + widget.orderdata['total_amount'],
+                              '${StringConst.currency}' + widget.orderdata['total_amount'],
                               style: TextStyle(
                                   fontWeight: FontWeight.w300,
                                   fontSize: 15,

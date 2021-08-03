@@ -255,7 +255,7 @@ class CategoryDetailScreen extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              '\$' + fooditems[i]['price'],
+                              '${StringConst.currency}' + fooditems[i]['price'],
                               style: subHeadingTextStyle,
                             ),
                             SizedBox(

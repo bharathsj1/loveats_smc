@@ -189,7 +189,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(left: 5),
-                                      child: Text('\$' +
+                                      child: Text('${StringConst.currency}' +
                                           cartlist[index]['payableAmount']
                                               .toString()),
                                     ),
@@ -331,7 +331,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                 ],
                               ),
                             ),
-                            Text('\$${food['price']}'),
+                            Text('${StringConst.currency}${food['price']}'),
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Text(
@@ -398,7 +398,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                   const EdgeInsets.symmetric(vertical: 5.0),
                               child: Text(food['name']),
                             ),
-                            Text('\$${food['price']}'),
+                            Text('${StringConst.currency}${food['price']}'),
                             Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: Row(
@@ -475,7 +475,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('Subtotal'),
-                              Text('\$' + totalAmount.toStringAsFixed(2))
+                              Text('${StringConst.currency}' + totalAmount.toStringAsFixed(2))
                             ],
                           ),
                           SizedBox(
@@ -485,7 +485,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('Shipping'),
-                              Text('\$' + shipping.toStringAsFixed(2))
+                              Text('${StringConst.currency}' + shipping.toStringAsFixed(2))
                             ],
                           ),
                           SizedBox(
@@ -495,7 +495,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('Service Charges'),
-                              Text('\$' + charges.toStringAsFixed(2))
+                              Text('${StringConst.currency}' + charges.toStringAsFixed(2))
                             ],
                           ),
                           SizedBox(
@@ -513,7 +513,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                '\$' +
+                                '${StringConst.currency}' +
                                     (totalAmount + shipping + charges)
                                         .toStringAsFixed(2),
                                 style: TextStyle(fontWeight: FontWeight.bold),

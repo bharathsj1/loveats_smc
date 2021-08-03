@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:potbelly/values/values.dart';
 
 import 'demo_data.dart';
 import 'styles.dart';
@@ -78,7 +79,7 @@ class _HotelListViewState extends State<HotelList> with SingleTickerProviderStat
             )
           ],
         ),
-        Text('\$${hotel.price}', style: Styless.hotelPrice)
+        Text('${StringConst.currency}${hotel.price}', style: Styless.hotelPrice)
       ],
     );
   }

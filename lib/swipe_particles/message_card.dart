@@ -107,7 +107,7 @@ class EmailCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text('\$' + email['price'].toString(),
+                        Text('${StringConst.currency}' + email['price'].toString(),
                             style: TextStyle(
                               fontSize: 11,
                               letterSpacing: .3,

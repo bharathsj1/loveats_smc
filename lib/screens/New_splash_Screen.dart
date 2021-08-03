@@ -52,7 +52,7 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
           // 'assets/food2.json',
           // 'assets/food3.json',
           controller: animationcontroll,
-          
+
           onLoaded: (value) {
             animationcontroll.addStatusListener((status) {
               if (status == AnimationStatus.completed) {

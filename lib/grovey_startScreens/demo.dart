@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 import 'content_card.dart';
@@ -21,24 +22,24 @@ class _GooeyEdgeDemoState extends State<GooeyEdgeDemo> {
           ContentCard(
             color: 'Red',
             altColor: Color(0xFF4259B2),
-            title: "",
-            subtitle:
-                'Relax your mind and create inner peace with soothing sounds of nature.',
+            title: "Wake up gently \nwith sounds of nature",
+            subtitle: 'Relax your mind and create inner peace with soothing sounds of nature.',
             buttontext: 'Get Started',
           ),
           ContentCard(
             color: 'Yellow',
             altColor: Color(0xFF904E93),
-            title: '"Our recipes melt your taste buds"',
-            subtitle: 'Authentic Indian food Cuisines',
+            title: "Clear your mind \nwith breathing exercises",
+            subtitle:
+            'Melt your stresses and anxieties away with 50+ breathing exercises.',
             buttontext: 'Get Started',
           ),
           ContentCard(
             color: 'Blue',
             altColor: Color(0xFFFFB138),
-            title: "I definitely love kimchi",
+            title: "Fall asleep \nwith bedtime stories",
             subtitle:
-                'Enjoy a restful night’s sleep with relaxing activities and calm bedtime stories.',
+            'Enjoy a restful night’s sleep with relaxing activities and calm bedtime stories.',
             buttontext: 'Login',
           ),
         ],

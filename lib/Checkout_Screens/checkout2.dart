@@ -438,7 +438,7 @@ class _CheckOutScreen2State extends State<CheckOutScreen2> {
                             color: Colors.white),
                       ),
                       Text(
-                       '\$'+ total.toStringAsFixed(2),
+                       '${StringConst.currency}'+ total.toStringAsFixed(2),
                         style: TextStyle(
                             fontSize: 18,
                             fontFamily: 'roboto',

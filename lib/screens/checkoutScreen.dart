@@ -350,7 +350,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Subtotal'),
-                  Text('\$' + widget.checkoutdata['total'].toStringAsFixed(2))
+                  Text('${StringConst.currency}' + widget.checkoutdata['total'].toStringAsFixed(2))
                 ],
               ),
               SizedBox(
@@ -361,7 +361,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 children: [
                   Text('Shipping'),
                   Text(
-                      '\$' + widget.checkoutdata['shipping'].toStringAsFixed(2))
+                      '${StringConst.currency}' + widget.checkoutdata['shipping'].toStringAsFixed(2))
                 ],
               ),
               SizedBox(
@@ -371,7 +371,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Service Charges'),
-                  Text('\$' + widget.checkoutdata['charges'].toStringAsFixed(2))
+                  Text('${StringConst.currency}' + widget.checkoutdata['charges'].toStringAsFixed(2))
                 ],
               ),
               SizedBox(
@@ -389,7 +389,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    '\$' + total.toStringAsFixed(2),
+                    '${StringConst.currency}' + total.toStringAsFixed(2),
                     style: TextStyle(fontWeight: FontWeight.bold),
                   )
                 ],

@@ -161,7 +161,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
     return showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        backgroundColor: Colors.white.withOpacity(0),
+        backgroundColor: Colors.white.withOpacity(0.3),
         // backgroundColor: Colors.transparent,
         shape: RoundedRectangleBorder(
             // side: BorderSide(color: Colors.white70, width: 1),
@@ -173,20 +173,15 @@ class GooeyCarouselState extends State<GooeyCarousel>
               StateSetter setState /*You can rename this!*/) {
             return Padding(
               padding: EdgeInsets.only(
-                bottom: 25,
-                left: 15,
-                right: 15,
-              ),
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
               child: ClipRRect(
                 borderRadius: new BorderRadius.only(
                     topLeft: const Radius.circular(30.0),
-                    topRight: const Radius.circular(30.0),
-                    bottomLeft: const Radius.circular(30.0),
-                    bottomRight: const Radius.circular(30.0)),
+                    topRight: const Radius.circular(30.0)),
                 child: new BackdropFilter(
                   filter: new ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
                   child: new Container(
-                    height: MediaQuery.of(context).size.height / 1.8,
+                    height: MediaQuery.of(context).size.height / 2.1,
                     color: Colors.white.withOpacity(
                         0.2), //could change this to Color(0xFF737373),
                     //so you don't have to change MaterialApp canvasColor
@@ -211,10 +206,9 @@ class GooeyCarouselState extends State<GooeyCarousel>
                             ),
                             Center(
                                 child: Text(
-                              "LOGIN",
-                              textAlign: TextAlign.left,
+                              "Sign In",
                               style: TextStyle(
-                                  fontSize: 30,
+                                  fontSize: 25,
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.white),
                             )),
@@ -528,26 +522,23 @@ class GooeyCarouselState extends State<GooeyCarousel>
         // elevation: 5,
         context: context,
         isScrollControlled: true,
-        backgroundColor: Colors.white.withOpacity(0.0),
+        backgroundColor: Colors.white.withOpacity(0.4),
         // backgroundColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          // side: BorderSide(color: Colors.white70, width: 1),
-          borderRadius: new BorderRadius.only(
-            topLeft: const Radius.circular(30.0),
-            topRight: const Radius.circular(30.0),
-          ),
-        ),
+            // side: BorderSide(color: Colors.white70, width: 1),
+            borderRadius: new BorderRadius.only(
+                topLeft: const Radius.circular(30.0),
+                topRight: const Radius.circular(30.0))),
         builder: (context) {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
             return Padding(
-              padding: EdgeInsets.only(bottom: 15, left: 15, right: 15),
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
               child: ClipRRect(
                 borderRadius: new BorderRadius.only(
                     topLeft: const Radius.circular(30.0),
-                    topRight: const Radius.circular(30.0),
-                    bottomLeft: const Radius.circular(30.0),
-                    bottomRight: const Radius.circular(30.0)),
+                    topRight: const Radius.circular(30.0)),
                 child: new BackdropFilter(
                   filter: new ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
                   child: new Container(

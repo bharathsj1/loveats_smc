@@ -518,32 +518,58 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontSize: Sizes.TEXT_SIZE_22,
                                   ),
                                 )),
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.start,
-                            //   children: <Widget>[
-                            //     Icon(
-                            //       Icons.star,
-                            //       color: AppColors.secondaryElement,
-                            //       size: 16,
-                            //     ),
-                            //     Align(
-                            //       alignment: Alignment.topLeft,
-                            //       child: Container(
-                            //         // width: MediaQuery.of(context).size.width*0.5,
-                            //         // color: Colors.red,
-                            //         child: Text('4.4' + ' Very good',
-                            //             textAlign: TextAlign.center,
-                            //             style: GoogleFonts.openSans(
-                            //               textStyle:
-                            //                   Styles.customNormalTextStyle(
-                            //                 color: AppColors.secondaryElement,
-                            //                 fontSize: Sizes.TEXT_SIZE_14,
-                            //               ),
-                            //             )),
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.star,
+                                  color: AppColors.secondaryElement,
+                                  size: 16,
+                                ),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    // width: MediaQuery.of(context).size.width*0.5,
+                                    // color: Colors.red,
+                                    child: Text('4.4' + ' Very good',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.openSans(
+                                          textStyle:
+                                              Styles.customNormalTextStyle(
+                                            color: AppColors.secondaryElement,
+                                            fontSize: Sizes.TEXT_SIZE_14,
+                                          ),
+                                        )),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.25,
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Container(
+                                      // width: MediaQuery.of(context).size.width*0.5,
+                                      // color: Colors.red,
+                                      child: Text(
+                                          hotspotlist[i]['address'] + ' (500+)',
+                                          textAlign: TextAlign.left,
+                                          style: GoogleFonts.openSans(
+                                            textStyle:
+                                                Styles.customNormalTextStyle(
+                                              color: Colors.black54,
+                                              fontSize: Sizes.TEXT_SIZE_14,
+                                            ),
+                                          )),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
@@ -553,7 +579,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     // width: MediaQuery.of(context).size.width*0.5,
                                     // color: Colors.red,
                                     child: Text(
-                                        hotspotlist[i]['address'] + ' (500+)',
+                                        hotspotlist[i]['distance'] +
+                                            ' - ${StringConst.currency}' +
+                                            hotspotlist[i]['charges'] +
+                                            ' Delivery',
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.openSans(
                                           textStyle:
@@ -782,7 +811,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     // color: Colors.red,
                                     child: Text(
                                         // hotlist[i]['distance'] +
-                                        '\$' + popularitem[i]['menu_price'],
+                                        '${StringConst.currency}' +
+                                            popularitem[i]['menu_price'],
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.openSans(
                                           textStyle:
@@ -1490,12 +1520,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               data: resturants[0]),
                         );
                       },
-                      child: Lottie.asset(
-                          // 'assets/food.json',
-                          'assets/restaurant2.json',
-                          // 'assets/food2.json',
-                          // 'assets/food3.json',
-
+                      child: Lottie.asset('assets/restaurant2.json',
                           width: MediaQuery.of(context).size.width - 25,
                           height: lottie && !loader ? 200 : 0,
                           fit: BoxFit.fill, onLoaded: (value) {

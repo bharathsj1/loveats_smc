@@ -423,7 +423,7 @@ class _HotSpotDetailsScreenState extends State<HotSpotDetailsScreen> {
                                             child: Text(
                                                 widget.restaurantDetails
                                                         .distance +
-                                                    ' - \$' +
+                                                    ' - ${StringConst.currency}' +
                                                     '0.22' +
                                                     ' Delivery',
                                                 textAlign: TextAlign.center,
@@ -911,7 +911,7 @@ class _HotSpotDetailsScreenState extends State<HotSpotDetailsScreen> {
               Row(
                 children: [
                   // Text(
-                  //   '\$' + fooditems[i]['price'],
+                  //   '${StringConst.currency}' + fooditems[i]['price'],
                   //   style: subHeadingTextStyle,
                   // ),
                   //        Card(
@@ -963,7 +963,7 @@ class _HotSpotDetailsScreenState extends State<HotSpotDetailsScreen> {
                       // color: Colors.red,
                       child: Text(
                           widget.restaurantDetails.distance +
-                              ' - \$' +
+                              ' - ${StringConst.currency}' +
                               '0.22' +
                               ' Delivery',
                           textAlign: TextAlign.center,
