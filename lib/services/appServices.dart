@@ -215,6 +215,17 @@ class AppService {
     }
   }
 
+  Future<dynamic> getitems(data) async {
+    try {
+      FormData formData = new FormData.fromMap(data);
+      var resp = await this.dio.post("/getItemsServiceType", data: formData);
+      print(resp);
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
   Future<dynamic> setaddress(data) async {
     String accessToken = await getAccessToken();
     dio.options.headers['Authorization'] = "Bearer " + accessToken;

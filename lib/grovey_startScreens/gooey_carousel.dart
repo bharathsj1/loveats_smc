@@ -55,7 +55,6 @@ class GooeyCarouselState extends State<GooeyCarousel>
   @override
   void dispose() {
     _ticker.dispose();
-
     super.dispose();
   }
 

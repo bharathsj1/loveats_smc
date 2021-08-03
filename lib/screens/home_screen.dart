@@ -56,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List searchlist = [];
   bool _isGuest = false;
   bool lottie = false;
+  bool lottie2 = false;
   String selected_address = 'Your Location';
   List subscription = [
     'assets/images/sub3.png',
@@ -472,7 +473,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fit: BoxFit.cover,
                                   )
                                 : Image.asset(
-                                    'assets/images/hot${i+1}.jpeg',
+                                    'assets/images/hot${i + 1}.jpeg',
                                     width: MediaQuery.of(context).size.width,
                                     height: 150,
                                     fit: BoxFit.fill,
@@ -546,23 +547,23 @@ class _HomeScreenState extends State<HomeScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Container(
-                                 
-                                  width: MediaQuery.of(context).size.width / 1.25,
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.25,
                                   child: Align(
                                     alignment: Alignment.topLeft,
                                     child: Container(
                                       // width: MediaQuery.of(context).size.width*0.5,
                                       // color: Colors.red,
-                                      child:
-                                          Text(hotspotlist[i]['address'] + ' (500+)',
-                                              textAlign: TextAlign.left,
-                                              style: GoogleFonts.openSans(
-                                                textStyle:
-                                                    Styles.customNormalTextStyle(
-                                                  color: Colors.black54,
-                                                  fontSize: Sizes.TEXT_SIZE_14,
-                                                ),
-                                              )),
+                                      child: Text(
+                                          hotspotlist[i]['address'] + ' (500+)',
+                                          textAlign: TextAlign.left,
+                                          style: GoogleFonts.openSans(
+                                            textStyle:
+                                                Styles.customNormalTextStyle(
+                                              color: Colors.black54,
+                                              fontSize: Sizes.TEXT_SIZE_14,
+                                            ),
+                                          )),
                                     ),
                                   ),
                                 ),
@@ -621,14 +622,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 //       distance: hotspotlist[i]['distance'] + ' Km',
                 //       data: hotspotlist[i]),
                 // );
-               var data= RestaurentsModel.fromJson({'data': [popularitem[i]['restaurant']],'success':true,'message':'ok'});
+                var data = RestaurentsModel.fromJson({
+                  'data': [popularitem[i]['restaurant']],
+                  'success': true,
+                  'message': 'ok'
+                });
                 print(popularitem[i]['restaurant']);
                 Navigator.pushNamed(context, AppRouter.Add_Extra, arguments: {
-            'update': false,
-            'item': popularitem[i],
-            // 'restaurant': widget.restaurantDetails.data
-            'restaurant':data.data[0]
-          });
+                  'update': false,
+                  'item': popularitem[i],
+                  // 'restaurant': widget.restaurantDetails.data
+                  'restaurant': data.data[0]
+                });
               },
               child: Container(
                 height: 245,
@@ -647,7 +652,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(6),
                                 topRight: Radius.circular(6)),
-                            child: popularitem[i]['menu_image'].substring(0, 4) ==
+                            child: popularitem[i]['menu_image']
+                                        .substring(0, 4) ==
                                     'http'
                                 ? Image.network(
                                     popularitem[i]['menu_image'],
@@ -753,16 +759,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Container(
                                     // width: MediaQuery.of(context).size.width*0.5,
                                     // color: Colors.red,
-                                    child:
-                                        Text(popularitem[i]['restaurant']['rest_address'] + ' (500+)',
-                                            textAlign: TextAlign.center,
-                                            style: GoogleFonts.openSans(
-                                              textStyle:
-                                                  Styles.customNormalTextStyle(
-                                                color: Colors.black54,
-                                                fontSize: Sizes.TEXT_SIZE_14,
-                                              ),
-                                            )),
+                                    child: Text(
+                                        popularitem[i]['restaurant']
+                                                ['rest_address'] +
+                                            ' (500+)',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.openSans(
+                                          textStyle:
+                                              Styles.customNormalTextStyle(
+                                            color: Colors.black54,
+                                            fontSize: Sizes.TEXT_SIZE_14,
+                                          ),
+                                        )),
                                   ),
                                 ),
                               ],
@@ -777,9 +785,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     // color: Colors.red,
                                     child: Text(
                                         // hotlist[i]['distance'] +
-                                            '${StringConst.currency}' +
-                                            popularitem[i]['menu_price']
-                                            ,
+                                        '${StringConst.currency}' +
+                                            popularitem[i]['menu_price'],
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.openSans(
                                           textStyle:
@@ -990,22 +997,25 @@ class _HomeScreenState extends State<HomeScreen> {
               : null,
           child: InkWell(
             onTap: () {
-              if (deliverytype == id) {
-                deliverytype = null;
-                resturants = searchlist;
-                setState(() {});
-              } else {
-                deliverytype = id;
-                print(resturants);
-                resturants = searchlist
-                    .where((pro) => deliverytype == 0
-                        ? pro.delivery == 1
-                        : deliverytype == 1
-                            ? pro.pickup == 1
-                            : pro.tableService == 1)
-                    .toList();
-                setState(() {});
-              }
+              // if (deliverytype == id) {
+              //   deliverytype = null;
+              //   resturants = searchlist;
+              //   setState(() {});
+              // } else {
+              //   deliverytype = id;
+              //   print(resturants);
+              //   resturants = searchlist
+              //       .where((pro) => deliverytype == 0
+              //           ? pro.delivery == 1
+              //           : deliverytype == 1
+              //               ? pro.pickup == 1
+              //               : pro.tableService == 1)
+              //       .toList();
+              //   setState(() {});
+              // }
+              Navigator.pushNamed(context, AppRouter.Filter_Items, arguments: {
+                'name': name == 'Delivery' ? 'Deliverable' : 'Pickup'
+              });
             },
             child: Container(
                 width: width,
@@ -1079,18 +1089,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       InkWell(
-                       
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(left: 8.0),
                               child: InkWell(
-                                 onTap: () => bottomSheetForLocation(context),
+                                onTap: () => bottomSheetForLocation(context),
                                 child: Row(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(bottom: 0.0),
+                                      padding:
+                                          const EdgeInsets.only(bottom: 0.0),
                                       // child: Icon(Icons.share_location_outlined,
                                       //     color: AppColors.black),
                                       child: Image.asset(
@@ -1447,7 +1457,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  loader || lottie ==false
+                  loader || lottie == false
                       ? Center(
                           child: Container(
                             width: MediaQuery.of(context).size.width - 16,
@@ -1466,39 +1476,97 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       : Container(),
 
-                   Center(
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                AppRouter.restaurantDetailsScreen,
-                                arguments: RestaurantDetails(
-                                    imagePath: resturants[0].restImage,
-                                    restaurantName: resturants[0].restName,
-                                    restaurantAddress:
-                                        resturants[0].restAddress +
-                                            resturants[0].restCity +
-                                            ' ' +
-                                            resturants[0].restCountry,
-                                    rating: '0.0',
-                                    category: resturants[0].restType,
-                                    distance: '0 Km',
-                                    data: resturants[0]),
-                              );
-                            },
-                            child: Lottie.asset(
-                                'assets/restaurant2.json',
-                                width: MediaQuery.of(context).size.width - 25,
-                                height:lottie && !loader? 200:0,
-                                fit: BoxFit.fill, onLoaded: (value) {
-                              setState(() {
-                                lottie = true;
-                              });
-                              print('value');
-                            }),
+                  Center(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          AppRouter.restaurantDetailsScreen,
+                          arguments: RestaurantDetails(
+                              imagePath: resturants[0].restImage,
+                              restaurantName: resturants[0].restName,
+                              restaurantAddress: resturants[0].restAddress +
+                                  resturants[0].restCity +
+                                  ' ' +
+                                  resturants[0].restCountry,
+                              rating: '0.0',
+                              category: resturants[0].restType,
+                              distance: '0 Km',
+                              data: resturants[0]),
+                        );
+                      },
+                      child: Lottie.asset('assets/restaurant2.json',
+                          width: MediaQuery.of(context).size.width - 25,
+                          height: lottie && !loader ? 200 : 0,
+                          fit: BoxFit.fill, onLoaded: (value) {
+                        setState(() {
+                          lottie = true;
+                        });
+                        print('value');
+                      }),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: Text('Recipe'.toUpperCase(),
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.dmSerifDisplay(
+                            textStyle: Styles.customTitleTextStyle2(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: Sizes.TEXT_SIZE_22,
+                            ),
+                          ))),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  loader
+                      ? Center(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width - 16,
+                            height: 200,
+                            child: SkeletonAnimation(
+                              shimmerColor: Colors.grey[350],
+                              shimmerDuration: 1100,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 4),
+                              ),
+                            ),
                           ),
-                        ),
-                      // : Container(),
+                        )
+                      : 
+     Center(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          AppRouter.HotspotsDetailsScreen,
+                          arguments: RestaurantDetails(
+                              imagePath: hotspotlist[0]['image'],
+                              restaurantName: hotspotlist[0]['name'],
+                              restaurantAddress: hotspotlist[0]['address'],
+                              // rating: hotspotlist[0]['rating'],
+                              rating: '3.2',
+                              category: '',
+                              distance: hotspotlist[0]['distance'] + ' Km',
+                              data: hotspotlist[0]),
+                        );
+                      },
+                      child: Image.asset(
+        //  'assets/loginvideo2.gif',
+         'assets/recipe1.gif',
+         fit: BoxFit.fill,
+         height: 200,
+                    width: MediaQuery.of(context).size.width-25, filterQuality: FilterQuality.high, )
+                    ),
+                  ),
+                  // : Container(),
                   // loader
                   //     ? Container(
                   //         height: 280,
@@ -1605,7 +1673,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(height: 0.0),
                           ],
                         ),
-                 
+
                   Container(
                     height: 180,
                     //  width: 180,
@@ -1652,7 +1720,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         }),
                   ),
                   SizedBox(height: 10.0),
-                   loader4
+                  loader4
                       ? Container(
                           height: 280,
                           child: CarouselSlider(
@@ -1733,7 +1801,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           createUserProfilePhotos(numberOfProfilePhotos: 6),
                     ),
                   ),
-                  
+
                   SizedBox(height: 30.0),
                 ],
               ),
@@ -1898,7 +1966,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'Go to Login Screen',
                       style: TextStyle(fontSize: 15.0),
                     ),
-                    onPressed: ()async {
+                    onPressed: () async {
                       await Service().removeGuest();
                       Provider.of<ProviderService>(context, listen: false)
                           .allfalse();
