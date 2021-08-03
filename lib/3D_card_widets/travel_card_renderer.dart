@@ -186,7 +186,7 @@ class TravelCardRenderer extends StatelessWidget {
                                     // width: MediaQuery.of(context).size.width*0.5,
                                     // color: Colors.red,
                                     child: Text(
-                                      '0.3 miles away - \$0.5 Delivery',
+                                      '0.3 miles away - ${StringConst.currency}0.5 Delivery',
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.openSans(textStyle:Styles.customNormalTextStyle(
                                         color: Colors.black54,

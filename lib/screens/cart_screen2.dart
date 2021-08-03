@@ -191,7 +191,7 @@ class _OldCartScreenState extends State<OldCartScreen> {
                                     width:
                                         MediaQuery.of(context).size.width * 0.4,
                                     child: Text(
-                                        '\$' +
+                                        '${StringConst.currency}' +
                                             newcart[i][index]['payableAmount'],
                                         style: TextStyle(
                                             fontSize: 18,
@@ -453,7 +453,7 @@ class _OldCartScreenState extends State<OldCartScreen> {
                         Padding(
                           padding: const EdgeInsets.only(left: 20.0),
                           child: Text(
-                              '\$' +
+                              '${StringConst.currency}' +
                                   (totalAmount + shipping + charges)
                                       .toStringAsFixed(2),
                               style: TextStyle(fontWeight: FontWeight.bold)),
@@ -619,17 +619,17 @@ class _OldCartScreenState extends State<OldCartScreen> {
                                     height: 10,
                                   ),
                                   pricerow('Subtotal',
-                                      '\$' + totalAmount.toStringAsFixed(2)),
+                                      '${StringConst.currency}' + totalAmount.toStringAsFixed(2)),
                                   SizedBox(
                                     height: 10,
                                   ),
                                   pricerow('Value Added Tax',
-                                      '\$' + charges.toStringAsFixed(2)),
+                                      '${StringConst.currency}' + charges.toStringAsFixed(2)),
                                   SizedBox(
                                     height: 10,
                                   ),
                                   pricerow('Delivery Charges',
-                                      '\$' + shipping.toStringAsFixed(2)),
+                                      '${StringConst.currency}' + shipping.toStringAsFixed(2)),
                                   SizedBox(
                                     height: 15,
                                   ),
@@ -642,7 +642,7 @@ class _OldCartScreenState extends State<OldCartScreen> {
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold)),
                                       Text(
-                                        '\$' +
+                                        '${StringConst.currency}' +
                                             (totalAmount + shipping + charges)
                                                 .toStringAsFixed(2),
                                         style: TextStyle(

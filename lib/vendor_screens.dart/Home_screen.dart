@@ -116,7 +116,7 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                       Row(
                         children: [
                           Text(
-                            '\$' +
+                            '${StringConst.currency}' +
                                 orderslist[i]['order_detail'][0]['total_price'],
                             style: TextStyle(
                               color: AppColors.secondaryElement,

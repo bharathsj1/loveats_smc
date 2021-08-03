@@ -545,21 +545,25 @@ class _HomeScreenState extends State<HomeScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Container(
-                                    // width: MediaQuery.of(context).size.width*0.5,
-                                    // color: Colors.red,
-                                    child:
-                                        Text(hotspotlist[i]['address'] + ' (500+)',
-                                            textAlign: TextAlign.center,
-                                            style: GoogleFonts.openSans(
-                                              textStyle:
-                                                  Styles.customNormalTextStyle(
-                                                color: Colors.black54,
-                                                fontSize: Sizes.TEXT_SIZE_14,
-                                              ),
-                                            )),
+                                Container(
+                                 
+                                  width: MediaQuery.of(context).size.width / 1.25,
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Container(
+                                      // width: MediaQuery.of(context).size.width*0.5,
+                                      // color: Colors.red,
+                                      child:
+                                          Text(hotspotlist[i]['address'] + ' (500+)',
+                                              textAlign: TextAlign.left,
+                                              style: GoogleFonts.openSans(
+                                                textStyle:
+                                                    Styles.customNormalTextStyle(
+                                                  color: Colors.black54,
+                                                  fontSize: Sizes.TEXT_SIZE_14,
+                                                ),
+                                              )),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -574,7 +578,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     // color: Colors.red,
                                     child: Text(
                                         hotspotlist[i]['distance'] +
-                                            ' - \$' +
+                                            ' - ${StringConst.currency}' +
                                             hotspotlist[i]['charges'] +
                                             ' Delivery',
                                         textAlign: TextAlign.center,
@@ -773,7 +777,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     // color: Colors.red,
                                     child: Text(
                                         // hotlist[i]['distance'] +
-                                            '\$' +
+                                            '${StringConst.currency}' +
                                             popularitem[i]['menu_price']
                                             ,
                                         textAlign: TextAlign.center,
@@ -1483,11 +1487,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             },
                             child: Lottie.asset(
-                                // 'assets/food.json',
                                 'assets/restaurant2.json',
-                                // 'assets/food2.json',
-                                // 'assets/food3.json',
-
                                 width: MediaQuery.of(context).size.width - 25,
                                 height:lottie && !loader? 200:0,
                                 fit: BoxFit.fill, onLoaded: (value) {

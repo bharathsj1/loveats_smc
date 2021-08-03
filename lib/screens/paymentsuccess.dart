@@ -221,7 +221,7 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
                                   '#' + widget.checkoutdata['orderid']):Container(),
                               
                               // generaterow('Email', widget.checkoutdata['email']),
-                              generaterow('Amount', '\$'+widget.checkoutdata['amount'].toString()),
+                              generaterow('Amount', '${StringConst.currency}'+widget.checkoutdata['amount'].toString()),
                               generaterow(
                                   'Payment Id', widget.checkoutdata['paymentid']),
                               widget.checkoutdata['type'] == 'cart'

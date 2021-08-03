@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:potbelly/screens/Addnewpayment.dart';
+import 'package:potbelly/screens/FilterItem.dart';
 import 'package:potbelly/screens/Filter_sort.dart';
 import 'package:potbelly/screens/Filters_Screen.dart';
 import 'package:potbelly/screens/NewSearch_screen.dart';
@@ -118,6 +119,7 @@ class AppRouter {
   static const Filter_SortScreen = '/Filter_sortScreen';
   static const Restaurant_info = '/Restaurant_info';
   static const Add_new_Payment = '/Add_new_Payment';
+  static const Filter_Items = '/Filter_Items';
   static const testing = '/testing';
 
   static const userAddresses = '/user_addresses';
@@ -153,6 +155,11 @@ class AppRouter {
       case AppRouter.Add_new_Payment:
         return MaterialPageRoute<dynamic>(
           builder: (_) => AddNewPayment(),
+          settings: settings,
+        );
+      case AppRouter.Filter_Items:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => FilterItems(data: args),
           settings: settings,
         );
       case AppRouter.testing:

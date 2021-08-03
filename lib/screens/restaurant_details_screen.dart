@@ -1501,7 +1501,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                     Row(
                       children: [
                         Text(
-                          '\$' + fooditems[i]['price'].toString(),
+                          '${StringConst.currency}' + fooditems[i]['price'].toString(),
                           style: subHeadingTextStyle,
                         ),
                         SizedBox(
@@ -1611,7 +1611,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text(
-                                  '\$' +
+                                  '${StringConst.currency}' +
                                       newfooditems[i]['menu_price'].toString(),
                                   style: TextStyle(
                                     fontSize: 15,

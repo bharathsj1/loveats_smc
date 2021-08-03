@@ -278,7 +278,7 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
                       tileColor: AppColors.white,
                       title: Padding(
                         padding: const EdgeInsets.only(top: 2.0),
-                        child: Text(addons[index]['data']['name'] + '  ( \$'+addons[index]['data']['price']+' )',
+                        child: Text(addons[index]['data']['name'] + '  ( ${StringConst.currency}'+addons[index]['data']['price']+' )',
                             style: TextStyle(
                                 color: Colors.black54,
                                 fontSize: 17,

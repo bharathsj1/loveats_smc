@@ -110,7 +110,7 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                     Row(
                       children: [
                         Text(
-                          '\$' +
+                          '${StringConst.currency}' +
                               widget.orderdata['order_detail'][i]
                                   ['total_price'],
                           style: TextStyle(
@@ -426,7 +426,7 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          '\$' + widget.orderdata['total_amount'],
+                          '${StringConst.currency}' + widget.orderdata['total_amount'],
                           style: TextStyle(
                             color: AppColors.secondaryElement,
                             fontWeight: FontWeight.bold,
@@ -602,7 +602,7 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                         Row(
                           children: [
                             Text(
-                              '\$' + widget.orderdata['total_amount'],
+                              '${StringConst.currency}' + widget.orderdata['total_amount'],
                               style: TextStyle(
                                 color: AppColors.secondaryElement,
                                 fontWeight: FontWeight.bold,

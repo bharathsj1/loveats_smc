@@ -198,7 +198,7 @@ class _CartScreenState extends State<CartScreen> {
                                               color: AppColors.black)),
                                     ),
                                     Text(
-                                        '\$' +
+                                        '${StringConst.currency}' +
                                             double.tryParse(newcart[i][index]
                                                     ['payableAmount'])
                                                 .toStringAsFixed(2),
@@ -236,7 +236,7 @@ class _CartScreenState extends State<CartScreen> {
                                 //       width:
                                 //           MediaQuery.of(context).size.width * 0.4,
                                 //       child: Text(
-                                //           '\$' +
+                                //           '${StringConst.currency}' +
                                 //               newcart[i][index]['payableAmount'],
                                 //           style: TextStyle(
                                 //               fontSize: 18,
@@ -678,7 +678,7 @@ class _CartScreenState extends State<CartScreen> {
                   height: 0,
                 ),
                 Text(
-                    'Price: \$' +
+                    'Price: ${StringConst.currency}' +
                         double.tryParse(newcart[i][index]['payableAmount'])
                             .toStringAsFixed(2),
                     textAlign: TextAlign.center,
@@ -812,7 +812,7 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                   Text(
                                     // this.itemqty,
-                                    '\$' + ridertip.toStringAsFixed(2),
+                                    '${StringConst.currency}' + ridertip.toStringAsFixed(2),
                                     style: TextStyle(
                                         fontSize: 16,
                                         color: AppColors.secondaryElement,
@@ -869,7 +869,7 @@ class _CartScreenState extends State<CartScreen> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold)),
                               Text(
-                                  '\$' +
+                                  '${StringConst.currency}' +
                                       (totalAmount + shipping + charges)
                                           .toStringAsFixed(2),
                                   style: TextStyle(
@@ -1096,7 +1096,7 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                             pricerow(
                                 'Subtotal',
-                                '\$' + totalAmount.toStringAsFixed(2),
+                                '${StringConst.currency}' + totalAmount.toStringAsFixed(2),
                                 false,
                                 ''),
                             SizedBox(
@@ -1104,18 +1104,18 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                             pricerow(
                                 'Service Fee',
-                                '\$' + charges.toStringAsFixed(2),
+                                '${StringConst.currency}' + charges.toStringAsFixed(2),
                                 true,
-                                'This fee is 5% of your cart before promotions or discounts are applied. It has a minimum of \$' +
+                                'This fee is 5% of your cart before promotions or discounts are applied. It has a minimum of ${StringConst.currency}' +
                                     charges.toStringAsFixed(2)),
                             SizedBox(
                               height: 5,
                             ),
                             pricerow(
                                 'Delivery Fee',
-                                '\$' + shipping.toStringAsFixed(2),
+                                '${StringConst.currency}' + shipping.toStringAsFixed(2),
                                 true,
-                                'This restaurant provides delivery in \$' +
+                                'This restaurant provides delivery in ${StringConst.currency}' +
                                     shipping.toStringAsFixed(2)),
                             SizedBox(
                               height: 5,
@@ -1129,7 +1129,7 @@ class _CartScreenState extends State<CartScreen> {
                             //             fontSize: 20,
                             //             fontWeight: FontWeight.bold)),
                             //     Text(
-                            //       '\$' +
+                            //       '${StringConst.currency}' +
                             //           (totalAmount + shipping + charges)
                             //               .toStringAsFixed(2),
                             //       style: TextStyle(
@@ -1335,7 +1335,7 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                   Row(
                                     children: [
-                                      Text('\$0.29',
+                                      Text('${StringConst.currency}0.29',
                                           style: TextStyle(
                                             fontSize: 13,
                                             color: AppColors.grey,
@@ -1376,7 +1376,7 @@ class _CartScreenState extends State<CartScreen> {
                                 Padding(
                                   padding: const EdgeInsets.only(right: 15.0),
                                   child:
-                                      Text('\$' + newrestip.toStringAsFixed(2),
+                                      Text('${StringConst.currency}' + newrestip.toStringAsFixed(2),
                                           style: TextStyle(
                                             // fontWeight: FontWeight.w600,
                                             fontSize: 16,
@@ -1445,7 +1445,7 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 12.0),
-                        child: Text('\$' + tiplistname[i],
+                        child: Text('${StringConst.currency}' + tiplistname[i],
                             style: TextStyle(
                               fontSize: 16,
                               color: AppColors.grey,

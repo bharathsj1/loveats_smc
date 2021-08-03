@@ -15,6 +15,7 @@ import 'package:potbelly/vendor_screens.dart/open_direction.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
+import 'package:video_player/video_player.dart';
 
 class New_Splash extends StatefulWidget {
   @override
@@ -23,22 +24,46 @@ class New_Splash extends StatefulWidget {
 
 class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  VideoPlayerController _controller;
 
   AnimationController animationcontroll;
   @override
   void initState() {
     // TODO: implement initState
-    animationcontroll = AnimationController(
-      duration: const Duration(milliseconds: 100),
-      vsync: this,
-    );
+    initialize();
+    // animationcontroll = AnimationController(
+    //   duration: const Duration(milliseconds: 100),
+    //   vsync: this,
+    // );
     super.initState();
   }
 
   @override
   dispose() {
-    animationcontroll.dispose();
+    if (_controller != null) {
+      _controller.dispose();
+    }
+    // animationcontroll.dispose();
     super.dispose();
+  }
+
+  initialize() {
+    // print(videourl);
+    if (_controller != null) {
+      _controller.dispose();
+    }
+    _controller = VideoPlayerController.asset('assets/splashvid.mp4')
+      ..addListener(() {
+        if (_controller.value.position == _controller.value.duration) {
+          print('video Ended');
+          navigatetonext(context);
+        }
+      })
+      ..initialize().then((_) {
+        _controller.play();
+        // _controller.setLooping(true);
+        setState(() {});
+      });
   }
 
   @override
@@ -46,23 +71,33 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Center(
-        child: Lottie.asset(
-          // 'assets/food.json',
-          'assets/food5.json',
-          // 'assets/food2.json',
-          // 'assets/food3.json',
-          controller: animationcontroll,
-          
-          onLoaded: (value) {
-            animationcontroll.addStatusListener((status) {
-              if (status == AnimationStatus.completed) {
-                navigatetonext(context);
-              }
-            });
-            animationcontroll
-              ..duration = value.duration
-              ..forward();
-          },
+        // child: Lottie.asset(
+        //   // 'assets/food.json',
+        //   'assets/food5.json',
+        //   // 'assets/food2.json',
+        //   // 'assets/food3.json',
+        //   controller: animationcontroll,
+
+        //   onLoaded: (value) {
+        //     animationcontroll.addStatusListener((status) {
+        //       if (status == AnimationStatus.completed) {
+        //         navigatetonext(context);
+        //       }
+        //     });
+        //     animationcontroll
+        //       ..duration = value.duration
+        //       ..forward();
+        //   },
+        // )
+        child: SizedBox(
+          child: FittedBox(
+            child: SizedBox(
+              child: VideoPlayer(_controller),
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+            ),
+            fit: BoxFit.fill,
+          ),
         ),
       ),
     );

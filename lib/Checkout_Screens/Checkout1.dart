@@ -701,7 +701,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                             color: AppColors.black,
                             fontSize: 16,
                             fontWeight: FontWeight.bold)),
-                    Text('\$' + widget.checkoutdata['total'].toStringAsFixed(2),
+                    Text('${StringConst.currency}' + widget.checkoutdata['total'].toStringAsFixed(2),
                         style: TextStyle(
                             color: AppColors.black,
                             fontSize: 16,

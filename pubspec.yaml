@@ -103,10 +103,10 @@ flutter:
     - assets/swipe/
     - assets/images/
     - assets/launcher/
-    - assets/loveats.mp4
-    - assets/loveats2.mp4
-    - assets/demo_card/London/
-    - assets/demo_card/Pisa/
+    # - assets/loveats.mp4
+    # - assets/loveats2.mp4
+    # - assets/demo_card/London/
+    # - assets/demo_card/Pisa/
     - assets/demo_card/Budapest/
     - assets/demo_card/
     - assets/hero_card/
