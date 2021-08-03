@@ -15,9 +15,8 @@ class AddExtraScreen extends StatefulWidget {
 
 class _AddExtraScreenState extends State<AddExtraScreen> {
   var itemqty = '1';
-  List addons=[];
-  bool _isLoading=true;
-
+  List addons = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -27,15 +26,13 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
     super.initState();
   }
 
-    getaddson() async {
-    var response = await AppService().getaddon(widget.data['restaurant'].id.toString());
+  getaddson() async {
+    var response =
+        await AppService().getaddon(widget.data['restaurant'].id.toString());
     // addons= response['data'];
     print(response);
     for (var item in response['data']) {
-      addons.add({
-        'data': item,
-        'check': false
-      });
+      addons.add({'data': item, 'check': false});
     }
     print(addons);
     _isLoading = false;
@@ -60,7 +57,7 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
     {'name': 'Tango Orange 1.5ltr', 'check': false},
   ];
 
-   loading() {
+  loading() {
     return List.generate(
         6,
         (index) => Padding(
@@ -162,87 +159,96 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
         ],
       ),
       bottomNavigationBar: Material(
-        elevation: 20,
+          elevation: 0,
           child: Container(
-            padding: EdgeInsets.only(top: 5),
-        height: 60,
-        width: MediaQuery.of(context).size.width,
-        color: Colors.white,
-        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        InkWell(
-                          onTap: () {
-                            if (int.parse(this.itemqty) > 1) {
-                              this.itemqty =
-                                  (int.parse(this.itemqty) - 1)
-                                      .toString();
-                              setState(() {});
-                              // totalprice();
-                              if (int.parse(this.itemqty) == 1) {
-                                // disabled = false;
-                                setState(() {});
-                              }
-                              setState(() {});
-                            }
-                            // Provider.of<CartProvider>(context, listen: false)
-                            //     .removeToCart(cartlist[i]);
-                          },
-                          child: Container(
-                              alignment: Alignment.topCenter,
-                              padding: EdgeInsets.zero,
-                              decoration: BoxDecoration(
-                              color: AppColors.black,
-                                borderRadius: BorderRadius.circular(100)
-                              ),
-                              width: 32,
-                              height: 32,
-                              // child: Text(
-                              //   "-",
-                              //   style: TextStyle(
-                              //       color: AppColors.secondaryElement,
-                              //       fontSize: 70),
-                              // )
-                             child: Icon(Icons.minimize,color: AppColors.white,size: 20,)
-                              ),
-                        ),
-                        SizedBox(width: 15,),
-                        Text(
-                          this.itemqty,
-                          style: TextStyle(fontSize: 32,color: AppColors.secondaryElement,fontWeight: FontWeight.w400),
-                        ),
-                        SizedBox(width: 15,),
-                        InkWell(
-                          onTap: () {
-                            print('here');
-                            this.itemqty =
-                                (int.parse(this.itemqty) + 1).toString();
-                            print(this.itemqty);
-                            setState(() {});
+            padding: EdgeInsets.only(top: 5, bottom: 20),
+            height: 60,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.white,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                InkWell(
+                  onTap: () {
+                    if (int.parse(this.itemqty) > 1) {
+                      this.itemqty = (int.parse(this.itemqty) - 1).toString();
+                      setState(() {});
+                      // totalprice();
+                      if (int.parse(this.itemqty) == 1) {
+                        // disabled = false;
+                        setState(() {});
+                      }
+                      setState(() {});
+                    }
+                    // Provider.of<CartProvider>(context, listen: false)
+                    //     .removeToCart(cartlist[i]);
+                  },
+                  child: Container(
+                      alignment: Alignment.topCenter,
+                      padding: EdgeInsets.zero,
+                      decoration: BoxDecoration(
+                          color: AppColors.black,
+                          borderRadius: BorderRadius.circular(100)),
+                      width: 32,
+                      height: 32,
+                      // child: Text(
+                      //   "-",
+                      //   style: TextStyle(
+                      //       color: AppColors.secondaryElement,
+                      //       fontSize: 70),
+                      // )
+                      child: Icon(
+                        Icons.minimize,
+                        color: AppColors.white,
+                        size: 20,
+                      )),
+                ),
+                SizedBox(
+                  width: 15,
+                ),
+                Text(
+                  this.itemqty,
+                  style: TextStyle(
+                      fontSize: 28,
+                      color: AppColors.secondaryElement,
+                      fontWeight: FontWeight.w400),
+                ),
+                SizedBox(
+                  width: 15,
+                ),
+                InkWell(
+                  onTap: () {
+                    print('here');
+                    this.itemqty = (int.parse(this.itemqty) + 1).toString();
+                    print(this.itemqty);
+                    setState(() {});
 
-                            // Provider.of<CartProvider>(context, listen: false)
-                            //     .addToCart(context, data);
-                          },
-                          child: Container(
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.zero,
-                              decoration: BoxDecoration(
-                              color: AppColors.black,
-                                borderRadius: BorderRadius.circular(100)
-                              ),
-                              width: 32,
-                              height: 32,
-                              // child: Text(
-                              //   "-",
-                              //   style: TextStyle(
-                              //       color: AppColors.secondaryElement,
-                              //       fontSize: 70),
-                              // )
-                             child: Icon(Icons.add,color: AppColors.white,size: 20,)),
-                        ),
-                      ],
-                    ),
-      )),
+                    // Provider.of<CartProvider>(context, listen: false)
+                    //     .addToCart(context, data);
+                  },
+                  child: Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.zero,
+                      decoration: BoxDecoration(
+                          color: AppColors.black,
+                          borderRadius: BorderRadius.circular(100)),
+                      width: 32,
+                      height: 32,
+                      // child: Text(
+                      //   "-",
+                      //   style: TextStyle(
+                      //       color: AppColors.secondaryElement,
+                      //       fontSize: 70),
+                      // )
+                      child: Icon(
+                        Icons.add,
+                        color: AppColors.white,
+                        size: 20,
+                      )),
+                ),
+              ],
+            ),
+          )),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -265,42 +271,47 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
                 ],
               ),
             ),
-          _isLoading
-                ? Column(children: loading()):   SingleChildScrollView(
-              child: Column(
-                  children: List.generate(
-                addons.length,
-                (index) => Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15),
-                    padding: EdgeInsets.zero,
-                    // color: Colors.red,
-                    child: CheckboxListTile(
-                      tileColor: AppColors.white,
-                      title: Padding(
-                        padding: const EdgeInsets.only(top: 2.0),
-                        child: Text(addons[index]['data']['name'] + '  ( \$'+addons[index]['data']['price']+' )',
-                            style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 17,
-                                fontWeight: FontWeight.normal)),
-                      ),
-                      value: addons[index]['check'],
+            _isLoading
+                ? Column(children: loading())
+                : SingleChildScrollView(
+                    child: Column(
+                        children: List.generate(
+                      addons.length,
+                      (index) => Container(
+                          margin: EdgeInsets.symmetric(horizontal: 15),
+                          padding: EdgeInsets.zero,
+                          // color: Colors.red,
+                          child: CheckboxListTile(
+                            tileColor: AppColors.white,
+                            title: Padding(
+                              padding: const EdgeInsets.only(top: 2.0),
+                              child: Text(
+                                  addons[index]['data']['name'] +
+                                      '  ( \$' +
+                                      addons[index]['data']['price'] +
+                                      ' )',
+                                  style: TextStyle(
+                                      color: Colors.black54,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.normal)),
+                            ),
+                            value: addons[index]['check'],
 
-                      activeColor: AppColors.secondaryElement,
-                      //  selectedTileColor: Colors.red,
-                      contentPadding: EdgeInsets.all(0),
-                      checkColor: AppColors.white,
-                      onChanged: (newValue) {
-                        setState(() {
-                          addons[index]['check'] = newValue;
-                        });
-                      },
+                            activeColor: AppColors.secondaryElement,
+                            //  selectedTileColor: Colors.red,
+                            contentPadding: EdgeInsets.all(0),
+                            checkColor: AppColors.white,
+                            onChanged: (newValue) {
+                              setState(() {
+                                addons[index]['check'] = newValue;
+                              });
+                            },
 
-                      // controlAffinity:
-                      //     ListTileControlAffinity.leading, //  <-- leading Checkbox
+                            // controlAffinity:
+                            //     ListTileControlAffinity.leading, //  <-- leading Checkbox
+                          )),
                     )),
-              )),
-            ),
+                  ),
             // Container(
             //   color: AppColors.secondaryColor,
             //   padding: const EdgeInsets.symmetric(
