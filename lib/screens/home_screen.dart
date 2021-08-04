@@ -56,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List searchlist = [];
   bool _isGuest = false;
   bool lottie = false;
+  bool lottie2 = false;
   String selected_address = 'Your Location';
   List subscription = [
     'assets/images/sub3.png',
@@ -445,40 +446,39 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(6),
                                 topRight: Radius.circular(6)),
-                            // child: hotspotlist[i]['image'].substring(0, 4) !=
-                            //         'http'
-                            //     ? Image.network(
-                            //         hotspotlist[i]['image'],
-                            //         loadingBuilder: (BuildContext ctx,
-                            //             Widget child,
-                            //             ImageChunkEvent loadingProgress) {
-                            //           if (loadingProgress == null) {
-                            //             return child;
-                            //           } else {
-                            //             return Container(
-                            //               height: 150,
-                            //               child: Center(
-                            //                 child: CircularProgressIndicator(
-                            //                   valueColor:
-                            //                       AlwaysStoppedAnimation<Color>(
-                            //                           AppColors
-                            //                               .secondaryElement),
-                            //                 ),
-                            //               ),
-                            //             );
-                            //           }
-                            //         },
-                            //         width: MediaQuery.of(context).size.width,
-                            //         height: 150,
-                            //         fit: BoxFit.cover,
-                            //       )
-
-                            child: Image.asset(
-                              'assets/images/hot${i + 1}.jpeg',
-                              width: MediaQuery.of(context).size.width,
-                              height: 170,
-                              fit: BoxFit.fill,
-                            ),
+                            child: hotspotlist[i]['image'].substring(0, 4) !=
+                                    'http'
+                                ? Image.network(
+                                    hotspotlist[i]['image'],
+                                    loadingBuilder: (BuildContext ctx,
+                                        Widget child,
+                                        ImageChunkEvent loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return Container(
+                                          height: 150,
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      AppColors
+                                                          .secondaryElement),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 150,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.asset(
+                                    'assets/images/hot${i + 1}.jpeg',
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 150,
+                                    fit: BoxFit.fill,
+                                  ),
                           ),
                           Positioned(
                               right: 5,
@@ -1023,22 +1023,25 @@ class _HomeScreenState extends State<HomeScreen> {
               : null,
           child: InkWell(
             onTap: () {
-              if (deliverytype == id) {
-                deliverytype = null;
-                resturants = searchlist;
-                setState(() {});
-              } else {
-                deliverytype = id;
-                print(resturants);
-                resturants = searchlist
-                    .where((pro) => deliverytype == 0
-                        ? pro.delivery == 1
-                        : deliverytype == 1
-                            ? pro.pickup == 1
-                            : pro.tableService == 1)
-                    .toList();
-                setState(() {});
-              }
+              // if (deliverytype == id) {
+              //   deliverytype = null;
+              //   resturants = searchlist;
+              //   setState(() {});
+              // } else {
+              //   deliverytype = id;
+              //   print(resturants);
+              //   resturants = searchlist
+              //       .where((pro) => deliverytype == 0
+              //           ? pro.delivery == 1
+              //           : deliverytype == 1
+              //               ? pro.pickup == 1
+              //               : pro.tableService == 1)
+              //       .toList();
+              //   setState(() {});
+              // }
+              Navigator.pushNamed(context, AppRouter.Filter_Items, arguments: {
+                'name': name == 'Delivery' ? 'Deliverable' : 'Pickup'
+              });
             },
             child: Container(
                 width: width,
@@ -1479,6 +1482,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               )),
                         ],
                       )),
+
                   SizedBox(
                     height: 10,
                   ),
@@ -1531,6 +1535,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       }),
                     ),
                   ),
+
                   // : Container(),
                   // loader
                   //     ? Container(
@@ -1581,63 +1586,80 @@ class _HomeScreenState extends State<HomeScreen> {
                   //         ],
                   //       ),
                   //
-                  SizedBox(height: 0.0),
-                  loader3
-                      ? Container(
-                          height: 280,
-                          child: CarouselSlider(
-                              options: CarouselOptions(
-                                  enableInfiniteScroll: true, height: 260),
-                              items: List.generate(
-                                1,
-                                (ind) => SkeletonAnimation(
-                                  shimmerColor: Colors.grey[350],
-                                  shimmerDuration: 1100,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                    ),
-                                    margin: EdgeInsets.symmetric(horizontal: 4),
-                                  ),
-                                ),
-                              )),
-                        )
-                      : Column(
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 15.0),
-                            Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0),
-                                child: Text(
-                                  'Hot Spot'.toUpperCase(),
-                                  textAlign: TextAlign.left,
-                                  style: Styles.customTitleTextStyle2(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: Sizes.TEXT_SIZE_16,
-                                  ),
-                                )),
-                            SizedBox(height: 5.0),
+                  // SizedBox(height: 0.0),
+                  // loader3
+                  //     ? Container(
+                  //         height: 280,
+                  //         child: CarouselSlider(
+                  //             options: CarouselOptions(
+                  //                 enableInfiniteScroll: true, height: 260),
+                  //             items: List.generate(
+                  //               1,
+                  //               (ind) => SkeletonAnimation(
+                  //                 shimmerColor: Colors.grey[350],
+                  //                 shimmerDuration: 1100,
+                  //                 child: Container(
+                  //                   decoration: BoxDecoration(
+                  //                     color: Colors.grey[300],
+                  //                   ),
+                  //                   margin: EdgeInsets.symmetric(horizontal: 4),
+                  //                 ),
+                  //               ),
+                  //             )),
+                  //       )
+                  //     : Column(
+                  //         // mainAxisAlignment: MainAxisAlignment.start,
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           SizedBox(height: 15.0),
+                  //           Padding(
+                  //               padding: const EdgeInsets.symmetric(
+                  //                   horizontal: 12.0),
+                  //               child: Text(
+                  //                 'Hot Spot'.toUpperCase(),
+                  //                 textAlign: TextAlign.left,
+                  //                 style: Styles.customTitleTextStyle2(
+                  //                   color: Colors.black87,
+                  //                   fontWeight: FontWeight.bold,
+                  //                   fontSize: Sizes.TEXT_SIZE_16,
+                  //                 ),
+                  //               )),
+                  //           SizedBox(height: 5.0),
 
-                            // TravelCardList(
-                            //   cities: resturants,
-                            //   onCityChange: _handleCityChange,
-                            // ),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Row(
-                                  children: hotspot(),
-                                ),
-                              ),
+                  //           // TravelCardList(
+                  //           //   cities: resturants,
+                  //           //   onCityChange: _handleCityChange,
+                  //           // ),
+                  //           SingleChildScrollView(
+                  //             scrollDirection: Axis.horizontal,
+                  //             child: Padding(
+                  //               padding:
+                  //                   const EdgeInsets.symmetric(horizontal: 8.0),
+                  //               child: Row(
+                  //                 children: hotspot(),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //           SizedBox(height: 0.0),
+                  //         ],
+                  //       ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: Text('OFFERS'.toUpperCase(),
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.dmSerifDisplay(
+                            textStyle: Styles.customTitleTextStyle2(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: Sizes.TEXT_SIZE_22,
                             ),
-                            SizedBox(height: 0.0),
-                          ],
-                        ),
+                          ))),
+                  SizedBox(
+                    height: 10,
+                  ),
 
                   Container(
                     height: 180,
@@ -1684,6 +1706,69 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         }),
                   ),
+
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: Text('Recipes'.toUpperCase(),
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.dmSerifDisplay(
+                            textStyle: Styles.customTitleTextStyle2(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: Sizes.TEXT_SIZE_22,
+                            ),
+                          ))),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  loader
+                      ? Center(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width - 16,
+                            height: 200,
+                            child: SkeletonAnimation(
+                              shimmerColor: Colors.grey[350],
+                              shimmerDuration: 1100,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 4),
+                              ),
+                            ),
+                          ),
+                        )
+                      : Center(
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRouter.HotspotsDetailsScreen,
+                                  arguments: RestaurantDetails(
+                                      imagePath: hotspotlist[0]['image'],
+                                      restaurantName: hotspotlist[0]['name'],
+                                      restaurantAddress: hotspotlist[0]
+                                          ['address'],
+                                      // rating: hotspotlist[0]['rating'],
+                                      rating: '3.2',
+                                      category: '',
+                                      distance:
+                                          hotspotlist[0]['distance'] + ' Km',
+                                      data: hotspotlist[0]),
+                                );
+                              },
+                              child: Image.asset(
+                                //  'assets/loginvideo2.gif',
+                                'assets/recipe1.gif',
+                                fit: BoxFit.fill,
+                                height: 230,
+                                width: MediaQuery.of(context).size.width - 25,
+                                filterQuality: FilterQuality.high,
+                              )),
+                        ),
                   SizedBox(height: 10.0),
                   loader4
                       ? Container(
