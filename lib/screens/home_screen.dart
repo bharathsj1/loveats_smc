@@ -847,7 +847,13 @@ class _HomeScreenState extends State<HomeScreen> {
         catlist.length,
         (i) => InkWell(
               onTap: () {
-                selectedcat = i;
+                // selectedcat = i;
+                  Navigator.pushNamed(context, AppRouter.Filter_Items, arguments: {
+                // 'name': name == 'Delivery' ? 'Deliverable' : 'Pickup',
+                'name': catlist[i],
+                'cat':true,
+                'catid': i==0? 1:i
+              });
                 setState(() {});
               },
               child: Container(
@@ -1040,7 +1046,8 @@ class _HomeScreenState extends State<HomeScreen> {
               //   setState(() {});
               // }
               Navigator.pushNamed(context, AppRouter.Filter_Items, arguments: {
-                'name': name == 'Delivery' ? 'Deliverable' : 'Pickup'
+                'name': name == 'Delivery' ? 'Deliverable' : 'Pickup',
+                'cat':false
               });
             },
             child: Container(

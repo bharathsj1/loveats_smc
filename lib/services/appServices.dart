@@ -226,6 +226,18 @@ class AppService {
       return null;
     }
   }
+
+  Future<dynamic> getcatitems(id) async {
+    try {
+      // FormData formData = new FormData.fromMap(data);
+      var resp = await this.dio.get("/getMenuWithMenuType/"+id,);
+      print(resp);
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
   Future<dynamic> setaddress(data) async {
     String accessToken = await getAccessToken();
     dio.options.headers['Authorization'] = "Bearer " + accessToken;
