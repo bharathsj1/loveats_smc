@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:potbelly/grovey_startScreens/ProviderService.dart';
 import 'package:potbelly/grovey_startScreens/demo.dart';
 import 'package:potbelly/models/free_meal_model.dart';
@@ -119,11 +120,11 @@ class _CartScreenState extends State<CartScreen> {
         newcart[i].length,
         (index) => InkWell(
               onTap: () async {
-                updateitem(context, (newcart[i][index]),i,index);
+                updateitem(context, (newcart[i][index]), i, index);
                 //  await CartProvider().clearcart();
                 //  getcartlist();
                 //  setState(() {
-                   
+
                 //  });
               },
               child: Container(
@@ -255,8 +256,8 @@ class _CartScreenState extends State<CartScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                            newcart[i][index]['addon'][ind]['data']
-                                                ['name'],
+                                            newcart[i][index]['addon'][ind]
+                                                ['data']['name'],
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: AppColors.secondaryElement,
@@ -812,7 +813,8 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                   Text(
                                     // this.itemqty,
-                                    '${StringConst.currency}' + ridertip.toStringAsFixed(2),
+                                    '${StringConst.currency}' +
+                                        ridertip.toStringAsFixed(2),
                                     style: TextStyle(
                                         fontSize: 16,
                                         color: AppColors.secondaryElement,
@@ -981,22 +983,22 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                               ],
                             ),
-                            InkWell(
-                              onTap: () {
-                                // showrating = !showrating;
-                                setState(() {});
-                              },
-                              child: Container(
-                                child: Text(
-                                  'Change',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: 'roboto',
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.secondaryElement),
-                                ),
-                              ),
-                            ),
+                            // InkWell(
+                            //   onTap: () {
+                            //     // showrating = !showrating;
+                            //     setState(() {});
+                            //   },
+                            //   child: Container(
+                            //     child: Text(
+                            //       'Change',
+                            //       style: TextStyle(
+                            //           fontSize: 16,
+                            //           fontFamily: 'roboto',
+                            //           fontWeight: FontWeight.bold,
+                            //           color: AppColors.secondaryElement),
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -1096,7 +1098,8 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                             pricerow(
                                 'Subtotal',
-                                '${StringConst.currency}' + totalAmount.toStringAsFixed(2),
+                                '${StringConst.currency}' +
+                                    totalAmount.toStringAsFixed(2),
                                 false,
                                 ''),
                             SizedBox(
@@ -1104,7 +1107,8 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                             pricerow(
                                 'Service Fee',
-                                '${StringConst.currency}' + charges.toStringAsFixed(2),
+                                '${StringConst.currency}' +
+                                    charges.toStringAsFixed(2),
                                 true,
                                 'This fee is 5% of your cart before promotions or discounts are applied. It has a minimum of ${StringConst.currency}' +
                                     charges.toStringAsFixed(2)),
@@ -1113,7 +1117,8 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                             pricerow(
                                 'Delivery Fee',
-                                '${StringConst.currency}' + shipping.toStringAsFixed(2),
+                                '${StringConst.currency}' +
+                                    shipping.toStringAsFixed(2),
                                 true,
                                 'This restaurant provides delivery in ${StringConst.currency}' +
                                     shipping.toStringAsFixed(2)),
@@ -1342,15 +1347,24 @@ class _CartScreenState extends State<CartScreen> {
                                             letterSpacing: .3,
                                           )),
                                       Switch.adaptive(
-                                        value: addrestip,
-                                        activeColor: AppColors.secondaryElement,
-                                        activeTrackColor: AppColors
-                                            .secondaryElement
-                                            .withOpacity(0.4),
-                                        onChanged: (newValue) => setState(() {
-                                          addrestip = newValue;
-                                        }),
-                                      ),
+                                          value: addrestip,
+                                          activeColor:
+                                              AppColors.secondaryElement,
+                                          activeTrackColor: AppColors
+                                              .secondaryElement
+                                              .withOpacity(0.4),
+                                          onChanged: (newValue) {
+                                            setState(() {
+                                              addrestip = newValue;
+                                              if (addrestip) {
+                                                totalAmount =
+                                                    totalAmount + 0.29;
+                                              } else {
+                                                totalAmount =
+                                                    totalAmount - 0.29;
+                                              }
+                                            });
+                                          }),
                                     ],
                                   ),
                                 ],
@@ -1375,14 +1389,15 @@ class _CartScreenState extends State<CartScreen> {
                                         color: Colors.grey.shade800)),
                                 Padding(
                                   padding: const EdgeInsets.only(right: 15.0),
-                                  child:
-                                      Text('${StringConst.currency}' + newrestip.toStringAsFixed(2),
-                                          style: TextStyle(
-                                            // fontWeight: FontWeight.w600,
-                                            fontSize: 16,
-                                            letterSpacing: .3,
-                                            color: AppColors.grey,
-                                          )),
+                                  child: Text(
+                                      '${StringConst.currency}' +
+                                          newrestip.toStringAsFixed(2),
+                                      style: TextStyle(
+                                        // fontWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                        letterSpacing: .3,
+                                        color: AppColors.grey,
+                                      )),
                                 ),
                               ],
                             ),
@@ -1424,7 +1439,12 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  List tiplistname = ['2.50', '5.00', '10.00', '15.00'];
+  List tiplistname = [
+    {'name': '2.50', 'check': false},
+    {'name': '5.00', 'check': false},
+    {'name':'10.00','check':false},
+    {'name':'15.00','check':false}
+  ];
 
   List<Widget> tiplist() {
     return List.generate(
@@ -1445,7 +1465,7 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 12.0),
-                        child: Text('${StringConst.currency}' + tiplistname[i],
+                        child: Text('${StringConst.currency}' + tiplistname[i]['name'],
                             style: TextStyle(
                               fontSize: 16,
                               color: AppColors.grey,
@@ -1453,25 +1473,44 @@ class _CartScreenState extends State<CartScreen> {
                             )),
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 15,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 6.0),
-                        child: Row(
-                          children: [
-                            Icon(Icons.add, color: AppColors.secondaryElement),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text('Add',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.secondaryElement,
-                                  letterSpacing: .3,
-                                )),
-                          ],
+                        child: InkWell(
+                          onTap: (){
+                            if( !tiplistname[i]['check']){
+
+                            tiplistname[i]['check']=true;
+                            }
+                            else{
+                               tiplistname[i]['check']=false;
+                            }
+                            setState(() {
+                              
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Icon(tiplistname[i]['check']?FontAwesomeIcons.minus:FontAwesomeIcons.plus,size: 15, color: AppColors.secondaryElement),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Center(
+                                
+                                child: Text(tiplistname[i]['check']?'Remove':'Add',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: AppColors.secondaryElement,
+                                      letterSpacing: .3,
+                                    )),
+                              ),
+                            ],
+                          ),
+                        
                         ),
-                      )
+                      ),
+                    
                     ],
                   ),
                 ),
@@ -1539,8 +1578,8 @@ class _CartScreenState extends State<CartScreen> {
                         'Go to Login Screen',
                         style: TextStyle(fontSize: 15.0),
                       ),
-                      onPressed: ()async {
-                         await Service().removeGuest();
+                      onPressed: () async {
+                        await Service().removeGuest();
                         Provider.of<ProviderService>(context, listen: false)
                             .allfalse();
                         Provider.of<ProviderService>(context, listen: false)
