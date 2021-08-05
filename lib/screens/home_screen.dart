@@ -837,8 +837,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List catlist = [
     'All',
-    'Korean',
     'Indian',
+    'Korean',
   ];
   int selectedcat = 0;
 
@@ -848,12 +848,13 @@ class _HomeScreenState extends State<HomeScreen> {
         (i) => InkWell(
               onTap: () {
                 // selectedcat = i;
-                  Navigator.pushNamed(context, AppRouter.Filter_Items, arguments: {
-                // 'name': name == 'Delivery' ? 'Deliverable' : 'Pickup',
-                'name': catlist[i],
-                'cat':true,
-                'catid': i==0? 1:i
-              });
+                Navigator.pushNamed(context, AppRouter.Filter_Items,
+                    arguments: {
+                      // 'name': name == 'Delivery' ? 'Deliverable' : 'Pickup',
+                      'name': catlist[i],
+                      'cat': true,
+                      'catid': i == 0 ? 1 : i
+                    });
                 setState(() {});
               },
               child: Container(
@@ -1047,7 +1048,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // }
               Navigator.pushNamed(context, AppRouter.Filter_Items, arguments: {
                 'name': name == 'Delivery' ? 'Deliverable' : 'Pickup',
-                'cat':false
+                'cat': false
               });
             },
             child: Container(
@@ -1769,7 +1770,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               child: Image.asset(
                                 //  'assets/loginvideo2.gif',
-                                'assets/recipe1.gif',
+                                'assets/recipe2.gif',
                                 fit: BoxFit.fill,
                                 height: 230,
                                 width: MediaQuery.of(context).size.width - 25,
