@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List resturants = [];
   List categories = [];
   List hotspotlist = [];
+  List recipes = [];
   List popularitem = [];
   List<City> _cityList;
   City _currentCity;
@@ -83,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _register();
     getRestaurent();
     getcateory();
-    gethotspot();
+    getrecipes();
     getpopularitem();
     isUserGuest();
     super.initState();
@@ -136,6 +138,14 @@ class _HomeScreenState extends State<HomeScreen> {
     var response = await AppService().getallhotspot();
     hotspotlist = response['data'];
     print(hotspotlist);
+    loader3 = false;
+    setState(() {});
+  }
+
+  getrecipes() async {
+    var response = await AppService().getrecipe();
+    recipes = response['data'];
+    print(recipes);
     loader3 = false;
     setState(() {});
   }
@@ -655,30 +665,50 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: popularitem[i]['menu_image']
                                         .substring(0, 4) ==
                                     'http'
-                                ? Image.network(
-                                    popularitem[i]['menu_image'],
-                                    loadingBuilder: (BuildContext ctx,
-                                        Widget child,
-                                        ImageChunkEvent loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child;
-                                      } else {
-                                        return Container(
-                                          height: 150,
-                                          child: Center(
-                                            child: CircularProgressIndicator(
-                                              valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
-                                                      AppColors
-                                                          .secondaryElement),
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
+                                ?
+                                // Image.network(
+                                //     popularitem[i]['menu_image'],
+                                //     loadingBuilder: (BuildContext ctx,
+                                //         Widget child,
+                                //         ImageChunkEvent loadingProgress) {
+                                //       if (loadingProgress == null) {
+                                //         return child;
+                                //       } else {
+                                //         return Container(
+                                //           height: 150,
+                                //           child: Center(
+                                //             child: CircularProgressIndicator(
+                                //               valueColor:
+                                //                   AlwaysStoppedAnimation<Color>(
+                                //                       AppColors
+                                //                           .secondaryElement),
+                                //             ),
+                                //           ),
+                                //         );
+                                //       }
+                                //     },
+                                //     width: MediaQuery.of(context).size.width,
+                                //     height: 150,
+                                //     fit: BoxFit.cover,
+                                //   )
+                                CachedNetworkImage(
+                                    imageUrl: popularitem[i]['menu_image'],
                                     width: MediaQuery.of(context).size.width,
                                     height: 150,
                                     fit: BoxFit.cover,
+                                    placeholder: (context, url) => Container(
+                                      height: 150,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  AppColors.secondaryElement),
+                                        ),
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
                                   )
                                 : Image.asset(
                                     popularitem[i]['menu_image'],
@@ -822,12 +852,13 @@ class _HomeScreenState extends State<HomeScreen> {
         (i) => InkWell(
               onTap: () {
                 // selectedcat = i;
-                  Navigator.pushNamed(context, AppRouter.Filter_Items, arguments: {
-                // 'name': name == 'Delivery' ? 'Deliverable' : 'Pickup',
-                'name': catlist[i],
-                'cat':true,
-                'catid': i==0? 1:i
-              });
+                Navigator.pushNamed(context, AppRouter.Filter_Items,
+                    arguments: {
+                      // 'name': name == 'Delivery' ? 'Deliverable' : 'Pickup',
+                      'name': catlist[i],
+                      'cat': true,
+                      'catid': i == 0 ? 1 : i
+                    });
                 setState(() {});
               },
               child: Container(
@@ -1019,10 +1050,15 @@ class _HomeScreenState extends State<HomeScreen> {
               //       .toList();
               //   setState(() {});
               // }
-              Navigator.pushNamed(context, AppRouter.Filter_Items, arguments: {
-                'name': name == 'Delivery' ? 'Deliverable' : 'Pickup',
-                'cat':false
-              });
+              if (name == 'Table Service') {
+                Navigator.pushNamed(context, AppRouter.Table_Scanner);
+              } else {
+                Navigator.pushNamed(context, AppRouter.Filter_Items,
+                    arguments: {
+                      'name': name == 'Delivery' ? 'Deliverable' : 'Pickup',
+                      'cat': false
+                    });
+              }
             },
             child: Container(
                 width: width,
@@ -1199,7 +1235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       _isGuest = await Service().isGuest();
                                       // print(_isGuest);
                                       // return;
-                                      if (!_isGuest) {
+                                      if (_isGuest !=null && !_isGuest) {
                                         Navigator.pushNamed(
                                           context,
                                           AppRouter.profileScreen,
@@ -1518,7 +1554,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Text('Recipe'.toUpperCase(),
+                      child: Text('Recipes'.toUpperCase(),
                           textAlign: TextAlign.left,
                           style: GoogleFonts.dmSerifDisplay(
                             textStyle: Styles.customTitleTextStyle2(
@@ -1530,7 +1566,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  loader
+                  loader3
                       ? Center(
                           child: Container(
                             width: MediaQuery.of(context).size.width - 16,
@@ -1547,32 +1583,36 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         )
-                      : 
-     Center(
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          AppRouter.HotspotsDetailsScreen,
-                          arguments: RestaurantDetails(
-                              imagePath: hotspotlist[0]['image'],
-                              restaurantName: hotspotlist[0]['name'],
-                              restaurantAddress: hotspotlist[0]['address'],
-                              // rating: hotspotlist[0]['rating'],
-                              rating: '3.2',
-                              category: '',
-                              distance: hotspotlist[0]['distance'] + ' Km',
-                              data: hotspotlist[0]),
-                        );
-                      },
-                      child: Image.asset(
-        //  'assets/loginvideo2.gif',
-         'assets/recipe1.gif',
-         fit: BoxFit.fill,
-         height: 200,
-                    width: MediaQuery.of(context).size.width-25, filterQuality: FilterQuality.high, )
-                    ),
-                  ),
+                      : Center(
+                          child: InkWell(
+                              onTap: () {
+                                // Navigator.pushNamed(
+                                //   context,
+                                //   AppRouter.HotspotsDetailsScreen,
+                                //   arguments: RestaurantDetails(
+                                //       imagePath: hotspotlist[0]['image'],
+                                //       restaurantName: hotspotlist[0]['name'],
+                                //       restaurantAddress: hotspotlist[0]['address'],
+                                //       // rating: hotspotlist[0]['rating'],
+                                //       rating: '3.2',
+                                //       category: '',
+                                //       distance: hotspotlist[0]['distance'] + ' Km',
+                                //       data: hotspotlist[0]),
+                                // );
+                                Navigator.pushNamed(
+                                    context, AppRouter.Recipe_details,
+                                    arguments: recipes[0]);
+                              },
+                              child: Image.asset(
+                                //  'assets/loginvideo2.gif',
+                                'assets/recipe1.gif',
+                                fit: BoxFit.fill,
+                                height: 200,
+                                width: MediaQuery.of(context).size.width - 25,
+                                filterQuality: FilterQuality.high,
+                              )),
+                        ),
+                  SizedBox(height: 15.0),
                   // : Container(),
                   // loader
                   //     ? Container(
@@ -1623,63 +1663,66 @@ class _HomeScreenState extends State<HomeScreen> {
                   //         ],
                   //       ),
                   //
-                  SizedBox(height: 0.0),
-                  loader3
-                      ? Container(
-                          height: 280,
-                          child: CarouselSlider(
-                              options: CarouselOptions(
-                                  enableInfiniteScroll: true, height: 260),
-                              items: List.generate(
-                                1,
-                                (ind) => SkeletonAnimation(
-                                  shimmerColor: Colors.grey[350],
-                                  shimmerDuration: 1100,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                    ),
-                                    margin: EdgeInsets.symmetric(horizontal: 4),
-                                  ),
-                                ),
-                              )),
-                        )
-                      : Column(
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 15.0),
-                            Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0),
-                                child: Text(
-                                  'Hot Spot'.toUpperCase(),
-                                  textAlign: TextAlign.left,
-                                  style: Styles.customTitleTextStyle2(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: Sizes.TEXT_SIZE_16,
-                                  ),
-                                )),
-                            SizedBox(height: 5.0),
 
-                            // TravelCardList(
-                            //   cities: resturants,
-                            //   onCityChange: _handleCityChange,
-                            // ),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Row(
-                                  children: hotspot(),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 0.0),
-                          ],
-                        ),
+                  //hotspot start
+                  // SizedBox(height: 0.0),
+                  // loader3
+                  //     ? Container(
+                  //         height: 280,
+                  //         child: CarouselSlider(
+                  //             options: CarouselOptions(
+                  //                 enableInfiniteScroll: true, height: 260),
+                  //             items: List.generate(
+                  //               1,
+                  //               (ind) => SkeletonAnimation(
+                  //                 shimmerColor: Colors.grey[350],
+                  //                 shimmerDuration: 1100,
+                  //                 child: Container(
+                  //                   decoration: BoxDecoration(
+                  //                     color: Colors.grey[300],
+                  //                   ),
+                  //                   margin: EdgeInsets.symmetric(horizontal: 4),
+                  //                 ),
+                  //               ),
+                  //             )),
+                  //       )
+                  //     : Column(
+                  //         // mainAxisAlignment: MainAxisAlignment.start,
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           SizedBox(height: 15.0),
+                  //           Padding(
+                  //               padding: const EdgeInsets.symmetric(
+                  //                   horizontal: 12.0),
+                  //               child: Text(
+                  //                 'Hot Spot'.toUpperCase(),
+                  //                 textAlign: TextAlign.left,
+                  //                 style: Styles.customTitleTextStyle2(
+                  //                   color: Colors.black87,
+                  //                   fontWeight: FontWeight.bold,
+                  //                   fontSize: Sizes.TEXT_SIZE_16,
+                  //                 ),
+                  //               )),
+                  //           SizedBox(height: 5.0),
+
+                  //           // TravelCardList(
+                  //           //   cities: resturants,
+                  //           //   onCityChange: _handleCityChange,
+                  //           // ),
+                  //           SingleChildScrollView(
+                  //             scrollDirection: Axis.horizontal,
+                  //             child: Padding(
+                  //               padding:
+                  //                   const EdgeInsets.symmetric(horizontal: 8.0),
+                  //               child: Row(
+                  //                 children: hotspot(),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //           SizedBox(height: 0.0),
+                  //         ],
+                  //       ),
+                  //hotspot ended
 
                   Container(
                     height: 180,

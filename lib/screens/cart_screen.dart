@@ -1482,9 +1482,13 @@ class _CartScreenState extends State<CartScreen> {
                             if( !tiplistname[i]['check']){
 
                             tiplistname[i]['check']=true;
+                            newrestip += double.parse(tiplistname[i]['name']);
+                            totalAmount+= double.parse(tiplistname[i]['name']);
                             }
                             else{
                                tiplistname[i]['check']=false;
+                            totalAmount-=  double.parse(tiplistname[i]['name']);
+                            newrestip -= double.parse(tiplistname[i]['name']);
                             }
                             setState(() {
                               

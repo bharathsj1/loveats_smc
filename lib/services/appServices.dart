@@ -86,11 +86,31 @@ class AppService {
   }
 
   Future<dynamic> getallhotspot() async {
-    // String accessToken = await getAccessToken();
-    // dio.options.headers['Authorization'] = "Bearer " + accessToken;
     try {
       var resp = await this.dio.get(
             "/getAllHotspot",
+          );
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+  Future<dynamic> getrecipe() async {
+    try {
+      var resp = await this.dio.get(
+            "/get-receipies",
+          );
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+  Future<dynamic> getrecipedetails(id) async {
+    try {
+      var resp = await this.dio.get(
+            "/get-receipe/"+id,
           );
       return resp.data;
     } catch (e) {

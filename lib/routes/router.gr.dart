@@ -8,11 +8,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:potbelly/screens/Addnewpayment.dart';
+import 'package:potbelly/screens/Buy_Ingredients.dart';
+import 'package:potbelly/screens/Enjoy_meal.dart';
 import 'package:potbelly/screens/FilterItem.dart';
 import 'package:potbelly/screens/Filter_sort.dart';
 import 'package:potbelly/screens/Filters_Screen.dart';
 import 'package:potbelly/screens/NewSearch_screen.dart';
 import 'package:potbelly/screens/New_splash_Screen.dart';
+import 'package:potbelly/screens/Recipe_details.dart';
+import 'package:potbelly/screens/Steps_Screen.dart';
+import 'package:potbelly/screens/Table_Scanner.dart';
 import 'package:potbelly/screens/add_extra.dart';
 import 'package:potbelly/screens/google_map.dart';
 import 'package:potbelly/screens/Promotionalert.dart';
@@ -120,6 +125,11 @@ class AppRouter {
   static const Restaurant_info = '/Restaurant_info';
   static const Add_new_Payment = '/Add_new_Payment';
   static const Filter_Items = '/Filter_Items';
+  static const Recipe_details = '/Recipe_details';
+  static const Steps_Screen = '/Steps_Screen';
+  static const Enjoy_Meal = '/Enjoy_Meal';
+  static const Buy_Ingredients = '/Buy_Ingredients';
+  static const Table_Scanner = '/Table_Scanner';
   static const testing = '/testing';
 
   static const userAddresses = '/user_addresses';
@@ -152,6 +162,26 @@ class AppRouter {
           builder: (_) => RegisterScreen(),
           settings: settings,
         );
+      case AppRouter.Recipe_details:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => RecipeDetails(data: args,),
+          settings: settings,
+        );
+      case AppRouter.Steps_Screen:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => StepsScreen(data: args),
+          settings: settings,
+        );
+      case AppRouter.Enjoy_Meal:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => EnjoyMeal(data: args),
+          settings: settings,
+        );
+      case AppRouter.Buy_Ingredients:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => BuyIngredients(data: args,),
+          settings: settings,
+        );
       case AppRouter.Add_new_Payment:
         return MaterialPageRoute<dynamic>(
           builder: (_) => AddNewPayment(),
@@ -162,6 +192,11 @@ class AppRouter {
           builder: (_) => FilterItems(data: args),
           settings: settings,
         );
+      // case AppRouter.Table_Scanner:
+      //   return MaterialPageRoute<dynamic>(
+      //     builder: (_) => TableScanner(),
+      //     settings: settings,
+      //   );
       case AppRouter.testing:
         return MaterialPageRoute<dynamic>(
           builder: (_) => AddNewCart(data: args,),
