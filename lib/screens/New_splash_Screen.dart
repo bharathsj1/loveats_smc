@@ -11,6 +11,7 @@ import 'package:potbelly/screens/home_screen.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
+import 'package:potbelly/vendor_screens.dart/Home_screen.dart';
 import 'package:potbelly/vendor_screens.dart/open_direction.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -126,8 +127,9 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
             MaterialPageRoute(
                 builder: (_) => shared != null
                     ?
+                    shared == '2'?
                     //  BubbleTabBarDemo(type: shared,)
-                    HomeScreen()
+                    HomeScreen(): Vendor_Home_screen()
                     :
                     //  BackgroundVideo()
                     GooeyEdgeDemo()),

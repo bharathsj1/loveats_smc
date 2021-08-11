@@ -191,6 +191,7 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: AppBar(
         centerTitle: true,
         elevation: 1,
@@ -202,7 +203,45 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
               fontFamily: 'roboto',
               color: AppColors.secondaryElement),
         ),
+        actions: [
+          Padding(
+                                  padding: const EdgeInsets.only(right: 10.0),
+                                  child: InkWell(
+                                    onTap: () async {
+                                      // _isGuest = await Service().isGuest();
+                                      // // print(_isGuest);
+                                      // // return;
+                                      // if (!_isGuest) {
+                                        Navigator.pushNamed(
+                                          context,
+                                          AppRouter.profileScreen,
+                                        );
+                                      // } else
+                                      //   _askLoginDialog(context);
+
+                                      // setState(() {});
+                                    },
+                                    // child: Icon(
+                                    //   Icons.person,
+                                    //   color: AppColors.black,
+                                    //   size: 22,
+                                    // )
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 4.0),
+                                      child: CircleAvatar(
+                                        backgroundImage: AssetImage(
+                                            'assets/images/andy.png'),
+                                        backgroundColor: Colors.transparent,
+                                        minRadius: Sizes.RADIUS_16,
+                                        maxRadius: Sizes.RADIUS_16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                          
+        ],
       ),
+      
       body: loader
           ? Center(
               child: CircularProgressIndicator(
