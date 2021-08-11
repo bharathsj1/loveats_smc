@@ -107,6 +107,19 @@ class AppService {
       return null;
     }
   }
+  Future<dynamic> getrecipesub() async {
+     String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      var resp = await this.dio.get(
+            "/isUserReceipeSubscribed",
+          );
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
   Future<dynamic> getrecipedetails(id) async {
     try {
       var resp = await this.dio.get(
@@ -139,6 +152,18 @@ class AppService {
     try {
       var resp = await this.dio.get(
             "/getAddOns/"+id,
+          );
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future<dynamic> getrecipeplans() async {
+    try {
+      var resp = await this.dio.get(
+            "/getReceipiesProduct/",
           );
       return resp.data;
     } catch (e) {
@@ -251,6 +276,21 @@ class AppService {
     try {
       // FormData formData = new FormData.fromMap(data);
       var resp = await this.dio.get("/getMenuWithMenuType/"+id,);
+      print(resp);
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future<dynamic> getsublist() async {
+     String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      var resp =  await dio.request(
+      '/get-specific-user-subs',
+    );
       print(resp);
       return resp.data;
     } catch (e) {
@@ -394,6 +434,19 @@ class AppService {
     try {
       FormData formData = new FormData.fromMap(data);
       var resp = await this.dio.post("/make-order", data: formData);
+      print(resp);
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+  Future<dynamic> addpack(data) async {
+    String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      FormData formData = new FormData.fromMap(data);
+      var resp = await this.dio.post("/create-recipe-order", data: formData);
       print(resp);
       return resp.data;
     } catch (e) {

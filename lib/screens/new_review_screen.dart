@@ -24,7 +24,7 @@ class _NewReviewScreenState extends State<NewReviewScreen> {
   bool canPost = false;
 
   TextStyle subTitleTextStyle = Styles.customNormalTextStyle(
-    color: AppColors.accentText,
+    color: AppColors.grey,
     fontSize: Sizes.TEXT_SIZE_16,
   );
 
@@ -59,14 +59,17 @@ class _NewReviewScreenState extends State<NewReviewScreen> {
                   //     currentScreen: HomeScreen(),
                   //   ),
                   // ),
+                  onTap: (){
+                    Navigator.pop(context);
+                  },
                   child: Center(
                     child: Container(
                       margin: const EdgeInsets.only(left: 4),
                       child: Text(
                         'Cancel',
                         style: textTheme.body1.copyWith(
-                          color: AppColors.accentText,
-                          fontSize: Sizes.TEXT_SIZE_20,
+                          color: Colors.black54,
+                          fontSize: Sizes.TEXT_SIZE_16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -76,7 +79,7 @@ class _NewReviewScreenState extends State<NewReviewScreen> {
                 Text(
                   "New Review",
                   style: Styles.customTitleTextStyle(
-                    color: AppColors.headingText,
+                    color: AppColors.black,
                     fontWeight: FontWeight.w600,
                     fontSize: Sizes.TEXT_SIZE_22,
                   ),
@@ -100,8 +103,8 @@ class _NewReviewScreenState extends State<NewReviewScreen> {
                         style: textTheme.body1.copyWith(
                           color: canPost
                               ? AppColors.secondaryElement
-                              : AppColors.accentText,
-                          fontSize: Sizes.TEXT_SIZE_20,
+                              : Colors.black54,
+                          fontSize: Sizes.TEXT_SIZE_16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -115,57 +118,58 @@ class _NewReviewScreenState extends State<NewReviewScreen> {
         body: Container(
           margin: const EdgeInsets.symmetric(
             horizontal: Sizes.MARGIN_16,
-            vertical: Sizes.MARGIN_16,
+            vertical: Sizes.MARGIN_4,
           ),
           child: ListView(
             children: <Widget>[
-              FoodyBiteSearchInputField(
-                ImagePath.searchIcon,
-                controller: controller,
-                textFormFieldStyle:
-                    Styles.customNormalTextStyle(color: AppColors.accentText),
-                hintText: StringConst.HINT_TEXT_HOME_SEARCH_BAR,
-                hintTextStyle:
-                    Styles.customNormalTextStyle(color: AppColors.accentText),
-                hasSuffixIcon: showSuffixIcon,
-                suffixIcon: suffixIcon(),
-                suffixIconImagePath: ImagePath.settingsIcon,
-                borderWidth: 0.0,
-                onTapOfLeadingIcon: () {},
-                onTapOfSuffixIcon: () {
-                  controller.clear();
-                  changeState(
-                    showSuffixIcon: false,
-                    isCardShowing: false,
-                    hasRestaurantBeenAdded: false,
-                  );
-                },
-                borderStyle: BorderStyle.solid,
-                onChanged: (value) => _onChange(value),
+              // isCardShowing ? SpaceH30() : Container(),
+              //     isCardShowing
+              //         ? FoodyBiteSearchCard(
+              //             hasBeenAdded: hasRestaurantBeenAdded,
+              //             onPressed: () {
+              //               changeState(
+              //                   hasRestaurantBeenAdded: true,
+              //                   isCardShowing: true,
+              //                   showSuffixIcon: true,
+              //                   canPost: true);
+              //             },
+              //             onPressClose: () {
+              //               changeState(
+              //                 isCardShowing: false,
+              //                 hasRestaurantBeenAdded: false,
+              //                 showSuffixIcon: true,
+              //               );
+              //             },
+              //           )
+              //         : Container(),
+              // SpaceH30(),
+              Center(
+                child: Container(
+                    child: Text(
+                  'Add review with photo and get free 10 coins in your wallet',
+                  style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                )),
               ),
-              isCardShowing ? SpaceH30() : Container(),
-              isCardShowing
-                  ? FoodyBiteSearchCard(
-                      hasBeenAdded: hasRestaurantBeenAdded,
-                      onPressed: () {
-                        changeState(
-                            hasRestaurantBeenAdded: true,
-                            isCardShowing: true,
-                            showSuffixIcon: true,
-                            canPost: true);
-                      },
-                      onPressClose: () {
-                        changeState(
-                          isCardShowing: false,
-                          hasRestaurantBeenAdded: false,
-                          showSuffixIcon: true,
-                        );
-                      },
-                    )
-                  : Container(),
               SpaceH30(),
               RatingsBar(),
-              SpaceH30(),
+              SpaceH20(),
+              Container(
+                width: MediaQuery.of(context).size.width - 60,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 0.0,
+                ),
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(width: 0.5,color: Colors.grey),
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                child: Icon(Icons.add_a_photo_outlined,color: Colors.black87,),
+              ),
+              SpaceH20(),
               _buildReview(context: context),
             ],
           ),
@@ -198,12 +202,13 @@ class _NewReviewScreenState extends State<NewReviewScreen> {
 
   Widget _buildReview({@required BuildContext context}) {
     var textTheme = Theme.of(context).textTheme;
+    TextEditingController review = TextEditingController();
     return Column(
       children: <Widget>[
         Text(
           "Review",
           style: Styles.customTitleTextStyle(
-            color: AppColors.headingText,
+            color: AppColors.black,
             fontWeight: FontWeight.w600,
             fontSize: Sizes.TEXT_SIZE_20,
           ),
@@ -214,12 +219,14 @@ class _NewReviewScreenState extends State<NewReviewScreen> {
           maxLines: 10,
           hintText: "Write your experience",
           hintTextStyle: subTitleTextStyle,
-          borderWidth: Sizes.WIDTH_1,
+          borderWidth: 1.5,
           borderRadius: Sizes.RADIUS_12,
           borderStyle: BorderStyle.solid,
-          focusedBorderColor: AppColors.indigo,
+          focusedBorderColor: AppColors.black,
           textFormFieldStyle: textTheme.body1,
           contentPaddingHorizontal: Sizes.MARGIN_16,
+          textEditingController: review,
+          borderColor: Colors.grey,
         ),
       ],
     );

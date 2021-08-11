@@ -162,6 +162,7 @@ class _UserSubscriptionListState extends State<UserSubscriptionList> {
     _specificUserSubscriptionModel =
         await Service().getSpecificUserSubscriptionData();
     _isLoading = false;
+    print(_specificUserSubscriptionModel);
     setState(() {});
   }
 

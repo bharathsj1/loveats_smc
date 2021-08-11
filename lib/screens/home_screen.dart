@@ -51,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List categories = [];
   List hotspotlist = [];
   List recipes = [];
+  List recipessub = [];
   List popularitem = [];
   List<City> _cityList;
   City _currentCity;
@@ -86,6 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
     getRestaurent();
     getcateory();
     getrecipes();
+    getsubrecipe();
     getpopularitem();
     isUserGuest();
     super.initState();
@@ -146,6 +148,14 @@ class _HomeScreenState extends State<HomeScreen> {
     var response = await AppService().getrecipe();
     recipes = response['data'];
     print(recipes);
+    // loader3 = false;
+    setState(() {});
+  }
+
+  getsubrecipe() async {
+    var response = await AppService().getrecipesub();
+    recipessub = response['data'];
+    print(recipessub);
     loader3 = false;
     setState(() {});
   }
@@ -1599,9 +1609,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                 //       distance: hotspotlist[0]['distance'] + ' Km',
                                 //       data: hotspotlist[0]),
                                 // );
+                               
+                                if(recipessub.length==0){
                                 Navigator.pushNamed(
-                                    context, AppRouter.Recipe_details,
-                                    arguments: recipes[0]);
+                                    context, AppRouter.Recipes_list,
+                                    arguments: {'recipe':recipes[0],'usersub':true,'subdata': recipessub[0]});
+                                }
+                                else{
+                                Navigator.pushNamed(
+                                    context, AppRouter.Build_Plan,
+                                    arguments: {'recipe':recipes[0],'usersub':false,});
+                                }
                               },
                               child: Image.asset(
                                 //  'assets/loginvideo2.gif',

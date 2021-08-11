@@ -31,20 +31,20 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
   @override
   void initState() {
     // TODO: implement initState
-    initialize();
-    // animationcontroll = AnimationController(
-    //   duration: const Duration(milliseconds: 100),
-    //   vsync: this,
-    // );
+    // initialize();
+    animationcontroll = AnimationController(
+      duration: const Duration(milliseconds: 100),
+      vsync: this,
+    );
     super.initState();
   }
 
   @override
   dispose() {
-    if (_controller != null) {
-      _controller.dispose();
-    }
-    // animationcontroll.dispose();
+    // if (_controller != null) {
+    //   _controller.dispose();
+    // }
+    animationcontroll.dispose();
     super.dispose();
   }
 
@@ -72,51 +72,42 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Center(
-        // child: Lottie.asset(
-        //   // 'assets/food.json',
-        //   'assets/food5.json',
-        //   // 'assets/food2.json',
-        //   // 'assets/food3.json',
-        //   controller: animationcontroll,
+        child: Lottie.asset(
+          // 'assets/food.json',
+          'assets/splash.json',
+          // 'assets/food2.json',
+          // 'assets/food3.json',
+          width: MediaQuery.of(context).size.width,
+          frameRate: FrameRate.max,
+          fit: BoxFit.fill,
+          controller: animationcontroll,
 
-        //   onLoaded: (value) {
-        //     animationcontroll.addStatusListener((status) {
-        //       if (status == AnimationStatus.completed) {
-        //         navigatetonext(context);
-        //       }
-        //     });
-        //     animationcontroll
-        //       ..duration = value.duration
-        //       ..forward();
-        //   },
-        // )
-        child: SizedBox(
-          child: FittedBox(
-            child: SizedBox(
-              child: VideoPlayer(_controller),
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-            ),
-            fit: BoxFit.fill,
-          ),
-        ),
+          onLoaded: (value) {
+            animationcontroll.addStatusListener((status) {
+              if (status == AnimationStatus.completed) {
+                navigatetonext(context);
+              }
+            });
+            animationcontroll
+              ..duration = value.duration
+              ..forward();
+          },
+        )
+        // child: SizedBox(
+        //   child: FittedBox(
+        //     child: SizedBox(
+        //       child: VideoPlayer(_controller),
+        //       height: MediaQuery.of(context).size.height,
+        //       width: MediaQuery.of(context).size.width,
+        //     ),
+        //     fit: BoxFit.fill,
+        //   ),
+        // ),
       ),
     );
   }
 
   navigatetonext(context) async {
-    // final shared = await Service().loggedUser();
-    // Navigator.pushAndRemoveUntil(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (_) => shared != null
-    //             ? BubbleTabBarDemo(
-    //                 type: shared,
-    //               )
-    //             :
-    //             //  BackgroundVideo()
-    //             GooeyEdgeDemo()),
-    //     (route) => false);
     final user = firebaseAuth.currentUser;
     final shared = await Service().loggedUser();
     final driving = await Service().checkdriving();

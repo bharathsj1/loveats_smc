@@ -503,6 +503,7 @@ class Service {
   Future<GetAllSubscriptionModel> getAllSubscription() async {
     try {
       Response response = await dio.request('/get-all-subscription-plans');
+       print(response);
       if (response.data['success'] == true)
         return GetAllSubscriptionModel.fromJson(response.data);
       else
