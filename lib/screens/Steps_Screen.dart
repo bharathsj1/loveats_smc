@@ -222,7 +222,7 @@ class _StepsScreenState extends State<StepsScreen>
                         padding: EdgeInsets.all(4),
                         child: ClipOval(
                           child: CachedNetworkImage(
-                            imageUrl: ingridient[i]['image'],
+                            imageUrl: ingridient[i]['ingridient']['image'],
                             width: 100,
                             height: 100,
                             fit: BoxFit.cover,

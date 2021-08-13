@@ -178,16 +178,19 @@ class _Myorder_DetailState extends State<Myorder_Detail> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              widget.orderdata['order_detail'][0]['rest_menu']
-                                      ['menu_name'] +
-                                  '  x' +
-                                  widget.orderdata['order_detail'][0]
-                                      ['quantity'],
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.black.withOpacity(0.6),
-                                  fontFamily: 'roboto'),
+                            Container(
+                              width: MediaQuery.of(context).size.width*0.62,
+                              child: Text(
+                           widget.orderdata['is_receipe']==1? widget.orderdata['receipe']['title']+ '  x' +widget.orderdata['quantity']:  widget.orderdata['order_detail']  [0]['rest_menu']
+                                        ['menu_name'] +
+                                    '  x' +
+                                    widget.orderdata['order_detail'][0]
+                                        ['quantity'],
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    color: AppColors.black.withOpacity(0.6),
+                                    fontFamily: 'roboto'),
+                              ),
                             ),
                             SizedBox(
                               height: 6,
@@ -207,7 +210,7 @@ class _Myorder_DetailState extends State<Myorder_Detail> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             child: Image.network(
-                              widget.orderdata['order_detail'][0]['rest_menu']
+                            widget.orderdata['is_receipe']==1? widget.orderdata['receipe']['image']:  widget.orderdata['order_detail'][0]['rest_menu']
                                   ['menu_image'],
                               height: 50,
                               width: 50,
@@ -269,6 +272,7 @@ class _Myorder_DetailState extends State<Myorder_Detail> {
                             progressbutton(widget.orderdata['status'] !=null? true:false,Colors.green[600], true),
                             progressbutton(widget.orderdata['status'] =='ready'||widget.orderdata['status'] =='onway'||widget.orderdata['status'] =='delivered'? true:false,Colors.green[600], true),
                             progressbutton( widget.orderdata['status'] =='onway'? true:false,Colors.green[600], true),
+                            progressbutton( widget.orderdata['status'] =='delivered'? true:false,Colors.green[600], true),
                             progressbutton( widget.orderdata['status'] =='delivered'? true:false,Colors.green[600], true),
                           ],
                         ),
@@ -359,6 +363,25 @@ class _Myorder_DetailState extends State<Myorder_Detail> {
                               'Order has been delivered. Enjoy!',
                               '',
                               Colors.green[600]),
+                           SizedBox(
+                            height: 38,
+                          ),
+                         InkWell(
+                            onTap: widget.orderdata['status'] !='delivered'? () {
+
+                              print('here');
+                              Navigator.pushNamed(
+                                  context, AppRouter.newReviewScreen,
+                                  );
+                            }:null,
+                            child: progressdetail(
+                            widget.orderdata['status'] =='delivered'? true:false,
+                              Icons.card_giftcard_outlined,
+                              false,
+                              'Add Review',
+                              'Add review and get free 10 coins in your wallet',
+                              '',
+                              Colors.green[600]),)
                         ],
                       ),
                     ],

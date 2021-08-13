@@ -108,6 +108,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                     builder: (_) => SubscriptionWebview(
                       planId: data.id,
                       userId: userId,
+                      isrecipe: false,
+                      
                     ),
                   ),
                 );
@@ -130,6 +132,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   void getSubscriptionPlans() async {
     _getAllSubscriptionModel = await Service().getAllSubscription();
     _isLoading = false;
+    print(_getAllSubscriptionModel);
     setState(() {});
   }
 

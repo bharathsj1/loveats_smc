@@ -25,7 +25,10 @@ class _RecipeDetailsState extends State<RecipeDetails>
   bool lastStatus = true;
   bool isExpaned = true;
   bool loader = true;
+  bool usersub = false;
   int personselect = 0;
+  double delivery=5.0;
+  List sublist=[];
   List persons = [
     {'name': '2', 'select': true},
     {'name': '4', 'select': false},
@@ -35,7 +38,19 @@ class _RecipeDetailsState extends State<RecipeDetails>
 
   @override
   void initState() {
+    if(widget.data['usersub']){
+    usersub=widget.data['usersub'];
+    personselect= persons
+        .indexWhere((p) => p['name']
+            .contains(widget.data['subdata']['person_quantity']));
+    print(personselect);
+    persons[personselect]['select']=true;
+    }
+    setState(() {
+      
+    });
     getrecipes();
+    getsub();
     _controller = new TabController(length: 2, vsync: this);
     //  _tabcontroller.index=2;
 
@@ -49,10 +64,25 @@ class _RecipeDetailsState extends State<RecipeDetails>
 
   getrecipes() async {
     var response =
-        await AppService().getrecipedetails(widget.data['id'].toString());
+        await AppService().getrecipedetails(widget.data['recipe']['id'].toString());
     recipedetails = response['data'];
     print(response);
     loader = false;
+    setState(() {});
+  }
+  getsub() async {
+    var response =
+        await AppService().getsublist();
+    sublist = response['data'];
+    print(sublist);
+    for (var item in sublist) {
+      if(item['product']['id']== 'prod_JzuaHXKP0rkKNJ'){
+        print('avail');
+        delivery=0.0;
+        break;
+      }
+    }
+    // loader = false;
     setState(() {});
   }
 
@@ -158,7 +188,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
                       tag: 'recipe',
                       child: CachedNetworkImage(
                         imageUrl:
-                           widget.data['image'],
+                           widget.data['recipe']['image'],
                         width: MediaQuery.of(context).size.width,
                         height: 250,
                         fit: BoxFit.cover,
@@ -188,7 +218,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
     return List.generate(
         persons.length,
         (i) => InkWell(
-              onTap: () {
+              onTap:usersub?null: () {
                 for (var item in persons) {
                   item['select'] = false;
                 }
@@ -197,40 +227,43 @@ class _RecipeDetailsState extends State<RecipeDetails>
 
                 setState(() {});
               },
-              child: Container(
-                decoration: BoxDecoration(
-                    color: persons[i]['select']
-                        ? AppColors.secondaryElement
-                        : null,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(width: 0.2, color: Colors.black54)),
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                margin: EdgeInsets.symmetric(horizontal: 2),
-                child: Row(
-                  children: [
-                    Text(persons[i]['name'],
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.openSans(
-                          textStyle: Styles.customNormalTextStyle(
-                            color: persons[i]['select']
-                                ? AppColors.white
-                                : Colors.black54,
-                            fontSize: Sizes.TEXT_SIZE_20,
-                          ),
-                        )),
-                    persons[i]['select']
-                        ? Text(' Person',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.openSans(
-                              textStyle: Styles.customNormalTextStyle(
-                                color: persons[i]['select']
-                                    ? AppColors.white
-                                    : Colors.black54,
-                                fontSize: Sizes.TEXT_SIZE_16,
-                              ),
-                            ))
-                        : Container(),
-                  ],
+              child: Opacity(
+                opacity: usersub && i!=personselect? 0.3:1,
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: persons[i]['select']
+                          ? AppColors.secondaryElement
+                          : usersub?Colors.grey.shade400: null,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(width: 0.2, color: Colors.black54)),
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  margin: EdgeInsets.symmetric(horizontal: 2),
+                  child: Row(
+                    children: [
+                      Text(persons[i]['name'],
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.openSans(
+                            textStyle: Styles.customNormalTextStyle(
+                              color: persons[i]['select']
+                                  ? AppColors.white
+                                  : Colors.black54,
+                              fontSize: Sizes.TEXT_SIZE_20,
+                            ),
+                          )),
+                      persons[i]['select']
+                          ? Text(' Person',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.openSans(
+                                textStyle: Styles.customNormalTextStyle(
+                                  color: persons[i]['select']
+                                      ? AppColors.white
+                                      : Colors.black54,
+                                  fontSize: Sizes.TEXT_SIZE_16,
+                                ),
+                              ))
+                          : Container(),
+                    ],
+                  ),
                 ),
               ),
             ));
@@ -552,7 +585,8 @@ class _RecipeDetailsState extends State<RecipeDetails>
                   buttonTextStyle:
                       TextStyle(color: AppColors.white, fontSize: 14),
                   onTap: () {
-                    Navigator.pushNamed(context, AppRouter.Buy_Ingredients,arguments: {'recipe':widget.data,'ingredients':recipedetails['data'],'person':personselect});
+
+                    Navigator.pushNamed(context, AppRouter.Buy_Ingredients,arguments: {'usersub':usersub,'recipe':widget.data['recipe'],'ingredients':recipedetails['data'],'person':personselect,'delivery':delivery});
                   },
                 ),
               ),
@@ -569,7 +603,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
                   onTap: () {
                       var steps = recipedetails['steps'];
                     Navigator.pushNamed(context, AppRouter.Steps_Screen,
-                        arguments: {'recipe':widget.data,'steps': steps, 'stepno': 0,'person':personselect});
+                        arguments: {'recipe':widget.data['recipe'],'steps': steps, 'stepno': 0,'person':personselect});
                   },
                 ),
               ),
@@ -590,7 +624,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 5),
-                  Text(toBeginningOfSentenceCase(widget.data['title']),
+                  Text(toBeginningOfSentenceCase(widget.data['recipe']['title']),
                       textAlign: TextAlign.left,
                       style: Styles.customTitleTextStyle(
                         color: Colors.black87,
@@ -600,7 +634,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
                   SizedBox(
                     height: 5,
                   ),
-                  Text(widget.data['short_description'],
+                  Text(widget.data['recipe']['short_description'],
                       textAlign: TextAlign.center,
                       style: GoogleFonts.openSans(
                         textStyle: Styles.customNormalTextStyle(
@@ -613,15 +647,19 @@ class _RecipeDetailsState extends State<RecipeDetails>
                   ),
                   IntrinsicHeight(
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(widget.data['total_time'] + ' prep',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.openSans(
-                              textStyle: Styles.customNormalTextStyle(
-                                color: Colors.black54,
-                                fontSize: Sizes.TEXT_SIZE_14,
-                              ),
-                            )),
+                        Row(
+                          children: [
+                            Text(widget.data['recipe']['total_time'] + ' prep',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.openSans(
+                                  textStyle: Styles.customNormalTextStyle(
+                                    color: Colors.black54,
+                                    fontSize: Sizes.TEXT_SIZE_14,
+                                  ),
+                                )),
+
                         SizedBox(
                           width: 2,
                         ),
@@ -644,6 +682,26 @@ class _RecipeDetailsState extends State<RecipeDetails>
                         SizedBox(
                           width: 2,
                         ),
+                                                  ],
+                        ),
+                     usersub?   Center(
+                child: PotbellyButton(
+                  'View as non-subscriber',
+                  buttonHeight: 30,
+                  buttonWidth: 120,
+                  decoration: BoxDecoration(
+                      color: AppColors.secondaryElement,
+                      borderRadius: BorderRadius.circular(4)),
+                  buttonTextStyle:
+                      TextStyle(color: AppColors.white, fontSize: 12),
+                  onTap: () {
+                   usersub=false;
+                   setState(() {
+                     
+                   });
+                  },
+                ),
+              ):Container(),
                       ],
                     ),
                   ),
@@ -655,14 +713,14 @@ class _RecipeDetailsState extends State<RecipeDetails>
                     color: Colors.black54,
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 5,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Column(
                         children: [
-                          Text(widget.data['total_time'],
+                          Text(widget.data['recipe']['total_time'],
                               textAlign: TextAlign.center,
                               style: GoogleFonts.openSans(
                                 textStyle: Styles.customNormalTextStyle(
@@ -685,7 +743,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
                       ),
                       Column(
                         children: [
-                          Text(widget.data['calories'],
+                          Text(widget.data['recipe']['calories'],
                               textAlign: TextAlign.center,
                               style: GoogleFonts.openSans(
                                 textStyle: Styles.customNormalTextStyle(
@@ -708,7 +766,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
                       ),
                       Column(
                         children: [
-                          Text(widget.data['difficulty'],
+                          Text(widget.data['recipe']['difficulty'],
                               textAlign: TextAlign.center,
                               style: GoogleFonts.openSans(
                                 textStyle: Styles.customNormalTextStyle(

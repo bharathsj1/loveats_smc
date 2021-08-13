@@ -75,7 +75,7 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
                         child: Image.network(
-                          orderslist[i]['order_detail'][0]['rest_menu']
+                       orderslist[i]['is_receipe']==1? orderslist[i]['receipe']['image']:  orderslist[i]['order_detail'][0]['rest_menu']
                               ['menu_image'],
                           loadingBuilder: (BuildContext ctx, Widget child,
                               ImageChunkEvent loadingProgress) {
@@ -106,7 +106,7 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                         // color: Colors.red,
                         width: MediaQuery.of(context).size.width * 0.50,
                         child: Text(
-                          orderslist[i]['order_detail'][0]['rest_menu']
+                        orderslist[i]['is_receipe']==1? orderslist[i]['receipe']['title'] : orderslist[i]['order_detail'][0]['rest_menu']
                               ['menu_name'],
                           style: subHeadingTextStyle,
                           maxLines: 1,
@@ -116,7 +116,8 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                       Row(
                         children: [
                           Text(
-                            '${StringConst.currency}' +
+                          orderslist[i]['is_receipe']==1? '${StringConst.currency}' +
+                                orderslist[i]['total_amount']: '${StringConst.currency}' +
                                 orderslist[i]['order_detail'][0]['total_price'],
                             style: TextStyle(
                               color: AppColors.secondaryElement,
@@ -139,7 +140,7 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                           Container(
                             width: MediaQuery.of(context).size.width * 0.40,
                             child: Text(
-                              orderslist[i]['order_detail'][0]['rest_menu']
+                            orderslist[i]['is_receipe']==1? orderslist[i]['receipe']['short_description']:  orderslist[i]['order_detail'][0]['rest_menu']
                                   ['menu_details'],
                               style: addressTextStyle,
                               maxLines: 1,
@@ -163,7 +164,7 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Quantity: ' +
+                            orderslist[i]['is_receipe']==1?'Quantity: ' + orderslist[i]['quantity']:  'Quantity: ' + 
                                   orderslist[i]['order_detail'][0]['quantity'],
                               style: addressTextStyle,
                               maxLines: 2,

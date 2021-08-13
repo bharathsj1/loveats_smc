@@ -9,8 +9,11 @@ import 'package:webview_flutter/webview_flutter.dart';
 class SubscriptionWebview extends StatefulWidget {
   final String userId;
   final String planId;
+  final String personquantity;
+  final String perweek;
+  final bool isrecipe;
 
-  const SubscriptionWebview({Key key, this.userId, this.planId})
+  const SubscriptionWebview({Key key, this.userId, this.planId,@required this.isrecipe,this.perweek,this.personquantity})
       : super(key: key);
 
   @override
@@ -18,6 +21,15 @@ class SubscriptionWebview extends StatefulWidget {
 }
 
 class _SubscriptionWebviewState extends State<SubscriptionWebview> {
+  @override
+  void initState() {
+    print(widget.userId);
+    print(widget.planId);
+    print(widget.isrecipe);
+    print(widget.perweek);
+    print(widget.personquantity);
+    super.initState();
+  }
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
   @override
@@ -26,7 +38,7 @@ class _SubscriptionWebviewState extends State<SubscriptionWebview> {
       appBar: AppBar(),
       body: WebView(
         initialUrl:
-            'https://love.signaturemediachannel.com/checkout/${widget.userId}/${widget.planId}',
+           widget.isrecipe? 'https://love.signaturemediachannel.com/checkout-subscription/${widget.userId}/${widget.planId}/${widget.personquantity}/${widget.perweek}': 'https://love.signaturemediachannel.com/checkout/${widget.userId}/${widget.planId}',
         onWebViewCreated: (WebViewController webViewController) {
           _controller.complete(webViewController);
         },

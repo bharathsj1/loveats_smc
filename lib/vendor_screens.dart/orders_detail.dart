@@ -602,7 +602,7 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                         Row(
                           children: [
                             Text(
-                              '${StringConst.currency}' + widget.orderdata['total_amount'],
+                              '${StringConst.currency}' + (double.parse(widget.orderdata['total_amount'])).toStringAsFixed(2),
                               style: TextStyle(
                                 color: AppColors.secondaryElement,
                                 fontWeight: FontWeight.bold,

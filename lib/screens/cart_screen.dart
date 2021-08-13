@@ -22,6 +22,7 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   bool mixmatch = false;
   List cartlist = [];
+  List packlist = [];
   List newcart = [];
   bool loader = true;
   bool cutlery = false;
@@ -38,7 +39,7 @@ class _CartScreenState extends State<CartScreen> {
 
   void getSpecificUserSubscription() async {
     isGuest = await Service().isGuest();
-    if (!isGuest) {
+    if (isGuest!=null && !isGuest) {
       _specificUserSubscriptionModel =
           await Service().getSpecificUserSubscriptionData();
       _freemealModel = await Service().checkFreeMeal();
@@ -88,6 +89,24 @@ class _CartScreenState extends State<CartScreen> {
     print(cartlist);
     //setState(() {});
   }
+  
+  getpackcartlist() async {
+    print(await Service().getUserdata());
+    var pack = await CartProvider().getcartspacklist();
+    packlist.clear();
+    print(pack);
+    // for (var item in cart) {
+    for (var i = 0; i < pack.length; i++) {
+      packlist.add(pack[i]);
+    }
+    print(packlist.length);
+
+    if (packlist.length != 0) {
+      calculate2();
+    }
+    print(packlist);
+    //setState(() {});
+  }
 
   calculate() {
     double total = 0;
@@ -99,9 +118,20 @@ class _CartScreenState extends State<CartScreen> {
     print(totalAmount);
   }
 
+  calculate2() {
+    double total = 0;
+    packlist.forEach((f) {
+      total += (f['price']) * double.parse(f['qty']);
+    });
+    totalAmount = total;
+    print('total');
+    print(totalAmount);
+  }
+
   @override
   void initState() {
     getcartlist();
+    // getpackcartlist();
     getSpecificUserSubscription();
     super.initState();
   }
@@ -418,6 +448,119 @@ class _CartScreenState extends State<CartScreen> {
             ));
   }
 
+  List<Widget> renderpackList() {
+    return List.generate(
+        packlist.length,
+        (index) => InkWell(
+              onTap: () async {
+                // updateitem(context, (newcart[i][index]), i, index);
+                 await CartProvider().clearpackcart();
+                 getpackcartlist();
+                 setState(() {
+
+                 });
+              },
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(packlist[index]['qty'] + 'x',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: AppColors.secondaryElement,
+                                  fontWeight: FontWeight.bold)),
+
+                          
+                          SizedBox(
+                            width: 25,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 0.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.62,
+                                      child: Text(packlist[index]['name'],
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              // fontWeight: FontWeight.bold
+                                              color: AppColors.black)),
+                                    ),
+                                    Text(
+                                        '${StringConst.currency}' +
+                                            double.tryParse(packlist[index]
+                                                    ['payableAmount'])
+                                                .toStringAsFixed(2),
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: AppColors.secondaryElement,
+                                            fontWeight: FontWeight.w900)),
+                                  ],
+                                ),
+                                
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: List.generate(
+                                    packlist[index]['data']['ingredients'].length,
+                                    (ind) => Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            packlist[index]['data']['ingredients'][ind]['ingridient']['name'],
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: AppColors.secondaryElement,
+                                              letterSpacing: .3,
+                                            )),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                
+                                SizedBox(
+                                  height: 15,
+                                ),
+                               
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      child: Divider(
+                        height: 1,
+                        color: Colors.grey[400],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ));
+  }
+
   List<Widget> resturantwithcart() {
     return List.generate(
         newcart.length,
@@ -474,6 +617,67 @@ class _CartScreenState extends State<CartScreen> {
                 ),
                 Column(
                   children: renderAddList(i),
+                ),
+              ],
+            ));
+  }
+ 
+  List<Widget> packcartlist() {
+    return List.generate(
+        packlist.length,
+        (i) => Column(
+              children: [
+                Material(
+                  elevation: 1,
+                  child: Container(
+                    height: 50,
+                    // color: Colors.grey[100],
+                    padding: EdgeInsets.only(left: 20),
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.network(
+                              packlist[i]['image'],
+                              loadingBuilder: (BuildContext ctx, Widget child,
+                                  ImageChunkEvent loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                } else {
+                                  return Container(
+                                    // height: ,
+                                    width: 30,
+                                    height: 30,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                AppColors.secondaryElement),
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              fit: BoxFit.cover,
+                              height: 30,
+                              width: 30,
+                            )),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                           'Recipe Package',
+                          style: TextStyle(
+                              color: AppColors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Column(
+                  children: renderpackList(),
                 ),
               ],
             ));
@@ -739,7 +943,7 @@ class _CartScreenState extends State<CartScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: (loader == false && newcart.length == 0) ||
+      bottomNavigationBar: (loader == false && newcart.length == 0 && packlist.length == 0) ||
               (loader == false && newcart.length > 1 && mixmatch == false)
           ? null
           : Material(
@@ -897,11 +1101,13 @@ class _CartScreenState extends State<CartScreen> {
                             } else {
                               var data = {
                                 'cartlist': newcart,
+                                'packlist': packlist,
                                 'charges': charges,
                                 'shipping': shipping,
                                 'total': totalAmount,
                                 'type': 'cart',
                                 'mixmatch': mixmatch,
+                                'recipe':false
                               };
                               Navigator.pushNamed(context, AppRouter.CheckOut1,
                                   arguments: data);
@@ -933,7 +1139,7 @@ class _CartScreenState extends State<CartScreen> {
                     AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
               ),
             )
-          : newcart.length == 0
+          : newcart.length == 0 && packlist.length ==0
               ? Center(
                   child: Container(
                     child: Text('Cart is empty'),
@@ -1086,6 +1292,9 @@ class _CartScreenState extends State<CartScreen> {
                       // ),
                       Column(
                         children: resturantwithcart(),
+                      ),
+                      Column(
+                        children: packcartlist(),
                       ),
                       Container(
                         color: Colors.white,

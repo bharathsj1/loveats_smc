@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +15,7 @@ import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/circularIndicator.dart';
 import 'package:potbelly/widgets/foody_bite_card.dart';
+import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:potbelly/widgets/spaces.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -71,6 +73,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             AppColors.secondaryElement),
         NavBarItemData(
             "Profile", OMIcons.person, 105, AppColors.secondaryElement),
+        NavBarItemData(
+            "Social", OMIcons.person, 105, AppColors.secondaryElement),
       ];
 
       // initialize();
@@ -303,6 +307,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  social(){
+    return Container();
+  }
+
   @override
   Widget build(BuildContext context) {
     var navBar = NavBar(
@@ -332,7 +340,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 margin: EdgeInsets.only(top: Sizes.MARGIN_8),
                 child: ListView(
                   children: <Widget>[
-                    Column(
+                  _selectedNavIndex != 4?  Column(
                       children: [
                         prefs.getString('photo') != null &&
                                 prefs.getString('photo') != ''
@@ -376,7 +384,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                       ],
-                    ),
+                    ):Container(),
                     _selectedNavIndex == 3
                         ? Column(
                             children: [
@@ -403,27 +411,155 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           )
                         : Container(),
-                    Divider(
-                      height: Sizes.HEIGHT_24,
+               
+                 _selectedNavIndex == 4?   Padding(
+                  padding: const EdgeInsets.symmetric(horizontal:20.0),
+                   child: Column(
+                     crossAxisAlignment: CrossAxisAlignment.start,
+                     children: [
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                        prefs.getString('photo') != null &&
+                                  prefs.getString('photo') != ''
+                              ? CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                    StringConst.LIVE_PICTURE_URL +
+                                        prefs.getString('photo'),
+                                  ),
+                                  backgroundColor: Colors.transparent,
+                                  minRadius:50,
+                                  maxRadius:50,
+                                )
+                              : CircleAvatar(
+                                  backgroundImage:
+                                      AssetImage('assets/images/andy.png'),
+                                  backgroundColor: Colors.transparent,
+                                  minRadius: 50,
+                                  maxRadius: 50,
+                                ),
+                                 IntrinsicHeight(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    detail(number: "50", text: "Reviews"),
+                                    VerticalDivider(
+                                      width: Sizes.WIDTH_40,
+                                      thickness: 1.0,
+                                    ),
+                                    detail(number: "100k", text: "Followers"),
+                                    VerticalDivider(
+                                      width: Sizes.WIDTH_40,
+                                      thickness: 1.0,
+                                    ),
+                                    detail(number: "30", text: "Following"),
+                                    SpaceH24(),
+                                  ],
+                                ),
+                              ),
+                     ],),
+                     SizedBox(height: 10,),
+                      Text(toBeginningOfSentenceCase(prefs.getString('name')) ?? 'Not Available',
+                              style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: Colors.black)),
+                     SizedBox(height: 5,),
+                      Text(toBeginningOfSentenceCase('My first priority will always be food because it is the only thing which gives us the energy to live.') ?? 'Not Available',
+                              style: TextStyle(fontSize: 14,fontWeight: FontWeight.normal,color: Colors.black54)),
+                     SizedBox(height: 15,),
+                      Center(
+                        child: PotbellyButton(
+                            'Edit Profile',
+                            onTap: () {
+                            
+                            },
+                            buttonHeight: 42,
+                            buttonWidth: MediaQuery.of(context).size.width * 0.90,
+                            buttonTextStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(width: 0.5,color: Colors.grey),
+                                color: Colors.transparent),
+                          ),
+                      ),
+                      SizedBox(height: 15,)
+                     
+                      ],),
+                      
+                     
+                 ):Container(),
+                   _selectedNavIndex != 4?   Divider(
+                      height: 24,
+                      thickness: 1.0,
+                      color: Colors.grey.shade300,
+                    ):Container(),
+                  _selectedNavIndex == 4?   Divider(
+                      height: 3,
                       thickness: 3.0,
-                      color: Colors.grey[200],
-                    ),
+                      color: Colors.black87,
+                    ):Container(),
+                   _selectedNavIndex == 4? Padding(
+                     padding: const EdgeInsets.only(top:0.0),
+                     child: Wrap(children: postlist()),
+                   ):Container(),
                     _selectedNavIndex == 0
                         ? homewidget()
                         : _selectedNavIndex == 1
                             ? bookmarkwidget()
                             : _selectedNavIndex == 2
                                 ? notificationwidget()
-                                : profilewidget()
+                                : _selectedNavIndex == 3? profilewidget():social()
                   ],
                 ),
               ));
   }
 
+  List allpost=[
+    'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+    'https://www.eatright.org/-/media/eatrightimages/health/pregnancy/fertilityandreproduction/bean-corn-tomato-salad-1056788234.jpg?h=450&w=600&la=en&hash=8E919F45C2E0A8D540BB725663DD2F7F3A8CB804',
+    'https://tecadvo.com/wp-content/uploads/2020/10/13.jpg',
+    'https://media.self.com/photos/5f189b76c58e27c99fbef9e3/1:1/w_850,h_849,c_limit/blackberry-vanilla-french-toast.jpg',
+    'https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/10/Eat-Grains-Beans-Food-732x549-Thumbnail-732x549.jpg',
+    'https://images.squarespace-cdn.com/content/v1/53621c77e4b0ab57db4d48d5/1497488872780-JUR4XENC89U8RIQ30FEY/IMG_9881.JPG?format=500w'
+    'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+    'https://www.eatright.org/-/media/eatrightimages/health/pregnancy/fertilityandreproduction/bean-corn-tomato-salad-1056788234.jpg?h=450&w=600&la=en&hash=8E919F45C2E0A8D540BB725663DD2F7F3A8CB804',
+    'https://tecadvo.com/wp-content/uploads/2020/10/13.jpg',
+    'https://media.self.com/photos/5f189b76c58e27c99fbef9e3/1:1/w_850,h_849,c_limit/blackberry-vanilla-french-toast.jpg',
+    'https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/10/Eat-Grains-Beans-Food-732x549-Thumbnail-732x549.jpg',
+    'https://images.squarespace-cdn.com/content/v1/53621c77e4b0ab57db4d48d5/1497488872780-JUR4XENC89U8RIQ30FEY/IMG_9881.JPG?format=500w'
+  ];
+  
+  postlist(){
+     return List.generate(
+       allpost.length ,
+        (i) =>Container(
+          decoration: BoxDecoration(border: Border.all(width: 1.5,color: Colors.black)),
+          child: CachedNetworkImage(
+                              imageUrl:allpost[i],
+                              width: (MediaQuery.of(context).size.width/3)-3,
+                              height: (MediaQuery.of(context).size.width/3)-3,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Center(
+                                child: Container(
+                                  // height: 150,
+
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.secondaryElement),
+                                  ),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                            ),
+        ),);
+  }
+
   void getSpecificUserSubscription() async {
     _specificUserSubscriptionModel =
         await Service().getSpecificUserSubscriptionData();
-    print(_specificUserSubscriptionModel.data.length);
+    // print(_specificUserSubscriptionModel.data.length);
       _isLoading = false;
     setState(() {});
     
@@ -743,3 +879,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+
+

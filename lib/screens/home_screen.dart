@@ -1076,12 +1076,6 @@ class _HomeScreenState extends State<HomeScreen> {
               //       .toList();
               //   setState(() {});
               // }
-<<<<<<< HEAD
-              Navigator.pushNamed(context, AppRouter.Filter_Items, arguments: {
-                'name': name == 'Delivery' ? 'Deliverable' : 'Pickup',
-                'cat': false
-              });
-=======
               if (name == 'Table Service') {
                 Navigator.pushNamed(context, AppRouter.Table_Scanner);
               } else {
@@ -1091,7 +1085,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       'cat': false
                     });
               }
->>>>>>> 9c8f91e3dbe58db12226c0dfe123cf582c864025
             },
             child: Container(
                 width: width,
@@ -1268,7 +1261,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       _isGuest = await Service().isGuest();
                                       // print(_isGuest);
                                       // return;
-                                      if (_isGuest !=null && !_isGuest) {
+                                      if (_isGuest != null && !_isGuest) {
                                         Navigator.pushNamed(
                                           context,
                                           AppRouter.profileScreen,
@@ -1585,9 +1578,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       }),
                     ),
                   ),
-<<<<<<< HEAD
-
-=======
                   SizedBox(
                     height: 10,
                   ),
@@ -1652,7 +1642,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               )),
                         ),
                   SizedBox(height: 15.0),
->>>>>>> 9c8f91e3dbe58db12226c0dfe123cf582c864025
                   // : Container(),
                   // loader
                   //     ? Container(
@@ -1703,48 +1692,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   //         ],
                   //       ),
                   //
-<<<<<<< HEAD
-                  // SizedBox(height: 0.0),
-                  // loader3
-                  //     ? Container(
-                  //         height: 280,
-                  //         child: CarouselSlider(
-                  //             options: CarouselOptions(
-                  //                 enableInfiniteScroll: true, height: 260),
-                  //             items: List.generate(
-                  //               1,
-                  //               (ind) => SkeletonAnimation(
-                  //                 shimmerColor: Colors.grey[350],
-                  //                 shimmerDuration: 1100,
-                  //                 child: Container(
-                  //                   decoration: BoxDecoration(
-                  //                     color: Colors.grey[300],
-                  //                   ),
-                  //                   margin: EdgeInsets.symmetric(horizontal: 4),
-                  //                 ),
-                  //               ),
-                  //             )),
-                  //       )
-                  //     : Column(
-                  //         // mainAxisAlignment: MainAxisAlignment.start,
-                  //         crossAxisAlignment: CrossAxisAlignment.start,
-                  //         children: [
-                  //           SizedBox(height: 15.0),
-                  //           Padding(
-                  //               padding: const EdgeInsets.symmetric(
-                  //                   horizontal: 12.0),
-                  //               child: Text(
-                  //                 'Hot Spot'.toUpperCase(),
-                  //                 textAlign: TextAlign.left,
-                  //                 style: Styles.customTitleTextStyle2(
-                  //                   color: Colors.black87,
-                  //                   fontWeight: FontWeight.bold,
-                  //                   fontSize: Sizes.TEXT_SIZE_16,
-                  //                 ),
-                  //               )),
-                  //           SizedBox(height: 5.0),
-
-=======
 
                   //hotspot start
                   // SizedBox(height: 0.0),
@@ -1787,7 +1734,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   //               )),
                   //           SizedBox(height: 5.0),
 
->>>>>>> 9c8f91e3dbe58db12226c0dfe123cf582c864025
                   //           // TravelCardList(
                   //           //   cities: resturants,
                   //           //   onCityChange: _handleCityChange,
@@ -1805,27 +1751,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   //           SizedBox(height: 0.0),
                   //         ],
                   //       ),
-<<<<<<< HEAD
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Text('OFFERS'.toUpperCase(),
-                          textAlign: TextAlign.left,
-                          style: GoogleFonts.dmSerifDisplay(
-                            textStyle: Styles.customTitleTextStyle2(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: Sizes.TEXT_SIZE_22,
-                            ),
-                          ))),
-                  SizedBox(
-                    height: 10,
-                  ),
-=======
                   //hotspot ended
->>>>>>> 9c8f91e3dbe58db12226c0dfe123cf582c864025
 
                   Container(
                     height: 180,

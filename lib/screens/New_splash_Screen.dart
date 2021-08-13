@@ -29,6 +29,7 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
   @override
   void initState() {
     // TODO: implement initState
+    // initialize();
     animationcontroll = AnimationController(
       duration: const Duration(milliseconds: 100),
       vsync: this,
@@ -38,6 +39,9 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
 
   @override
   dispose() {
+    // if (_controller != null) {
+    //   _controller.dispose();
+    // }
     animationcontroll.dispose();
     super.dispose();
   }
@@ -47,41 +51,39 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Center(
-        child: Lottie.asset(
-          // 'assets/curryloveatsupdate.json',
-          'assets/loveats_splash2.json',
-          // 'assets/food2.json',
-          // 'assets/food3.json',
-          controller: animationcontroll,
+          child: Lottie.asset(
+        // 'assets/curryloveatsupdate.json',
+        'assets/loveats_splash2.json',
+        // 'assets/food2.json',
+        // 'assets/food3.json',
+        controller: animationcontroll,
 
-          onLoaded: (value) {
-            animationcontroll.addStatusListener((status) {
-              if (status == AnimationStatus.completed) {
-                navigatetonext(context);
-              }
-            });
-            animationcontroll
-              ..duration = value.duration
-              ..forward();
-          },
-        ),
-      ),
+        onLoaded: (value) {
+          animationcontroll.addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              navigatetonext(context);
+            }
+          });
+          animationcontroll
+            ..duration = value.duration
+            ..forward();
+        },
+      )
+          // child: SizedBox(
+          //   child: FittedBox(
+          //     child: SizedBox(
+          //       child: VideoPlayer(_controller),
+          //       height: MediaQuery.of(context).size.height,
+          //       width: MediaQuery.of(context).size.width,
+          //     ),
+          //     fit: BoxFit.fill,
+          //   ),
+          // ),
+          ),
     );
   }
 
   navigatetonext(context) async {
-    // final shared = await Service().loggedUser();
-    // Navigator.pushAndRemoveUntil(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (_) => shared != null
-    //             ? BubbleTabBarDemo(
-    //                 type: shared,
-    //               )
-    //             :
-    //             //  BackgroundVideo()
-    //             GooeyEdgeDemo()),
-    //     (route) => false);
     final user = firebaseAuth.currentUser;
     final shared = await Service().loggedUser();
     final driving = await Service().checkdriving();
@@ -126,10 +128,11 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
             context,
             MaterialPageRoute(
                 builder: (_) => shared != null
-                    ?
-                    shared == '2'?
-                    //  BubbleTabBarDemo(type: shared,)
-                    HomeScreen(): Vendor_Home_screen()
+                    ? shared == '2'
+                        ?
+                        //  BubbleTabBarDemo(type: shared,)
+                        HomeScreen()
+                        : Vendor_Home_screen()
                     :
                     //  BackgroundVideo()
                     GooeyEdgeDemo()),

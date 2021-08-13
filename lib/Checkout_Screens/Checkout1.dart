@@ -657,6 +657,188 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
     });
   }
 
+  buyrecipe() async {
+    var orderId = '';
+    if (widget.checkoutdata['usersub']) {
+      var packdata = {
+        'total_amount': widget.checkoutdata['total_amount'],
+        'payment_method': widget.checkoutdata['payment_method'],
+        'is_receipe': widget.checkoutdata['is_receipe'],
+        'method_id': widget.checkoutdata['method_id'],
+        'user_id': int.parse(widget.checkoutdata['user_id']),
+        'customer_id': int.parse(widget.checkoutdata['user_id']),
+        'payment_id': widget.checkoutdata['payment_id'],
+        'customer_addressId': myaddress[selectedaddress]['id'],
+        'is_subscribed_user': widget.checkoutdata['is_subscribed_user'],
+        'receipe_id': widget.checkoutdata['receipe_id'],
+        'quantity':'1',
+        'person_quantity': widget.checkoutdata['person'] ==1? '4':widget.checkoutdata['person']==2?'6':'2',
+        // 'receipe_id': widget
+        //     .checkoutdata['packlist'][i]['id']
+      };
+      print(packdata);
+      AppService().addeorder(packdata).then((value) {
+        orderId = value['data']['id'].toString();
+        print(value);
+        Navigator.pushNamed(context, AppRouter.CheckOut3,
+            arguments: {'type': 'recipe', 'orderId': orderId});
+      });
+      setState(() {});
+    } else {
+      var data2 = {
+        'amount': (double.parse(widget.checkoutdata['total_amount']).floor())
+                .toString() +
+            '00',
+        'currency': 'usd',
+        'customer': mycards[selectedcard]['customer']
+        // 'receipt_email': 'miansaadhafeez@gmail.com'
+      };
+      await PaymentService().getIntent(data2).then((value) async {
+        print(value);
+        _paymentSheetData = value;
+        print(_paymentSheetData['client_secret']);
+        print(mycards[selectedcard]['customer']);
+        setState(() {});
+        var resp = await Stripe.instance.confirmPaymentMethod(
+            _paymentSheetData['client_secret'],
+            PaymentMethodParams.cardFromMethodId(
+                paymentMethodId: mycards[selectedcard]['id'].toString(),
+                cvc: '123'));
+
+        if (resp.status == PaymentIntentsStatus.Succeeded) {
+          var packdata = {
+            'total_amount': widget.checkoutdata['total_amount'],
+            'payment_method': 'card',
+            'is_receipe': widget.checkoutdata['is_receipe'],
+            'method_id': mycards[selectedcard]['id'].toString(),
+            'payment_id': _paymentSheetData['id'],
+            'user_id': int.parse(widget.checkoutdata['user_id']),
+            'customer_addressId': myaddress[selectedaddress]['id'],
+            'is_subscribed_user': widget.checkoutdata['is_subscribed_user'],
+            'receipe_id': widget.checkoutdata['receipe_id'],
+            'quantity':'1',
+            'person_quantity': widget.checkoutdata['person'] ==1? '4':widget.checkoutdata['person']==2?'6':'2',
+            // 'person_quantity': person ==1? '4':person==2?'6':'2',
+            // 'receipe_id': widget
+            //     .checkoutdata['packlist'][i]['id']
+          };
+          print(packdata);
+          AppService().addeorder(packdata).then((value) {
+            orderId = value['data']['id'].toString();
+            print(value);
+            Navigator.pushNamed(context, AppRouter.CheckOut3,
+                arguments: {'type': 'recipe', 'orderId': orderId});
+          });
+          setState(() {});
+        } else {
+          Toast.show('Payment Failed', context, duration: 3);
+        }
+      });
+    }
+  }
+
+  buycartitem() {
+    print('here');
+    var orderId = '';
+    if (widget.checkoutdata['mixmatch'] == true) {
+      var data = {
+        'total_amount': widget.checkoutdata['total'],
+        'payment_method': 'card',
+        'payment_id': _paymentSheetData['client_secret'],
+        'customer_addressId': myaddress[selectedaddress]['id'],
+      };
+      AppService().addeorder(data).then((value) {
+        orderId = value['data']['id'];
+        print(value);
+        for (var i = 0; i < widget.checkoutdata['cartlist'].length; i++) {
+          for (var j = 0; j < widget.checkoutdata['cartlist'][i].length; j++) {
+            print(widget.checkoutdata['cartlist'][i][j]);
+            var data2 = {
+              'quantity': widget.checkoutdata['cartlist'][i][j]['qty'],
+              'total_price': widget.checkoutdata['cartlist'][i][j]
+                  ['payableAmount'],
+              'order_id': value['data']['id'],
+              'rest_menuId': widget.checkoutdata['cartlist'][i][j]['id'],
+              'rest_Id': widget.checkoutdata['cartlist'][i][j]['restaurantId'],
+            };
+            AppService().addorderdetails(data2).then((value) {
+              print(value);
+              if (i == widget.checkoutdata['cartlist'].length - 1 &&
+                  j == widget.checkoutdata['cartlist'][i].length - 1) {
+                var data = {
+                  'title': 'New Order',
+                  'body': 'User has been placed a new order',
+                  'data': value.toString(),
+                  //  ''
+                };
+                AppService().sendnotisuperadmin(data);
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                this.loader3 = false;
+
+                setState(() {});
+                Navigator.pushNamed(context, AppRouter.CheckOut3, arguments: {
+                  'type': widget.checkoutdata['type'],
+                  'orderId': orderId
+                });
+              }
+            });
+          }
+        }
+        //    AppRouter.navigator.pushNamed(AppRouter.CheckOut3, arguments: {
+        //   'type': widget.checkoutdata['type'],
+        //   'orderId': orderId
+        // });
+      });
+    } else {
+      for (var i = 0; i < widget.checkoutdata['cartlist'].length; i++) {
+        var data = {
+          'total_amount': widget.checkoutdata['total'],
+          'payment_method': 'card',
+          'payment_id': _paymentSheetData['client_secret'],
+          'customer_addressId': myaddress[selectedaddress]['id'],
+        };
+        AppService().addeorder(data).then((value) {
+          orderId = value['data']['id'].toString();
+          print(orderId);
+          for (var j = 0; j < widget.checkoutdata['cartlist'][i].length; j++) {
+            print(widget.checkoutdata['cartlist'][i][j]);
+            var data2 = {
+              'quantity': widget.checkoutdata['cartlist'][i][j]['qty'],
+              'total_price': widget.checkoutdata['cartlist'][i][j]
+                  ['payableAmount'],
+              'order_id': value['data']['id'],
+              'rest_menuId': widget.checkoutdata['cartlist'][i][j]['id'],
+              'rest_Id': widget.checkoutdata['cartlist'][i][j]['restaurantId'],
+            };
+            AppService().addorderdetails(data2).then((value) async {
+              print(value);
+              if (i == widget.checkoutdata['cartlist'].length - 1 &&
+                  j == widget.checkoutdata['cartlist'][i].length - 1) {
+                this.loader3 = false;
+                var data = {
+                  'title': 'New Order',
+                  'body': 'User has been placed a new order',
+                  'data': value.toString(),
+                };
+                AppService().sendnotisuperadmin(data);
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                this.loader3 = false;
+                await CartProvider().clearcart();
+                setState(() {});
+                Navigator.pushNamed(context, AppRouter.CheckOut3, arguments: {
+                  'type': widget.checkoutdata['type'],
+                  'orderId': orderId
+                });
+              }
+            });
+          }
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -701,7 +883,12 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                             color: AppColors.black,
                             fontSize: 16,
                             fontWeight: FontWeight.bold)),
-                    Text('${StringConst.currency}' + widget.checkoutdata['total'].toStringAsFixed(2),
+                    Text(
+                        widget.checkoutdata['recipe'] == true
+                            ? '${StringConst.currency}' +
+                                widget.checkoutdata['total_amount']
+                            : '${StringConst.currency}' +
+                                widget.checkoutdata['total'].toStringAsFixed(2),
                         style: TextStyle(
                             color: AppColors.black,
                             fontSize: 16,
@@ -716,239 +903,289 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  loader3?  Padding(
-          padding: const EdgeInsets.only(bottom:8.0),
-          child: Center(
-              child: CircularProgressIndicator(
-                valueColor:
-                    AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
-              ),
-            ),
-        ):    PotbellyButton(
-                    'Proceed to payment',
-                    onTap: () async {
-                      if (myaddress.length != 0 && selectedcard != null) {
-                        loader3=true;
-                        setState(() {
-                          
-                        });
-                        var data = {
-                          'cartlist': widget.checkoutdata['cartlist'],
-                          'charges': widget.checkoutdata['charges'],
-                          'shipping': widget.checkoutdata['shipping'],
-                          'total': widget.checkoutdata['total'],
-                          'type': widget.checkoutdata['type'],
-                          'mixmatch': widget.checkoutdata['mixmatch'],
-                          'customer_addressId': myaddress[selectedaddress]
-                              ['id'],
-                          'addressId': selectedaddress
-                        };
-                        var data2 = {
-                          'amount': (widget.checkoutdata['total'].floor())
-                                  .toString() +
-                              '00',
-                          'currency': 'usd',
-                          'customer': mycards[selectedcard]['customer']
-                          // 'receipt_email': 'miansaadhafeez@gmail.com'
-                        };
-                        await PaymentService()
-                            .getIntent(data2)
-                            .then((value) async {
-                          print(value);
-                          _paymentSheetData = value;
-                          print(_paymentSheetData['client_secret']);
-                          print(mycards[selectedcard]['customer']);
-                          setState(() {});
-                          var resp = await Stripe.instance.confirmPaymentMethod(
-                              _paymentSheetData['client_secret'],
-                              PaymentMethodParams.cardFromMethodId(
-                                  paymentMethodId: mycards[selectedcard]['id'].toString(),
-                                  cvc: '123'));
-                          
-
-                          if (resp.status == PaymentIntentsStatus.Succeeded) {
-                            print('here');
-                            var orderId = '';
-                            if (widget.checkoutdata['mixmatch'] == true) {
-                              var data = {
-                                'total_amount': widget.checkoutdata['total'],
-                                'payment_method': 'card',
-                                'payment_id':
-                                    _paymentSheetData['client_secret'],
-                                'customer_addressId':
-                                    myaddress[selectedaddress]['id'],
-                              };
-                              AppService().addeorder(data).then((value) {
-                                orderId = value['data']['id'];
-                                print(value);
-                                for (var i = 0;
-                                    i < widget.checkoutdata['cartlist'].length;
-                                    i++) {
-                                  for (var j = 0;
-                                      j <
-                                          widget.checkoutdata['cartlist'][i]
-                                              .length;
-                                      j++) {
-                                    print(
-                                        widget.checkoutdata['cartlist'][i][j]);
-                                    var data2 = {
-                                      'quantity':
-                                          widget.checkoutdata['cartlist'][i][j]
-                                              ['qty'],
-                                      'total_price':
-                                          widget.checkoutdata['cartlist'][i][j]
-                                              ['payableAmount'],
-                                      'order_id': value['data']['id'],
-                                      'rest_menuId': widget
-                                          .checkoutdata['cartlist'][i][j]['id'],
-                                      'rest_Id': widget.checkoutdata['cartlist']
-                                          [i][j]['restaurantId'],
-                                    };
-                                    AppService()
-                                        .addorderdetails(data2)
-                                        .then((value) {
-                                      print(value);
-                                      if (i ==
-                                              widget.checkoutdata['cartlist']
-                                                      .length -
-                                                  1 &&
-                                          j ==
-                                              widget.checkoutdata['cartlist'][i]
-                                                      .length -
-                                                  1) {
-                                        var data = {
-                                          'title': 'New Order',
-                                          'body':
-                                              'User has been placed a new order',
-                                          'data': value.toString(),
-                                          //  ''
-                                        };
-                                        AppService().sendnotisuperadmin(data);
-                                        Navigator.of(context).pop();
-                                        Navigator.of(context).pop();
-                                        this.loader3 = false;
-
-                                        setState(() {});
-                                        Navigator.pushNamed(
-                                            context, AppRouter.CheckOut3,
-                                            arguments: {
-                                              'type':
-                                                  widget.checkoutdata['type'],
-                                              'orderId': orderId
-                                            });
-                                      }
-                                    });
-                                  }
-                                }
-                                //    AppRouter.navigator.pushNamed(AppRouter.CheckOut3, arguments: {
-                                //   'type': widget.checkoutdata['type'],
-                                //   'orderId': orderId
-                                // });
-                              });
+                  loader3
+                      ? Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  AppColors.secondaryElement),
+                            ),
+                          ),
+                        )
+                      : PotbellyButton(
+                          'Proceed to payment',
+                          onTap: () async {
+                            if (widget.checkoutdata['recipe']) {
+                              if (myaddress.length != 0) {
+                                buyrecipe();
+                              } else {
+                                Toast.show('Add address to continue', context,
+                                    duration: 3);
+                              }
                             } else {
-                              for (var i = 0;
-                                  i < widget.checkoutdata['cartlist'].length;
-                                  i++) {
-                                var data = {
-                                  'total_amount': widget.checkoutdata['total'],
-                                  'payment_method': 'card',
-                                  'payment_id':
-                                      _paymentSheetData['client_secret'],
-                                  'customer_addressId':
-                                      myaddress[selectedaddress]['id'],
+                              if (myaddress.length != 0 &&
+                                  selectedcard != null) {
+                                // loader3 = true;
+
+                                // var data = {
+                                //   'cartlist': widget.checkoutdata['cartlist'],
+                                //   'charges': widget.checkoutdata['charges'],
+                                //   'shipping': widget.checkoutdata['shipping'],
+                                //   'total': widget.checkoutdata['total'],
+                                //   'type': widget.checkoutdata['type'],
+                                //   'mixmatch': widget.checkoutdata['mixmatch'],
+                                //   'customer_addressId': myaddress[selectedaddress]
+                                //       ['id'],
+                                //   'addressId': selectedaddress
+                                // };
+                                var data2 = {
+                                  'amount':
+                                      (widget.checkoutdata['total'].floor())
+                                              .toString() +
+                                          '00',
+                                  'currency': 'usd',
+                                  'customer': mycards[selectedcard]['customer']
+                                  // 'receipt_email': 'miansaadhafeez@gmail.com'
                                 };
-                                AppService().addeorder(data).then((value) {
-                                  orderId = value['data']['id'].toString();
-                                  print(orderId);
-                                  for (var j = 0;
-                                      j <
-                                          widget.checkoutdata['cartlist'][i]
-                                              .length;
-                                      j++) {
-                                    print(
-                                        widget.checkoutdata['cartlist'][i][j]);
-                                    var data2 = {
-                                      'quantity':
-                                          widget.checkoutdata['cartlist'][i][j]
-                                              ['qty'],
-                                      'total_price':
-                                          widget.checkoutdata['cartlist'][i][j]
-                                              ['payableAmount'],
-                                      'order_id': value['data']['id'],
-                                      'rest_menuId': widget
-                                          .checkoutdata['cartlist'][i][j]['id'],
-                                      'rest_Id': widget.checkoutdata['cartlist']
-                                          [i][j]['restaurantId'],
-                                    };
-                                    AppService()
-                                        .addorderdetails(data2)
-                                        .then((value) async {
-                                      print(value);
-                                      if (i ==
-                                              widget.checkoutdata['cartlist']
-                                                      .length -
-                                                  1 &&
-                                          j ==
-                                              widget.checkoutdata['cartlist'][i]
-                                                      .length -
-                                                  1) {
-                                        this.loader3 = false;
-                                        var data = {
-                                          'title': 'New Order',
-                                          'body':
-                                              'User has been placed a new order',
-                                          'data': value.toString(),
-                                        };
-                                        AppService().sendnotisuperadmin(data);
-                                        Navigator.of(context).pop();
-                                        Navigator.of(context).pop();
-                                        this.loader3 = false;
-                                        await CartProvider().clearcart();
-                                        setState(() {});
-                                        Navigator.pushNamed(
-                                            context, AppRouter.CheckOut3,
-                                            arguments: {
-                                              'type':
-                                                  widget.checkoutdata['type'],
-                                              'orderId': orderId
-                                            });
-                                      }
-                                    });
+                                await PaymentService()
+                                    .getIntent(data2)
+                                    .then((value) async {
+                                  print(value);
+                                  _paymentSheetData = value;
+                                  print(_paymentSheetData['client_secret']);
+                                  print(mycards[selectedcard]['customer']);
+                                  setState(() {});
+                                  var resp = await Stripe.instance
+                                      .confirmPaymentMethod(
+                                          _paymentSheetData['client_secret'],
+                                          PaymentMethodParams.cardFromMethodId(
+                                              paymentMethodId:
+                                                  mycards[selectedcard]['id']
+                                                      .toString(),
+                                              cvc: '123'));
+
+                                  if (resp.status ==
+                                      PaymentIntentsStatus.Succeeded) {
+                                    buycartitem();
+                                    // for (var i = 0;
+                                    //     i <
+                                    //         widget
+                                    //             .checkoutdata['packlist'].length;
+                                    //     i++) {
+                                    //       var person= widget
+                                    //         .checkoutdata['packlist'][i]['person'];
+
+                                    //   var packdata = {
+                                    //     'total_amount': double.tryParse(
+                                    //             widget.checkoutdata['packlist'][i]
+                                    //                 ['payableAmount'])
+                                    //         .toStringAsFixed(2),
+                                    //     'payment_method': 'card',
+                                    //     'is_receipe': 1,
+
+                                    //     'method_id': mycards[selectedcard]['id']
+                                    //         .toString(),
+                                    //         'user_id': 1,
+                                    //     'payment_id':
+                                    //         _paymentSheetData['id'],
+                                    //     'customer_addressId':
+                                    //         myaddress[selectedaddress]['id'],
+                                    //     // 'person_quantity': person ==1? '4':person==2?'6':'2',
+                                    //     // 'receipe_id': widget
+                                    //     //     .checkoutdata['packlist'][i]['id']
+                                    //   };
+                                    //   print(packdata);
+                                    // AppService()
+                                    //     .addeorder(packdata)
+                                    //     .then((value) {-
+                                    //   // orderId = value['data']['id'];
+                                    //   print(value);
+                                    // });
+                                    // setState(() {});
+                                    // }
+                                    // print('here');
+                                    // var orderId = '';
+                                    // if (widget.checkoutdata['mixmatch'] == true) {
+                                    //   var data = {
+                                    //     'total_amount': widget.checkoutdata['total'],
+                                    //     'payment_method': 'card',
+                                    //     'payment_id':
+                                    //         _paymentSheetData['client_secret'],
+                                    //     'customer_addressId':
+                                    //         myaddress[selectedaddress]['id'],
+                                    //   };
+                                    //   AppService().addeorder(data).then((value) {
+                                    //     orderId = value['data']['id'];
+                                    //     print(value);
+                                    //     for (var i = 0;
+                                    //         i < widget.checkoutdata['cartlist'].length;
+                                    //         i++) {
+                                    //       for (var j = 0;
+                                    //           j <
+                                    //               widget.checkoutdata['cartlist'][i]
+                                    //                   .length;
+                                    //           j++) {
+                                    //         print(
+                                    //             widget.checkoutdata['cartlist'][i][j]);
+                                    //         var data2 = {
+                                    //           'quantity':
+                                    //               widget.checkoutdata['cartlist'][i][j]
+                                    //                   ['qty'],
+                                    //           'total_price':
+                                    //               widget.checkoutdata['cartlist'][i][j]
+                                    //                   ['payableAmount'],
+                                    //           'order_id': value['data']['id'],
+                                    //           'rest_menuId': widget
+                                    //               .checkoutdata['cartlist'][i][j]['id'],
+                                    //           'rest_Id': widget.checkoutdata['cartlist']
+                                    //               [i][j]['restaurantId'],
+                                    //         };
+                                    //         AppService()
+                                    //             .addorderdetails(data2)
+                                    //             .then((value) {
+                                    //           print(value);
+                                    //           if (i ==
+                                    //                   widget.checkoutdata['cartlist']
+                                    //                           .length -
+                                    //                       1 &&
+                                    //               j ==
+                                    //                   widget.checkoutdata['cartlist'][i]
+                                    //                           .length -
+                                    //                       1) {
+                                    //             var data = {
+                                    //               'title': 'New Order',
+                                    //               'body':
+                                    //                   'User has been placed a new order',
+                                    //               'data': value.toString(),
+                                    //               //  ''
+                                    //             };
+                                    //             AppService().sendnotisuperadmin(data);
+                                    //             Navigator.of(context).pop();
+                                    //             Navigator.of(context).pop();
+                                    //             this.loader3 = false;
+
+                                    //             setState(() {});
+                                    //             Navigator.pushNamed(
+                                    //                 context, AppRouter.CheckOut3,
+                                    //                 arguments: {
+                                    //                   'type':
+                                    //                       widget.checkoutdata['type'],
+                                    //                   'orderId': orderId
+                                    //                 });
+                                    //           }
+                                    //         });
+                                    //       }
+                                    //     }
+                                    //     //    AppRouter.navigator.pushNamed(AppRouter.CheckOut3, arguments: {
+                                    //     //   'type': widget.checkoutdata['type'],
+                                    //     //   'orderId': orderId
+                                    //     // });
+                                    //   });
+                                    // } else {
+                                    //   for (var i = 0;
+                                    //       i < widget.checkoutdata['cartlist'].length;
+                                    //       i++) {
+                                    //     var data = {
+                                    //       'total_amount': widget.checkoutdata['total'],
+                                    //       'payment_method': 'card',
+                                    //       'payment_id':
+                                    //           _paymentSheetData['client_secret'],
+                                    //       'customer_addressId':
+                                    //           myaddress[selectedaddress]['id'],
+                                    //     };
+                                    //     AppService().addeorder(data).then((value) {
+                                    //       orderId = value['data']['id'].toString();
+                                    //       print(orderId);
+                                    //       for (var j = 0;
+                                    //           j <
+                                    //               widget.checkoutdata['cartlist'][i]
+                                    //                   .length;
+                                    //           j++) {
+                                    //         print(
+                                    //             widget.checkoutdata['cartlist'][i][j]);
+                                    //         var data2 = {
+                                    //           'quantity':
+                                    //               widget.checkoutdata['cartlist'][i][j]
+                                    //                   ['qty'],
+                                    //           'total_price':
+                                    //               widget.checkoutdata['cartlist'][i][j]
+                                    //                   ['payableAmount'],
+                                    //           'order_id': value['data']['id'],
+                                    //           'rest_menuId': widget
+                                    //               .checkoutdata['cartlist'][i][j]['id'],
+                                    //           'rest_Id': widget.checkoutdata['cartlist']
+                                    //               [i][j]['restaurantId'],
+                                    //         };
+                                    //         AppService()
+                                    //             .addorderdetails(data2)
+                                    //             .then((value) async {
+                                    //           print(value);
+                                    //           if (i ==
+                                    //                   widget.checkoutdata['cartlist']
+                                    //                           .length -
+                                    //                       1 &&
+                                    //               j ==
+                                    //                   widget.checkoutdata['cartlist'][i]
+                                    //                           .length -
+                                    //                       1) {
+                                    //             this.loader3 = false;
+                                    //             var data = {
+                                    //               'title': 'New Order',
+                                    //               'body':
+                                    //                   'User has been placed a new order',
+                                    //               'data': value.toString(),
+                                    //             };
+                                    //             AppService().sendnotisuperadmin(data);
+                                    //             Navigator.of(context).pop();
+                                    //             Navigator.of(context).pop();
+                                    //             this.loader3 = false;
+                                    //             await CartProvider().clearcart();
+                                    //             setState(() {});
+                                    //             Navigator.pushNamed(
+                                    //                 context, AppRouter.CheckOut3,
+                                    //                 arguments: {
+                                    //                   'type':
+                                    //                       widget.checkoutdata['type'],
+                                    //                   'orderId': orderId
+                                    //                 });
+                                    //           }
+                                    //         });
+                                    //       }
+                                    //     });
+                                    //   }
+                                    // }
                                   }
                                 });
+
+                                // var respo = await Stripe.instance.presentPaymentSheet(
+                                //     parameters: PresentPaymentSheetParameters(
+                                //       confirmPayment: true,
+                                //         clientSecret:
+                                //             _paymentSheetData['client_secret']));
+                                //             print(respo);
+                                // Navigator.pushNamed(context, AppRouter.CheckOut2,
+                                //     arguments: data);
+
+                              } else {
+                                Toast.show('Add address to continue', context,
+                                    duration: 3);
                               }
                             }
-                          }
-                          ;
-                        });
-
-                        // var respo = await Stripe.instance.presentPaymentSheet(
-                        //     parameters: PresentPaymentSheetParameters(
-                        //       confirmPayment: true,
-                        //         clientSecret:
-                        //             _paymentSheetData['client_secret']));
-                        //             print(respo);
-                        // Navigator.pushNamed(context, AppRouter.CheckOut2,
-                        //     arguments: data);
-
-                      } else {
-                        Toast.show('Add address to continue', context,
-                            duration: 3);
-                      }
-                    },
-                    buttonHeight: 45,
-                    buttonWidth: MediaQuery.of(context).size.width * 0.89,
-                    buttonTextStyle: TextStyle(
-                        fontSize: 18,
-                        fontFamily: 'roboto',
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: myaddress.length != 0
-                            ? AppColors.secondaryElement
-                            : AppColors.grey),
-                  ),
+                          },
+                          buttonHeight: 45,
+                          buttonWidth: MediaQuery.of(context).size.width * 0.89,
+                          buttonTextStyle: TextStyle(
+                              fontSize: 18,
+                              fontFamily: 'roboto',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              color: myaddress.length != 0
+                                  ? AppColors.secondaryElement
+                                  : AppColors.grey),
+                        ),
                 ],
               ),
             ],
@@ -1259,156 +1496,172 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
             SizedBox(
               height: 20,
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Text(
-                'Payment',
-                style: TextStyle(
-                    color: AppColors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'roboto'),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-
-            !loader
-                ? SingleChildScrollView(
-                    child: Column(
-                        children: List.generate(
-                            mycards.length,
-                            (index) => Container(
-                                margin: EdgeInsets.symmetric(horizontal: 15),
-                                padding: EdgeInsets.zero,
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            width: 0.5,
-                                            color: AppColors.grey
-                                                .withOpacity(0.5)))),
-                                // color: Colors.red,
-                                child: RadioListTile(
-                                  tileColor: AppColors.white,
-
-                                  title: Padding(
-                                    padding: const EdgeInsets.only(top: 2.0),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Image.asset(
-                                          mycards[index]['card']['brand'] ==
-                                                  'visa'
-                                              ? 'assets/images/visa2.png'
-                                              : 'assets/images/master.png',
-                                          height: 20,
-                                          width: 30,
-                                        ),
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                                mycards[index]['card']['brand']
-                                                    .toUpperCase(),
-                                                style: TextStyle(
-                                                    color: Colors.black54,
-                                                    fontSize: 15,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            Text(
-                                                '**** **** **** ' +
-                                                    mycards[index]['card']
-                                                        ['last4'],
-                                                style: TextStyle(
-                                                    color: Colors.black54,
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.normal)),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  value: index,
-                                  activeColor: AppColors.secondaryElement,
-                                  //  selectedTileColor: Colors.red,
-                                  contentPadding: EdgeInsets.all(0),
-                                  // checkColor: AppColors.white,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      selectedcard = newValue;
-                                    });
-                                  },
-                                  groupValue: selectedcard,
-
-                                  controlAffinity: ListTileControlAffinity
-                                      .trailing, //  <-- leading Checkbox
-                                )))))
-                : Container(),
-            SizedBox(
-              height: 5,
-            ),
-
-            Center(
-              child: InkWell(
-                onTap: () async {
-                  // Navigator.pushNamed(context, AppRouter.Add_new_Payment);
-                  Navigator.pushNamed(context, AppRouter.testing,
-                          arguments: null)
-                      .then((value) {
-                    getsavedcards();
-                  });
-                  // final paymentMethod =
-                  // await Stripe.instance.createPaymentMethod(PaymentMethodParams.card(
-
-                  // ));
-                  // print(paymentMethod);
-                  //  await Stripe.instance.createPaymentMethod({
-                  //    'card':''
-                  //  });
-                },
-                child: Container(
-                  height: 55,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                      color: AppColors.white,
-                      // border: Border.all(color: Colors.grey, width: 0),
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+            widget.checkoutdata['usersub']
+                ? Container()
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Icon(
-                        Icons.credit_card_outlined,
-                        color: AppColors.secondaryElement,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Container(
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
                         child: Text(
-                          'Add a Payment method',
+                          'Payment',
                           style: TextStyle(
-                              color: AppColors.secondaryElement,
-                              fontSize: 16,
-                              // fontWeight: FontWeight.bold,
+                              color: AppColors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                               fontFamily: 'roboto'),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      !loader
+                          ? SingleChildScrollView(
+                              child: Column(
+                                  children: List.generate(
+                                      mycards.length,
+                                      (index) => Container(
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 15),
+                                          padding: EdgeInsets.zero,
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      width: 0.5,
+                                                      color: AppColors.grey
+                                                          .withOpacity(0.5)))),
+                                          // color: Colors.red,
+                                          child: RadioListTile(
+                                            tileColor: AppColors.white,
+
+                                            title: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 2.0),
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  Image.asset(
+                                                    mycards[index]['card']
+                                                                ['brand'] ==
+                                                            'visa'
+                                                        ? 'assets/images/visa2.png'
+                                                        : 'assets/images/master.png',
+                                                    height: 20,
+                                                    width: 30,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 15,
+                                                  ),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                          mycards[index]['card']
+                                                                  ['brand']
+                                                              .toUpperCase(),
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black54,
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                      Text(
+                                                          '**** **** **** ' +
+                                                              mycards[index]
+                                                                      ['card']
+                                                                  ['last4'],
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black54,
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal)),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            value: index,
+                                            activeColor:
+                                                AppColors.secondaryElement,
+                                            //  selectedTileColor: Colors.red,
+                                            contentPadding: EdgeInsets.all(0),
+                                            // checkColor: AppColors.white,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                selectedcard = newValue;
+                                              });
+                                            },
+                                            groupValue: selectedcard,
+
+                                            controlAffinity: ListTileControlAffinity
+                                                .trailing, //  <-- leading Checkbox
+                                          )))))
+                          : Container(),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Center(
+                        child: InkWell(
+                          onTap: () async {
+                            // Navigator.pushNamed(context, AppRouter.Add_new_Payment);
+                            Navigator.pushNamed(context, AppRouter.testing,
+                                    arguments: null)
+                                .then((value) {
+                              getsavedcards();
+                            });
+                            // final paymentMethod =
+                            // await Stripe.instance.createPaymentMethod(PaymentMethodParams.card(
+
+                            // ));
+                            // print(paymentMethod);
+                            //  await Stripe.instance.createPaymentMethod({
+                            //    'card':''
+                            //  });
+                          },
+                          child: Container(
+                            height: 55,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                                color: AppColors.white,
+                                // border: Border.all(color: Colors.grey, width: 0),
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Icon(
+                                  Icons.credit_card_outlined,
+                                  color: AppColors.secondaryElement,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Container(
+                                  child: Text(
+                                    'Add a Payment method',
+                                    style: TextStyle(
+                                        color: AppColors.secondaryElement,
+                                        fontSize: 16,
+                                        // fontWeight: FontWeight.bold,
+                                        fontFamily: 'roboto'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
-              ),
-            ),
             // SizedBox(
             //   height: 5,
             // ),

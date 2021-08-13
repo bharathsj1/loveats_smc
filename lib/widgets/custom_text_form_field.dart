@@ -56,6 +56,7 @@ class CustomTextFormField extends StatelessWidget {
         validator: (value) => function(value),
         style: textFormFieldStyle,
         maxLines: maxLines,
+        cursorColor: AppColors.grey,
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(borderRadius),
