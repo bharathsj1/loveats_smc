@@ -12,6 +12,7 @@ import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/locationService.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
+import 'package:potbelly/vendor_screens.dart/Home_screen.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,6 +55,8 @@ class _Open_directionState extends State<Open_direction> {
   LocationData destinationLocation;
 // wrapper around the location API
   Location location;
+  StreamSubscription<LocationData> locationSubscription;
+
 
   // void _onMapCreated(GoogleMapController _cntlr) {
   //   _controller = _cntlr;
@@ -109,7 +112,7 @@ class _Open_directionState extends State<Open_direction> {
             context,
             MaterialPageRoute(
                 builder: (_) =>
-                      RootScreen2() ),
+                      Vendor_Home_screen() ),
             (route) => false);
                     }
             });
@@ -157,7 +160,7 @@ class _Open_directionState extends State<Open_direction> {
 
     // subscribe to changes in the user's location
     // by "listening" to the location's onLocationChanged event
-    location.onLocationChanged.listen((LocationData cLoc) {
+   locationSubscription= location.onLocationChanged.listen((LocationData cLoc) {
       // cLoc contains the lat and long of the
       // current user's position in real time,
       // so we're holding on to it
@@ -222,6 +225,11 @@ class _Open_directionState extends State<Open_direction> {
     setState(() {
       
     });
+  }
+  @override
+  void dispose() {
+     locationSubscription.cancel();
+    super.dispose();
   }
 
   @override

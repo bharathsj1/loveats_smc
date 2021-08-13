@@ -373,6 +373,11 @@ class Service {
     return shared.getInt('USERID').toString();
   }
 
+  Future<int> getUserId_int() async {
+    final shared = await initializdPrefs();
+    return shared.getInt('USERID');
+  }
+
   Future<bool> makeOrder(int total) async {
     accessToken = await getAccessToken();
     print('make Order functon');

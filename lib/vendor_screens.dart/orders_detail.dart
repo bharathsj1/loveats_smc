@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
@@ -46,6 +47,58 @@ class _OrdersDetailsState extends State<OrdersDetails> {
     accounttype = await AppService().gettype();
     print(accounttype);
     setState(() {});
+  }
+
+
+   ingredient() {
+     print(widget.orderdata);
+    var ingridient = widget.orderdata['receipe']['ingridients'];
+    print(ingridient);
+    var personselect = widget.orderdata['person_quantity'];
+    return List.generate(
+        ingridient.length,
+        (i) => Column(
+              children: [
+                Divider(
+                  thickness: 0.3,
+                  color: Colors.black54,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(ingridient[i]['ingridient']['name'],
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.openSans(
+                          textStyle: Styles.customNormalTextStyle(
+                            color: Colors.black,
+                            fontSize: Sizes.TEXT_SIZE_14,
+                          ),
+                        )),
+                    Text(
+                        (personselect == '1'
+                                ? ingridient[i]['three_person_quantity']
+                                : personselect == '2'
+                                    ? ingridient[i]['four_person_quantity']
+                                    : ingridient[i]['two_person_quantity']) +
+                            ' ' +
+                            ingridient[i]['ingridient']['unit'],
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.openSans(
+                          textStyle: Styles.customNormalTextStyle(
+                              color: AppColors.secondaryElement,
+                              fontSize: Sizes.TEXT_SIZE_14,
+                              fontWeight: FontWeight.bold),
+                        )),
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+              ],
+            ));
   }
 
   List<Widget> card() {
@@ -206,7 +259,55 @@ class _OrdersDetailsState extends State<OrdersDetails> {
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           onPressed: () async {
-            if (Api == 'superadmin') {
+             if (Api == 'superadmin&vendor') {
+                 var data = {
+                'order_id': widget.orderdata['id'],
+                'super_admin_status': type
+              };
+              Navigator.pop(context);
+              loader = true;
+              setState(() {});
+              AppService().setsuperadmin(data).then((value) {
+                print(value);
+                if (value['message'].contains('Successfully')) {
+                  
+                  print('done');
+                  if (type == 'approved') {
+                     var data01 = {'order_id': widget.orderdata['id'], 'status': 'ready'};
+                    AppService().setorderstatus(data01).then((value) {
+                      print(value);
+                    });
+                    var data = {
+                      'title': 'Order Approved',
+                      'body':
+                          'Your recipe order has been approved by admin.',
+                      // 'data': value.toString(),
+                      'user_id': widget.orderdata['customer_id']
+                    };
+                    AppService().sendnotispecificuser(data);
+                     var data2 = {
+                      'title': 'New Recipe Order to Deliver',
+                      'body': 'Order#'+widget.orderdata['id'].toString()+' was assigned you to deliver',
+                      // 'data': value.toString(),
+                      // 'user_id': widget.orderdata['customer_id']
+                    };
+                    AppService().sendnotideliveryboy(data2);
+                  } else {
+                    var data = {
+                      'title': 'Order Rejected',
+                      'body': 'Your order has been reject by admin',
+                      // 'data': value.toString(),
+                      'user_id': widget.orderdata['customer_id']
+                    };
+                    AppService().sendnotispecificuser(data);
+                  }
+                  widget.orderdata['super_admin'] = type;
+                  loader = false;
+                  setState(() {});
+                }
+              });
+             }
+           else if (Api == 'superadmin') {
               var data = {
                 'order_id': widget.orderdata['id'],
                 'super_admin_status': type
@@ -271,7 +372,7 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                     AppService().sendnotispecificuser(data);
                     var data2 = {
                       'title': 'New Order to Deliver',
-                      'body': 'Order#'+widget.orderdata['id']+' was assigned you to deliver',
+                      'body': 'Order#'+widget.orderdata['id'].toString()+' was assigned you to deliver',
                       // 'data': value.toString(),
                       // 'user_id': widget.orderdata['customer_id']
                     };
@@ -466,7 +567,11 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                                           borderRadius:
                                               BorderRadius.circular(100),
                                           color: Colors.red[500]), onTap: () {
-                                    _onAlertButtonsPressed(
+                                   widget.orderdata['is_receipe']==1?   _onAlertButtonsPressed(
+                                        context,
+                                        'rejected',
+                                        'superadmin&vendor',
+                                        "Do you want to reject this order?"):  _onAlertButtonsPressed(
                                         context,
                                         'rejected',
                                         'superadmin',
@@ -489,7 +594,13 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                                               BorderRadius.circular(100),
                                           color: AppColors.secondaryElement),
                                       onTap: () {
-                                    _onAlertButtonsPressed(
+                                 widget.orderdata['is_receipe']==1? 
+                                       _onAlertButtonsPressed(
+                                        context,
+                                        'approved',
+                                        'superadmin&vendor',
+                                        "Do you want to accept this order?"):
+                                      _onAlertButtonsPressed(
                                         context,
                                         'approved',
                                         'superadmin',
@@ -645,7 +756,8 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Items: ' +
+                           widget.orderdata['is_receipe']==1?     'Recipe: ' +
+                                 widget.orderdata['quantity']+'x'   :   'Items: ' +
                                     widget.orderdata['order_detail'].length
                                         .toString(),
                                 style: addressTextStyle,
@@ -690,6 +802,7 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                         'Customer',
                         style: TextStyle(
                             fontSize: 20,
+                            color: Colors.black87,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'roboto'),
                         maxLines: 1,
@@ -861,9 +974,10 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                         width: 20,
                       ),
                       Text(
-                        'Food Ordered',
+                      widget.orderdata['is_receipe']==1? 'Recipe Ordered':  'Food Ordered',
                         style: TextStyle(
                             fontSize: 20,
+                            color: AppColors.black,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'roboto'),
                         maxLines: 1,
@@ -874,9 +988,15 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                   SizedBox(
                     height: 10,
                   ),
+                 widget.orderdata['is_receipe']==1?  Padding(
+                   padding: const EdgeInsets.only(bottom:10.0),
+                   child: Column(
+                        children: ingredient(),
+                      ),
+                 ):
                   Column(
                     children: card(),
-                  )
+                  ),
                 ],
               ),
             )

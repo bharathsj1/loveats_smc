@@ -16,6 +16,7 @@ import 'package:potbelly/screens/Filter_sort.dart';
 import 'package:potbelly/screens/Filters_Screen.dart';
 import 'package:potbelly/screens/NewSearch_screen.dart';
 import 'package:potbelly/screens/New_splash_Screen.dart';
+import 'package:potbelly/screens/Post_view.dart';
 import 'package:potbelly/screens/Recipe_details.dart';
 import 'package:potbelly/screens/Recipe_list.dart';
 import 'package:potbelly/screens/Steps_Screen.dart';
@@ -136,6 +137,7 @@ class AppRouter {
   static const Build_Plan = '/Build_Plan';
   static const Buy_New_Plan = '/Buy_New_Plan';
   static const Recipes_list = '/Recipes_list';
+  static const Post_view = '/Post_view';
   static const testing = '/testing';
 
   static const userAddresses = '/user_addresses';
@@ -181,6 +183,11 @@ class AppRouter {
       case AppRouter.Recipes_list:
         return MaterialPageRoute<dynamic>(
           builder: (_) => RecipeList(data: args,),
+          settings: settings,
+        );
+      case AppRouter.Post_view:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => PostView(postdata: args,),
           settings: settings,
         );
       case AppRouter.Recipe_details:
@@ -518,7 +525,7 @@ class AppRouter {
         );
       case AppRouter.newReviewScreen:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => NewReviewScreen(),
+          builder: (_) => NewReviewScreen(orderdata: args,),
           settings: settings,
         );
       case AppRouter.googleMap:

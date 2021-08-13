@@ -1095,10 +1095,9 @@ class _CartScreenState extends State<CartScreen> {
                         padding: const EdgeInsets.only(right: 0.0),
                         child: PotbellyButton(
                           'Go to Checkout',
-                          onTap: () {
-                            if (isGuest) {
-                              _askLoginDialog(context);
-                            } else {
+                          onTap: () async {
+                           if (isGuest ==null || !isGuest){
+                               String userId = await Service().getUserId();
                               var data = {
                                 'cartlist': newcart,
                                 'packlist': packlist,
@@ -1107,10 +1106,16 @@ class _CartScreenState extends State<CartScreen> {
                                 'total': totalAmount,
                                 'type': 'cart',
                                 'mixmatch': mixmatch,
-                                'recipe':false
+                                'recipe':false,
+                                'usersub': false,
+                                'user_id':userId
                               };
                               Navigator.pushNamed(context, AppRouter.CheckOut1,
                                   arguments: data);
+                           
+                            } else {
+                              _askLoginDialog(context);
+                            
                             }
                           },
                           buttonHeight: 45,

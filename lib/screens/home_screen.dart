@@ -19,6 +19,7 @@ import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/settings_screen.dart';
 import 'package:potbelly/services/DatabaseManager.dart';
 import 'package:potbelly/services/appServices.dart';
+import 'package:potbelly/services/firebaseSetup.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/heading_row.dart';
@@ -67,23 +68,16 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   RestaurentsModel _restaurentsModel;
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  var token;
-  _register() {
-    _firebaseMessaging.getToken().then((tokeen) {
-      print(tokeen);
-      this.token = tokeen;
-      print(token);
-    });
-  }
+ 
 
   @override
   void initState() {
+    FirebaseSetup().configureFirebase(context);
     var data = DemoData();
     _cityList = data.getCities();
     _currentCity = _cityList[1];
     checkpromo();
-    _register();
+    // _register();
     getRestaurent();
     getcateory();
     getrecipes();
@@ -1243,9 +1237,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: InkWell(
                                     onTap: () async {
                                       _isGuest = await Service().isGuest();
-                                      // print(_isGuest);
+                                      print(_isGuest);
                                       // return;
-                                      if (_isGuest !=null && !_isGuest) {
+                                      if (_isGuest ==null || !_isGuest) {
                                         Navigator.pushNamed(
                                           context,
                                           AppRouter.profileScreen,
@@ -1610,7 +1604,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 //       data: hotspotlist[0]),
                                 // );
                                
-                                if(recipessub.length==0){
+                                if(recipessub.length>0){
                                 Navigator.pushNamed(
                                     context, AppRouter.Recipes_list,
                                     arguments: {'recipe':recipes[0],'usersub':true,'subdata': recipessub[0]});

@@ -43,6 +43,7 @@ class GooeyCarousel extends StatefulWidget {
 class GooeyCarouselState extends State<GooeyCarousel>
     with SingleTickerProviderStateMixin {
   int _currentIndex;
+ bool loader=false;
   @override
   void initState() {
     // Provider.of(context, listen: false)._edge = GooeyEdge(count: 25);
@@ -331,12 +332,24 @@ class GooeyCarouselState extends State<GooeyCarousel>
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 32),
-                              child: InkWell(
+                              child: loader
+                      ? Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  AppColors.white),
+                            ),
+                          ),
+                        )
+                      :  InkWell(
                                 onTap: () {
                                   // Navigator.pushAndRemoveUntil(
                                   //     context,
                                   //     MaterialPageRoute(builder: (_) => RootScreen()),
                                   //     (route) => false);
+                                  loader=true;
+                                   setState(() {});
                                   _signInWithEmail(context, emailController,
                                       passwordController, _formKey);
                                 },
@@ -794,13 +807,25 @@ class GooeyCarouselState extends State<GooeyCarousel>
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 32),
-                              child: InkWell(
+                              child:loader
+                      ? Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  AppColors.white),
+                            ),
+                          ),
+                        )
+                      :  InkWell(
                                 onTap: () {
                                   // Navigator.pushAndRemoveUntil(
                                   //     context,
                                   //     MaterialPageRoute(
                                   //         builder: (_) => BubbleTabBarDemo(type: '2')),
                                   //     (route) => false);
+                                    loader=true;
+                                   setState(() {});
                                   validateFormAndCreateUser(context);
                                 },
                                 child: Material(
@@ -981,6 +1006,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
             print(value);
             Navigator.pop(context);
             Provider.of<ProviderService>(context, listen: false).allfalse();
+            loader=false;
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
@@ -1087,10 +1113,12 @@ class GooeyCarouselState extends State<GooeyCarousel>
         IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
         udid = iosInfo.identifierForVendor;
       }
+      
       _firebaseMessaging.getToken().then((tokeen) {
         var data = {'device_id': udid, 'firebase_token': tokeen};
         AppService().savedeicetoken(data).then((value) {
           print(value);
+            loader=true;
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
@@ -1099,7 +1127,9 @@ class GooeyCarouselState extends State<GooeyCarousel>
                       HomeScreen()),
               (route) => false);
         });
+
       });
+        loader=true;
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(

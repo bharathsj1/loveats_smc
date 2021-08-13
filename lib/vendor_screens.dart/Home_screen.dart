@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/appServices.dart';
+import 'package:potbelly/services/firebaseSetup.dart';
 import 'package:potbelly/values/values.dart';
 
 class Vendor_Home_screen extends StatefulWidget {
@@ -39,6 +40,7 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
 
   @override
   void initState() {
+     FirebaseSetup().configureFirebase(context);
     //  _register();
     getorders();
     super.initState();
@@ -48,6 +50,7 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
     var orders = await AppService().getOrdersRestaurent();
     print(orders);
     orderslist = orders['data'];
+    print(orderslist);
     loader = false;
     reloader = false;
     setState(() {});

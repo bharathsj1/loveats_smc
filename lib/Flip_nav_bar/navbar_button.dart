@@ -1,6 +1,8 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:outline_material_icons/outline_material_icons.dart';
+import 'package:potbelly/values/values.dart';
 
 import 'clipped_view.dart';
 import 'navbar.dart';
@@ -13,13 +15,14 @@ class NavbarButton extends StatefulWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const NavbarButton(this.data, this.isSelected, {@required this.onTap });
+  const NavbarButton(this.data, this.isSelected, {@required this.onTap});
 
   @override
   _NavbarButtonState createState() => _NavbarButtonState();
 }
 
-class _NavbarButtonState extends State<NavbarButton> with SingleTickerProviderStateMixin {
+class _NavbarButtonState extends State<NavbarButton>
+    with SingleTickerProviderStateMixin {
   AnimationController _iconAnimController;
   bool _wasSelected;
   double _animScale = 1;
@@ -51,18 +54,28 @@ class _NavbarButtonState extends State<NavbarButton> with SingleTickerProviderSt
         //Rotate the icon using the current animation value
         Rotation3d(
           rotationY: 180 * _iconAnimController.value,
-          child: Icon(
-            widget.data.icon,
-            size: 24,
-            color: widget.isSelected ? Colors.white : Color(0xffcccccc),
-          ),
+          child: widget.data.icon == OMIcons.addCircle
+              ? CircleAvatar(
+                  backgroundImage: AssetImage('assets/images/andy.png'),
+                  backgroundColor: Colors.transparent,
+                  minRadius: Sizes.RADIUS_16,
+                  maxRadius: Sizes.RADIUS_16,
+                )
+              : Icon(
+                  widget.data.icon,
+                  size: 24,
+                  color: widget.isSelected ? Colors.white : Color(0xffcccccc),
+                ),
         ),
         //Add some hz spacing
         SizedBox(width: 8),
         //Label
         Text(
           widget.data.title,
-          style: TextStyle(color: Colors.white, fontFamily: "Montserrat",),
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: "Montserrat",
+          ),
         ),
       ],
     );
@@ -79,7 +92,7 @@ class _NavbarButtonState extends State<NavbarButton> with SingleTickerProviderSt
           //Determine target width, selected item is wider
           width: widget.isSelected ? widget.data.width : 56,
           curve: Curves.easeOutCubic,
-          padding: EdgeInsets.symmetric(horizontal:5,vertical: 5),
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           duration: Duration(milliseconds: (700 / _animScale).round()),
           //Use BoxDecoration top create a rounded container
           decoration: BoxDecoration(
@@ -98,7 +111,9 @@ class _NavbarButtonState extends State<NavbarButton> with SingleTickerProviderSt
   void _startAnimIfSelectedChanged(bool isSelected) {
     if (_wasSelected != widget.isSelected) {
       //Go forward or reverse, depending on the isSelected state
-      widget.isSelected ? _iconAnimController.forward() : _iconAnimController.reverse();
+      widget.isSelected
+          ? _iconAnimController.forward()
+          : _iconAnimController.reverse();
     }
     _wasSelected = widget.isSelected;
   }

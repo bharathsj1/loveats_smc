@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/appServices.dart';
@@ -26,6 +30,11 @@ class _OrderListState extends State<OrderList> {
     setState(() {});
   }
 
+
+
+
+  
+
   @override
   void initState() {
     getorders();
@@ -40,7 +49,13 @@ class _OrderListState extends State<OrderList> {
               child: InkWell(
                 onTap: () {
                   Navigator
-                    .pushNamed(context,AppRouter.myorder_detail,arguments:orderlist[i]);
+                    .pushNamed(context,AppRouter.myorder_detail,arguments:orderlist[i]).then((value) {
+                      loader=true;
+                      setState(() {
+                        
+                      });
+                      getorders();
+                    });
                 },
                 child: Container(
                   padding: EdgeInsets.only(bottom: 10),

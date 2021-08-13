@@ -52,7 +52,11 @@ class CustomTextFormField extends StatelessWidget {
     return Container(
       child: TextFormField(
         controller: textEditingController,
-        autovalidateMode: AutovalidateMode.disabled,
+        // autovalidateMode: AutovalidateMode.disabled,
+        onSaved: (save){
+          print(save);
+        },
+        keyboardType: TextInputType.text,
         validator: (value) => function(value),
         style: textFormFieldStyle,
         maxLines: maxLines,

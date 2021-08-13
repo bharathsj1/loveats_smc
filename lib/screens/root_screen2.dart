@@ -39,7 +39,7 @@ class _RootScreen2State extends State<RootScreen2>
  
   @override
   initState() {
-   FirebaseSetup.configureFirebase(context);
+   FirebaseSetup().configureFirebase(context);
     super.initState();
     print("init runs");
     currentScreen = widget.currentScreen?.currentScreen ?? Vendor_Home_screen();

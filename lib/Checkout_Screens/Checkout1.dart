@@ -658,6 +658,9 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
   }
 
   buyrecipe() async {
+     setState(() {
+      loader3=true;
+    });
     var orderId = '';
     if (widget.checkoutdata['usersub']) {
       var packdata = {
@@ -680,6 +683,15 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
       AppService().addeorder(packdata).then((value) {
         orderId = value['data']['id'].toString();
         print(value);
+         var data = {
+                      'title': 'Order Placed',
+                      'body':
+                          'You can track you order in order history section',
+                      // 'data': value.toString(),
+                      'user_id': int.parse(widget.checkoutdata['user_id'])
+                    };
+                    AppService().sendnotispecificuser(data);
+                    loader3=false;
         Navigator.pushNamed(context, AppRouter.CheckOut3,
             arguments: {'type': 'recipe', 'orderId': orderId});
       });
@@ -726,6 +738,15 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
           AppService().addeorder(packdata).then((value) {
             orderId = value['data']['id'].toString();
             print(value);
+             var data = {
+                      'title': 'Order Placed',
+                      'body':
+                          'You can track you order in order history section',
+                      // 'data': value.toString(),
+                      'user_id': int.parse(widget.checkoutdata['user_id'])
+                    };
+                    AppService().sendnotispecificuser(data);
+                    loader3=false;
             Navigator.pushNamed(context, AppRouter.CheckOut3,
                 arguments: {'type': 'recipe', 'orderId': orderId});
           });
@@ -738,14 +759,41 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
   }
 
   buycartitem() {
+    setState(() {
+      loader3=true;
+    });
     print('here');
     var orderId = '';
     if (widget.checkoutdata['mixmatch'] == true) {
+      // var packdata = {
+      //   'total_amount': widget.checkoutdata['total_amount'],
+      //   'payment_method': widget.checkoutdata['payment_method'],
+      //   'is_receipe': widget.checkoutdata['is_receipe'],
+      //   'method_id': widget.checkoutdata['method_id'],
+      //   'user_id': int.parse(widget.checkoutdata['user_id']),
+      //   'customer_id': int.parse(widget.checkoutdata['user_id']),
+      //   'payment_id': widget.checkoutdata['payment_id'],
+      //   'customer_addressId': myaddress[selectedaddress]['id'],
+      //   'is_subscribed_user': widget.checkoutdata['is_subscribed_user'],
+      //   'receipe_id': widget.checkoutdata['receipe_id'],
+      //   'quantity':'1',
+      //   'person_quantity': widget.checkoutdata['person'] ==1? '4':widget.checkoutdata['person']==2?'6':'2',
+      //   // 'receipe_id': widget
+      //   //     .checkoutdata['packlist'][i]['id']
+      // };
       var data = {
         'total_amount': widget.checkoutdata['total'],
         'payment_method': 'card',
+        'is_receipe': 0,
+        'method_id': mycards[selectedcard]['id'].toString(),
+        'user_id': int.parse(widget.checkoutdata['user_id']),
+        'customer_id': int.parse(widget.checkoutdata['user_id']),
         'payment_id': _paymentSheetData['client_secret'],
         'customer_addressId': myaddress[selectedaddress]['id'],
+        'is_subscribed_user': widget.checkoutdata['usersub']? 1:0,
+        // 'receipe_id': null,
+        // 'quantity':'0',
+        // 'person_quantity': '0',
       };
       AppService().addeorder(data).then((value) {
         orderId = value['data']['id'];
@@ -771,6 +819,14 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                   'data': value.toString(),
                   //  ''
                 };
+                 var notidata = {
+                      'title': 'Order Placed',
+                      'body':
+                          'You can track you order in order history section',
+                      // 'data': value.toString(),
+                      'user_id': int.parse(widget.checkoutdata['user_id'])
+                    };
+                    AppService().sendnotispecificuser(notidata);
                 AppService().sendnotisuperadmin(data);
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
@@ -794,9 +850,17 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
       for (var i = 0; i < widget.checkoutdata['cartlist'].length; i++) {
         var data = {
           'total_amount': widget.checkoutdata['total'],
-          'payment_method': 'card',
-          'payment_id': _paymentSheetData['client_secret'],
-          'customer_addressId': myaddress[selectedaddress]['id'],
+        'payment_method': 'card',
+        'is_receipe': 0,
+        'method_id': mycards[selectedcard]['id'].toString(),
+        'user_id': int.parse(widget.checkoutdata['user_id']),
+        'customer_id': int.parse(widget.checkoutdata['user_id']),
+        'payment_id': _paymentSheetData['client_secret'],
+        'customer_addressId': myaddress[selectedaddress]['id'],
+        'is_subscribed_user': widget.checkoutdata['usersub']? 1:0,
+        // 'receipe_id': null,
+        // 'quantity':'0',
+        // 'person_quantity': '0',
         };
         AppService().addeorder(data).then((value) {
           orderId = value['data']['id'].toString();
@@ -815,12 +879,20 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
               print(value);
               if (i == widget.checkoutdata['cartlist'].length - 1 &&
                   j == widget.checkoutdata['cartlist'][i].length - 1) {
-                this.loader3 = false;
+                // this.loader3 = false;
                 var data = {
                   'title': 'New Order',
                   'body': 'User has been placed a new order',
                   'data': value.toString(),
                 };
+                var notidata = {
+                      'title': 'Order Placed',
+                      'body':
+                          'You can track you order in order history section',
+                      // 'data': value.toString(),
+                      'user_id': int.parse(widget.checkoutdata['user_id'])
+                    };
+                    AppService().sendnotispecificuser(notidata);
                 AppService().sendnotisuperadmin(data);
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
@@ -918,6 +990,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                           onTap: () async {
                             if (widget.checkoutdata['recipe']) {
                               if (myaddress.length != 0) {
+                                print('if');
                                 buyrecipe();
                               } else {
                                 Toast.show('Add address to continue', context,
@@ -926,7 +999,9 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                             } else {
                               if (myaddress.length != 0 &&
                                   selectedcard != null) {
-                                // loader3 = true;
+                                loader3 = true;
+                                  setState(() {});
+
 
                                 // var data = {
                                 //   'cartlist': widget.checkoutdata['cartlist'],
@@ -967,6 +1042,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
 
                                   if (resp.status ==
                                       PaymentIntentsStatus.Succeeded) {
+                                print('else');
                                     buycartitem();
                                     // for (var i = 0;
                                     //     i <

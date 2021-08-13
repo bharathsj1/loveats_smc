@@ -3,6 +3,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/spaces.dart';
 
+double newstarsrating;
 class Ratings extends StatelessWidget {
   final String rating;
 
@@ -38,19 +39,26 @@ class Ratings extends StatelessWidget {
   }
 }
 
-class RatingsBar extends StatelessWidget {
+class RatingsBar extends StatefulWidget {
   RatingsBar({
     this.title = "Rating",
     this.hasSubtitle = true,
     this.subtitle = "Rate your experience",
     this.hasTitle = true,
+    this.starsrating,
   });
 
   final String title;
   final bool hasTitle;
   final String subtitle;
   final bool hasSubtitle;
+   double starsrating;
 
+  @override
+  _RatingsBarState createState() => _RatingsBarState();
+}
+
+class _RatingsBarState extends State<RatingsBar> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -76,12 +84,14 @@ class RatingsBar extends StatelessWidget {
           child: Center(
             child: RatingBar.builder(
               // ratingWidget: null,
-              initialRating: 0,
+              initialRating: 1,
               minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: true,
               itemCount: 5,
               itemSize: 35,
+              glowColor: Colors.amber,
+              glowRadius: 0.5,
               unratedColor: AppColors.kFoodyBiteGreyRatingStar,
               itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
               itemBuilder: (context, _) => Icon(
@@ -90,14 +100,19 @@ class RatingsBar extends StatelessWidget {
               ),
               onRatingUpdate: (rating) {
                 print(rating);
+                widget.starsrating=rating;
+               newstarsrating=rating;
+                setState(() {
+                  
+                });
               },
             ),
           ),
         ),
         SpaceH12(),
-        hasSubtitle
+        widget.hasSubtitle
             ? Text(
-                subtitle,
+                widget.subtitle,
                 style: Styles.customNormalTextStyle(
                   color: AppColors.grey,
                   fontSize: Sizes.TEXT_SIZE_16,
