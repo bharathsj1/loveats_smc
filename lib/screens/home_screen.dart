@@ -1761,7 +1761,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 //  'assets/loginvideo2.gif',
                                 'assets/recipe2.gif',
                                 fit: BoxFit.fill,
-                                height: 200,
+                                height: 220,
                                 width: MediaQuery.of(context).size.width - 25,
                                 filterQuality: FilterQuality.high,
                               )),
