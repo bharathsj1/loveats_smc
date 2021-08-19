@@ -44,7 +44,7 @@ class _RootScreenState extends State<RootScreen>
 
   @override
   initState() {
-    FirebaseSetup.configureFirebase(context);
+    FirebaseSetup().configureFirebase(context);
     // var token = FirebaseMessaging.instance.getToken();
     // firebaseMessaging..messaging().ios.registerForRemoteNotifications();
 

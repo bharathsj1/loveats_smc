@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/values/values.dart';
 
@@ -22,6 +23,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     var noti = await AppService().getnoti();
     print(noti);
     notilist = noti['data'];
+   notilist= notilist.reversed.toList();
     loader = false;
     setState(() {});
   }
@@ -69,7 +71,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 elevation: 1,
                 child: ListTile(
                   leading: Image.asset('assets/images/logo.png'),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRouter.order_list);
+                  },
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[

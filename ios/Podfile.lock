@@ -290,6 +290,8 @@ PODS:
     - GoogleUtilities/Reachability (~> 7.4)
     - GoogleUtilities/UserDefaults (~> 7.4)
   - Flutter (1.0.0)
+  - flutter_native_image (0.0.1):
+    - Flutter
   - fluttertoast (0.0.2):
     - Flutter
     - Toast
@@ -437,6 +439,7 @@ DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
+  - flutter_native_image (from `.symlinks/plugins/flutter_native_image/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
   - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
@@ -498,6 +501,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
+  flutter_native_image:
+    :path: ".symlinks/plugins/flutter_native_image/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
   geolocator:
@@ -552,6 +557,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 1585729afc787877763208c2088ed84221161f77
   FirebaseMessaging: 42252b79b860482021483748669ec32e22196462
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  flutter_native_image: 9c0b7451838484458e5b0fae007b86a4c2d4bdfe
   fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   geolocator: f5e3de65e241caba7ce3e8a618803387bda73384

@@ -33,7 +33,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoading = true;
   SharedPreferences prefs;
   List bookmarks = [];
+  List ratings = [];
   bool loader = true;
+  bool rloader = true;
   List<NavBarItemData> _navBarItems;
   List<Widget> _viewsByIndex;
   int _selectedNavIndex = 0;
@@ -52,6 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var noti = await AppService().getnoti();
     print(noti);
     notilist = noti['data'];
+     notilist= notilist.reversed.toList();
     loader2 = false;
     setState(() {});
   }
@@ -60,6 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     getSpecificUserSubscription();
     getUserDetail();
+    getreviews();
     getbookmark();
     getnoti();
     var type = '2';
@@ -74,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         NavBarItemData(
             "Profile", OMIcons.person, 105, AppColors.secondaryElement),
         NavBarItemData(
-            "Social", OMIcons.person, 105, AppColors.secondaryElement),
+            "Social", OMIcons.addCircle, 105, AppColors.secondaryElement),
       ];
 
       // initialize();
@@ -93,6 +97,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
     super.initState();
   }
+    getreviews() async {
+    var response = await AppService().getratings();
+    ratings = response['data'];
+    rloader = false;
+    print(response);
+    setState(() {});
+  }
+
 
   initialize() {
     _viewsByIndex = <Widget>[
@@ -495,8 +507,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       color: Colors.grey.shade300,
                     ):Container(),
                   _selectedNavIndex == 4?   Divider(
-                      height: 3,
-                      thickness: 3.0,
+                      height: 2.5,
+                      thickness: 2.0,
                       color: Colors.black87,
                     ):Container(),
                    _selectedNavIndex == 4? Padding(
@@ -532,27 +544,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
   
   postlist(){
      return List.generate(
-       allpost.length ,
-        (i) =>Container(
-          decoration: BoxDecoration(border: Border.all(width: 1.5,color: Colors.black)),
-          child: CachedNetworkImage(
-                              imageUrl:allpost[i],
-                              width: (MediaQuery.of(context).size.width/3)-3,
-                              height: (MediaQuery.of(context).size.width/3)-3,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => Center(
-                                child: Container(
-                                  // height: 150,
-
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppColors.secondaryElement),
+       ratings.length ,
+        (i) =>InkWell(
+          onTap: (){
+            Navigator.pushNamed(context, AppRouter.Post_view,arguments: ratings);
+          },
+          child: Container(
+            decoration: BoxDecoration(border: Border.all(width: 1.5,color: Colors.black)),
+            child: CachedNetworkImage(
+                                imageUrl: StringConst.BASE_imageURL+ ratings[i]['image'],
+                                width: (MediaQuery.of(context).size.width/3)-3,
+                                height: (MediaQuery.of(context).size.width/3)-3,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => Center(
+                                  child: Container(
+                                    // height: 150,
+        
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          AppColors.secondaryElement),
+                                    ),
                                   ),
                                 ),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
                               ),
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
-                            ),
+          ),
         ),);
   }
 

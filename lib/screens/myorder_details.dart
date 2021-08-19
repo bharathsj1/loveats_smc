@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/values/values.dart';
+import 'package:toast/toast.dart';
 
 class Myorder_Detail extends StatefulWidget {
   var orderdata;
@@ -271,9 +272,9 @@ class _Myorder_DetailState extends State<Myorder_Detail> {
                             progressbutton( widget.orderdata['super_admin'] !=null? true:false,AppColors.secondaryElement, true),
                             progressbutton(widget.orderdata['status'] !=null? true:false,Colors.green[600], true),
                             progressbutton(widget.orderdata['status'] =='ready'||widget.orderdata['status'] =='onway'||widget.orderdata['status'] =='delivered'? true:false,Colors.green[600], true),
-                            progressbutton( widget.orderdata['status'] =='onway'? true:false,Colors.green[600], true),
+                            progressbutton( widget.orderdata['status'] =='onway' || widget.orderdata['status'] =='delivered'? true:false,Colors.green[600], true),
                             progressbutton( widget.orderdata['status'] =='delivered'? true:false,Colors.green[600], true),
-                            progressbutton( widget.orderdata['status'] =='delivered'? true:false,Colors.green[600], true),
+                           widget.orderdata['is_receipe']!=1?    progressbutton( widget.orderdata['review'] != null? true:false,Colors.green[600], true):Container(),
                           ],
                         ),
                       ),
@@ -344,7 +345,7 @@ class _Myorder_DetailState extends State<Myorder_Detail> {
                                   });
                             }:null,
                             child: progressdetail(
-                              widget.orderdata['status'] =='onway'? true:false,
+                              widget.orderdata['status'] =='onway' ||  widget.orderdata['status'] =='delivered'? true:false,
                                 Icons.local_shipping_outlined,
                                 false,
                                 'Out for Delivery',
@@ -366,22 +367,38 @@ class _Myorder_DetailState extends State<Myorder_Detail> {
                            SizedBox(
                             height: 38,
                           ),
-                         InkWell(
-                            onTap: widget.orderdata['status'] !='delivered'? () {
+                      widget.orderdata['is_receipe']!=1?    InkWell(
+                            onTap: widget.orderdata['status'] =='delivered'? () {
 
                               print('here');
+                              if(widget.orderdata['review'] == null){
+
                               Navigator.pushNamed(
                                   context, AppRouter.newReviewScreen,
-                                  );
+                                  arguments: {'orderdata':widget.orderdata}
+                                  ).then((value) {
+                                    print(value);
+                                    if(value !=null){
+                                      widget.orderdata['review']=value;
+                                      setState(() {
+                                        
+                                      });
+                                    }
+                                  });
+                              }
+                              else{
+                                 Toast.show('Already Reviewed', context, duration: 3);
+                              }
+                              print(widget.orderdata);
                             }:null,
                             child: progressdetail(
-                            widget.orderdata['status'] =='delivered'? true:false,
+                            widget.orderdata['review'] != null? true:false,
                               Icons.card_giftcard_outlined,
                               false,
                               'Add Review',
                               'Add review and get free 10 coins in your wallet',
                               '',
-                              Colors.green[600]),)
+                              Colors.green[600]),):Container()
                         ],
                       ),
                     ],

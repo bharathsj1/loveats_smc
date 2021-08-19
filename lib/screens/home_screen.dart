@@ -19,6 +19,7 @@ import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/settings_screen.dart';
 import 'package:potbelly/services/DatabaseManager.dart';
 import 'package:potbelly/services/appServices.dart';
+import 'package:potbelly/services/firebaseSetup.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/heading_row.dart';
@@ -51,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List categories = [];
   List hotspotlist = [];
   List recipes = [];
+  List recipessub = [];
   List popularitem = [];
   List<City> _cityList;
   City _currentCity;
@@ -66,26 +68,19 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   RestaurentsModel _restaurentsModel;
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  var token;
-  _register() {
-    _firebaseMessaging.getToken().then((tokeen) {
-      print(tokeen);
-      this.token = tokeen;
-      print(token);
-    });
-  }
 
   @override
   void initState() {
+    FirebaseSetup().configureFirebase(context);
     var data = DemoData();
     _cityList = data.getCities();
     _currentCity = _cityList[1];
     checkpromo();
-    _register();
+    // _register();
     getRestaurent();
     getcateory();
     getrecipes();
+    getsubrecipe();
     getpopularitem();
     isUserGuest();
     super.initState();
@@ -146,13 +141,20 @@ class _HomeScreenState extends State<HomeScreen> {
     var response = await AppService().getrecipe();
     recipes = response['data'];
     print(recipes);
+    // loader3 = false;
+    setState(() {});
+  }
+
+  getsubrecipe() async {
+    var response = await AppService().getrecipesub();
+    recipessub = response['data'];
+    print(recipessub);
     loader3 = false;
     setState(() {});
   }
 
   getpopularitem() async {
     var response = await AppService().getpopularitem();
-
     popularitem = response['data'];
     print(popularitem);
     loader4 = false;
@@ -440,7 +442,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
               child: Container(
-                height: 300,
+                height: 250,
                 width: MediaQuery.of(context).size.width / 1.2,
                 child: Card(
                   elevation: 0,
@@ -605,31 +607,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ],
                             ),
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.start,
-                            //   children: <Widget>[
-                            //     Align(
-                            //       alignment: Alignment.topLeft,
-                            //       child: Container(
-                            //         // width: MediaQuery.of(context).size.width*0.5,
-                            //         // color: Colors.red,
-                            //         child: Text(
-                            //             hotspotlist[i]['distance'] +
-                            //                 ' - \$' +
-                            //                 hotspotlist[i]['charges'] +
-                            //                 ' Delivery',
-                            //             textAlign: TextAlign.center,
-                            //             style: GoogleFonts.josefinSans(
-                            //               textStyle:
-                            //                   Styles.customNormalTextStyle(
-                            //                 color: Colors.black54,
-                            //                 fontSize: Sizes.TEXT_SIZE_16,
-                            //               ),
-                            //             )),
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
                           ],
                         ),
                       ),
@@ -672,7 +649,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
               },
               child: Container(
-                height: 250,
+                height: 245,
                 width: MediaQuery.of(context).size.width / 1,
                 child: Card(
                   elevation: 0,
@@ -867,8 +844,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List catlist = [
     'All',
-    'Indian',
     'Korean',
+    'Indian',
   ];
   int selectedcat = 0;
 
@@ -1153,7 +1130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 // collapsedHeight: 40,
                 toolbarHeight: 135,
                 flexibleSpace: Padding(
-                  padding: const EdgeInsets.only(top: 35.0),
+                  padding: const EdgeInsets.only(top: 25.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -1259,9 +1236,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: InkWell(
                                     onTap: () async {
                                       _isGuest = await Service().isGuest();
-                                      // print(_isGuest);
+                                      print(_isGuest);
                                       // return;
-                                      if (_isGuest != null && !_isGuest) {
+                                      if (_isGuest == null || !_isGuest) {
                                         Navigator.pushNamed(
                                           context,
                                           AppRouter.profileScreen,
@@ -1369,7 +1346,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     // width: MediaQuery.of(context).size.width * 0.82,
                                     width: MediaQuery.of(context).size.width,
                                     child: Material(
-                                      elevation: 0,
+                                      elevation: 3,
                                       borderRadius: BorderRadius.circular(0),
                                       child: Container(
                                         color: Colors.grey[200],
@@ -1379,17 +1356,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                           children: [
                                             FoodyBiteSearchInputField(
                                                 ImagePath.searchIcon,
-                                                borderRadius: 0,
+                                                borderRadius: 12,
                                                 controller: searchcontroller,
-                                                fillColor: Colors.grey[100],
+                                                fillColor: Colors.grey[200],
                                                 filled: true,
                                                 borderColor: Colors.transparent,
                                                 contentPaddingVertical: 11,
                                                 contentPaddingHorizontal: 50,
                                                 textFormFieldStyle: Styles
                                                     .customNormalTextStyle(
-                                                        fontFamily:
-                                                            "Josefin Sans",
                                                         color: Colors.black54),
                                                 hintText: StringConst
                                                     .HINT_TEXT_HOME_SEARCH_BAR,
@@ -1525,7 +1500,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               )),
                         ],
                       )),
-
                   SizedBox(
                     height: 10,
                   ),
@@ -1535,11 +1509,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             width: MediaQuery.of(context).size.width - 16,
                             height: 200,
                             child: SkeletonAnimation(
-                              shimmerColor: Colors.grey[200],
+                              shimmerColor: Colors.grey[350],
                               shimmerDuration: 1100,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[200],
+                                  color: Colors.grey[300],
                                 ),
                                 margin: EdgeInsets.symmetric(horizontal: 4),
                               ),
@@ -1628,9 +1602,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                 //       distance: hotspotlist[0]['distance'] + ' Km',
                                 //       data: hotspotlist[0]),
                                 // );
-                                Navigator.pushNamed(
-                                    context, AppRouter.Recipe_details,
-                                    arguments: recipes[0]);
+
+                                if (recipessub.length > 0) {
+                                  Navigator.pushNamed(
+                                      context, AppRouter.Recipes_list,
+                                      arguments: {
+                                        'recipe': recipes[0],
+                                        'usersub': true,
+                                        'subdata': recipessub[0]
+                                      });
+                                } else {
+                                  Navigator.pushNamed(
+                                      context, AppRouter.Build_Plan,
+                                      arguments: {
+                                        'recipe': recipes[0],
+                                        'usersub': false,
+                                      });
+                                }
                               },
                               child: Image.asset(
                                 //  'assets/loginvideo2.gif',
@@ -1754,7 +1742,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   //hotspot ended
 
                   Container(
-                    height: 180,
+                    height: 220,
                     //  width: 180,
                     //  color: Colors.red,
 
@@ -1798,69 +1786,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         }),
                   ),
-
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Text('Recipes'.toUpperCase(),
-                          textAlign: TextAlign.left,
-                          style: GoogleFonts.dmSerifDisplay(
-                            textStyle: Styles.customTitleTextStyle2(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: Sizes.TEXT_SIZE_22,
-                            ),
-                          ))),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  loader
-                      ? Center(
-                          child: Container(
-                            width: MediaQuery.of(context).size.width - 16,
-                            height: 200,
-                            child: SkeletonAnimation(
-                              shimmerColor: Colors.grey[350],
-                              shimmerDuration: 1100,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                ),
-                                margin: EdgeInsets.symmetric(horizontal: 4),
-                              ),
-                            ),
-                          ),
-                        )
-                      : Center(
-                          child: InkWell(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  AppRouter.HotspotsDetailsScreen,
-                                  arguments: RestaurantDetails(
-                                      imagePath: hotspotlist[0]['image'],
-                                      restaurantName: hotspotlist[0]['name'],
-                                      restaurantAddress: hotspotlist[0]
-                                          ['address'],
-                                      // rating: hotspotlist[0]['rating'],
-                                      rating: '3.2',
-                                      category: '',
-                                      distance:
-                                          hotspotlist[0]['distance'] + ' Km',
-                                      data: hotspotlist[0]),
-                                );
-                              },
-                              child: Image.asset(
-                                //  'assets/loginvideo2.gif',
-                                'assets/recipe2.gif',
-                                fit: BoxFit.fill,
-                                height: 230,
-                                width: MediaQuery.of(context).size.width - 25,
-                                filterQuality: FilterQuality.high,
-                              )),
-                        ),
                   SizedBox(height: 10.0),
                   loader4
                       ? Container(

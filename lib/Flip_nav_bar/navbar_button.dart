@@ -1,6 +1,8 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:outline_material_icons/outline_material_icons.dart';
+import 'package:potbelly/values/values.dart';
 
 import 'clipped_view.dart';
 import 'navbar.dart';
@@ -52,11 +54,18 @@ class _NavbarButtonState extends State<NavbarButton>
         //Rotate the icon using the current animation value
         Rotation3d(
           rotationY: 180 * _iconAnimController.value,
-          child: Icon(
-            widget.data.icon,
-            size: 22,
-            color: widget.isSelected ? Colors.white : Color(0xffcccccc),
-          ),
+          child: widget.data.icon == OMIcons.addCircle
+              ? CircleAvatar(
+                  backgroundImage: AssetImage('assets/images/andy.png'),
+                  backgroundColor: Colors.transparent,
+                  minRadius: Sizes.RADIUS_16,
+                  maxRadius: Sizes.RADIUS_16,
+                )
+              : Icon(
+                  widget.data.icon,
+                  size: 24,
+                  color: widget.isSelected ? Colors.white : Color(0xffcccccc),
+                ),
         ),
         //Add some hz spacing
         SizedBox(width: 10),
@@ -65,7 +74,6 @@ class _NavbarButtonState extends State<NavbarButton>
           widget.data.title,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 15,
             fontFamily: "Montserrat",
           ),
         ),

@@ -215,6 +215,20 @@ class AppService {
       return null;
     }
   }
+  Future<dynamic> getratings() async {
+    String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      var resp = await this.dio.get(
+            "/get-user-rating",
+          );
+      print(resp);
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
 
   Future<dynamic> getnoti() async {
     String accessToken = await getAccessToken();
@@ -304,6 +318,19 @@ class AppService {
     try {
       FormData formData = new FormData.fromMap(data);
       var resp = await this.dio.post("/addUserAddress", data: formData);
+      print(resp);
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+  Future<dynamic> addnewreview(data) async {
+    String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      FormData formData = new FormData.fromMap(data);
+      var resp = await this.dio.post("/store-rating", data: formData);
       print(resp);
       return resp.data;
     } catch (e) {

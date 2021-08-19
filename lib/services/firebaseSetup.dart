@@ -3,28 +3,42 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:potbelly/screens/notification_screen.dart';
 import 'package:potbelly/services/messagepopup.dart';
+import 'package:potbelly/services/service.dart';
+import 'package:potbelly/vendor_screens.dart/vendor_notifications.dart';
 import 'package:provider/provider.dart';
 
 class FirebaseSetup {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-
-  static configureFirebase(context) {
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  String savedMessageId  = "";
+   configureFirebase(context) async {
+     await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+  
+    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print(message);
-      print(message.data);
+      print(savedMessageId);
+      print( message.messageId);
+      print(savedMessageId != message.messageId);
+      print(savedMessageId == message.messageId);
       if (message.data != null) {
         //  Provider.of<ProviderPage>(context, listen: false).changenoti();
         print("onMessage");
         print(message);
-
+    if (savedMessageId != message.messageId){
+        savedMessageId  = message.messageId;
         _showTopPopup(
             context,
             Platform.isIOS
                 ? message.notification.title
                 : message.notification.title);
       }
+}
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (message.data != null) {
@@ -112,10 +126,17 @@ class FirebaseSetup {
             onVerticalDragUpdate: (dragUpdateDetails) {
               Navigator.of(context).pop();
             },
-            onTap: () {
+            onTap: () async {
               Navigator.of(context).pop();
-              // Navigator.push(context,
-              //     MaterialPageRoute(builder: (context) => NotificationsPage()));
+              final shared = await Service().loggedUser();
+              if(shared == '2'){
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => NotificationsScreen()));
+              }
+              else{
+                 Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => VendorNotificationsScreen()));
+              }
             },
             child: Container(
               height: 55,
