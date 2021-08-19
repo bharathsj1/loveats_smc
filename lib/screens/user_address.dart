@@ -28,13 +28,14 @@ class _UserAddressesState extends State<UserAddresses> {
         body: loader
             ? CircularIndicator()
             : myaddress.length == 0
-                ? Center(
+                ? Center( 
                     child: Text(
                       'No addresses available.',
                       textAlign: TextAlign.center,
                     ),
                   )
-                : Column(children: addresscard()));
+                : SingleChildScrollView(
+                    child: Column(children: addresscard())));
   }
 
   List<Widget> addresscard() {

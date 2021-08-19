@@ -5,7 +5,7 @@ import 'package:potbelly/widgets/potbelly_button.dart';
 
 class BuildPlan extends StatefulWidget {
   var data;
-   BuildPlan({@required this.data});
+  BuildPlan({@required this.data});
 
   @override
   _BuildPlanState createState() => _BuildPlanState();
@@ -28,27 +28,33 @@ class _BuildPlanState extends State<BuildPlan> {
             fontSize: Sizes.TEXT_SIZE_18,
           ),
         ),
-        actions: [ Center(
-          child: Padding(
-            padding: const EdgeInsets.only(right:10.0),
-            child: InkWell(
-              onTap: () {
-                Navigator.pushReplacementNamed(context, AppRouter.Recipes_list,arguments:{'recipe':widget.data['recipe'],'usersub':false,} );
-                                    
-              },
-              child: Container(
-                child: Text(
-                  'Skip',
-                  style: Styles.customTitleTextStyle(
-                    color: AppColors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: Sizes.TEXT_SIZE_18,
+        actions: [
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushReplacementNamed(
+                      context, AppRouter.Recipes_list,
+                      arguments: {
+                        'recipe': widget.data['recipe'],
+                        'usersub': false,
+                      });
+                },
+                child: Container(
+                  child: Text(
+                    'Skip',
+                    style: Styles.customTitleTextStyle(
+                      color: AppColors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: Sizes.TEXT_SIZE_18,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),],
+        ],
       ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
@@ -90,16 +96,21 @@ class _BuildPlanState extends State<BuildPlan> {
                   fontWeight: FontWeight.bold,
                   color: AppColors.black),
             ),
-             SizedBox(
+            SizedBox(
               height: 5,
             ),
-            Image.asset('assets/images/newlogo.png', height: 80, width: 140,fit: BoxFit.fill,),
-             SizedBox(
+            Image.asset(
+              'assets/images/newlogo.png',
+              height: 80,
+              width: 140,
+              fit: BoxFit.fill,
+            ),
+            SizedBox(
               height: 5,
             ),
             Image.asset(
               //  'assets/loginvideo2.gif',
-              'assets/recipe1.gif',
+              'assets/recipe2.gif',
               fit: BoxFit.fill,
               height: 200,
               width: MediaQuery.of(context).size.width,
@@ -109,7 +120,7 @@ class _BuildPlanState extends State<BuildPlan> {
               height: 8,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal:20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Text(
                 'Free Ingredients and easy to follow recipes, straight to your doorstep.',
                 style: TextStyle(

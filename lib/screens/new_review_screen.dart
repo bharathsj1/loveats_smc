@@ -31,6 +31,7 @@ class _NewReviewScreenState extends State<NewReviewScreen> {
   bool hasRestaurantBeenAdded = false;
   bool isCardShowing = false;
   bool canPost = false;
+  bool is_public = true;
     bool _imageSelected=false;
   File selectedfile;
   double starsrating=1.0;
@@ -136,6 +137,7 @@ class _NewReviewScreenState extends State<NewReviewScreen> {
       'image': await MultipartFile.fromFile(selectedfile.path,
             filename: selectedfile.path.split('/').last),
       'user_id':userId,
+      'is_public': is_public? 1:0
     };
     print(data);
      AppService().addnewreview(data).then((value) {
@@ -402,6 +404,49 @@ class _NewReviewScreenState extends State<NewReviewScreen> {
               ),
               SpaceH20(),
               _buildReview(context: context,review: review),
+              // SpaceH20(),
+               Container(
+                        color: AppColors.white,
+                        // padding: EdgeInsets.fromLTRB(22, 10, 10, 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width - 100,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Public',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18,
+                                          letterSpacing: .3,
+                                          color: Colors.grey.shade800)),
+                                  // SizedBox(
+                                  //   height: 4,
+                                  // ),
+                                  // Text(
+                                  //     'Help us reduce plastic waste - only request cutlery when you need it',
+                                  //     style: TextStyle(
+                                  //       fontSize: 13,
+                                  //       color: AppColors.grey,
+                                  //       letterSpacing: .3,
+                                  //     )),
+                                ],
+                              ),
+                            ),
+                            Switch.adaptive(
+                              value: is_public,
+                              activeColor: AppColors.secondaryElement,
+                              activeTrackColor:
+                                  AppColors.secondaryElement.withOpacity(0.4),
+                              onChanged: (newValue) => setState(() {
+                                is_public = newValue;
+                              }),
+                            ),
+                          ],
+                        ),
+                      ),
             ],
           ),
         ),

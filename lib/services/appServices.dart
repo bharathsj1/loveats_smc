@@ -230,6 +230,21 @@ class AppService {
     }
   }
 
+  Future<dynamic> getrestratings(id) async {
+    String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      var resp = await this.dio.get(
+            "/get-restaurant-rating/"+id,
+          );
+      print(resp);
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   Future<dynamic> getnoti() async {
     String accessToken = await getAccessToken();
     dio.options.headers['Authorization'] = "Bearer " + accessToken;
@@ -331,6 +346,19 @@ class AppService {
     try {
       FormData formData = new FormData.fromMap(data);
       var resp = await this.dio.post("/store-rating", data: formData);
+      print(resp);
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+  Future<dynamic> likepost(data) async {
+    String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      FormData formData = new FormData.fromMap(data);
+      var resp = await this.dio.post("/like", data: formData);
       print(resp);
       return resp.data;
     } catch (e) {

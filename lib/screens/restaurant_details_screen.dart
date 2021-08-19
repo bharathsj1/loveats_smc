@@ -25,6 +25,7 @@ import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/card_tags.dart';
 import 'package:potbelly/widgets/dark_overlay.dart';
 import 'package:potbelly/widgets/heading_row.dart';
+import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:potbelly/widgets/ratings_widget.dart';
 import 'package:potbelly/widgets/spaces.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -49,6 +50,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     with SingleTickerProviderStateMixin {
   bool bookmark = false;
   bool _isLoading = true;
+  bool cartbtn = false;
   RestaurentMenuModel _restaurentMenuModel;
   var controller = ScrollController();
   double prevOffset = 0.0;
@@ -524,29 +526,34 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                   Positioned(
                       bottom: 10,
                       right: 15,
-                      child: Container(
-                        height: 30,
-                        width: 120,
-                        decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.7),
-                            borderRadius: BorderRadius.circular(6)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.grid_view,
-                              color: AppColors.white,
-                              size: 16,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'View Gallery',
-                              style: TextStyle(
-                                  fontSize: 15, color: AppColors.white),
-                            )
-                          ],
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, AppRouter.View_Gallery,arguments: widget.restaurantDetails.data);
+                        },
+                        child: Container(
+                          height: 30,
+                          width: 120,
+                          decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.7),
+                              borderRadius: BorderRadius.circular(6)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.grid_view,
+                                color: AppColors.white,
+                                size: 16,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'View Gallery',
+                                style: TextStyle(
+                                    fontSize: 15, color: AppColors.white),
+                              )
+                            ],
+                          ),
                         ),
                       ))
                 ],
@@ -613,6 +620,46 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
   Widget build(BuildContext context) {
     var heightOfStack = MediaQuery.of(context).size.height / 2.8;
     return Scaffold(
+      bottomNavigationBar: cartbtn? Material(
+              // elevation: 5,
+              child: Container(
+                color: AppColors.white,
+                margin: EdgeInsets.only(top: 5),
+                height: 60,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                   
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 0.0),
+                      child: PotbellyButton(
+                        'View Cart',
+                        onTap: ()  {
+                        
+                            Navigator.pushNamed(context, AppRouter.cart_Screen);
+                        },
+                        buttonHeight: 45,
+                        buttonWidth: MediaQuery.of(context).size.width * 0.85,
+                        buttonTextStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: AppColors.secondaryElement),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                  ],
+                ),
+              ),
+            ): null,
       body: CustomScrollView(
         controller: _autoScrollController,
         slivers: <Widget>[
@@ -914,51 +961,51 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                           ),
                         )
                       : Container(),
+                  // SizedBox(
+                  //   height: 5,
+                  // ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Row(
+                  //       children: [
+                  //         Image.asset(
+                  //           "assets/images/driver.gif",
+                  //           height: 40,
+                  //           width: 40,
+                  //         ),
+                  //         SizedBox(
+                  //           width: 10,
+                  //         ),
+                  //         Text(
+                  //           'Delivery in 15 - 30 min',
+                  //           style: TextStyle(
+                  //               fontSize: 16,
+                  //               fontFamily: 'roboto',
+                  //               color: Colors.grey.shade700),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //     InkWell(
+                  //       onTap: () {
+                  //         showrating = !showrating;
+                  //         setState(() {});
+                  //       },
+                  //       child: Container(
+                  //         child: Text(
+                  //           'Change',
+                  //           style: TextStyle(
+                  //               fontSize: 16,
+                  //               fontFamily: 'roboto',
+                  //               fontWeight: FontWeight.bold,
+                  //               color: AppColors.secondaryElement),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(
-                    height: 5,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Image.asset(
-                            "assets/images/driver.gif",
-                            height: 40,
-                            width: 40,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            'Delivery in 15 - 30 min',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontFamily: 'roboto',
-                                color: Colors.grey.shade700),
-                          ),
-                        ],
-                      ),
-                      InkWell(
-                        onTap: () {
-                          showrating = !showrating;
-                          setState(() {});
-                        },
-                        child: Container(
-                          child: Text(
-                            'Change',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontFamily: 'roboto',
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.secondaryElement),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 5,
+                    height: 8,
                   ),
                   InkWell(
                     onTap: () {
@@ -2082,6 +2129,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
         if (index == -1) {
         } else {
           fooditemswithcat[j]['menuItems'][i]['cart'] = true;
+          cartbtn=true;
           fooditemswithcat[j]['menuItems'][i]['qty2'] = cart[index]['qty'];
         }
       }
@@ -2098,6 +2146,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
       if (index == -1) {
       } else {
         newfooditems[i]['cart'] = true;
+        cartbtn=true;
         newfooditems[i]['qty2'] = cart[index]['qty'];
       }
     }

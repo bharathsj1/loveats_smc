@@ -242,13 +242,10 @@ class _RecipeListState extends State<RecipeList> {
                       //   cities: resturants,
                       //   onCityChange: _handleCityChange,
                       // ),
-                      SingleChildScrollView(
-                        // scrollDirection: Axis.horizontal,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Column(
-                            children: popular(),
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: Column(
+                          children: popular(),
                         ),
                       ),
                       SizedBox(height: 0.0),

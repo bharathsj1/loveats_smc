@@ -87,7 +87,7 @@ class _CartScreenState extends State<CartScreen> {
       calculate();
     }
     print(cartlist);
-    //setState(() {});
+    setState(() {});
   }
   
   getpackcartlist() async {
@@ -150,6 +150,7 @@ class _CartScreenState extends State<CartScreen> {
         newcart[i].length,
         (index) => InkWell(
               onTap: () async {
+                print(newcart[i][index]);
                 updateitem(context, (newcart[i][index]), i, index);
                 //  await CartProvider().clearcart();
                 //  getcartlist();
@@ -276,26 +277,62 @@ class _CartScreenState extends State<CartScreen> {
                                 //     ),
                                 //   ],
                                 // ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: List.generate(
-                                    newcart[i][index]['addon'].length,
-                                    (ind) => Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            newcart[i][index]['addon'][ind]
-                                                ['data']['name'],
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: AppColors.secondaryElement,
-                                              letterSpacing: .3,
-                                            )),
-                                      ],
+                                Row(
+                                  
+                                  children: [
+                                    Container(
+                                      width: MediaQuery.of(context).size.width*0.65,
+                                      // color: Colors.red,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: List.generate(
+                                          newcart[i][index]['addon'].length,
+                                          (ind) => Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  newcart[i][index]['addon'][ind]
+                                                      ['data']['name'],
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: AppColors.secondaryElement,
+                                                    letterSpacing: .3,
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    InkWell(
+                                      onTap: () async {
+                                        print('here');
+                                        await CartProvider()
+                                            .removeToCart(newcart[i][index]);
+                                        // await CartProvider()
+                                        //     .clearcart();
+
+                                        getcartlist();
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.delete_outline,
+                                              color: Colors.black54, size: 20),
+                                          // Padding(
+                                          //   padding: const EdgeInsets.only(
+                                          //       top: 5, left: 0),
+                                          //   child: Text('Remove',
+                                          //       style: TextStyle(
+                                          //           // fontSize: 18,
+                                          //           color: Colors.black54,
+                                          //           fontWeight:
+                                          //               FontWeight.w600)),
+                                          // ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 // Column(
                                 //   mainAxisAlignment: MainAxisAlignment.start,
@@ -787,11 +824,19 @@ class _CartScreenState extends State<CartScreen> {
                 ),
                 InkWell(
                   onTap: () {
+                    // print(item['restaurantdata']['id']);
                     Navigator.pushNamed(context, AppRouter.Add_Extra,
                         arguments: {
                           'update': true,
-                          'drink': item['drink'],
-                          'topping': item['topping']
+                          // 'drink': item['drink'],
+                          'product':item,
+                          'addon': item['addon'],
+                           'restaurant' : item['restaurantdata']
+                        }).then((value) {
+                          if(value!=null && value){
+                            Navigator.pop(context);
+                            getcartlist();
+                          }
                         });
                   },
                   child: Container(
@@ -951,7 +996,7 @@ class _CartScreenState extends State<CartScreen> {
               child: Container(
                 color: AppColors.white,
                 margin: EdgeInsets.only(top: 5),
-                height: 105,
+                height: 120,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -977,11 +1022,10 @@ class _CartScreenState extends State<CartScreen> {
                                       if (this.ridertip > 0) {
                                         this.ridertip = this.ridertip - 1;
                                         setState(() {});
-                                        // totalprice();
-                                        if (this.ridertip == 1) {
-                                          // disabled = false;
-                                          setState(() {});
-                                        }
+                                       totalAmount-= 1;
+                                        // if (this.ridertip == 1) {
+                                        //   // disabled = false;
+                                        // }
                                         setState(() {});
                                       }
                                     },
@@ -1032,6 +1076,7 @@ class _CartScreenState extends State<CartScreen> {
                                       print('here');
                                       print('here');
                                       this.ridertip = (this.ridertip + 1);
+                                      totalAmount+= 1;
                                       print(this.ridertip);
                                       setState(() {});
                                     },
@@ -1088,50 +1133,48 @@ class _CartScreenState extends State<CartScreen> {
                       ],
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 0,
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 0.0),
-                        child: PotbellyButton(
-                          'Go to Checkout',
-                          onTap: () async {
-                           if (isGuest ==null || !isGuest){
-                               String userId = await Service().getUserId();
-                              var data = {
-                                'cartlist': newcart,
-                                'packlist': packlist,
-                                'charges': charges,
-                                'shipping': shipping,
-                                'total': totalAmount,
-                                'type': 'cart',
-                                'mixmatch': mixmatch,
-                                'recipe':false,
-                                'usersub': false,
-                                'user_id':userId
-                              };
-                              Navigator.pushNamed(context, AppRouter.CheckOut1,
-                                  arguments: data);
-                           
-                            } else {
-                              _askLoginDialog(context);
-                            
-                            }
-                          },
-                          buttonHeight: 45,
-                          buttonWidth: MediaQuery.of(context).size.width * 0.85,
-                          buttonTextStyle: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: AppColors.secondaryElement),
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 0.0),
+                      child: PotbellyButton(
+                        'Go to Checkout',
+                        onTap: () async {
+                         if (isGuest ==null || !isGuest){
+                             String userId = await Service().getUserId();
+                            var data = {
+                              'cartlist': newcart,
+                              'packlist': packlist,
+                              'charges': charges,
+                              'shipping': shipping,
+                              'total': totalAmount,
+                              'type': 'cart',
+                              'mixmatch': mixmatch,
+                              'recipe':false,
+                              'usersub': false,
+                              'user_id':userId
+                            };
+                            Navigator.pushNamed(context, AppRouter.CheckOut1,
+                                arguments: data);
+                         
+                          } else {
+                            _askLoginDialog(context);
+                          
+                          }
+                        },
+                        buttonHeight: 45,
+                        buttonWidth: MediaQuery.of(context).size.width * 0.85,
+                        buttonTextStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: AppColors.secondaryElement),
                       ),
                     ),
                     SizedBox(
-                      height: 5,
+                      height: 8,
                     ),
                   ],
                 ),
@@ -1632,21 +1675,21 @@ class _CartScreenState extends State<CartScreen> {
                       SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        color: AppColors.white,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                        child: Text('Add voucher code',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                letterSpacing: .3,
-                                color: AppColors.secondaryElement)),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                      // Container(
+                      //   width: MediaQuery.of(context).size.width,
+                      //   color: AppColors.white,
+                      //   padding:
+                      //       EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      //   child: Text('Add voucher code',
+                      //       style: TextStyle(
+                      //           fontWeight: FontWeight.w600,
+                      //           fontSize: 16,
+                      //           letterSpacing: .3,
+                      //           color: AppColors.secondaryElement)),
+                      // ),
+                      // SizedBox(
+                      //   height: 20,
+                      // ),
                     ],
                   ),
                 ),

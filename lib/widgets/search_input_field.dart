@@ -57,36 +57,38 @@ class FoodyBiteSearchInputField extends StatelessWidget {
     return Container(
       height: 46,
       width: MediaQuery.of(context).size.width-70,
-      padding: EdgeInsets.only(top: 1),
+      padding: EdgeInsets.only(top: 0),
       child: TextFormField(
         controller: controller,
         style: textFormFieldStyle,
         enabled: false,
         decoration: InputDecoration(
-          border: InputBorder.none,
-        focusedBorder: InputBorder.none,
-        enabledBorder: InputBorder.none,
-        errorBorder: InputBorder.none,
-        disabledBorder: InputBorder.none,
-          // enabledBorder: OutlineInputBorder(
+        //   border: InputBorder.none,
+        // focusedBorder: InputBorder.none,
+        // enabledBorder: InputBorder.none,
+        // errorBorder: InputBorder.none,
+        // disabledBorder: InputBorder.none,
+          enabledBorder: OutlineInputBorder(
             
-          //   // borderSide: BorderSide.none,
-          //   //BorderSide.none(color: Colors.transparent, width: 0),
-          //   borderRadius: BorderRadius.circular(borderRadius)
-          // ),
-          // focusedBorder: OutlineInputBorder(
-          //   // borderSide: BorderSide.none,
-          //   //BorderSide.none(color: Colors.transparent, width: 0),
-          //   borderRadius: BorderRadius.circular(borderRadius)
-          // ),
-          // border: OutlineInputBorder(
-          //   borderRadius: BorderRadius.circular(borderRadius),
-          //   // borderSide: BorderSide.none(
-          //     // color: Colors.transparent,
-          //     // width: 0,
-          //     // style: borderStyle,
-          //   // ),
-          // ),
+            borderSide: BorderSide.none,
+            //BorderSide.none(color: Colors.transparent, width: 0),
+            borderRadius: BorderRadius.circular(borderRadius)
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            //BorderSide.none(color: Colors.transparent, width: 0),
+            borderRadius: BorderRadius.circular(borderRadius)
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(borderRadius),
+            borderSide: BorderSide.none,
+
+            // borderSide: BorderSide.none(
+              // color: Colors.transparent,
+              // width: 0,
+              // style: borderStyle,
+            // ),
+          ),
           prefixIcon: InkWell(
             onTap: onTapOfLeadingIcon,
             child: prefixIcon ?? defaultPrefixIcon(),

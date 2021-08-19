@@ -939,7 +939,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
         child: Container(
           color: AppColors.white,
           margin: EdgeInsets.only(top: 5),
-          height: 75,
+          height: 90,
           child: Column(
             children: [
               SizedBox(

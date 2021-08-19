@@ -27,16 +27,39 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
   }
 
   getaddson() async {
-    var response =
-        await AppService().getaddon(widget.data['restaurant'].id.toString());
-    // addons= response['data'];
-    print(response);
-    for (var item in response['data']) {
-      addons.add({'data': item, 'check': false});
+    // var response=[];
+    if (widget.data['update'] != null && widget.data['update'] == true) {
+      var response = await AppService()
+          .getaddon(widget.data['restaurant']['id'].toString());
+      print(response);
+      for (var item in response['data']) {
+        addons.add({'data': item, 'check': false});
+      }
+      for (var i = 0; i < addons.length; i++) {
+        var data = widget.data['addon']
+            .where((x) => x['data']['id'] == addons[i]['data']['id'])
+            .toList();
+        print(data);
+        if (data.length > 0) {
+          addons[i]['check'] = true;
+        }
+      }
+      setState(() {});
+      print(addons);
+      _isLoading = false;
+      setState(() {});
+    } else {
+      var response =
+          await AppService().getaddon(widget.data['restaurant'].id.toString());
+      print(response);
+      for (var item in response['data']) {
+        addons.add({'data': item, 'check': false});
+      }
+      print(addons);
+      _isLoading = false;
+      setState(() {});
     }
-    print(addons);
-    _isLoading = false;
-    setState(() {});
+    // addons= response['data'];
   }
 
   List toppings = [
@@ -103,50 +126,64 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
         actions: [
           InkWell(
               onTap: () {
-                print(widget.data['item']);
-                Map<String, dynamic> cartdata = {
-                  'id': widget.data['item']['id'],
-                  'restaurantId': widget.data['item']['rest_id'],
-                  'image': widget.data['item']['menu_image'],
-                  'details': widget.data['item']['menu_details'],
-                  'name': widget.data['item']['menu_name'],
-                  'price': double.parse(widget.data['item']['menu_price']),
-                  'payableAmount': widget.data['item']['menu_price'].toString(),
-                  'qty': this.itemqty,
-                  'data': widget.data['item'],
-                  'restaurantdata': widget.data['restaurant'],
-                  // 'topping': toppings
-                  //     .where((product) => product['check'] == true)
-                  //     .toList(),
-                  // 'drink': drinks
-                  //     .where((product) => product['check'] == true)
-                  //     .toList()
-                  'addon': addons
-                      .where((product) => product['check'] == true)
-                      .toList()
-                };
-                print(cartdata);
-                print(this.itemqty);
-                CartProvider().addToCart(context, cartdata);
-                // if (fooditems[index]['cart'] !=
-                //         null &&
-                //     fooditems[index]['cart'] ==
-                //         true) {
-                //   var qtyy = int.parse(
-                //       fooditems[index]['qty2']);
-                //   qtyy++;
-                //   fooditems[index]['qty2'] =
-                //       qtyy.toString();
-                // } else {
-                //   fooditems[index]['qty2'] =
-                //       fooditems[index]['qty'];
-                // }
+                if (widget.data['update'] != null &&
+                    widget.data['update'] == true) {
+                  CartProvider().updatecartaddon(
+                      context,
+                      widget.data['product'],
+                      addons
+                          .where((product) => product['check'] == true)
+                          .toList(),
+                      widget.data['addon']);
+                  print(widget.data['product']);
+                  Navigator.pop(context, true);
+                } else {
+                  print(widget.data['item']);
+                  Map<String, dynamic> cartdata = {
+                    'id': widget.data['item']['id'],
+                    'restaurantId': widget.data['item']['rest_id'],
+                    'image': widget.data['item']['menu_image'],
+                    'details': widget.data['item']['menu_details'],
+                    'name': widget.data['item']['menu_name'],
+                    'price': double.parse(widget.data['item']['menu_price']),
+                    'payableAmount':
+                        widget.data['item']['menu_price'].toString(),
+                    'qty': this.itemqty,
+                    'data': widget.data['item'],
+                    'restaurantdata': widget.data['restaurant'],
+                    // 'topping': toppings
+                    //     .where((product) => product['check'] == true)
+                    //     .toList(),
+                    // 'drink': drinks
+                    //     .where((product) => product['check'] == true)
+                    //     .toList()
+                    'addon': addons
+                        .where((product) => product['check'] == true)
+                        .toList()
+                  };
+                  print(cartdata);
+                  print(this.itemqty);
+                  CartProvider().addToCart(context, cartdata);
+                  // if (fooditems[index]['cart'] !=
+                  //         null &&
+                  //     fooditems[index]['cart'] ==
+                  //         true) {
+                  //   var qtyy = int.parse(
+                  //       fooditems[index]['qty2']);
+                  //   qtyy++;
+                  //   fooditems[index]['qty2'] =
+                  //       qtyy.toString();
+                  // } else {
+                  //   fooditems[index]['qty2'] =
+                  //       fooditems[index]['qty'];
+                  // }
 
-                // fooditems[index]['cart'] = true;
-                // print(fooditems[index]);
-                // Navigator.pop(context);
-                setState(() {});
-                Navigator.pop(context);
+                  // fooditems[index]['cart'] = true;
+                  // print(fooditems[index]);
+                  // Navigator.pop(context);
+                  setState(() {});
+                  Navigator.pop(context);
+                }
               },
               child: Container(
                   child: Icon(
@@ -159,9 +196,9 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
         ],
       ),
       bottomNavigationBar: Material(
-          elevation: 0,
+          elevation: 20,
           child: Container(
-            padding: EdgeInsets.only(top: 5, bottom: 20),
+            padding: EdgeInsets.only(top: 5),
             height: 60,
             width: MediaQuery.of(context).size.width,
             color: Colors.white,
@@ -209,7 +246,7 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
                 Text(
                   this.itemqty,
                   style: TextStyle(
-                      fontSize: 28,
+                      fontSize: 32,
                       color: AppColors.secondaryElement,
                       fontWeight: FontWeight.w400),
                 ),

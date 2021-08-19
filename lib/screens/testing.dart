@@ -278,7 +278,7 @@ class _AddNewCartState extends State<AddNewCart> {
                                                       decoration: BoxDecoration(
                                                           image: DecorationImage(
                                                               image: AssetImage(
-                                                                  'assets/images/visa2.jpg'))),
+                                                                  'assets/images/visa2.png'))),
                                                     )),
                                                 Container(
                                                     width: 40,

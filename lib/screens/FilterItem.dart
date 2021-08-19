@@ -339,8 +339,8 @@ class _FilterItemsState extends State<FilterItems> {
       ),
       body: SingleChildScrollView(
         controller: _sc,
-        physics: BouncingScrollPhysics(),
-        // scrollDirection: Axis.horizontal,
+        // physics: BouncingScrollPhysics(),
+        scrollDirection: Axis.vertical,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
           child: Column(
