@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -16,6 +17,7 @@ import 'package:potbelly/models/promotions.dart';
 import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/screens/FilterItem.dart';
 import 'package:potbelly/screens/settings_screen.dart';
 import 'package:potbelly/services/DatabaseManager.dart';
 import 'package:potbelly/services/appServices.dart';
@@ -28,6 +30,8 @@ import 'package:provider/provider.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 import 'package:toast/toast.dart';
 import 'package:video_player/video_player.dart';
+
+import 'Recipe_list.dart';
 
 class HomeScreen extends StatefulWidget {
   static const int TAB_NO = 0;
@@ -68,7 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   RestaurentsModel _restaurentsModel;
- 
 
   @override
   void initState() {
@@ -650,7 +653,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
               },
               child: Container(
-                height: 245,
+                // height: 245,
                 width: MediaQuery.of(context).size.width / 1,
                 child: Card(
                   elevation: 0,
@@ -791,13 +794,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Container(
-                                    // width: MediaQuery.of(context).size.width*0.5,
+                                    width: MediaQuery.of(context).size.width-30,
                                     // color: Colors.red,
                                     child: Text(
                                         popularitem[i]['restaurant']
                                                 ['rest_address'] +
                                             ' (500+)',
-                                        textAlign: TextAlign.center,
+                                        textAlign: TextAlign.left,
                                         style: GoogleFonts.openSans(
                                           textStyle:
                                               Styles.customNormalTextStyle(
@@ -833,6 +836,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ],
                             ),
+                            SizedBox(height: 8,)
                           ],
                         ),
                       ),
@@ -852,18 +856,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   newcategorieslist() {
     return List.generate(
-        catlist.length,
+        categories.length + 1,
         (i) => InkWell(
               onTap: () {
                 // selectedcat = i;
-                Navigator.pushNamed(context, AppRouter.Filter_Items,
-                    arguments: {
+                // Navigator.pushNamed(context, AppRouter.Filter_Items,
+                //     arguments: {
+                //       // 'name': name == 'Delivery' ? 'Deliverable' : 'Pickup',
+                //       'name': i == 0 ? 'All' : categories[i - 1].menuName,
+                //       'cat': true,
+                //       'catid': i == 0 ? 1 : categories[i - 1].id
+                //     });
+                // setState(() {});
+
+                Navigator.push(
+                          context,
+                          // MaterialPageRoute(builder: (_) => BackgroundVideo()), (route) => false);
+                          CupertinoPageRoute(builder: (_) => FilterItems(data:  {
                       // 'name': name == 'Delivery' ? 'Deliverable' : 'Pickup',
-                      'name': catlist[i],
+                      'name': i == 0 ? 'All' : categories[i - 1].menuName,
                       'cat': true,
-                      'catid': i == 0 ? 1 : i
-                    });
-                setState(() {});
+                      'catid': i == 0 ? 1 : categories[i - 1].id
+                    },)));
               },
               child: Container(
                 // padding: EdgeInsets.symmetric(vertical:selectedcat== i?0: 4),
@@ -994,7 +1008,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         bottom: MediaQuery.of(context).size.height * 0.01,
                         left: 10,
                         // right: 0,
-                        child: Text(catlist[i],
+                        child: Text(i == 0 ? 'All' : categories[i - 1].menuName,
                             textAlign: TextAlign.center,
                             style: GoogleFonts.dmSerifDisplay(
                               textStyle: Styles.customTitleTextStyle(
@@ -1131,7 +1145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 // collapsedHeight: 40,
                 toolbarHeight: 135,
                 flexibleSpace: Padding(
-                  padding: const EdgeInsets.only(top: 25.0),
+                  padding: const EdgeInsets.only(top: 32.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -1191,7 +1205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                0.50,
+                                                0.40,
                                             child: Text(
                                               selected_address,
                                               style: TextStyle(
@@ -1218,7 +1232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Row(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(right: 5.0),
+                                  padding: const EdgeInsets.only(right: 20.0),
                                   child: InkWell(
                                       onTap: () async {
                                         Navigator.pushNamed(
@@ -1226,20 +1240,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                           AppRouter.cart_Screen,
                                         );
                                       },
-                                      child: Icon(
-                                        OMIcons.shoppingCart,
-                                        color: AppColors.black,
-                                        size: 21,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.rectangle,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.grey[300],
+                                                  blurRadius: 7.0,
+                                                  spreadRadius: 0.5),
+                                            ]),
+                                        child: Icon(
+                                          OMIcons.shoppingCart,
+                                          color: AppColors.black,
+                                          size: 21,
+                                        ),
                                       )),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(right: 10.0),
+                                  padding: const EdgeInsets.only(right: 15.0),
                                   child: InkWell(
                                     onTap: () async {
                                       _isGuest = await Service().isGuest();
                                       print(_isGuest);
                                       // return;
-                                      if (_isGuest ==null || !_isGuest) {
+                                      if (_isGuest == null || !_isGuest) {
                                         Navigator.pushNamed(
                                           context,
                                           AppRouter.profileScreen,
@@ -1256,12 +1280,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                     // )
                                     child: Padding(
                                       padding: const EdgeInsets.only(top: 4.0),
-                                      child: CircleAvatar(
-                                        backgroundImage: AssetImage(
-                                            'assets/images/andy.png'),
-                                        backgroundColor: Colors.transparent,
-                                        minRadius: Sizes.RADIUS_14,
-                                        maxRadius: Sizes.RADIUS_14,
+                                      child: Material(
+                                        elevation: 10,
+                                        shadowColor: Colors.grey[400],
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                        ),
+                                        child: CircleAvatar(
+                                          backgroundImage: AssetImage(
+                                              'assets/images/andy.png'),
+                                          backgroundColor: Colors.transparent,
+                                          minRadius: Sizes.RADIUS_14,
+                                          maxRadius: Sizes.RADIUS_14,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -1272,7 +1304,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: 6,
+                        height: 0,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -1347,61 +1379,83 @@ class _HomeScreenState extends State<HomeScreen> {
                                     // width: MediaQuery.of(context).size.width * 0.82,
                                     width: MediaQuery.of(context).size.width,
                                     child: Material(
-                                      elevation: 3,
-                                      borderRadius: BorderRadius.circular(0),
+                                      elevation: 0,
+                                      borderRadius: BorderRadius.circular(8),
                                       child: Container(
-                                        color: Colors.grey[200],
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey[200],
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.grey[400],
+                                                  blurRadius: 5.0,
+                                                  spreadRadius: 0.5),
+                                            ]),
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            FoodyBiteSearchInputField(
-                                                ImagePath.searchIcon,
-                                                borderRadius: 12,
-                                                controller: searchcontroller,
-                                                fillColor: Colors.grey[200],
-                                                filled: true,
-                                                borderColor: Colors.transparent,
-                                                contentPaddingVertical: 11,
-                                                contentPaddingHorizontal: 50,
-                                                textFormFieldStyle: Styles
-                                                    .customNormalTextStyle(
-                                                        color: Colors.black54),
-                                                hintText: StringConst
-                                                    .HINT_TEXT_HOME_SEARCH_BAR,
-                                                hintTextStyle: Styles
-                                                    .customNormalTextStyle(
-                                                        color: Colors.black54),
-                                                suffixIconImagePath:
-                                                    ImagePath.settingsIcon,
-                                                hasSuffixIcon: false,
-                                                borderWidth: 0.0,
-                                                onChanged: (value) {
-                                              searchfromlist();
-                                            }, onTapOfLeadingIcon: () {
-                                              pausevideo();
-                                              FocusScope.of(context).unfocus();
-                                              Navigator.pushNamed(
-                                                context,
-                                                AppRouter.searchResultsScreen,
-                                                arguments: SearchValue(
-                                                  searchcontroller.text,
-                                                ),
-                                              ).then((value) {
-                                                this.searchcontroller.text = '';
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 0.0),
+                                              child: FoodyBiteSearchInputField(
+                                                  ImagePath.searchIcon,
+                                                  borderRadius: 8,
+                                                  controller: searchcontroller,
+                                                  fillColor: Colors.grey[200],
+                                                  filled: true,
+                                                  borderColor:
+                                                      Colors.transparent,
+                                                  contentPaddingVertical: 11,
+                                                  contentPaddingHorizontal: 50,
+                                                  textFormFieldStyle: Styles
+                                                      .customNormalTextStyle(
+                                                          color:
+                                                              Colors.black54),
+                                                  hintText: StringConst
+                                                      .HINT_TEXT_HOME_SEARCH_BAR,
+                                                  hintTextStyle: Styles
+                                                      .customNormalTextStyle(
+                                                          color:
+                                                              Colors.black54),
+                                                  suffixIconImagePath:
+                                                      ImagePath.settingsIcon,
+                                                  hasSuffixIcon: false,
+                                                  borderWidth: 0.0,
+                                                  onChanged: (value) {
+                                                searchfromlist();
+                                              }, onTapOfLeadingIcon: () {
+                                                pausevideo();
                                                 FocusScope.of(context)
                                                     .unfocus();
-                                                setState(() {});
-                                                resumevideo();
-                                              });
-                                            }, onTapOfSuffixIcon: () {
-                                              // pausevideo();
-                                              print('herrrrr');
-                                              Navigator.pushNamed(context,
-                                                      AppRouter.Filter_Screens)
-                                                  .then(
-                                                      (value) => resumevideo());
-                                            }, borderStyle: BorderStyle.solid),
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  AppRouter.searchResultsScreen,
+                                                  arguments: SearchValue(
+                                                    searchcontroller.text,
+                                                  ),
+                                                ).then((value) {
+                                                  this.searchcontroller.text =
+                                                      '';
+                                                  FocusScope.of(context)
+                                                      .unfocus();
+                                                  setState(() {});
+                                                  resumevideo();
+                                                });
+                                              }, onTapOfSuffixIcon: () {
+                                                // pausevideo();
+                                                print('herrrrr');
+                                                Navigator.pushNamed(
+                                                        context,
+                                                        AppRouter
+                                                            .Filter_Screens)
+                                                    .then((value) =>
+                                                        resumevideo());
+                                              },
+                                                  borderStyle:
+                                                      BorderStyle.solid),
+                                            ),
                                             InkWell(
                                               onTap: () {
                                                 Navigator.pushNamed(
@@ -1475,7 +1529,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 6,
                   ),
                   Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -1502,7 +1556,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       )),
                   SizedBox(
-                    height: 10,
+                    height: 6,
                   ),
                   loader || lottie == false
                       ? Center(
@@ -1553,8 +1607,71 @@ class _HomeScreenState extends State<HomeScreen> {
                       }),
                     ),
                   ),
+                   SizedBox(
+                    height: 8,
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: Text('Offers'.toUpperCase(),
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.dmSerifDisplay(
+                            textStyle: Styles.customTitleTextStyle2(
+                              color: Colors.black,
+                              letterSpacing: 2,
+                              fontWeight: FontWeight.bold,
+                              fontSize: Sizes.TEXT_SIZE_22,
+                            ),
+                          ))),
                   SizedBox(
-                    height: 10,
+                    height: 8,
+                  ),
+                  Container(
+                    height: 200,
+                    //  width: 180,
+                    //  color: Colors.red,
+
+                    margin: EdgeInsets.symmetric(horizontal: 8),
+                    // padding: EdgeInsets.all(8),
+                    child: ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: subscription.length,
+                        itemBuilder: (context, i) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5.0, vertical: 2),
+                            width: MediaQuery.of(context).size.width / 1.1,
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, AppRouter.promotionScreen);
+                              },
+                              child: Material(
+                                elevation: 1,
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(6),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(6),
+                                  child: Stack(
+                                    children: [
+                                      Image.asset(
+                                        subscription[i],
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                1.08,
+                                        fit: BoxFit.contain,
+                                        // color: Colors.red,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                  SizedBox(
+                    height: 8,
                   ),
                   Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -1563,12 +1680,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: GoogleFonts.dmSerifDisplay(
                             textStyle: Styles.customTitleTextStyle2(
                               color: Colors.black,
+                              letterSpacing: 2,
                               fontWeight: FontWeight.bold,
                               fontSize: Sizes.TEXT_SIZE_22,
                             ),
                           ))),
                   SizedBox(
-                    height: 10,
+                    height: 8,
                   ),
                   loader3
                       ? Center(
@@ -1603,16 +1721,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                 //       distance: hotspotlist[0]['distance'] + ' Km',
                                 //       data: hotspotlist[0]),
                                 // );
-                               
-                                if(recipessub.length>0){
-                                Navigator.pushNamed(
-                                    context, AppRouter.Recipes_list,
-                                    arguments: {'recipe':recipes[0],'usersub':true,'subdata': recipessub[0]});
-                                }
-                                else{
-                                Navigator.pushNamed(
-                                    context, AppRouter.Build_Plan,
-                                    arguments: {'recipe':recipes[0],'usersub':false,});
+
+                                if (recipessub.length > 0) {
+                                  // Navigator.pushNamed(
+                                  //     context, AppRouter.Recipes_list,
+                                  //     arguments: {
+                                  //       'recipe': recipes[0],
+                                  //       'usersub': true,
+                                  //       'subdata': recipessub[0]
+                                  //     });
+                                  Navigator.push(
+                          context,
+                          // MaterialPageRoute(builder: (_) => BackgroundVideo()), (route) => false);
+                          CupertinoPageRoute(builder: (_) => RecipeList(data:  {
+                                        'recipe': recipes[0],
+                                        'usersub': true,
+                                        'subdata': recipessub[0]
+                                      },)));
+                                } else {
+                                  Navigator.pushNamed(
+                                      context, AppRouter.Build_Plan,
+                                      arguments: {
+                                        'recipe': recipes[0],
+                                        'usersub': false,
+                                      });
                                 }
                               },
                               child: Image.asset(
@@ -1624,7 +1756,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 filterQuality: FilterQuality.high,
                               )),
                         ),
-                  SizedBox(height: 15.0),
+                  // SizedBox(height: 15.0),
+
                   // : Container(),
                   // loader
                   //     ? Container(
@@ -1736,58 +1869,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   //       ),
                   //hotspot ended
 
-                  Container(
-                    height: 180,
-                    //  width: 180,
-                    //  color: Colors.red,
-
-                    margin: EdgeInsets.symmetric(horizontal: 8),
-                    // padding: EdgeInsets.all(8),
-                    child: ListView.builder(
-                        physics: BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: subscription.length,
-                        itemBuilder: (context, i) {
-                          return Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 5.0, vertical: 2),
-                            width: MediaQuery.of(context).size.width / 1.1,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, AppRouter.promotionScreen);
-                              },
-                              child: Material(
-                                elevation: 1,
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(6),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(6),
-                                  child: Stack(
-                                    children: [
-                                      Image.asset(
-                                        subscription[i],
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                1.08,
-                                        fit: BoxFit.contain,
-                                        // color: Colors.red,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-                  ),
+                 
                   SizedBox(height: 10.0),
                   loader4
                       ? Container(
                           height: 280,
                           child: CarouselSlider(
                               options: CarouselOptions(
-                                  enableInfiniteScroll: true, height: 260),
+                                  enableInfiniteScroll: true, height: 280),
                               items: List.generate(
                                 1,
                                 (ind) => SkeletonAnimation(

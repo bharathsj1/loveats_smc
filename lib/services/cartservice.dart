@@ -10,6 +10,58 @@ class CartProvider with ChangeNotifier {
   double totalAmount = 0.0;
   double packtotalAmount = 0.0;
 
+   void updatecartaddon(context, product ,newaddon,oldaddon) async {
+     await getcarts();
+      int index = cartitems.indexWhere((x) {
+      print('indexwhere');
+      print(x.toString());
+      print(product['id']);
+      return x['id'] == product['id'] &&
+          x['restaurantId'] == product['restaurantId'];
+    });
+   var extraadd = cartitems.where((x) =>x['addon'].toString() == oldaddon.toString() ).toList();
+   print(index);
+
+    //  if (extraadd.length==0) {
+    //   // double total = 0.0;
+    //   // cartitems.add(product);
+    //   cartitems[index]['addon']=newaddon;
+    //   // also save into sqflite
+    //   notifyListeners();
+    //   Toast.show('Item customized', context, duration: 3);
+    // } else {
+      // // increase the qty
+      // cartitems[index]['qty'] =
+      //     (int.parse(cartitems[index]['qty']) + int.parse(product['qty']))
+      //         .toString();
+      // cartitems[index]['payableAmount'] =
+      //     ((cartitems[index]['price']) * double.parse(cartitems[index]['qty']))
+      //         .toString();
+      // print('payable');
+      // print(cartitems[index]['payableAmount']);
+      // // also save into sqflite
+      // notifyListeners();
+      // double total = 0;
+      // cartitems.forEach((f) {
+      //   total += (f['price']) * double.parse(f['qty']);
+      // });
+      // totalAmount = total;
+      // print('total');
+      // print(totalAmount);
+      // notifyListeners();
+      // Toast.show('Adding Quantity +' + product['qty'], context, duration: 3);
+    // }
+     
+          // double total = 0.0;
+      // cartitems.add(product);
+      cartitems[index]['addon']=newaddon;
+      // also save into sqflite
+      notifyListeners();
+      Toast.show('Item customized', context, duration: 3);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('cartlist', jsonEncode(cartitems));
+   }
+
   void addToCart(context, product) async {
     // check array is empty
     await getcarts();
@@ -21,7 +73,7 @@ class CartProvider with ChangeNotifier {
       return x['id'] == product['id'] &&
           x['restaurantId'] == product['restaurantId'];
     });
-    var extraadd = cartitems.where((x) =>x['topping'].toString() == product['topping'].toString() &&  x['drink'].toString() == product['drink'].toString()).toList();
+    var extraadd = cartitems.where((x) =>x['addon'].toString() == product['addon'].toString() ).toList();
     print(index);
     // print(cartitems[index]['topping']);
     // print(product['topping']);
@@ -67,6 +119,8 @@ class CartProvider with ChangeNotifier {
     await prefs.setString('cartlist', jsonEncode(cartitems));
   }
 
+
+  
   // Remove from cart
   Future<void> removeqtyCart(context, cart) async {
     await getcarts();
@@ -216,7 +270,8 @@ class CartProvider with ChangeNotifier {
     await getcarts();
     print(cartitems);
     int index = cartitems.indexWhere((x) =>
-        x['id'] == cart['id'] && x['restaurantId'] == cart['restaurantId']);
+        x['id'] == cart['id'] && x['restaurantId'] == cart['restaurantId'] && x['addon'].toString() == cart['addon'].toString());
+        
     if (index == -1) {
       return;
     } else {
@@ -229,6 +284,7 @@ class CartProvider with ChangeNotifier {
     // also save into sqflite
     notifyListeners();
   }
+  
   Future<void> removeTopackCart(pack) async {
     print(pack);
     await getpackagecarts();

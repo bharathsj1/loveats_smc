@@ -21,7 +21,9 @@ import 'package:potbelly/screens/Recipe_details.dart';
 import 'package:potbelly/screens/Recipe_list.dart';
 import 'package:potbelly/screens/Steps_Screen.dart';
 import 'package:potbelly/screens/Table_Scanner.dart';
+import 'package:potbelly/screens/View_gallery.dart';
 import 'package:potbelly/screens/add_extra.dart';
+import 'package:potbelly/screens/add_post_comments.dart';
 import 'package:potbelly/screens/build_plan.dart';
 import 'package:potbelly/screens/google_map.dart';
 import 'package:potbelly/screens/Promotionalert.dart';
@@ -138,6 +140,8 @@ class AppRouter {
   static const Buy_New_Plan = '/Buy_New_Plan';
   static const Recipes_list = '/Recipes_list';
   static const Post_view = '/Post_view';
+  static const View_Gallery = '/View_Gallery';
+  static const Add_post_comments = '/Add_post_comments';
   static const testing = '/testing';
 
   static const userAddresses = '/user_addresses';
@@ -173,6 +177,16 @@ class AppRouter {
       case AppRouter.Build_Plan:
         return MaterialPageRoute<dynamic>(
           builder: (_) => BuildPlan(data: args,),
+          settings: settings,
+        );
+      case AppRouter.View_Gallery:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => ViewGallery(data: args,),
+          settings: settings,
+        );
+      case AppRouter.Add_post_comments:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => Addpostcomment(postdata: args,),
           settings: settings,
         );
       case AppRouter.Buy_New_Plan:
