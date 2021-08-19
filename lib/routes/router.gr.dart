@@ -25,6 +25,7 @@ import 'package:potbelly/screens/View_gallery.dart';
 import 'package:potbelly/screens/add_extra.dart';
 import 'package:potbelly/screens/add_post_comments.dart';
 import 'package:potbelly/screens/build_plan.dart';
+import 'package:potbelly/screens/filtered_restaurant.dart';
 import 'package:potbelly/screens/google_map.dart';
 import 'package:potbelly/screens/Promotionalert.dart';
 import 'package:potbelly/screens/checkoutScreen.dart';
@@ -142,6 +143,7 @@ class AppRouter {
   static const Post_view = '/Post_view';
   static const View_Gallery = '/View_Gallery';
   static const Add_post_comments = '/Add_post_comments';
+  static const Filtered_Restaurant = '/Filtered_Restaurant';
   static const testing = '/testing';
 
   static const userAddresses = '/user_addresses';
@@ -187,6 +189,11 @@ class AppRouter {
       case AppRouter.Add_post_comments:
         return MaterialPageRoute<dynamic>(
           builder: (_) => Addpostcomment(postdata: args,),
+          settings: settings,
+        );
+      case AppRouter.Filtered_Restaurant:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => FilteredRestaurant(data: args,),
           settings: settings,
         );
       case AppRouter.Buy_New_Plan:

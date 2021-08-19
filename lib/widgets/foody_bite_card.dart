@@ -54,7 +54,7 @@ class FoodyBiteCard extends StatelessWidget {
         child: Card(
           elevation: cardElevation,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(tagRadius),
           ),
           child: Stack(
             children: <Widget>[
@@ -62,7 +62,7 @@ class FoodyBiteCard extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     ClipRRect(
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15)),
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(tagRadius),topRight: Radius.circular(tagRadius)),
                       child: imagePath.substring(0, 4) == 'http'
                           ? Image.network(
                               imagePath,
@@ -113,18 +113,18 @@ class FoodyBiteCard extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(width: Sizes.WIDTH_4),
-                              CardTags(
-                                title: category,
-                                decoration: BoxDecoration(
-                                  gradient: Gradients.secondaryGradient,
-                                  boxShadow: [
-                                    Shadows.secondaryShadow,
-                                  ],
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(tagRadius),
-                                  ),
-                                ),
-                              ),
+                              // CardTags(
+                              //   title: category,
+                              //   decoration: BoxDecoration(
+                              //     gradient: Gradients.secondaryGradient,
+                              //     boxShadow: [
+                              //       Shadows.secondaryShadow,
+                              //     ],
+                              //     borderRadius: BorderRadius.all(
+                              //       Radius.circular(tagRadius),
+                              //     ),
+                              //   ),
+                              // ),
                               // SizedBox(width: 5.0),
                               // CardTags(
                               //   title: distance,

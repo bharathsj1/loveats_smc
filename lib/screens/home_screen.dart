@@ -1603,15 +1603,45 @@ class _HomeScreenState extends State<HomeScreen> {
                               data: resturants[0]),
                         );
                       },
-                      child: Lottie.asset('assets/restaurant2.json',
-                          width: MediaQuery.of(context).size.width - 25,
-                          height: lottie && !loader ? 200 : 0,
-                          fit: BoxFit.fill, onLoaded: (value) {
-                        setState(() {
-                          lottie = true;
-                        });
-                        print('value');
-                      }),
+                      child: Stack(
+                        children: [
+                          Lottie.asset('assets/restaurant2.json',
+                              width: MediaQuery.of(context).size.width - 25,
+                              height: lottie && !loader ? 200 : 0,
+                              fit: BoxFit.fill, onLoaded: (value) {
+                            setState(() {
+                              lottie = true;
+                            });
+                            print('value');
+                          }),
+                          Positioned(
+                            right: 4,
+                            top: 4,
+                            child: Card(
+                            elevation: 1,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: Sizes.WIDTH_10,
+                                  vertical: 6),
+                              child: Text(
+                                'open',
+                                style: 'open'.toLowerCase() ==
+                                        StringConst.STATUS_OPEN.toLowerCase()
+                                    ? Styles.customNormalTextStyle(
+                                        color: AppColors.kFoodyBiteGreen,
+                                        fontSize: Sizes.TEXT_SIZE_12,
+                                        fontWeight: FontWeight.w700,
+                                      )
+                                    : Styles.customNormalTextStyle(
+                                        color: Colors.red,
+                                        fontSize: Sizes.TEXT_SIZE_12,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                              ),
+                            ),
+                          ))
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(

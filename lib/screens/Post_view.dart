@@ -204,15 +204,15 @@ class _PostViewState extends State<PostView> {
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black))
                             : Container(),
-                        //   SizedBox(width: 4,),
-                        // ratings[i]['comment'] !=null ||  ratings[i]['comment'] !=''?  Text(
-                        //       toBeginningOfSentenceCase(
-                        //               ratings[i]['comment']),
-                        //       style: TextStyle(
-                        //           fontSize: 12,
+                          SizedBox(width: 4,),
+                        ratings[i]['comment'] !=null ||  ratings[i]['comment'] !=''?  Text(
+                              toBeginningOfSentenceCase(
+                                      ratings[i]['comment']),
+                              style: TextStyle(
+                                  fontSize: 12,
 
-                        //           fontWeight: FontWeight.bold,
-                        //           color: Colors.black)):Container()
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black)):Container()
                       ],
                     ),
                   )

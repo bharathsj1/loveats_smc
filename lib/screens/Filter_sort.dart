@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
+import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/values/values.dart';
+import 'package:potbelly/widgets/potbelly_button.dart';
 
 class FilterSort extends StatefulWidget {
   bool sort;
@@ -11,23 +14,45 @@ class FilterSort extends StatefulWidget {
 }
 
 class _FilterSortState extends State<FilterSort> {
+  bool filteractive=true;
+  bool loader=false;
+  List restaurant=[];
   List mainfilters = [
-    {'icon': OMIcons.sort, 'name': 'Distance', 'check': false},
-    {'icon': OMIcons.fastfood, 'name': 'Hygiene ratings', 'check': false},
-    {'icon': OMIcons.localOffer, 'name': 'Recommended', 'check': false},
-    {'icon': OMIcons.healing, 'name': 'Time', 'check': false},
-    {'icon': OMIcons.healing, 'name': 'Top rated', 'check': false},
+    {'icon': OMIcons.sort, 'name': 'Distance','value':'distance', 'check': false},
+    {'icon': OMIcons.fastfood, 'name': 'Ratings','value':'ratings', 'check': false},
+    {'icon': OMIcons.localOffer, 'name': 'Recommended', 'value':'recommended','check': false},
+    {'icon': OMIcons.healing, 'name': 'Time', 'value':'open_close','check': false},
+    {'icon': OMIcons.healing, 'name': 'Top rated', 'value':'top_rated','check': false},
   ];
 
   List mainfilters2 = [
     // {'icon':OMIcons.sort,'name': 'Hygiene rating', 'check': false},
-    {'icon': OMIcons.fastfood, 'name': 'Hygiene rating: 5', 'check': false},
-    {'icon': OMIcons.localOffer, 'name': 'Hygiene rating: 4', 'check': false},
-    {'icon': OMIcons.healing, 'name': 'Hygiene rating: 3', 'check': false},
-    {'icon': OMIcons.healing, 'name': 'Hygiene rating: 2', 'check': false},
+    {'icon': OMIcons.fastfood, 'name': 'Rating: 5', 'value':'5', 'check': false},
+    {'icon': OMIcons.localOffer, 'name': 'Rating: 4', 'value':'4', 'check': false},
+    {'icon': OMIcons.healing, 'name': 'Rating: 3', 'value':'3', 'check': false},
+    {'icon': OMIcons.healing, 'name': 'Rating: 2', 'value':'2', 'check': false},
+    {'icon': OMIcons.healing, 'name': 'Rating: 1', 'value':'1', 'check': false},
   ];
 
-  var selected = 'Recommended';
+  var selected = 'recommended';
+
+   filter(){
+  setState(() {
+    loader=true;
+  });
+   var data={
+     'sort':  selected
+   };
+    AppService().getfilters(data).then((value) async {
+      print(value);
+      restaurant=value.data;
+      loader=false;
+    
+      setState(() {
+      });
+      Navigator.pushNamed(context, AppRouter.Filtered_Restaurant,arguments: restaurant);
+    });
+ }
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +78,55 @@ class _FilterSortState extends State<FilterSort> {
                 fontFamily: 'roboto'),
           ),
         ),
+      bottomNavigationBar : filteractive? Material(
+              // elevation: 5,
+              child: Container(
+                color: AppColors.white,
+                margin: EdgeInsets.only(top: 5),
+                height: 60,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                   
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 0.0),
+                      child:  loader
+                      ? Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  AppColors.secondaryElement),
+                            ),
+                          ),
+                        ): PotbellyButton(
+                        'Filter',
+                        onTap: ()  {
+                        
+                           filter();
+                        },
+                        buttonHeight: 45,
+                        buttonWidth: MediaQuery.of(context).size.width * 0.85,
+                        buttonTextStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: AppColors.secondaryElement),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                  ],
+                ),
+              ),
+            ): null,
         body: new Container(
             child:  Container(
                 // height: MediaQuery.of(context).size.height / 1.2,
@@ -108,7 +182,7 @@ class _FilterSortState extends State<FilterSort> {
                                                   fontWeight:
                                                       FontWeight.normal)),
                                         ),
-                                        value: mainfilters[index]['name'],
+                                        value: mainfilters[index]['value'],
                                         activeColor: AppColors.secondaryElement,
                                         //  selectedTileColor: Colors.red,
                                         contentPadding: EdgeInsets.all(0),

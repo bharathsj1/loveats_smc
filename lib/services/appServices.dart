@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:potbelly/models/restaurent_model.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -245,6 +246,21 @@ class AppService {
     }
   }
 
+  Future<dynamic> getratingdata(id) async {
+    String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      var resp = await this.dio.get(
+            "/review/"+id,
+          );
+      print(resp);
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   Future<dynamic> getnoti() async {
     String accessToken = await getAccessToken();
     dio.options.headers['Authorization'] = "Bearer " + accessToken;
@@ -361,6 +377,33 @@ class AppService {
       var resp = await this.dio.post("/like", data: formData);
       print(resp);
       return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+  Future<dynamic> commentpost(data) async {
+    String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      FormData formData = new FormData.fromMap(data);
+      var resp = await this.dio.post("/comment", data: formData);
+      print(resp);
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future<dynamic> getfilters(data) async {
+    String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      FormData formData = new FormData.fromMap(data);
+      var resp = await this.dio.post("/filter", data: formData);
+      print(resp);
+      return RestaurentsModel.fromJson(resp.data);
     } catch (e) {
       print(e);
       return null;

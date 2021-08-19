@@ -3,6 +3,7 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/values/values.dart';
+import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 
 class NewFilterScreen extends StatefulWidget {
@@ -14,6 +15,7 @@ class NewFilterScreen extends StatefulWidget {
 
 class _NewFilterScreenState extends State<NewFilterScreen> {
  bool loader=true;
+ bool filteractive=true;
   List categories=[];
  @override
  void initState(){
@@ -35,6 +37,23 @@ class _NewFilterScreenState extends State<NewFilterScreen> {
   //  categories=data['data'];
   loader=false;
    setState(() {});
+ }
+
+ filter(){
+   var catlist=[];
+   for (var i = 0; i < categories.length; i++) {
+     if(categories[i]['check'] == true){
+       catlist.add(categories[i]['id']);
+     }
+   }
+   var data={
+     'category':  categories
+                        .where((product) => product['check'] == true)
+                        .toList()
+   };
+    AppService().getfilters(data).then((value) async {
+      print(value);
+    });
  }
 
   loading() {
@@ -72,8 +91,8 @@ class _NewFilterScreenState extends State<NewFilterScreen> {
 
   List mainfilters = [
     {'icon':OMIcons.sort,'name': 'Sort', 'check': false},
-    {'icon':OMIcons.fastfood,'name': 'Hygiene rating', 'check': false},
-    {'icon':OMIcons.localOffer,'name': 'Offers', 'check': false},
+    {'icon':OMIcons.fastfood,'name': 'Rating', 'check': false},
+    // {'icon':OMIcons.localOffer,'name': 'Offers', 'check': false},
     // {'icon':OMIcons.healing,'name': 'Dietary', 'check': false},
   ];
   @override
@@ -160,6 +179,47 @@ class _NewFilterScreenState extends State<NewFilterScreen> {
         //   )
         // ],
       ),
+    bottomNavigationBar:  
+    filteractive? Material(
+              // elevation: 5,
+              child: Container(
+                color: AppColors.white,
+                margin: EdgeInsets.only(top: 5),
+                height: 60,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                   
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 0.0),
+                      child: PotbellyButton(
+                        'Filter',
+                        onTap: ()  {
+                        
+                           filter();
+                        },
+                        buttonHeight: 45,
+                        buttonWidth: MediaQuery.of(context).size.width * 0.85,
+                        buttonTextStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: AppColors.secondaryElement),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                  ],
+                ),
+              ),
+            ): null,
       body: new Container(
         child: Container(
           // height: MediaQuery.of(context).size.height / 1.2,
