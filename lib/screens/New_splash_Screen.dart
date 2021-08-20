@@ -16,7 +16,7 @@ import 'package:potbelly/vendor_screens.dart/open_direction.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
-
+import 'package:flutter_gifimage/flutter_gifimage.dart';
 class New_Splash extends StatefulWidget {
   @override
   _New_SplashState createState() => _New_SplashState();
@@ -24,25 +24,40 @@ class New_Splash extends StatefulWidget {
 
 class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+   GifController controller;
 
   AnimationController animationcontroll;
   @override
   void initState() {
+    controller= GifController(vsync: this);
+    // controller.repeat(min: 0,max: 90,period: Duration(milliseconds: 3000));
+    // controller.repeat(min: 0,max: 90,period: Duration(milliseconds: 3000));
+    // precacheImage(AssetImage('assets/love_splash.gif'),context);
+//    Future.delayed(const Duration(milliseconds: 3000), () {
+
+// // Here you can write your code
+
+//   setState(() {
+//     // Here you can write your code for open new view
+//   });
+
+// });
+
     // TODO: implement initState
     // initialize();
-    animationcontroll = AnimationController(
-      duration: const Duration(milliseconds: 100),
-      vsync: this,
-    );
+    // animationcontroll = AnimationController(
+    //   duration: const Duration(milliseconds: 100),
+    //   vsync: this,
+    // );
     super.initState();
   }
 
   @override
   dispose() {
-    // if (_controller != null) {
-    //   _controller.dispose();
-    // }
-    animationcontroll.dispose();
+    if (controller != null) {
+      controller.dispose();
+    }
+    // animationcontroll.dispose();
     super.dispose();
   }
 
@@ -51,24 +66,56 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Center(
-          child: Lottie.asset(
-        // 'assets/curryloveatsupdate.json',
-        'assets/loveats_splash2.json',
-        // 'assets/food2.json',
-        // 'assets/food3.json',
-        controller: animationcontroll,
+      //     child: Lottie.asset(
+      //   // 'assets/curryloveatsupdate.json',
+      //   'assets/loveats_splash2.json',
+      //   // 'assets/food2.json',
+      //   // 'assets/food3.json',
+      //   controller: animationcontroll,
 
-        onLoaded: (value) {
-          animationcontroll.addStatusListener((status) {
+      //   onLoaded: (value) {
+      //     animationcontroll.addStatusListener((status) {
+      //       if (status == AnimationStatus.completed) {
+      //         navigatetonext(context);
+      //       }
+      //     });
+      //     animationcontroll
+      //       ..duration = value.duration
+      //       ..forward();
+      //   },
+      // )
+
+//      child: Image.asset("assets/love_splash.gif",
+//       fit: BoxFit.fill,
+//            height: MediaQuery.of(context).size.height,
+//           width: MediaQuery.of(context).size.width,
+// )
+
+
+
+
+       child:  GifImage(
+          controller: controller,
+          fit: BoxFit.fill,
+           height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+
+          onFetchCompleted: (){
+      controller.animateTo(90,duration: Duration(milliseconds: 3000));
+        
+   controller.addStatusListener((status) {
+
             if (status == AnimationStatus.completed) {
               navigatetonext(context);
+              // print('hereeeeeee');
             }
           });
-          animationcontroll
-            ..duration = value.duration
-            ..forward();
-        },
-      )
+          },
+          image: AssetImage("assets/love_splash.gif",),
+          
+     )
+
+
           // child: SizedBox(
           //   child: FittedBox(
           //     child: SizedBox(

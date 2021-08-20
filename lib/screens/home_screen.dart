@@ -1569,7 +1569,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ? Center(
                           child: Container(
                             width: MediaQuery.of(context).size.width - 16,
-                            height: 200,
+                            height:  MediaQuery.of(context).size.height*0.23,
                             child: SkeletonAnimation(
                               shimmerColor: Colors.grey[350],
                               shimmerDuration: 1100,
@@ -1607,7 +1607,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Lottie.asset('assets/restaurant2.json',
                               width: MediaQuery.of(context).size.width - 25,
-                              height: lottie && !loader ? 200 : 0,
+                              height: lottie && !loader ? MediaQuery.of(context).size.height*0.24 : 0,
                               fit: BoxFit.fill, onLoaded: (value) {
                             setState(() {
                               lottie = true;
@@ -1663,7 +1663,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 8,
                   ),
                   Container(
-                    height: 200,
+                    height:  MediaQuery.of(context).size.height*0.24,
                     //  width: 180,
                     //  color: Colors.red,
 
@@ -1729,7 +1729,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ? Center(
                           child: Container(
                             width: MediaQuery.of(context).size.width - 16,
-                            height: 200,
+                            height:  MediaQuery.of(context).size.height*0.24,
                             child: SkeletonAnimation(
                               shimmerColor: Colors.grey[350],
                               shimmerDuration: 1100,
@@ -1791,7 +1791,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 //  'assets/loginvideo2.gif',
                                 'assets/recipe2.gif',
                                 fit: BoxFit.fill,
-                                height: 220,
+                                height:  MediaQuery.of(context).size.height*0.25,
                                 width: MediaQuery.of(context).size.width - 25,
                                 filterQuality: FilterQuality.high,
                               )),
