@@ -29,7 +29,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: buildLightTheme(context),
-      initialRoute: AppRouter.newsplashScreen,
+      // initialRoute: AppRouter.newsplashScreen,
       onGenerateRoute: AppRouter.onGenerateRoute,
       // navigatorKey: AppRouter.navigator.key,
       // home: SplashScreen(),

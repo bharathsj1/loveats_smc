@@ -29,19 +29,19 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
   AnimationController animationcontroll;
   @override
   void initState() {
-    controller= GifController(vsync: this);
+    // controller= GifController(vsync: this);
     // controller.repeat(min: 0,max: 90,period: Duration(milliseconds: 3000));
     // controller.repeat(min: 0,max: 90,period: Duration(milliseconds: 3000));
     // precacheImage(AssetImage('assets/love_splash.gif'),context);
-//    Future.delayed(const Duration(milliseconds: 3000), () {
+   Future.delayed(const Duration(milliseconds: 5500), () {
+     navigatetonext(context);
+// Here you can write your code
+  print('object');
+  // setState(() {
+  //   // Here you can write your code for open new view
+  // });
 
-// // Here you can write your code
-
-//   setState(() {
-//     // Here you can write your code for open new view
-//   });
-
-// });
+});
 
     // TODO: implement initState
     // initialize();
@@ -49,6 +49,10 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
     //   duration: const Duration(milliseconds: 100),
     //   vsync: this,
     // );
+    // WidgetsBinding.instance.addPostFrameCallback((_){
+    //   print('hereee');
+      
+    // });
     super.initState();
   }
 
@@ -85,35 +89,45 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
       //   },
       // )
 
-//      child: Image.asset("assets/love_splash.gif",
-//       fit: BoxFit.fill,
-//            height: MediaQuery.of(context).size.height,
-//           width: MediaQuery.of(context).size.width,
-// )
-
-
-
-
-       child:  GifImage(
-          controller: controller,
-          fit: BoxFit.fill,
+     child: Image.asset("assets/love_splash.gif",
+      fit: BoxFit.fill,
+      // frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+      //   print('herrrrrreeeee222');
+      //     if (wasSynchronouslyLoaded) {
+      //       return child;
+      //     }
+      //     return child;
+      // },
            height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
+)
 
-          onFetchCompleted: (){
-      controller.animateTo(90,duration: Duration(milliseconds: 3000));
+
+
+
+  //      child:  GifImage(
+  //         controller: controller,
+  //         fit: BoxFit.fill,
+  //          height: MediaQuery.of(context).size.height,
+  //         width: MediaQuery.of(context).size.width,
+
+  //         onFetchCompleted: (){
+  //     controller.animateTo(90,duration: Duration(milliseconds: 3000));
         
-   controller.addStatusListener((status) {
+  //  controller.addStatusListener((status) {
 
-            if (status == AnimationStatus.completed) {
-              navigatetonext(context);
-              // print('hereeeeeee');
-            }
-          });
-          },
-          image: AssetImage("assets/love_splash.gif",),
+  //           if (status == AnimationStatus.completed) {
+  //             navigatetonext(context);
+  //             // print('hereeeeeee');
+  //           }
+  //         });
+  //         },
+  //         image: AssetImage("assets/love_splash.gif",),
           
-     )
+  //    )
+   
+
+     
 
 
           // child: SizedBox(
