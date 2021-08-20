@@ -33,7 +33,7 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
     // controller.repeat(min: 0,max: 90,period: Duration(milliseconds: 3000));
     // controller.repeat(min: 0,max: 90,period: Duration(milliseconds: 3000));
     // precacheImage(AssetImage('assets/love_splash.gif'),context);
-   Future.delayed(const Duration(milliseconds: 5500), () {
+   Future.delayed(const Duration(milliseconds: 5000), () {
      navigatetonext(context);
 // Here you can write your code
   print('object');

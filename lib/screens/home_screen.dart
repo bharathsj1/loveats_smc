@@ -1565,7 +1565,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 6,
                   ),
-                  loader || lottie == false
+                  loader 
+                  // || lottie == false
                       ? Center(
                           child: Container(
                             width: MediaQuery.of(context).size.width - 16,
@@ -1605,15 +1606,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Stack(
                         children: [
-                          Lottie.asset('assets/restaurant2.json',
-                              width: MediaQuery.of(context).size.width - 25,
-                              height: lottie && !loader ? MediaQuery.of(context).size.height*0.24 : 0,
-                              fit: BoxFit.fill, onLoaded: (value) {
-                            setState(() {
-                              lottie = true;
-                            });
-                            print('value');
-                          }),
+                          // Lottie.asset('assets/restaurant2.json',
+                          //     width: MediaQuery.of(context).size.width - 25,
+                          //     height: lottie && !loader ? MediaQuery.of(context).size.height*0.24 : 0,
+                          //     fit: BoxFit.fill,
+                          //      onLoaded: (value) {
+                          //   setState(() {
+                          //     lottie = true;
+                          //   });
+                          //   print('value');
+                          // }),
+                          Image.asset('assets/restaurant.gif',
+                          width: MediaQuery.of(context).size.width - 25,
+                              height:  !loader ? MediaQuery.of(context).size.height*0.24 : 0,
+                              fit: BoxFit.fill,),
                           Positioned(
                             right: 4,
                             top: 4,
