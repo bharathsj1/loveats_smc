@@ -70,8 +70,9 @@ dependencies:
   lazy_loading_list: ^1.0.1
   cached_network_image: ^3.1.0
   flutter_native_image: ^0.0.6
-  time_formatter:
   flutter_gifimage: ^1.0.1
+  time_formatter:
+  
   # qr_code_scanner: ^0.5.2
   
   
