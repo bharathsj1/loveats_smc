@@ -20,6 +20,7 @@ import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/FilterItem.dart';
 import 'package:potbelly/screens/settings_screen.dart';
 import 'package:potbelly/services/DatabaseManager.dart';
+import 'package:potbelly/services/ServiceProvider.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/firebaseSetup.dart';
 import 'package:potbelly/services/service.dart';
@@ -79,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var data = DemoData();
     _cityList = data.getCities();
     _currentCity = _cityList[1];
+    Provider.of<ServiceProvider>(context, listen: false).getsubdata();
     checkpromo();
     // _register();
     getRestaurent();
@@ -1565,12 +1567,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 6,
                   ),
-                  loader 
-                  // || lottie == false
+                  loader
+                      // || lottie == false
                       ? Center(
                           child: Container(
                             width: MediaQuery.of(context).size.width - 16,
-                            height:  MediaQuery.of(context).size.height*0.23,
+                            height: MediaQuery.of(context).size.height * 0.23,
                             child: SkeletonAnimation(
                               shimmerColor: Colors.grey[350],
                               shimmerDuration: 1100,
@@ -1616,36 +1618,40 @@ class _HomeScreenState extends State<HomeScreen> {
                           //   });
                           //   print('value');
                           // }),
-                          Image.asset('assets/restaurant.gif',
-                          width: MediaQuery.of(context).size.width - 25,
-                              height:  !loader ? MediaQuery.of(context).size.height*0.24 : 0,
-                              fit: BoxFit.fill,),
+                          Image.asset(
+                            'assets/restaurant.gif',
+                            width: MediaQuery.of(context).size.width - 25,
+                            height: !loader
+                                ? MediaQuery.of(context).size.height * 0.24
+                                : 0,
+                            fit: BoxFit.fill,
+                          ),
                           Positioned(
-                            right: 4,
-                            top: 4,
-                            child: Card(
-                            elevation: 1,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: Sizes.WIDTH_10,
-                                  vertical: 6),
-                              child: Text(
-                                'open',
-                                style: 'open'.toLowerCase() ==
-                                        StringConst.STATUS_OPEN.toLowerCase()
-                                    ? Styles.customNormalTextStyle(
-                                        color: AppColors.kFoodyBiteGreen,
-                                        fontSize: Sizes.TEXT_SIZE_12,
-                                        fontWeight: FontWeight.w700,
-                                      )
-                                    : Styles.customNormalTextStyle(
-                                        color: Colors.red,
-                                        fontSize: Sizes.TEXT_SIZE_12,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                              ),
-                            ),
-                          ))
+                              right: 4,
+                              top: 4,
+                              child: Card(
+                                elevation: 1,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: Sizes.WIDTH_10, vertical: 6),
+                                  child: Text(
+                                    'open',
+                                    style: 'open'.toLowerCase() ==
+                                            StringConst.STATUS_OPEN
+                                                .toLowerCase()
+                                        ? Styles.customNormalTextStyle(
+                                            color: AppColors.kFoodyBiteGreen,
+                                            fontSize: Sizes.TEXT_SIZE_12,
+                                            fontWeight: FontWeight.w700,
+                                          )
+                                        : Styles.customNormalTextStyle(
+                                            color: Colors.red,
+                                            fontSize: Sizes.TEXT_SIZE_12,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                  ),
+                                ),
+                              ))
                         ],
                       ),
                     ),
@@ -1669,7 +1675,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 8,
                   ),
                   Container(
-                    height:  MediaQuery.of(context).size.height*0.24,
+                    height: MediaQuery.of(context).size.height * 0.24,
                     //  width: 180,
                     //  color: Colors.red,
 
@@ -1735,7 +1741,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ? Center(
                           child: Container(
                             width: MediaQuery.of(context).size.width - 16,
-                            height:  MediaQuery.of(context).size.height*0.24,
+                            height: MediaQuery.of(context).size.height * 0.24,
                             child: SkeletonAnimation(
                               shimmerColor: Colors.grey[350],
                               shimmerDuration: 1100,
@@ -1797,7 +1803,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 //  'assets/loginvideo2.gif',
                                 'assets/recipe2.gif',
                                 fit: BoxFit.fill,
-                                height:  MediaQuery.of(context).size.height*0.25,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.25,
                                 width: MediaQuery.of(context).size.width - 25,
                                 filterQuality: FilterQuality.high,
                               )),

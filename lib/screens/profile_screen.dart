@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potbelly/Flip_nav_bar/navbar.dart';
+import 'package:potbelly/grovey_startScreens/ProviderService.dart';
 import 'package:potbelly/models/UserModel.dart';
 import 'package:potbelly/models/specific_user_subscription_model.dart';
 import 'package:potbelly/routes/router.dart';
@@ -17,6 +18,7 @@ import 'package:potbelly/widgets/circularIndicator.dart';
 import 'package:potbelly/widgets/foody_bite_card.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:potbelly/widgets/spaces.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -793,6 +795,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _logoutFunction(BuildContext context) async {
+     Provider.of<ProviderService>(context, listen: false)
+                          .allfalse();
+                      Provider.of<ProviderService>(context, listen: false)
+                          .reset();
     await Service().logout(context);
   }
 
