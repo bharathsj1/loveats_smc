@@ -20,6 +20,7 @@ import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/FilterItem.dart';
 import 'package:potbelly/screens/settings_screen.dart';
 import 'package:potbelly/services/DatabaseManager.dart';
+import 'package:potbelly/services/ServiceProvider.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/firebaseSetup.dart';
 import 'package:potbelly/services/service.dart';
@@ -79,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var data = DemoData();
     _cityList = data.getCities();
     _currentCity = _cityList[1];
+    Provider.of<ServiceProvider>(context, listen: false).getsubdata();
     checkpromo();
     // _register();
     getRestaurent();

@@ -5,6 +5,7 @@ import 'package:potbelly/grovey_startScreens/demo.dart';
 import 'package:potbelly/models/free_meal_model.dart';
 import 'package:potbelly/models/specific_user_subscription_model.dart';
 import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/services/ServiceProvider.dart';
 import 'package:potbelly/services/cartservice.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
@@ -21,6 +22,8 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   bool mixmatch = false;
+  bool freemeal = false;
+  bool alreadyfreemeal = false;
   List cartlist = [];
   List packlist = [];
   List newcart = [];
@@ -55,11 +58,26 @@ class _CartScreenState extends State<CartScreen> {
     cartlist.clear();
     newcart.clear();
     print(cart);
+
     // for (var item in cart) {
     for (var i = 0; i < cart.length; i++) {
       cartlist.add(cart[i]);
     }
     print(cartlist.length);
+
+    if(Provider.of<ServiceProvider>(context, listen: false).usermealsub ==true){
+    if(Provider.of<ServiceProvider>(context, listen: false).freemealweek ==false){
+      print('here');
+      activefreemeal(); 
+    }
+    else{
+      alreadyfreemeal=true;
+    }
+
+    }
+    else{
+      freemeal=true;
+    }
     List temp = [];
     for (var i = 0; i < cartlist.length; i++) {
       var res = temp
@@ -89,6 +107,22 @@ class _CartScreenState extends State<CartScreen> {
     print(cartlist);
     setState(() {});
   }
+
+  activefreemeal(){
+    for (var i = 0; i < cartlist.length; i++) {
+      if(cartlist[i]['data']['is_free'] == 1){
+        cartlist[i]['payableAmount']=0.toString();
+        cartlist[i]['price']=0.0;
+        cartlist[i]['qty']='1';
+        cartlist[i]['in_free_meal']=true;
+        shipping=0;
+        break;
+      }
+    }
+    setState(() {
+      
+    });
+  }
   
   getpackcartlist() async {
     print(await Service().getUserdata());
@@ -110,10 +144,16 @@ class _CartScreenState extends State<CartScreen> {
 
   calculate() {
     double total = 0;
+    double addon = 0;
     cartlist.forEach((f) {
       total += (f['price']) * double.parse(f['qty']);
+       f['addon'].forEach((g) {
+      addon += double.parse(g['data']['price']);
     });
+    });
+    print(addon);
     totalAmount = total;
+    totalAmount += addon;
     print('total');
     print(totalAmount);
   }
@@ -150,337 +190,378 @@ class _CartScreenState extends State<CartScreen> {
         newcart[i].length,
         (index) => InkWell(
               onTap: () async {
-                print(newcart[i][index]);
+                // print(newcart[i][index]);
+                if(newcart[i][index]['in_free_meal'] ==true){
+
                 updateitem(context, (newcart[i][index]), i, index);
+                }
+                else{
+                updateitem(context, (newcart[i][index]), i, index);
+                }
                 //  await CartProvider().clearcart();
                 //  getcartlist();
                 //  setState(() {
 
                 //  });
               },
-              child: Container(
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(newcart[i][index]['qty'] + 'x',
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: AppColors.secondaryElement,
-                                  fontWeight: FontWeight.bold)),
+              child: Stack(
+                children: [
+                  Container(
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          child:   Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(newcart[i][index]['qty'] + 'x',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: AppColors.secondaryElement,
+                                      fontWeight: FontWeight.bold)),
 
-                          // ClipRRect(
-                          //     borderRadius: BorderRadius.circular(10),
-                          //     child: Image.network(
-                          //       newcart[i][index]['image'],
-                          //       loadingBuilder: (BuildContext ctx, Widget child,
-                          //           ImageChunkEvent loadingProgress) {
-                          //         if (loadingProgress == null) {
-                          //           return child;
-                          //         } else {
-                          //           return Container(
-                          //             // height: ,
-                          //             width: 90,
-                          //             height: 90,
-                          //             child: Center(
-                          //               child: CircularProgressIndicator(
-                          //                 valueColor:
-                          //                     AlwaysStoppedAnimation<Color>(
-                          //                         AppColors.secondaryElement),
-                          //               ),
-                          //             ),
-                          //           );
-                          //         }
-                          //       },
-                          //       fit: BoxFit.cover,
-                          //       height: 90,
-                          //       width: 90,
-                          //     )),
-                          SizedBox(
-                            width: 25,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 0.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                              // ClipRRect(
+                              //     borderRadius: BorderRadius.circular(10),
+                              //     child: Image.network(
+                              //       newcart[i][index]['image'],
+                              //       loadingBuilder: (BuildContext ctx, Widget child,
+                              //           ImageChunkEvent loadingProgress) {
+                              //         if (loadingProgress == null) {
+                              //           return child;
+                              //         } else {
+                              //           return Container(
+                              //             // height: ,
+                              //             width: 90,
+                              //             height: 90,
+                              //             child: Center(
+                              //               child: CircularProgressIndicator(
+                              //                 valueColor:
+                              //                     AlwaysStoppedAnimation<Color>(
+                              //                         AppColors.secondaryElement),
+                              //               ),
+                              //             ),
+                              //           );
+                              //         }
+                              //       },
+                              //       fit: BoxFit.cover,
+                              //       height: 90,
+                              //       width: 90,
+                              //     )),
+                              SizedBox(
+                                width: 25,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 0.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.62,
-                                      child: Text(newcart[i][index]['name'],
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              // fontWeight: FontWeight.bold
-                                              color: AppColors.black)),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          width: MediaQuery.of(context).size.width *
+                                              0.65,
+                                          child: Text(newcart[i][index]['name'],
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: AppColors.black)),
+                                        ),
+                                     newcart[i][index]['in_free_meal'] ==true?  Container(
+                    padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3),
+                      boxShadow: [BoxShadow(color: AppColors.secondaryElement, blurRadius: 2,spreadRadius: 0)],
+                    color: AppColors.secondaryElement),
+                child: Text('Free Meal',
+                    style: TextStyle(
+                        fontSize: 8,
+                        letterSpacing: 1.1,
+                        wordSpacing: 1.2,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
+              ):   Text(
+                                            '${StringConst.currency}' +
+                                                double.tryParse(newcart[i][index]
+                                                        ['payableAmount'])
+                                                    .toStringAsFixed(2),
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: AppColors.secondaryElement,
+                                                fontWeight: FontWeight.w900)),
+                                      ],
                                     ),
-                                    Text(
-                                        '${StringConst.currency}' +
-                                            double.tryParse(newcart[i][index]
-                                                    ['payableAmount'])
-                                                .toStringAsFixed(2),
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: AppColors.secondaryElement,
-                                            fontWeight: FontWeight.w900)),
-                                  ],
-                                ),
-                                // SizedBox(
-                                //   height: 10,
-                                // ),
-                                // Container(
-                                //   // color: Colors.red,
-                                //   width: MediaQuery.of(context).size.width * 0.50,
-                                //   child: Text(newcart[i][index]['details'],
-                                //       maxLines: 2,
-                                //       overflow: TextOverflow.ellipsis,
-                                //       style: TextStyle(
-                                //           fontSize: 15,
-                                //           fontWeight: FontWeight.bold,
-                                //           color: Colors.black54)),
-                                // ),
-                                // SizedBox(
-                                //   height: 10,
-                                // ),
-                                // Row(
-                                //   crossAxisAlignment: CrossAxisAlignment.start,
-                                //   mainAxisAlignment:
-                                //       MainAxisAlignment.spaceBetween,
-                                //   children: [
-                                //     Container(
-                                //       // color: Colors.red,
-                                //       // margin: EdgeInsets.only(left: 0),
-                                //       width:
-                                //           MediaQuery.of(context).size.width * 0.4,
-                                //       child: Text(
-                                //           '${StringConst.currency}' +
-                                //               newcart[i][index]['payableAmount'],
-                                //           style: TextStyle(
-                                //               fontSize: 18,
-                                //               color: AppColors.secondaryElement,
-                                //               fontWeight: FontWeight.w900)),
-                                //     ),
-                                //   ],
-                                // ),
-                                Row(
-                                  
-                                  children: [
-                                    Container(
-                                      width: MediaQuery.of(context).size.width*0.65,
-                                      // color: Colors.red,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: List.generate(
-                                          newcart[i][index]['addon'].length,
-                                          (ind) => Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                    // SizedBox(
+                                    //   height: 10,
+                                    // ),
+                                    // Container(
+                                    //   // color: Colors.red,
+                                    //   width: MediaQuery.of(context).size.width * 0.50,
+                                    //   child: Text(newcart[i][index]['details'],
+                                    //       maxLines: 2,
+                                    //       overflow: TextOverflow.ellipsis,
+                                    //       style: TextStyle(
+                                    //           fontSize: 15,
+                                    //           fontWeight: FontWeight.bold,
+                                    //           color: Colors.black54)),
+                                    // ),
+                                    // SizedBox(
+                                    //   height: 10,
+                                    // ),
+                                    // Row(
+                                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                                    //   mainAxisAlignment:
+                                    //       MainAxisAlignment.spaceBetween,
+                                    //   children: [
+                                    //     Container(
+                                    //       // color: Colors.red,
+                                    //       // margin: EdgeInsets.only(left: 0),
+                                    //       width:
+                                    //           MediaQuery.of(context).size.width * 0.4,
+                                    //       child: Text(
+                                    //           '${StringConst.currency}' +
+                                    //               newcart[i][index]['payableAmount'],
+                                    //           style: TextStyle(
+                                    //               fontSize: 18,
+                                    //               color: AppColors.secondaryElement,
+                                    //               fontWeight: FontWeight.w900)),
+                                    //     ),
+                                    //   ],
+                                    // ),
+                                    Row(
+                                      
+                                      children: [
+                                        Container(
+                                          width: newcart[i][index]['in_free_meal'] ==true?MediaQuery.of(context).size.width*0.73:MediaQuery.of(context).size.width*0.68,
+                                          // color: Colors.red,
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: List.generate(
+                                              newcart[i][index]['addon'].length,
+                                              (ind) => Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      newcart[i][index]['addon'][ind]
+                                                          ['data']['name']+ '  ( ${StringConst.currency}${ newcart[i][index]['addon'][ind]['data']['price']} )',
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: AppColors.secondaryElement,
+                                                        letterSpacing: .3,
+                                                      )),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () async {
+                                            print('here');
+                                            await CartProvider()
+                                                .removeToCart(newcart[i][index]);
+                                            // await CartProvider()
+                                            //     .clearcart();
+
+                                            getcartlist();
+                                          },
+                                          child: Row(
                                             children: [
-                                              Text(
-                                                  newcart[i][index]['addon'][ind]
-                                                      ['data']['name'],
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: AppColors.secondaryElement,
-                                                    letterSpacing: .3,
-                                                  )),
+                                              Icon(Icons.delete_outline,
+                                                  color: Colors.black54, size: 20),
+                                              // Padding(
+                                              //   padding: const EdgeInsets.only(
+                                              //       top: 5, left: 0),
+                                              //   child: Text('Remove',
+                                              //       style: TextStyle(
+                                              //           // fontSize: 18,
+                                              //           color: Colors.black54,
+                                              //           fontWeight:
+                                              //               FontWeight.w600)),
+                                              // ),
                                             ],
                                           ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                    InkWell(
-                                      onTap: () async {
-                                        print('here');
-                                        await CartProvider()
-                                            .removeToCart(newcart[i][index]);
-                                        // await CartProvider()
-                                        //     .clearcart();
+                                    // Column(
+                                    //   mainAxisAlignment: MainAxisAlignment.start,
+                                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                                    //   children: List.generate(
+                                    //     newcart[i][index]['drink'].length,
+                                    //     (ind) => Column(
+                                    //       crossAxisAlignment:
+                                    //           CrossAxisAlignment.start,
+                                    //       children: [
+                                    //         Text(
+                                    //             newcart[i][index]['drink'][ind]
+                                    //                 ['name'],
+                                    //             style: TextStyle(
+                                    //               fontSize: 12,
+                                    //               color: AppColors.secondaryElement,
+                                    //               letterSpacing: .3,
+                                    //             )),
+                                    //       ],
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    // Container(
+                                    //   width: MediaQuery.of(context).size.width * 0.50,
+                                    //   child: Row(
+                                    //     mainAxisAlignment:
+                                    //         MainAxisAlignment.spaceBetween,
+                                    //     children: [
+                                    //       InkWell(
+                                    //         onTap: () async {
+                                    //           print('here');
+                                    //           await CartProvider()
+                                    //               .removeToCart(cartlist[index]);
+                                    //           // await CartProvider()
+                                    //           //     .clearcart();
 
-                                        getcartlist();
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.delete_outline,
-                                              color: Colors.black54, size: 20),
-                                          // Padding(
-                                          //   padding: const EdgeInsets.only(
-                                          //       top: 5, left: 0),
-                                          //   child: Text('Remove',
-                                          //       style: TextStyle(
-                                          //           // fontSize: 18,
-                                          //           color: Colors.black54,
-                                          //           fontWeight:
-                                          //               FontWeight.w600)),
-                                          // ),
-                                        ],
-                                      ),
-                                    ),
+                                    //           getcartlist();
+                                    //         },
+                                    //         child: Row(
+                                    //           children: [
+                                    //             Icon(Icons.delete_outline,
+                                    //                 color: Colors.black54, size: 20),
+                                    //             Padding(
+                                    //               padding: const EdgeInsets.only(
+                                    //                   top: 5, left: 0),
+                                    //               child: Text('Remove',
+                                    //                   style: TextStyle(
+                                    //                       // fontSize: 18,
+                                    //                       color: Colors.black54,
+                                    //                       fontWeight:
+                                    //                           FontWeight.w600)),
+                                    //             ),
+                                    //           ],
+                                    //         ),
+                                    //       ),
+                                    //       Row(
+                                    //         mainAxisAlignment: MainAxisAlignment.end,
+                                    //         children: <Widget>[
+                                    //           InkWell(
+                                    //             onTap: () async {
+                                    //               if (int.parse(
+                                    //                       newcart[i][index]['qty']) >
+                                    //                   1) {
+                                    //                 // newcart[i][index]['qty'] =
+                                    //                 //     (int.parse(newcart[i][index]
+                                    //                 //                 ['qty']) -
+                                    //                 //             1)
+                                    //                 //         .toString();
+                                    //                 await calculateprice(
+                                    //                     i, index, 'minus');
+                                    //                 calculate();
+                                    //                 setState(() {});
+                                    //                 if (int.parse(newcart[i][index]
+                                    //                         ['qty']) ==
+                                    //                     1) {
+                                    //                   setState(() {});
+                                    //                 }
+                                    //                 setState(() {});
+                                    //               }
+                                    //             },
+                                    //             child: Container(
+                                    //                 alignment: Alignment.center,
+                                    //                 padding: EdgeInsets.zero,
+                                    //                 width: 40,
+                                    //                 child: Text(
+                                    //                   "-",
+                                    //                   style: TextStyle(
+                                    //                       color: AppColors
+                                    //                           .secondaryElement,
+                                    //                       fontSize: 50),
+                                    //                 )),
+                                    //           ),
+                                    //           Text(
+                                    //             newcart[i][index]['qty'],
+                                    //             style: TextStyle(fontSize: 18),
+                                    //           ),
+                                    //           InkWell(
+                                    //             onTap: () async {
+                                    //               print('here');
+                                    //               // newcart[i][index]['qty'] =
+                                    //               //     (int.parse(newcart[i][index]
+                                    //               //                 ['qty']) +
+                                    //               //             1)
+                                    //               //         .toString();
+                                    //               print(newcart[i][index]['qty']);
+                                    //               await calculateprice(
+                                    //                   i, index, 'add');
+                                    //               calculate();
+                                    //               setState(() {});
+
+                                    //               // Provider.of<CartProvider>(context, listen: false)
+                                    //               //     .addToCart(context, data);
+                                    //             },
+                                    //             child: Container(
+                                    //                 alignment: Alignment.center,
+                                    //                 padding: EdgeInsets.only(top: 2),
+                                    //                 width: 40,
+                                    //                 child: Text(
+                                    //                   "+",
+                                    //                   style: TextStyle(
+                                    //                       color: AppColors
+                                    //                           .secondaryElement,
+                                    //                       fontSize: 32),
+                                    //                 )),
+                                    //           ),
+                                    //         ],
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // )
                                   ],
                                 ),
-                                // Column(
-                                //   mainAxisAlignment: MainAxisAlignment.start,
-                                //   crossAxisAlignment: CrossAxisAlignment.start,
-                                //   children: List.generate(
-                                //     newcart[i][index]['drink'].length,
-                                //     (ind) => Column(
-                                //       crossAxisAlignment:
-                                //           CrossAxisAlignment.start,
-                                //       children: [
-                                //         Text(
-                                //             newcart[i][index]['drink'][ind]
-                                //                 ['name'],
-                                //             style: TextStyle(
-                                //               fontSize: 12,
-                                //               color: AppColors.secondaryElement,
-                                //               letterSpacing: .3,
-                                //             )),
-                                //       ],
-                                //     ),
-                                //   ),
-                                // ),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                // Container(
-                                //   width: MediaQuery.of(context).size.width * 0.50,
-                                //   child: Row(
-                                //     mainAxisAlignment:
-                                //         MainAxisAlignment.spaceBetween,
-                                //     children: [
-                                //       InkWell(
-                                //         onTap: () async {
-                                //           print('here');
-                                //           await CartProvider()
-                                //               .removeToCart(cartlist[index]);
-                                //           // await CartProvider()
-                                //           //     .clearcart();
-
-                                //           getcartlist();
-                                //         },
-                                //         child: Row(
-                                //           children: [
-                                //             Icon(Icons.delete_outline,
-                                //                 color: Colors.black54, size: 20),
-                                //             Padding(
-                                //               padding: const EdgeInsets.only(
-                                //                   top: 5, left: 0),
-                                //               child: Text('Remove',
-                                //                   style: TextStyle(
-                                //                       // fontSize: 18,
-                                //                       color: Colors.black54,
-                                //                       fontWeight:
-                                //                           FontWeight.w600)),
-                                //             ),
-                                //           ],
-                                //         ),
-                                //       ),
-                                //       Row(
-                                //         mainAxisAlignment: MainAxisAlignment.end,
-                                //         children: <Widget>[
-                                //           InkWell(
-                                //             onTap: () async {
-                                //               if (int.parse(
-                                //                       newcart[i][index]['qty']) >
-                                //                   1) {
-                                //                 // newcart[i][index]['qty'] =
-                                //                 //     (int.parse(newcart[i][index]
-                                //                 //                 ['qty']) -
-                                //                 //             1)
-                                //                 //         .toString();
-                                //                 await calculateprice(
-                                //                     i, index, 'minus');
-                                //                 calculate();
-                                //                 setState(() {});
-                                //                 if (int.parse(newcart[i][index]
-                                //                         ['qty']) ==
-                                //                     1) {
-                                //                   setState(() {});
-                                //                 }
-                                //                 setState(() {});
-                                //               }
-                                //             },
-                                //             child: Container(
-                                //                 alignment: Alignment.center,
-                                //                 padding: EdgeInsets.zero,
-                                //                 width: 40,
-                                //                 child: Text(
-                                //                   "-",
-                                //                   style: TextStyle(
-                                //                       color: AppColors
-                                //                           .secondaryElement,
-                                //                       fontSize: 50),
-                                //                 )),
-                                //           ),
-                                //           Text(
-                                //             newcart[i][index]['qty'],
-                                //             style: TextStyle(fontSize: 18),
-                                //           ),
-                                //           InkWell(
-                                //             onTap: () async {
-                                //               print('here');
-                                //               // newcart[i][index]['qty'] =
-                                //               //     (int.parse(newcart[i][index]
-                                //               //                 ['qty']) +
-                                //               //             1)
-                                //               //         .toString();
-                                //               print(newcart[i][index]['qty']);
-                                //               await calculateprice(
-                                //                   i, index, 'add');
-                                //               calculate();
-                                //               setState(() {});
-
-                                //               // Provider.of<CartProvider>(context, listen: false)
-                                //               //     .addToCart(context, data);
-                                //             },
-                                //             child: Container(
-                                //                 alignment: Alignment.center,
-                                //                 padding: EdgeInsets.only(top: 2),
-                                //                 width: 40,
-                                //                 child: Text(
-                                //                   "+",
-                                //                   style: TextStyle(
-                                //                       color: AppColors
-                                //                           .secondaryElement,
-                                //                       fontSize: 32),
-                                //                 )),
-                                //           ),
-                                //         ],
-                                //       ),
-                                //     ],
-                                //   ),
-                                // )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                          child: Divider(
+                            height: 1,
+                            color: Colors.grey[400],
+                          ),
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                      child: Divider(
-                        height: 1,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+              //     newcart[i][index]['in_free_meal'] ==true?   Positioned(
+              //   right: MediaQuery.of(context).size.width-MediaQuery.of(context).size.width*0.62-92,
+              //   bottom:5,
+              //     child: Container(
+              //       padding: EdgeInsets.all(5),
+              //   decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(3),
+              //         boxShadow: [BoxShadow(color: AppColors.secondaryElement, blurRadius: 2,spreadRadius: 0)],
+              //       color: AppColors.secondaryElement),
+              //   child: Text('Free Meal',
+              //       style: TextStyle(
+              //           fontSize: 8,
+              //           letterSpacing: 1.1,
+              //           wordSpacing: 1.2,
+              //           fontWeight: FontWeight.bold,
+              //           color: Colors.white)),
+              // )):Container()
+                ],
               ),
             ));
   }
@@ -829,7 +910,7 @@ class _CartScreenState extends State<CartScreen> {
                         arguments: {
                           'update': true,
                           // 'drink': item['drink'],
-                          'product':item,
+                          'item':item,
                           'addon': item['addon'],
                            'restaurant' : item['restaurantdata']
                         }).then((value) {
@@ -852,11 +933,14 @@ class _CartScreenState extends State<CartScreen> {
                 SizedBox(
                   height: 10,
                 ),
-                Divider(
-                  height: 5,
-                  color: Colors.grey.shade200,
-                  thickness: 1.2,
-                ),
+              item['in_free_meal']==true?Container() : Column(
+                  children: [
+                    Divider(
+                      height: 5,
+                      color: Colors.grey.shade200,
+                      thickness: 1.2,
+                    ),
+                 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -940,6 +1024,8 @@ class _CartScreenState extends State<CartScreen> {
                 SizedBox(
                   height: 10,
                 ),
+                 ],
+                ),
 
                 // Divider(
                 //   height: 5,
@@ -965,9 +1051,56 @@ class _CartScreenState extends State<CartScreen> {
         });
   }
 
+  Notemsg(title,message){
+    return Column(children: [
+       SizedBox(
+                        height: 10,
+                      ),
+                      
+                      Container(
+                        color: AppColors.white,
+                        padding: EdgeInsets.fromLTRB(22, 10, 10, 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width - 100,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(title,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15,
+                                          letterSpacing: .3,
+                                          color: Colors.grey.shade800)),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text(
+                                     message,
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: AppColors.grey,
+                                        letterSpacing: .3,
+                                      )),
+                                ],
+                              ),
+                            ),
+                           
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+    ],);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+  return  Consumer<ServiceProvider>(builder: (context, service, child) {
+      return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         elevation: 1,
@@ -1301,10 +1434,10 @@ class _CartScreenState extends State<CartScreen> {
                           ],
                         ),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-
+                      freemeal? Notemsg('*Important',  'Subscribe LovEats and enjoy free meal every week'):
+                    alreadyfreemeal?
+                     Notemsg('*Important',  'Dear Customer you already get a free week meal'):
+                     Notemsg('*Important',  'Free Meal for subscribed customers.\n( Only need to pay for Extra Addons if added )'),
                       // Container(
                       //   height: 50,
                       //   color: Colors.white,
@@ -1341,9 +1474,9 @@ class _CartScreenState extends State<CartScreen> {
                       Column(
                         children: resturantwithcart(),
                       ),
-                      Column(
-                        children: packcartlist(),
-                      ),
+                      // Column(
+                      //   children: packcartlist(),
+                      // ),
                       Container(
                         color: Colors.white,
                         margin: EdgeInsets.symmetric(horizontal: 20),
@@ -1373,7 +1506,7 @@ class _CartScreenState extends State<CartScreen> {
                               height: 5,
                             ),
                             pricerow(
-                                'Delivery Fee',
+                               shipping==0?'Free Delivery': 'Delivery Fee',
                                 '${StringConst.currency}' +
                                     shipping.toStringAsFixed(2),
                                 true,
@@ -1694,6 +1827,8 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                 ),
     );
+  });
+    
   }
 
   List tiplistname = [

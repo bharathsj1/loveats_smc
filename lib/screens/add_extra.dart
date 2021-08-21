@@ -130,12 +130,12 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
                     widget.data['update'] == true) {
                   CartProvider().updatecartaddon(
                       context,
-                      widget.data['product'],
+                      widget.data['item'],
                       addons
-                          .where((product) => product['check'] == true)
+                          .where((pro) => pro['check'] == true)
                           .toList(),
                       widget.data['addon']);
-                  print(widget.data['product']);
+                  print(widget.data['item']);
                   Navigator.pop(context, true);
                 } else {
                   print(widget.data['item']);
@@ -150,6 +150,7 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
                         widget.data['item']['menu_price'].toString(),
                     'qty': this.itemqty,
                     'data': widget.data['item'],
+                    'is_free': widget.data['is_free'],
                     'restaurantdata': widget.data['restaurant'],
                     // 'topping': toppings
                     //     .where((product) => product['check'] == true)
@@ -195,7 +196,7 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
           )
         ],
       ),
-      bottomNavigationBar: Material(
+      bottomNavigationBar: widget.data['item']['is_free']==1?Container(height: 0,width: 0,): Material(
           elevation: 20,
           child: Container(
             padding: EdgeInsets.only(top: 5),

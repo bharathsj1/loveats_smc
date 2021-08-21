@@ -121,6 +121,20 @@ class AppService {
       return null;
     }
   }
+  Future<dynamic> checksubweek() async {
+     String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      var resp = await this.dio.get(
+            "/checkAllMealSubscription",
+          );
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+  
   Future<dynamic> getrecipedetails(id) async {
     try {
       var resp = await this.dio.get(
