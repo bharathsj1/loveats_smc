@@ -26,14 +26,13 @@ class _BuyIngredientsState extends State<BuyIngredients> {
 
   @override
   void initState() {
-    shipping= widget.data['delivery'];
-    if(widget.data['usersub']){
-      totalAmount=0.0;
-      charges=0.0;
-      shipping=0.0;
-    }
-    else{
-    calculate();
+    shipping = widget.data['delivery'];
+    if (widget.data['usersub']) {
+      totalAmount = 0.0;
+      charges = 0.0;
+      shipping = 0.0;
+    } else {
+      calculate();
     }
     super.initState();
   }
@@ -165,100 +164,100 @@ class _BuyIngredientsState extends State<BuyIngredients> {
           height: 80,
           decoration: BoxDecoration(
             boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)],
-          color: Colors.white,
+            color: Colors.white,
           ),
           child: Column(
             children: [
-               SizedBox(height: 8,),
-               Padding(
-                     padding: const EdgeInsets.symmetric(horizontal:20.0),
-                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('Package total',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: AppColors.black,
-                                                fontWeight: FontWeight.normal)),
-                                        Text(
-                                          '${StringConst.currency}' +
-                                              (totalAmount + shipping + charges)
-                                                  .toStringAsFixed(2),
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: AppColors.black,
-                                              fontWeight: FontWeight.bold),
-                                        )
-                                      ],
-                                    ),
-                   ),
-                   SizedBox(height: 8,),
+              SizedBox(
+                height: 8,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Package total',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.black,
+                            fontWeight: FontWeight.normal)),
+                    Text(
+                      '${StringConst.currency}' +
+                          (totalAmount + shipping + charges).toStringAsFixed(2),
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.black,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 8,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  
                   Center(
                     child: PotbellyButton(
-                      // 'Add to cart',
-                      'Buy Now',
-                      buttonHeight: 45,
-                      buttonWidth: MediaQuery.of(context).size.width / 1.2,
-                      decoration: BoxDecoration(
-                          color: AppColors.secondaryElement,
-                          borderRadius: BorderRadius.circular(10)),
-                      buttonTextStyle:
-                          TextStyle(color: AppColors.white, fontSize: 15),
-                      onTap: () async {
-                //        Map<String, dynamic> packcartdata = {
-                //   'id': widget.data['recipe']['id'],
-                //   'person': widget.data['person'],
-                //   'image': widget.data['recipe']['image'],
-                //   'details': widget.data['recipe']['short_description'],
-                //   'name': widget.data['recipe']['title'],
-                //   'price': totalAmount,
-                //   'payableAmount': totalAmount.toString(),
-                //   'qty': '1',
-                //   'data': widget.data,
-                // };
-                // print(packcartdata);
-                //  CartProvider().packageaddToCart(context, packcartdata);
+                        // 'Add to cart',
+                        'Buy Now',
+                        buttonHeight: 45,
+                        buttonWidth: MediaQuery.of(context).size.width / 1.2,
+                        decoration: BoxDecoration(
+                            color: AppColors.secondaryElement,
+                            borderRadius: BorderRadius.circular(10)),
+                        buttonTextStyle:
+                            TextStyle(color: AppColors.white, fontSize: 15),
+                        onTap: () async {
+                      //        Map<String, dynamic> packcartdata = {
+                      //   'id': widget.data['recipe']['id'],
+                      //   'person': widget.data['person'],
+                      //   'image': widget.data['recipe']['image'],
+                      //   'details': widget.data['recipe']['short_description'],
+                      //   'name': widget.data['recipe']['title'],
+                      //   'price': totalAmount,
+                      //   'payableAmount': totalAmount.toString(),
+                      //   'qty': '1',
+                      //   'data': widget.data,
+                      // };
+                      // print(packcartdata);
+                      //  CartProvider().packageaddToCart(context, packcartdata);
 
+                      // var person= widget
+                      //                         .checkoutdata['packlist'][i]['person'];
+                      String userId = await Service().getUserId();
+                      var packdata = {
+                        'total_amount': (totalAmount + shipping + charges)
+                            .toStringAsFixed(2),
+                        'payment_method': 'subscriber',
+                        'is_receipe': 1,
+                        'method_id': 'empty',
+                        'user_id': userId,
+                        'payment_id': 'empty',
+                        'customer_addressId': 1,
+                        'charges': charges,
+                        'shipping': shipping,
+                        'sub_total': totalAmount,
+                        'is_subscribed_user': widget.data['usersub'] ? 1 : 0,
+                        'receipe_id': widget.data['recipe']['id'],
+                        'recipe': true,
 
-                  // var person= widget
-                  //                         .checkoutdata['packlist'][i]['person'];
-                                           String userId = await Service().getUserId();
-                                    var packdata = {
-                                      'total_amount':(totalAmount + shipping + charges).toStringAsFixed(2),
-                                      'payment_method': 'subscriber',
-                                      'is_receipe': 1,
-                                      'method_id':'empty',
-                                          'user_id': userId,
-                                      'payment_id':
-                                          'empty',
-                                      'customer_addressId':
-                                         1,
-                                        'is_subscribed_user': widget.data['usersub']? 1:0,
-                                        'receipe_id': widget.data['recipe']['id'],
-                                        'recipe':true,
-                                        
-                                        'usersub':widget.data['usersub']
-                                      // 'person_quantity': person ==1? '4':person==2?'6':'2',
-                                      // 'receipe_id': widget
-                                      //     .checkoutdata['packlist'][i]['id']
-                                    };
-                                    // print(packdata);
-                                    // AppService()
-                                    //     .addeorder(packdata)
-                                    //     .then((value) {
-                                    //   print(value);
-                                    // });
-                                    // setState(() {}); 
-                                     Navigator.pushNamed(context, AppRouter.CheckOut1,
-                                  arguments: packdata);
-               
-                      }
-                    ),
+                        'usersub': widget.data['usersub']
+                        // 'person_quantity': person ==1? '4':person==2?'6':'2',
+                        // 'receipe_id': widget
+                        //     .checkoutdata['packlist'][i]['id']
+                      };
+                      // print(packdata);
+                      // AppService()
+                      //     .addeorder(packdata)
+                      //     .then((value) {
+                      //   print(value);
+                      // });
+                      // setState(() {});
+                      Navigator.pushNamed(context, AppRouter.CheckOut1,
+                          arguments: packdata);
+                    }),
                   ),
                 ],
               ),
@@ -379,8 +378,6 @@ class _BuyIngredientsState extends State<BuyIngredients> {
                       ),
                     )
                   ])),
-
-                  
         ],
       )),
     );

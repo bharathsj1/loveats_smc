@@ -50,6 +50,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
   void initState() {
     _controller = Completer();
     getaddress();
+    print(widget.checkoutdata['total']);
     getsavedcards();
     super.initState();
   }
@@ -658,8 +659,8 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
   }
 
   buyrecipe() async {
-     setState(() {
-      loader3=true;
+    setState(() {
+      loader3 = true;
     });
     var orderId = '';
     if (widget.checkoutdata['usersub']) {
@@ -674,8 +675,15 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
         'customer_addressId': myaddress[selectedaddress]['id'],
         'is_subscribed_user': widget.checkoutdata['is_subscribed_user'],
         'receipe_id': widget.checkoutdata['receipe_id'],
-        'quantity':'1',
-        'person_quantity': widget.checkoutdata['person'] ==1? '4':widget.checkoutdata['person']==2?'6':'2',
+        'sub_total': widget.checkoutdata['sub_total'],
+        'delivery_free': widget.checkoutdata['shipping'],
+        'service_fee': widget.checkoutdata['charges'],
+        'quantity': '1',
+        'person_quantity': widget.checkoutdata['person'] == 1
+            ? '4'
+            : widget.checkoutdata['person'] == 2
+                ? '6'
+                : '2',
         // 'receipe_id': widget
         //     .checkoutdata['packlist'][i]['id']
       };
@@ -683,15 +691,14 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
       AppService().addeorder(packdata).then((value) {
         orderId = value['data']['id'].toString();
         print(value);
-         var data = {
-                      'title': 'Order Placed',
-                      'body':
-                          'You can track you order in order history section',
-                      // 'data': value.toString(),
-                      'user_id': int.parse(widget.checkoutdata['user_id'])
-                    };
-                    AppService().sendnotispecificuser(data);
-                    loader3=false;
+        var data = {
+          'title': 'Order Placed',
+          'body': 'You can track you order in order history section',
+          // 'data': value.toString(),
+          'user_id': int.parse(widget.checkoutdata['user_id'])
+        };
+        AppService().sendnotispecificuser(data);
+        loader3 = false;
         Navigator.pushNamed(context, AppRouter.CheckOut3,
             arguments: {'type': 'recipe', 'orderId': orderId});
       });
@@ -728,8 +735,15 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
             'customer_addressId': myaddress[selectedaddress]['id'],
             'is_subscribed_user': widget.checkoutdata['is_subscribed_user'],
             'receipe_id': widget.checkoutdata['receipe_id'],
-            'quantity':'1',
-            'person_quantity': widget.checkoutdata['person'] ==1? '4':widget.checkoutdata['person']==2?'6':'2',
+            'sub_total': widget.checkoutdata['sub_total'],
+            'delivery_free': widget.checkoutdata['shipping'],
+            'service_fee': widget.checkoutdata['charges'],
+            'quantity': '1',
+            'person_quantity': widget.checkoutdata['person'] == 1
+                ? '4'
+                : widget.checkoutdata['person'] == 2
+                    ? '6'
+                    : '2',
             // 'person_quantity': person ==1? '4':person==2?'6':'2',
             // 'receipe_id': widget
             //     .checkoutdata['packlist'][i]['id']
@@ -738,15 +752,14 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
           AppService().addeorder(packdata).then((value) {
             orderId = value['data']['id'].toString();
             print(value);
-             var data = {
-                      'title': 'Order Placed',
-                      'body':
-                          'You can track you order in order history section',
-                      // 'data': value.toString(),
-                      'user_id': int.parse(widget.checkoutdata['user_id'])
-                    };
-                    AppService().sendnotispecificuser(data);
-                    loader3=false;
+            var data = {
+              'title': 'Order Placed',
+              'body': 'You can track you order in order history section',
+              // 'data': value.toString(),
+              'user_id': int.parse(widget.checkoutdata['user_id'])
+            };
+            AppService().sendnotispecificuser(data);
+            loader3 = false;
             Navigator.pushNamed(context, AppRouter.CheckOut3,
                 arguments: {'type': 'recipe', 'orderId': orderId});
           });
@@ -758,9 +771,9 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
     }
   }
 
-  buycartitem() {
+  buycartitem(payment_id, method_id) {
     setState(() {
-      loader3=true;
+      loader3 = true;
     });
     print('here');
     var orderId = '';
@@ -785,12 +798,19 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
         'total_amount': widget.checkoutdata['total'],
         'payment_method': 'card',
         'is_receipe': 0,
-        'method_id': mycards[selectedcard]['id'].toString(),
+        'method_id': method_id,
+        'payment_id': payment_id,
         'user_id': int.parse(widget.checkoutdata['user_id']),
         'customer_id': int.parse(widget.checkoutdata['user_id']),
-        'payment_id': _paymentSheetData['client_secret'],
         'customer_addressId': myaddress[selectedaddress]['id'],
-        'is_subscribed_user': widget.checkoutdata['usersub']? 1:0,
+        'is_subscribed_user': widget.checkoutdata['usersub'] ? 1 : 0,
+        'sub_total': widget.checkoutdata['sub_total'],
+        'delivery_free': widget.checkoutdata['shipping'],
+        'service_fee': widget.checkoutdata['charges'],
+        'tip_more': widget.checkoutdata['tip_more'],
+        'rider_tip': widget.checkoutdata['rider_tip'],
+        'restaurent_tip': widget.checkoutdata['restaurent_tip'],
+        'cutlery': widget.checkoutdata['cutlery'],
         // 'receipe_id': null,
         // 'quantity':'0',
         // 'person_quantity': '0',
@@ -819,14 +839,13 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                   'data': value.toString(),
                   //  ''
                 };
-                 var notidata = {
-                      'title': 'Order Placed',
-                      'body':
-                          'You can track you order in order history section',
-                      // 'data': value.toString(),
-                      'user_id': int.parse(widget.checkoutdata['user_id'])
-                    };
-                    AppService().sendnotispecificuser(notidata);
+                var notidata = {
+                  'title': 'Order Placed',
+                  'body': 'You can track you order in order history section',
+                  // 'data': value.toString(),
+                  'user_id': int.parse(widget.checkoutdata['user_id'])
+                };
+                AppService().sendnotispecificuser(notidata);
                 AppService().sendnotisuperadmin(data);
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
@@ -850,17 +869,24 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
       for (var i = 0; i < widget.checkoutdata['cartlist'].length; i++) {
         var data = {
           'total_amount': widget.checkoutdata['total'],
-        'payment_method': 'card',
-        'is_receipe': 0,
-        'method_id': mycards[selectedcard]['id'].toString(),
-        'user_id': int.parse(widget.checkoutdata['user_id']),
-        'customer_id': int.parse(widget.checkoutdata['user_id']),
-        'payment_id': _paymentSheetData['client_secret'],
-        'customer_addressId': myaddress[selectedaddress]['id'],
-        'is_subscribed_user': widget.checkoutdata['usersub']? 1:0,
-        // 'receipe_id': null,
-        // 'quantity':'0',
-        // 'person_quantity': '0',
+          'payment_method': 'card',
+          'is_receipe': 0,
+          'method_id': method_id,
+          'payment_id': payment_id,
+          'user_id': int.parse(widget.checkoutdata['user_id']),
+          'customer_id': int.parse(widget.checkoutdata['user_id']),
+          'customer_addressId': myaddress[selectedaddress]['id'],
+          'is_subscribed_user': widget.checkoutdata['usersub'] ? 1 : 0,
+          'sub_total': widget.checkoutdata['sub_total'],
+          'delivery_free': widget.checkoutdata['shipping'],
+          'service_fee': widget.checkoutdata['charges'],
+          'tip_more': widget.checkoutdata['tip_more'],
+          'rider_tip': widget.checkoutdata['rider_tip'],
+          'restaurent_tip': widget.checkoutdata['restaurent_tip'],
+          'cutlery': widget.checkoutdata['cutlery'],
+          // 'receipe_id': null,
+          // 'quantity':'0',
+          // 'person_quantity': '0',
         };
         AppService().addeorder(data).then((value) {
           orderId = value['data']['id'].toString();
@@ -886,13 +912,12 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                   'data': value.toString(),
                 };
                 var notidata = {
-                      'title': 'Order Placed',
-                      'body':
-                          'You can track you order in order history section',
-                      // 'data': value.toString(),
-                      'user_id': int.parse(widget.checkoutdata['user_id'])
-                    };
-                    AppService().sendnotispecificuser(notidata);
+                  'title': 'Order Placed',
+                  'body': 'You can track you order in order history section',
+                  // 'data': value.toString(),
+                  'user_id': int.parse(widget.checkoutdata['user_id'])
+                };
+                AppService().sendnotispecificuser(notidata);
                 AppService().sendnotisuperadmin(data);
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
@@ -1000,8 +1025,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                               if (myaddress.length != 0 &&
                                   selectedcard != null) {
                                 loader3 = true;
-                                  setState(() {});
-
+                                setState(() {});
 
                                 // var data = {
                                 //   'cartlist': widget.checkoutdata['cartlist'],
@@ -1014,226 +1038,48 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                                 //       ['id'],
                                 //   'addressId': selectedaddress
                                 // };
-                                var data2 = {
-                                  'amount':
-                                      (widget.checkoutdata['total'].floor())
-                                              .toString() +
-                                          '00',
-                                  'currency': 'usd',
-                                  'customer': mycards[selectedcard]['customer']
-                                  // 'receipt_email': 'miansaadhafeez@gmail.com'
-                                };
-                                await PaymentService()
-                                    .getIntent(data2)
-                                    .then((value) async {
-                                  print(value);
-                                  _paymentSheetData = value;
-                                  print(_paymentSheetData['client_secret']);
-                                  print(mycards[selectedcard]['customer']);
-                                  setState(() {});
-                                  var resp = await Stripe.instance
-                                      .confirmPaymentMethod(
+                                if (widget.checkoutdata['total'] <= 0) {
+                                  buycartitem('Free Subscription Meal','Free Subscription Meal');
+                                } else {
+                                  var data2 = {
+                                    'amount':
+                                        (widget.checkoutdata['total'].floor())
+                                                .toString() +
+                                            '00',
+                                    'currency': 'usd',
+                                    'customer': mycards[selectedcard]
+                                        ['customer']
+                                    // 'receipt_email': 'miansaadhafeez@gmail.com'
+                                  };
+                                  await PaymentService()
+                                      .getIntent(data2)
+                                      .then((value) async {
+                                    print(value);
+                                    _paymentSheetData = value;
+                                    print(_paymentSheetData['client_secret']);
+                                    print(mycards[selectedcard]['customer']);
+                                    setState(() {});
+                                    var resp = await Stripe.instance
+                                        .confirmPaymentMethod(
+                                            _paymentSheetData['client_secret'],
+                                            PaymentMethodParams
+                                                .cardFromMethodId(
+                                                    paymentMethodId:
+                                                        mycards[selectedcard]
+                                                                ['id']
+                                                            .toString(),
+                                                    cvc: '123'));
+
+                                    if (resp.status ==
+                                        PaymentIntentsStatus.Succeeded) {
+                                      print('else');
+                                      buycartitem(
                                           _paymentSheetData['client_secret'],
-                                          PaymentMethodParams.cardFromMethodId(
-                                              paymentMethodId:
-                                                  mycards[selectedcard]['id']
-                                                      .toString(),
-                                              cvc: '123'));
-
-                                  if (resp.status ==
-                                      PaymentIntentsStatus.Succeeded) {
-                                print('else');
-                                    buycartitem();
-                                    // for (var i = 0;
-                                    //     i <
-                                    //         widget
-                                    //             .checkoutdata['packlist'].length;
-                                    //     i++) {
-                                    //       var person= widget
-                                    //         .checkoutdata['packlist'][i]['person'];
-
-                                    //   var packdata = {
-                                    //     'total_amount': double.tryParse(
-                                    //             widget.checkoutdata['packlist'][i]
-                                    //                 ['payableAmount'])
-                                    //         .toStringAsFixed(2),
-                                    //     'payment_method': 'card',
-                                    //     'is_receipe': 1,
-
-                                    //     'method_id': mycards[selectedcard]['id']
-                                    //         .toString(),
-                                    //         'user_id': 1,
-                                    //     'payment_id':
-                                    //         _paymentSheetData['id'],
-                                    //     'customer_addressId':
-                                    //         myaddress[selectedaddress]['id'],
-                                    //     // 'person_quantity': person ==1? '4':person==2?'6':'2',
-                                    //     // 'receipe_id': widget
-                                    //     //     .checkoutdata['packlist'][i]['id']
-                                    //   };
-                                    //   print(packdata);
-                                    // AppService()
-                                    //     .addeorder(packdata)
-                                    //     .then((value) {-
-                                    //   // orderId = value['data']['id'];
-                                    //   print(value);
-                                    // });
-                                    // setState(() {});
-                                    // }
-                                    // print('here');
-                                    // var orderId = '';
-                                    // if (widget.checkoutdata['mixmatch'] == true) {
-                                    //   var data = {
-                                    //     'total_amount': widget.checkoutdata['total'],
-                                    //     'payment_method': 'card',
-                                    //     'payment_id':
-                                    //         _paymentSheetData['client_secret'],
-                                    //     'customer_addressId':
-                                    //         myaddress[selectedaddress]['id'],
-                                    //   };
-                                    //   AppService().addeorder(data).then((value) {
-                                    //     orderId = value['data']['id'];
-                                    //     print(value);
-                                    //     for (var i = 0;
-                                    //         i < widget.checkoutdata['cartlist'].length;
-                                    //         i++) {
-                                    //       for (var j = 0;
-                                    //           j <
-                                    //               widget.checkoutdata['cartlist'][i]
-                                    //                   .length;
-                                    //           j++) {
-                                    //         print(
-                                    //             widget.checkoutdata['cartlist'][i][j]);
-                                    //         var data2 = {
-                                    //           'quantity':
-                                    //               widget.checkoutdata['cartlist'][i][j]
-                                    //                   ['qty'],
-                                    //           'total_price':
-                                    //               widget.checkoutdata['cartlist'][i][j]
-                                    //                   ['payableAmount'],
-                                    //           'order_id': value['data']['id'],
-                                    //           'rest_menuId': widget
-                                    //               .checkoutdata['cartlist'][i][j]['id'],
-                                    //           'rest_Id': widget.checkoutdata['cartlist']
-                                    //               [i][j]['restaurantId'],
-                                    //         };
-                                    //         AppService()
-                                    //             .addorderdetails(data2)
-                                    //             .then((value) {
-                                    //           print(value);
-                                    //           if (i ==
-                                    //                   widget.checkoutdata['cartlist']
-                                    //                           .length -
-                                    //                       1 &&
-                                    //               j ==
-                                    //                   widget.checkoutdata['cartlist'][i]
-                                    //                           .length -
-                                    //                       1) {
-                                    //             var data = {
-                                    //               'title': 'New Order',
-                                    //               'body':
-                                    //                   'User has been placed a new order',
-                                    //               'data': value.toString(),
-                                    //               //  ''
-                                    //             };
-                                    //             AppService().sendnotisuperadmin(data);
-                                    //             Navigator.of(context).pop();
-                                    //             Navigator.of(context).pop();
-                                    //             this.loader3 = false;
-
-                                    //             setState(() {});
-                                    //             Navigator.pushNamed(
-                                    //                 context, AppRouter.CheckOut3,
-                                    //                 arguments: {
-                                    //                   'type':
-                                    //                       widget.checkoutdata['type'],
-                                    //                   'orderId': orderId
-                                    //                 });
-                                    //           }
-                                    //         });
-                                    //       }
-                                    //     }
-                                    //     //    AppRouter.navigator.pushNamed(AppRouter.CheckOut3, arguments: {
-                                    //     //   'type': widget.checkoutdata['type'],
-                                    //     //   'orderId': orderId
-                                    //     // });
-                                    //   });
-                                    // } else {
-                                    //   for (var i = 0;
-                                    //       i < widget.checkoutdata['cartlist'].length;
-                                    //       i++) {
-                                    //     var data = {
-                                    //       'total_amount': widget.checkoutdata['total'],
-                                    //       'payment_method': 'card',
-                                    //       'payment_id':
-                                    //           _paymentSheetData['client_secret'],
-                                    //       'customer_addressId':
-                                    //           myaddress[selectedaddress]['id'],
-                                    //     };
-                                    //     AppService().addeorder(data).then((value) {
-                                    //       orderId = value['data']['id'].toString();
-                                    //       print(orderId);
-                                    //       for (var j = 0;
-                                    //           j <
-                                    //               widget.checkoutdata['cartlist'][i]
-                                    //                   .length;
-                                    //           j++) {
-                                    //         print(
-                                    //             widget.checkoutdata['cartlist'][i][j]);
-                                    //         var data2 = {
-                                    //           'quantity':
-                                    //               widget.checkoutdata['cartlist'][i][j]
-                                    //                   ['qty'],
-                                    //           'total_price':
-                                    //               widget.checkoutdata['cartlist'][i][j]
-                                    //                   ['payableAmount'],
-                                    //           'order_id': value['data']['id'],
-                                    //           'rest_menuId': widget
-                                    //               .checkoutdata['cartlist'][i][j]['id'],
-                                    //           'rest_Id': widget.checkoutdata['cartlist']
-                                    //               [i][j]['restaurantId'],
-                                    //         };
-                                    //         AppService()
-                                    //             .addorderdetails(data2)
-                                    //             .then((value) async {
-                                    //           print(value);
-                                    //           if (i ==
-                                    //                   widget.checkoutdata['cartlist']
-                                    //                           .length -
-                                    //                       1 &&
-                                    //               j ==
-                                    //                   widget.checkoutdata['cartlist'][i]
-                                    //                           .length -
-                                    //                       1) {
-                                    //             this.loader3 = false;
-                                    //             var data = {
-                                    //               'title': 'New Order',
-                                    //               'body':
-                                    //                   'User has been placed a new order',
-                                    //               'data': value.toString(),
-                                    //             };
-                                    //             AppService().sendnotisuperadmin(data);
-                                    //             Navigator.of(context).pop();
-                                    //             Navigator.of(context).pop();
-                                    //             this.loader3 = false;
-                                    //             await CartProvider().clearcart();
-                                    //             setState(() {});
-                                    //             Navigator.pushNamed(
-                                    //                 context, AppRouter.CheckOut3,
-                                    //                 arguments: {
-                                    //                   'type':
-                                    //                       widget.checkoutdata['type'],
-                                    //                   'orderId': orderId
-                                    //                 });
-                                    //           }
-                                    //         });
-                                    //       }
-                                    //     });
-                                    //   }
-                                    // }
-                                  }
-                                });
-
+                                          mycards[selectedcard]['id']
+                                              .toString());
+                                    }
+                                  });
+                                }
                                 // var respo = await Stripe.instance.presentPaymentSheet(
                                 //     parameters: PresentPaymentSheetParameters(
                                 //       confirmPayment: true,
@@ -1572,7 +1418,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
             SizedBox(
               height: 20,
             ),
-            widget.checkoutdata['usersub']
+            widget.checkoutdata['usersub'] ||(widget.checkoutdata['total']!=null && widget.checkoutdata['total'] <= 0)
                 ? Container()
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

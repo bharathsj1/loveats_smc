@@ -20,6 +20,7 @@ class SubscriptionScreen extends StatefulWidget {
 
 class _SubscriptionScreenState extends State<SubscriptionScreen> {
   GetAllSubscriptionModel _getAllSubscriptionModel;
+  SpecificUserSubscriptionModel _specificUserSubscriptionModel;
   var _paymentSheetData;
   bool _isLoading = true;
   TextStyle descriptionStyle = TextStyle(
@@ -29,8 +30,27 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   @override
   void initState() {
     getSubscriptionPlans();
+    // getSpecificUserSubscription();
     super.initState();
   }
+
+  //   void getSpecificUserSubscription() async {
+  //   _specificUserSubscriptionModel =
+  //       await Service().getSpecificUserSubscriptionData();
+  //   print(_specificUserSubscriptionModel.data);
+ 
+  //   for (var i = 0; i < _getAllSubscriptionModel.data.length; i++) {
+  //    var check= _specificUserSubscriptionModel.data
+  //           .where((x) => x.id == _getAllSubscriptionModel.data[i].id && x.status== 'active')
+  //           .toList();
+
+  //           if(check.length >0){
+  //             _getAllSubscriptionModel.data[i].active=false;
+  //           }
+  //   }
+  //   _isLoading = false;
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -133,6 +153,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     _getAllSubscriptionModel = await Service().getAllSubscription();
     _isLoading = false;
     print(_getAllSubscriptionModel);
+    // getSpecificUserSubscription();
     setState(() {});
   }
 
