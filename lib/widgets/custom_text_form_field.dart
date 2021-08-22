@@ -23,6 +23,7 @@ class CustomTextFormField extends StatelessWidget {
   final int maxLines;
   final TextEditingController textEditingController;
   final Function function;
+  TextInputType keyboardtype;
 
   CustomTextFormField(
       {this.hasPrefixIcon = false,
@@ -45,6 +46,7 @@ class CustomTextFormField extends StatelessWidget {
       this.filled = true,
       this.obscured = false,
       this.textEditingController,
+      this.keyboardtype,
       this.function});
 
   @override
@@ -56,7 +58,7 @@ class CustomTextFormField extends StatelessWidget {
         onSaved: (save){
           print(save);
         },
-        keyboardType: TextInputType.text,
+        keyboardType: keyboardtype!=null? keyboardtype: TextInputType.text,
         validator: (value) => function(value),
         style: textFormFieldStyle,
         maxLines: maxLines,

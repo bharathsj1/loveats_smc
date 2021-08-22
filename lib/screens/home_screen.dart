@@ -80,16 +80,25 @@ class _HomeScreenState extends State<HomeScreen> {
     var data = DemoData();
     _cityList = data.getCities();
     _currentCity = _cityList[1];
-    Provider.of<ServiceProvider>(context, listen: false).getsubdata();
     checkpromo();
     // _register();
     getRestaurent();
+    checkguestandcall();
     getcateory();
     getrecipes();
-    getsubrecipe();
     getpopularitem();
     isUserGuest();
     super.initState();
+  }
+
+  checkguestandcall() async {
+    _isGuest = await Service().isGuest();
+    print(_isGuest);
+    // return;
+    if (_isGuest == null || !_isGuest) {
+    Provider.of<ServiceProvider>(context, listen: false).getsubdata();
+    getsubrecipe();
+    }
   }
 
   isUserGuest() async {

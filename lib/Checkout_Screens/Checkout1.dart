@@ -57,6 +57,8 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
 
   void _onMapCreated(GoogleMapController _cntlr) {
     // _controller = _cntlr;
+
+
     _controller.complete(_cntlr);
     // _location.onLocationChanged.listen((l) {
     //   _controller.animateCamera(
@@ -172,7 +174,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
     }
   }
 
-  showPlacePicker(context) async {
+  showPlacePicker(context,pop) async {
     LocationResult result = await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => PlacePicker(
               "AIzaSyCkoLh9yZhcAtP9R-KsP90JaqFiooRuEmg",
@@ -187,6 +189,9 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
       selected_country = result.country.name;
       selected_lat = result.latLng.latitude.toString();
       selected_long = result.latLng.longitude.toString();
+      if(pop){
+      Navigator.pop(context);
+      }
       bottomSheetForLocation(context);
     }
   }
@@ -194,176 +199,197 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
   bottomSheetForLocation(BuildContext context) {
     return showModalBottomSheet(
         context: context,
+        isScrollControlled: true,
         // backgroundColor: Colors.black54,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
         builder: (context) {
-          return Container(
-            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+          return Padding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(10.0),
-                  topRight: const Radius.circular(10.0),
+              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: const Radius.circular(10.0),
+                    topRight: const Radius.circular(10.0),
+                  ),
                 ),
-              ),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Add New Address',
-                            style: Styles.customNormalTextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              if (_formKey.currentState.validate()) {
-                                FocusScope.of(context).unfocus();
-
-                                loader = true;
-                                setState(() {});
-                                var data = {
-                                  'name': nameController.text,
-                                  'phone_no': phoneNoController.text,
-                                  'latitude': selected_lat.toString(),
-                                  'longitude': selected_long.toString(),
-                                  'address': selected_address,
-                                  'city': selected_city,
-                                  'country': selected_country,
-                                  'address_type': 'Other',
-                                };
-                                AppService().setaddress(data).then((value) {
-                                  print(value);
-                                  myaddress.add(value['data']);
-                                  loader = false;
-                                  setState(() {});
-                                });
-                                this.nameController.text = '';
-                                this.phoneNoController.text = '';
-                                Navigator.of(context).pop();
-                                // Toast.show('New Address added', context,
-                                //     duration: 3);
-
-                              }
-                            },
-                            child: Container(
-                              height: 30,
-                              width: 70,
-                              decoration: BoxDecoration(
-                                  color: AppColors.secondaryElement,
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: Center(
-                                child: Text(
-                                  'Add',
-                                  style: Styles.customNormalTextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Add New Address',
+                                style: Styles.customNormalTextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
                               ),
-                            ),
-                          )
-                        ],
-                      ),
+                              InkWell(
+                                onTap: () {
+                                  if (_formKey.currentState.validate()) {
+                                    FocusScope.of(context).unfocus();
+                  
+                                    // loader = true;
+                                    setState(() {});
+                                    var data = {
+                                      'name': nameController.text,
+                                      'phone_no': phoneNoController.text,
+                                      'latitude': selected_lat.toString(),
+                                      'longitude': selected_long.toString(),
+                                      'address': selected_address,
+                                      'city': selected_city,
+                                      'country': selected_country,
+                                      'address_type': 'Other',
+                                    };
+                                    AppService().setaddress(data).then((value) {
+                                      print(value);
+                                      myaddress.add(value['data']);
+                                      if(_controller.isCompleted){
+                                          updatePinOnMap(
+            double.parse(myaddress[selectedaddress]['user_latitude']),
+            double.parse(myaddress[selectedaddress]['user_longitude']));
+                                      }else{
+                                        print('here');
+                                        createmaps(double.parse(myaddress[myaddress.length-1]['user_latitude']),
+                                        double.parse(myaddress[myaddress.length-1]['user_longitude']));
+                                        // selectedaddress=myaddress.length-1;
+                                        // print(selectedaddress);
+                                      }
+                                      loader = false;
+                                      setState(() {});
+                                         Navigator.of(context).pop();
+                                    this.nameController.text = '';
+                                    this.phoneNoController.text = '';
+                                    });
+                                 
+                                    // Toast.show('New Address added', context,
+                                    //     duration: 3);
+                  
+                                  }
+                                },
+                                child: Container(
+                                  height: 30,
+                                  width: 70,
+                                  decoration: BoxDecoration(
+                                      color: AppColors.secondaryElement,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: Center(
+                                    child: Text(
+                                      'Add',
+                                      style: Styles.customNormalTextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Divider(),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          child: CustomTextFormField(
+                            hasPrefixIcon: true,
+                            textEditingController: nameController,
+                            prefixIcon: Icons.person_outline,
+                            hintText: StringConst.HINT_TEXT_NAME,
+                            borderColor: AppColors.green,
+                            borderWidth: 2,
+                            enabledBorderColor: AppColors.grey,
+                            hintTextStyle: TextStyle(color: AppColors.grey),
+                            focusedBorderColor: AppColors.grey,
+                            prefixIconColor: AppColors.secondaryElement,
+                            // fillColor: AppColors.grey.withOpacity(0.4),
+                            borderStyle: BorderStyle.solid,
+                            textFormFieldStyle: TextStyle(color: AppColors.grey),
+                            function: nameValidator,
+                          ),
+                        ),
+                        SpaceH16(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          child: CustomTextFormField(
+                            hasPrefixIcon: true,
+                            textEditingController: phoneNoController,
+                            
+                            // prefixIconImagePath: ImagePath.personIcon,
+                            prefixIcon: Icons.phone_outlined,
+                            hintText: StringConst.HINT_TEXT_PHONE_NO,
+                            borderColor: AppColors.green,
+                            borderWidth: 2,
+                            enabledBorderColor: AppColors.grey,
+                            hintTextStyle: TextStyle(color: AppColors.grey),
+                            focusedBorderColor: AppColors.grey,
+                            prefixIconColor: AppColors.secondaryElement,
+                            textFormFieldStyle: TextStyle(color: AppColors.grey),
+                            // fillColor: AppColors.grey.withOpacity(0.4),
+                            borderStyle: BorderStyle.solid,
+                            keyboardtype: TextInputType.phone,
+                            function: phoneValidator,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        // InkWell(
+                        //   onTap: () =>
+                        //       AppRouter.navigator.pushNamed(AppRouter.googleMap),
+                        //   child: Row(
+                        //     children: [
+                        //       Icon(Icons.location_searching, size: 12.0),
+                        //       SizedBox(
+                        //         width: 5.0,
+                        //       ),
+                        //       Text('Use current location',
+                        //           style: Styles.customNormalTextStyle(
+                        //               color: Colors.indigo)),
+                        //     ],
+                        //   ),
+                        // ),
+                        Divider(),
+                        SizedBox(
+                          height: 5.0,
+                        ),
+                        Text(
+                          'Selected Address',
+                          style: Styles.customNormalTextStyle(color: Colors.black),
+                        ),
+                        ListTile(
+                          leading: Icon(
+                            Icons.place_outlined,
+                            color: AppColors.secondaryElement,
+                          ),
+                          title: Text('Other'),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          subtitle: Text(selected_address +
+                              ' ' +
+                              selected_city +
+                              ' ' +
+                              selected_country),
+                        ),
+                        Divider(),
+                      ],
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Divider(),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                      child: CustomTextFormField(
-                        hasPrefixIcon: true,
-                        textEditingController: nameController,
-                        prefixIcon: Icons.person_outline,
-                        hintText: StringConst.HINT_TEXT_NAME,
-                        borderColor: AppColors.green,
-                        borderWidth: 2,
-                        enabledBorderColor: AppColors.grey,
-                        hintTextStyle: TextStyle(color: AppColors.grey),
-                        focusedBorderColor: AppColors.grey,
-                        prefixIconColor: AppColors.secondaryElement,
-                        // fillColor: AppColors.grey.withOpacity(0.4),
-                        borderStyle: BorderStyle.solid,
-                        textFormFieldStyle: TextStyle(color: AppColors.grey),
-                        function: nameValidator,
-                      ),
-                    ),
-                    SpaceH16(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                      child: CustomTextFormField(
-                        hasPrefixIcon: true,
-                        textEditingController: phoneNoController,
-                        // prefixIconImagePath: ImagePath.personIcon,
-                        prefixIcon: Icons.phone_outlined,
-                        hintText: StringConst.HINT_TEXT_PHONE_NO,
-                        borderColor: AppColors.green,
-                        borderWidth: 2,
-                        enabledBorderColor: AppColors.grey,
-                        hintTextStyle: TextStyle(color: AppColors.grey),
-                        focusedBorderColor: AppColors.grey,
-                        prefixIconColor: AppColors.secondaryElement,
-                        textFormFieldStyle: TextStyle(color: AppColors.grey),
-                        // fillColor: AppColors.grey.withOpacity(0.4),
-                        borderStyle: BorderStyle.solid,
-                        function: phoneValidator,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    // InkWell(
-                    //   onTap: () =>
-                    //       AppRouter.navigator.pushNamed(AppRouter.googleMap),
-                    //   child: Row(
-                    //     children: [
-                    //       Icon(Icons.location_searching, size: 12.0),
-                    //       SizedBox(
-                    //         width: 5.0,
-                    //       ),
-                    //       Text('Use current location',
-                    //           style: Styles.customNormalTextStyle(
-                    //               color: Colors.indigo)),
-                    //     ],
-                    //   ),
-                    // ),
-                    Divider(),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    Text(
-                      'Selected Address',
-                      style: Styles.customNormalTextStyle(color: Colors.black),
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.place_outlined,
-                        color: AppColors.secondaryElement,
-                      ),
-                      title: Text('Other'),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      subtitle: Text(selected_address +
-                          ' ' +
-                          selected_city +
-                          ' ' +
-                          selected_country),
-                    ),
-                    Divider(),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -611,7 +637,9 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                 Center(
                   child: InkWell(
                     onTap: () {
-                      showPlacePicker(context);
+                      // Navigator.pop(context);
+                      showPlacePicker(context,true);
+
                     },
                     child: Container(
                       height: 55,
@@ -651,6 +679,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
           });
         }).whenComplete(() {
       setState(() {
+        print(selectedaddress);
         updatePinOnMap(
             double.parse(myaddress[selectedaddress]['user_latitude']),
             double.parse(myaddress[selectedaddress]['user_longitude']));
@@ -1090,8 +1119,15 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                                 //     arguments: data);
 
                               } else {
+                                if(myaddress.length == 0){
+
                                 Toast.show('Add address to continue', context,
                                     duration: 3);
+                                }
+                                else{
+                                   Toast.show('Add payment method to continue', context,
+                                    duration: 3);
+                                }
                               }
                             }
                           },
@@ -1259,12 +1295,12 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
               ),
             ),
             !loader
-                ? Column(
+                ?  myaddress.length>0? Column(
                     children: [
                       SizedBox(
                         height: 20,
                       ),
-                      Container(
+                     Container(
                         height: 180,
                         width: MediaQuery.of(context).size.width,
                         child: Stack(
@@ -1349,7 +1385,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                       ),
                     ],
                   )
-                : Container(),
+                : Container():Container(),
             SizedBox(
               height: myaddress.length == 0 ? 20 : 0,
             ),
@@ -1357,7 +1393,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                 ? Center(
                     child: InkWell(
                       onTap: () {
-                        showPlacePicker(context);
+                        showPlacePicker(context,false);
                       },
                       child: Container(
                         height: 55,
