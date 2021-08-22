@@ -21,6 +21,7 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
   @override
   void initState() {
     getaddson();
+    print(widget.data);
     // widget.data['item']['qty']='1';
     setState(() {});
     super.initState();
@@ -150,7 +151,7 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
                         widget.data['item']['menu_price'].toString(),
                     'qty': this.itemqty,
                     'data': widget.data['item'],
-                    'is_free': widget.data['is_free'],
+                    'is_free': widget.data['item']['is_free'],
                     'restaurantdata': widget.data['restaurant'],
                     // 'topping': toppings
                     //     .where((product) => product['check'] == true)

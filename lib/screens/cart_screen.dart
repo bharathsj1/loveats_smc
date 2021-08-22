@@ -31,6 +31,7 @@ class _CartScreenState extends State<CartScreen> {
   bool cutlery = false;
   bool addrestip = false;
   double newrestip = 0.00;
+  double restip = 0.00;
   double totalAmount = 0.0;
   double ridertip = 0.0;
   int charges = 0;
@@ -1155,7 +1156,7 @@ class _CartScreenState extends State<CartScreen> {
                                       if (this.ridertip > 0) {
                                         this.ridertip = this.ridertip - 1;
                                         setState(() {});
-                                       totalAmount-= 1;
+                                      //  totalAmount-= 1;
                                         // if (this.ridertip == 1) {
                                         //   // disabled = false;
                                         // }
@@ -1209,7 +1210,7 @@ class _CartScreenState extends State<CartScreen> {
                                       print('here');
                                       print('here');
                                       this.ridertip = (this.ridertip + 1);
-                                      totalAmount+= 1;
+                                      // totalAmount+= 1;
                                       print(this.ridertip);
                                       setState(() {});
                                     },
@@ -1254,7 +1255,7 @@ class _CartScreenState extends State<CartScreen> {
                                       fontWeight: FontWeight.bold)),
                               Text(
                                   '${StringConst.currency}' +
-                                      (totalAmount + shipping + charges)
+                                      (totalAmount + shipping + charges+restip+newrestip+ridertip)
                                           .toStringAsFixed(2),
                                   style: TextStyle(
                                       color: AppColors.black,
@@ -1273,14 +1274,20 @@ class _CartScreenState extends State<CartScreen> {
                       child: PotbellyButton(
                         'Go to Checkout',
                         onTap: () async {
+                          print(totalAmount);
                          if (isGuest ==null || !isGuest){
                              String userId = await Service().getUserId();
                             var data = {
                               'cartlist': newcart,
                               'packlist': packlist,
+                              'total': totalAmount + shipping + charges+restip+newrestip+ridertip,
                               'charges': charges,
                               'shipping': shipping,
-                              'total': totalAmount,
+                              'sub_total': totalAmount,
+                              'tip_more': newrestip,
+                              'rider_tip': ridertip,
+                              'restaurent_tip': restip,
+                              'cutlery': cutlery.toString(),
                               'type': 'cart',
                               'mixmatch': mixmatch,
                               'recipe':false,
@@ -1747,11 +1754,13 @@ class _CartScreenState extends State<CartScreen> {
                                             setState(() {
                                               addrestip = newValue;
                                               if (addrestip) {
-                                                totalAmount =
-                                                    totalAmount + 0.29;
+                                                restip=0.29;
+                                                // totalAmount =
+                                                //     totalAmount + 0.29;
                                               } else {
-                                                totalAmount =
-                                                    totalAmount - 0.29;
+                                                restip=0.0;
+                                                // totalAmount =
+                                                //     totalAmount - 0.29;
                                               }
                                             });
                                           }),
@@ -1875,12 +1884,12 @@ class _CartScreenState extends State<CartScreen> {
 
                             tiplistname[i]['check']=true;
                             newrestip += double.parse(tiplistname[i]['name']);
-                            totalAmount+= double.parse(tiplistname[i]['name']);
+                            // totalAmount+= double.parse(tiplistname[i]['name']);
                             }
                             else{
                                tiplistname[i]['check']=false;
                             totalAmount-=  double.parse(tiplistname[i]['name']);
-                            newrestip -= double.parse(tiplistname[i]['name']);
+                            // newrestip -= double.parse(tiplistname[i]['name']);
                             }
                             setState(() {
                               

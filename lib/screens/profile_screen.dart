@@ -10,6 +10,7 @@ import 'package:potbelly/models/specific_user_subscription_model.dart';
 import 'package:potbelly/routes/router.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/settings_screen.dart';
+import 'package:potbelly/services/ServiceProvider.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/bookmarkservice.dart';
 import 'package:potbelly/services/service.dart';
@@ -383,7 +384,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         _specificUserSubscriptionModel == null ||
                                 _specificUserSubscriptionModel.data.length <= 0
                             ? const SizedBox()
-                            : Container(
+                            : checkanyactive()? Container(
                                 width: double.infinity,
                                 margin: EdgeInsets.symmetric(vertical: 10.0),
                                 padding: const EdgeInsets.all(20),
@@ -396,7 +397,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     color: Colors.black,
                                   ),
                                 ),
-                              ),
+                              ):Container(),
                       ],
                     ):Container(),
                     _selectedNavIndex == 3
@@ -578,10 +579,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void getSpecificUserSubscription() async {
     _specificUserSubscriptionModel =
         await Service().getSpecificUserSubscriptionData();
-    // print(_specificUserSubscriptionModel.data.length);
+    print(_specificUserSubscriptionModel.data);
       _isLoading = false;
     setState(() {});
     
+  }
+
+  checkanyactive(){
+    
+    for (var i = 0; i < _specificUserSubscriptionModel.data.length; i++) {
+      if(_specificUserSubscriptionModel.data[i].status =='active'){
+        return true;
+      }
+    }
+    return false;
   }
 
   Widget _buildAccountSettings({@required BuildContext context}) {
@@ -703,7 +714,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   titleColor: AppColors.black,
                   title: "Subscriptions",
                   onTap: () => Navigator.pushNamed(
-                      context, AppRouter.userSubscriptionList),
+                      context, AppRouter.userSubscriptionList).then((value) {
+                        getSpecificUserSubscription();
+                        Provider.of<ServiceProvider>(context, listen: false).getsubdata();
+                      }),
                 ),
                 // SettingsListTile(
                 //     title: "Change Language",

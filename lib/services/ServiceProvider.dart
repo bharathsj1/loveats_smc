@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'appServices.dart';
 
 class ServiceProvider with ChangeNotifier  {
-  bool usermealsub=false;
+  bool usermealsub=true; //have to change to false
   bool freemealweek=false;
   
   getsubdata() async {

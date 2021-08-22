@@ -644,7 +644,9 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                         child: PotbellyButton(
                           'View Cart',
                           onTap: () {
-                            Navigator.pushNamed(context, AppRouter.cart_Screen);
+                            Navigator.pushNamed(context, AppRouter.cart_Screen).then((value) {
+                              checkcomplete();
+                            });
                           },
                           buttonHeight: 45,
                           buttonWidth: MediaQuery.of(context).size.width * 0.85,
@@ -2186,6 +2188,30 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
         newfooditems[i]['qty2'] = cart[index]['qty'];
       }
     }
+    setState(() {});
+  }
+
+  checkcomplete() async {
+        var cart;
+    cart = await CartProvider().getcartslist();
+    if(cart.length == 0){
+          cartbtn = false;
+
+    }
+    for (var j = 0; j < fooditemswithcat.length; j++) {
+      for (var i = 0; i < fooditemswithcat[j]['menuItems'].length; i++) {
+        int index = cart.indexWhere(
+            (x) => x['id'] == fooditemswithcat[j]['menuItems'][i]['id']);
+        if (index == -1) {
+          fooditemswithcat[j]['menuItems'][i]['cart'] = false;
+        } else {
+          fooditemswithcat[j]['menuItems'][i]['cart'] = true;
+          cartbtn = true;
+          fooditemswithcat[j]['menuItems'][i]['qty2'] = cart[index]['qty'];
+        }
+      }
+    }
+
     setState(() {});
   }
 }
