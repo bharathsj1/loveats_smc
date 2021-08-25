@@ -16,6 +16,7 @@ import 'package:potbelly/values/values.dart';
 import 'package:potbelly/vendor_screens.dart/Home_screen.dart';
 import 'package:potbelly/widgets/snackbar.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:toast/toast.dart';
 import './ProviderService.dart';
 import 'package:provider/provider.dart';
 import 'sun_moon.dart';
@@ -47,7 +48,7 @@ class GooeyCarousel extends StatefulWidget {
 class GooeyCarouselState extends State<GooeyCarousel>
     with SingleTickerProviderStateMixin {
   int _currentIndex;
- bool loader=false;
+  bool loader = false;
   @override
   void initState() {
     // Provider.of(context, listen: false)._edge = GooeyEdge(count: 25);
@@ -178,9 +179,9 @@ class GooeyCarouselState extends State<GooeyCarousel>
               StateSetter setState /*You can rename this!*/) {
             return Padding(
               padding: EdgeInsets.only(bottom: 20, left: 20, right: 20),
-              child:  Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: ClipRRect(
                   borderRadius: new BorderRadius.only(
                       topLeft: const Radius.circular(30.0),
@@ -272,7 +273,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
 
                                         hintStyle: TextStyle(
                                             fontSize: 14.0,
-                                            color: Colors.white.withOpacity(0.8)),
+                                            color:
+                                                Colors.white.withOpacity(0.8)),
                                       ),
                                     ),
                                   ),
@@ -312,7 +314,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                     child: TextFormField(
                                       // focusNode: myFocusNodePassword,
                                       controller: passwordController,
-                                      keyboardType: TextInputType.visiblePassword,
+                                      keyboardType:
+                                          TextInputType.visiblePassword,
                                       validator: (value) =>
                                           passwordValidation(value),
                                       obscureText: true,
@@ -330,7 +333,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                         hintText: "Password",
                                         hintStyle: TextStyle(
                                             fontSize: 14.0,
-                                            color: Colors.white.withOpacity(0.8)),
+                                            color:
+                                                Colors.white.withOpacity(0.8)),
                                       ),
                                     ),
                                   ),
@@ -342,52 +346,62 @@ class GooeyCarouselState extends State<GooeyCarousel>
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 32),
                                 child: loader
-                        ? Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    AppColors.white),
-                              ),
-                            ),
-                          )
-                        :  InkWell(
-                                  onTap: () {
-                                    // Navigator.pushAndRemoveUntil(
-                                    //     context,
-                                    //     MaterialPageRoute(builder: (_) => RootScreen()),
-                                    //     (route) => false);
-                                    loader=true;
-                                     setState(() {});
-                                    _signInWithEmail(context, emailController,
-                                        passwordController, _formKey);
-                                  },
-                                  child: Material(
-                                    elevation: 5,
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: Colors.transparent,
-                                    // shape: RoundedRectangleBorder(
-                                    //   side: BorderSide(width: 1,color: AppColors.black,),
-                                    // ),
-                                    child: Container(
-                                      height: 50,
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                          color: AppColors.black,
-                                          // border: Border.all(width: 1,color: AppColors.black),
-                                          borderRadius: BorderRadius.circular(8)),
-                                      child: Center(
-                                        child: Text(
-                                          'Sign In',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600),
+                                    ? Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 8.0),
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    AppColors.white),
+                                          ),
+                                        ),
+                                      )
+                                    : InkWell(
+                                        onTap: () {
+                                          // Navigator.pushAndRemoveUntil(
+                                          //     context,
+                                          //     MaterialPageRoute(builder: (_) => RootScreen()),
+                                          //     (route) => false);
+                                          loader = true;
+                                          setState(() {});
+                                          _signInWithEmail(
+                                              context,
+                                              emailController,
+                                              passwordController,
+                                              _formKey);
+                                        },
+                                        child: Material(
+                                          elevation: 5,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          color: Colors.transparent,
+                                          // shape: RoundedRectangleBorder(
+                                          //   side: BorderSide(width: 1,color: AppColors.black,),
+                                          // ),
+                                          child: Container(
+                                            height: 50,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            decoration: BoxDecoration(
+                                                color: AppColors.black,
+                                                // border: Border.all(width: 1,color: AppColors.black),
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            child: Center(
+                                              child: Text(
+                                                'Sign In',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ),
                               ),
                               SizedBox(
                                 height: 10,
@@ -416,7 +430,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                       decoration: BoxDecoration(
                                           color: AppColors.black,
                                           // border: Border.all(width: 1,color: AppColors.black),
-                                          borderRadius: BorderRadius.circular(8)),
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
                                       child: Center(
                                         child: Text(
                                           'Sign in as a Guest',
@@ -457,25 +472,24 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                           ),
                                         )
                                       : InkWell(
-                                    onTap: () {
-                                      _signInWithAppleOnandroid(context);
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.all(10.0),
-                                      decoration: new BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.white,
-                                      ),
-                                      child: new Icon(
-                                      FontAwesomeIcons.apple,
-                                      color: Colors.black,
-                                      ),
-                                    ),
+                                          onTap: () {
+                                            _signInWithAppleOnandroid(context);
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.all(10.0),
+                                            decoration: new BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.white,
+                                            ),
+                                            child: new Icon(
+                                              FontAwesomeIcons.apple,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                  SizedBox(
+                                    width: 50,
                                   ),
-                                   SizedBox(
-                                          width: 50,
-                                        )
-                                     ,
                                   InkWell(
                                     onTap: () {
                                       _signInWithGoogle(context);
@@ -537,9 +551,9 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                       ))
                                 ],
                               ),
-                               SizedBox(
-                                          height: 10,
-                                        )
+                              SizedBox(
+                                height: 10,
+                              )
                             ],
                           ),
                         ),
@@ -574,8 +588,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
             return Padding(
               padding: EdgeInsets.only(bottom: 20, left: 20, right: 20),
               child: Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: ClipRRect(
                   borderRadius: new BorderRadius.only(
                       topLeft: const Radius.circular(30.0),
@@ -641,7 +655,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                       // focusNode: myFocusNodeEmailLogin,
                                       controller: fullnameController,
                                       keyboardType: TextInputType.name,
-                                      validator: (value) => nameValidator(value),
+                                      validator: (value) =>
+                                          nameValidator(value),
                                       style: TextStyle(
                                           // fontFamily: "WorkSansSemiBold",
                                           fontSize: 14.0,
@@ -656,7 +671,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                         hintText: "Full Name",
                                         hintStyle: TextStyle(
                                             fontSize: 14.0,
-                                            color: Colors.white.withOpacity(0.8)),
+                                            color:
+                                                Colors.white.withOpacity(0.8)),
                                       ),
                                     ),
                                   ),
@@ -697,7 +713,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                       // focusNode: myFocusNodeEmailLogin,
                                       controller: phoneController,
                                       keyboardType: TextInputType.phone,
-                                      validator: (value) => phoneValidator(value),
+                                      validator: (value) =>
+                                          phoneValidator(value),
                                       style: TextStyle(
                                           // fontFamily: "WorkSansSemiBold",
                                           fontSize: 14.0,
@@ -712,7 +729,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                         hintText: "Phone Number",
                                         hintStyle: TextStyle(
                                             fontSize: 14.0,
-                                            color: Colors.white.withOpacity(0.8)),
+                                            color:
+                                                Colors.white.withOpacity(0.8)),
                                       ),
                                     ),
                                   ),
@@ -769,7 +787,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                         hintText: "Email Address",
                                         hintStyle: TextStyle(
                                             fontSize: 14.0,
-                                            color: Colors.white.withOpacity(0.8)),
+                                            color:
+                                                Colors.white.withOpacity(0.8)),
                                       ),
                                     ),
                                   ),
@@ -809,7 +828,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                     child: TextFormField(
                                       // focusNode: myFocusNodeEmailLogin,
                                       controller: newpasswordController,
-                                      keyboardType: TextInputType.visiblePassword,
+                                      keyboardType:
+                                          TextInputType.visiblePassword,
                                       validator: (value) =>
                                           passwordValidation(value),
                                       obscureText: true,
@@ -827,7 +847,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                         hintText: "Password",
                                         hintStyle: TextStyle(
                                             fontSize: 14.0,
-                                            color: Colors.white.withOpacity(0.8)),
+                                            color:
+                                                Colors.white.withOpacity(0.8)),
                                       ),
                                     ),
                                   ),
@@ -838,53 +859,60 @@ class GooeyCarouselState extends State<GooeyCarousel>
                               ),
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 32),
-                                child:loader
-                        ? Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    AppColors.white),
-                              ),
-                            ),
-                          )
-                        :  InkWell(
-                                  onTap: () {
-                                    // Navigator.pushAndRemoveUntil(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (_) => BubbleTabBarDemo(type: '2')),
-                                    //     (route) => false);
-                                      loader=true;
-                                     setState(() {});
-                                    validateFormAndCreateUser(context);
-                                  },
-                                  child: Material(
-                                    elevation: 5,
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: Colors.transparent,
-                                    // shape: RoundedRectangleBorder(
-                                    //   side: BorderSide(width: 1,color: AppColors.black,),
-                                    // ),
-                                    child: Container(
-                                      height: 50,
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                          color: AppColors.black,
-                                          // border: Border.all(width: 1,color: AppColors.black),
-                                          borderRadius: BorderRadius.circular(8)),
-                                      child: Center(
-                                        child: Text(
-                                          'Sign Up',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600),
+                                child: loader
+                                    ? Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 8.0),
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    AppColors.white),
+                                          ),
+                                        ),
+                                      )
+                                    : InkWell(
+                                        onTap: () {
+                                          // Navigator.pushAndRemoveUntil(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //         builder: (_) => BubbleTabBarDemo(type: '2')),
+                                          //     (route) => false);
+                                          loader = true;
+                                          setState(() {});
+                                          validateFormAndCreateUser(context);
+                                        },
+                                        child: Material(
+                                          elevation: 5,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          color: Colors.transparent,
+                                          // shape: RoundedRectangleBorder(
+                                          //   side: BorderSide(width: 1,color: AppColors.black,),
+                                          // ),
+                                          child: Container(
+                                            height: 50,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            decoration: BoxDecoration(
+                                                color: AppColors.black,
+                                                // border: Border.all(width: 1,color: AppColors.black),
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            child: Center(
+                                              child: Text(
+                                                'Sign Up',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ),
                               ),
                               SizedBox(
                                 height: 30,
@@ -995,67 +1023,70 @@ class GooeyCarouselState extends State<GooeyCarousel>
     } else if (message.contains('register screen')) {
       FirebaseAuth _auth = FirebaseAuth.instance;
       var currUser = _auth.currentUser;
-      // Navigator.pop(context);
-      newemailController.text = currUser.email;
-      fullnameController.text = currUser.displayName.isNotEmpty? currUser.displayName:'LovEats User';
-      uid = currUser.uid;
-      type = 2;
-      // setState(() {});
-      // bottomsheet2();
+      if (currUser.email != null) {
+        Navigator.pop(context);
+        newemailController.text = currUser.email;
+        fullnameController.text = currUser.displayName.isNotEmpty
+            ? currUser.displayName
+            : 'LovEats User';
+        uid = currUser.uid;
+        type = 2;
+        // setState(() {});
+        // bottomsheet2();
 
-  UserModel userModel = UserModel(
-        uid,
-        fullnameController.text,
-        newemailController.text,
-        '12345678',
-        '',
-        '');
-      print(uid);
-    var message = await _service.registerUserWithEmail(
-        userModel, _profilePicture, uid, type ?? 0);
-    print(message);
-    if (message == 'success') {
-      final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-      var udid;
-      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      if (Platform.isAndroid) {
-        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        udid = androidInfo.id;
-      } else {
-        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-        udid = iosInfo.identifierForVendor;
-      }
-      
-      _firebaseMessaging.getToken().then((tokeen) {
-        var data = {'device_id': udid, 'firebase_token': tokeen};
-        AppService().savedeicetoken(data).then((value) {
-          print(value);
-            loader=true;
-          Navigator.pushAndRemoveUntil(
+        UserModel userModel = UserModel(uid, fullnameController.text,
+            newemailController.text, '12345678', '', '');
+        print(uid);
+        var message = await _service.registerUserWithEmail(
+            userModel, _profilePicture, uid, type ?? 0);
+        print(message);
+        if (message == 'success') {
+          final FirebaseMessaging _firebaseMessaging =
+              FirebaseMessaging.instance;
+          var udid;
+          DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+          if (Platform.isAndroid) {
+            AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+            udid = androidInfo.id;
+          } else {
+            IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+            udid = iosInfo.identifierForVendor;
+          }
+
+          _firebaseMessaging.getToken().then((tokeen) {
+            var data = {'device_id': udid, 'firebase_token': tokeen};
+            AppService().savedeicetoken(data).then((value) {
+              print(value);
+              loader = true;
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) =>
+                          // BubbleTabBarDemo(type: '2')
+                          HomeScreen()),
+                  (route) => false);
+            });
+          });
+          loader = true;
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (_) =>
                       // BubbleTabBarDemo(type: '2')
-                      HomeScreen()),
-              (route) => false);
-        });
-
-      });
-        loader=true;
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (_) =>
-                  // BubbleTabBarDemo(type: '2')
-                  HomeScreen()));
-    } else {
-      showSnackBar(context, message);
-    }
-
-      
+                      HomeScreen()));
+        } else {
+          showSnackBar(context, message);
+        }
+      } else {
+        Toast.show(
+            'Something went wrong, Please try to login with different account',
+            context,
+            duration: 3);
+      }
     } else
       showSnackBar(context, message);
   }
+
   _signInWithAppleOnandroid(BuildContext context) async {
     var message = await Service().signInWithAppleonandroid(context);
     print(message);
@@ -1090,64 +1121,70 @@ class GooeyCarouselState extends State<GooeyCarousel>
       // FirebaseAuth _auth = FirebaseAuth.instance;
       // var currUser = _auth.currentUser;
       // Navigator.pop(context);
- 
-      newemailController.text = message['user'].email;
-      fullnameController.text = message['user'].displayName !=null? message['user'].displayName :'lovEats User';
-      uid = message['user'].uid;
-      type = 2;
-      // setState(() {});
-      // bottomsheet2();
+      if (message['user'].email != null) {
+        newemailController.text = message['user'].email;
+        fullnameController.text = message['user'].displayName != null
+            ? message['user'].displayName
+            : 'lovEats User';
+        uid = message['user'].uid;
+        type = 2;
+        // setState(() {});
+        // bottomsheet2();
 
-  UserModel userModel = UserModel(
-        message['user'].uid,
-        fullnameController.text,
-        newemailController.text,
-        '12345678',
-        '',
-        '');
-      print(uid);
-    var data = await _service.registerUserWithEmail(
-        userModel, _profilePicture, message['user'].uid, type ?? 0);
-    print(data);
-    if (data == 'success') {
-      final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-      var udid;
-      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      if (Platform.isAndroid) {
-        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        udid = androidInfo.id;
-      } else {
-        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-        udid = iosInfo.identifierForVendor;
-      }
-      
-      _firebaseMessaging.getToken().then((tokeen) {
-        var data = {'device_id': udid, 'firebase_token': tokeen};
-        AppService().savedeicetoken(data).then((value) {
-          print(value);
-            loader=true;
-          Navigator.pushAndRemoveUntil(
+        UserModel userModel = UserModel(
+            message['user'].uid,
+            fullnameController.text,
+            newemailController.text,
+            '12345678',
+            '',
+            '');
+        print(uid);
+        var data = await _service.registerUserWithEmail(
+            userModel, _profilePicture, message['user'].uid, type ?? 0);
+        print(data);
+        if (data == 'success') {
+          final FirebaseMessaging _firebaseMessaging =
+              FirebaseMessaging.instance;
+          var udid;
+          DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+          if (Platform.isAndroid) {
+            AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+            udid = androidInfo.id;
+          } else {
+            IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+            udid = iosInfo.identifierForVendor;
+          }
+
+          _firebaseMessaging.getToken().then((tokeen) {
+            var data = {'device_id': udid, 'firebase_token': tokeen};
+            AppService().savedeicetoken(data).then((value) {
+              print(value);
+              loader = true;
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) =>
+                          // BubbleTabBarDemo(type: '2')
+                          HomeScreen()),
+                  (route) => false);
+            });
+          });
+          loader = true;
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (_) =>
                       // BubbleTabBarDemo(type: '2')
-                      HomeScreen()),
-              (route) => false);
-        });
-
-      });
-        loader=true;
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (_) =>
-                  // BubbleTabBarDemo(type: '2')
-                  HomeScreen()));
-    } else {
-      showSnackBar(context, data);
-    }
-
-      
+                      HomeScreen()));
+        } else {
+          showSnackBar(context, data);
+        }
+      } else {
+        Toast.show(
+            'Something went wrong, Please try to login with different account',
+            context,
+            duration: 3);
+      }
     } else
       showSnackBar(context, message['msg']);
   }
@@ -1174,7 +1211,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
             print(value);
             Navigator.pop(context);
             Provider.of<ProviderService>(context, listen: false).allfalse();
-            loader=false;
+            loader = false;
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
@@ -1281,12 +1318,12 @@ class GooeyCarouselState extends State<GooeyCarousel>
         IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
         udid = iosInfo.identifierForVendor;
       }
-      
+
       _firebaseMessaging.getToken().then((tokeen) {
         var data = {'device_id': udid, 'firebase_token': tokeen};
         AppService().savedeicetoken(data).then((value) {
           print(value);
-            loader=true;
+          loader = true;
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
@@ -1295,9 +1332,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
                       HomeScreen()),
               (route) => false);
         });
-
       });
-        loader=true;
+      loader = true;
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(

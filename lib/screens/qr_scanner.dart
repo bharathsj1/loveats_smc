@@ -21,6 +21,7 @@ class _QrScannerState extends State<QrScanner> {
   QRViewController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool cameraon=true;
+  bool loading=true;
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -36,9 +37,97 @@ class _QrScannerState extends State<QrScanner> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+            appBar: AppBar(
+        backgroundColor: Colors.black.withOpacity(1),
+        elevation: 0,
+        title: Text(
+          'Scan QR',
+          style: TextStyle(color: AppColors.white),
+        ),
+        leading: InkWell(
+          onTap: () => Navigator.pop(context),
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: AppColors.white,
+          ),
+        ),
+      ),
+      // bottomNavigationBar: Container(
+      //   padding:EdgeInsets.all(10),
+      //   child: SingleChildScrollView(
+      //     scrollDirection: Axis.horizontal,
+      //     child: Row(
+      //           // mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //           children: [
+      //             InkWell(
+      //                 onTap: () async {
+      //                   await controller?.toggleFlash();
+      //                   setState(() {});
+      //                 },
+      //                 child: FutureBuilder(
+      //                   future: controller?.getFlashStatus(),
+      //                   builder: (context, snapshot) {
+      //                     return Icon(
+      //                         snapshot.data ? Icons.flash_on : Icons.flash_off,
+      //                         color: AppColors.secondaryElement);
+      //                   },
+      //                 )),
+        
+      //             // SizedBox(width: 10,)
+      //           cameraon? ElevatedButton(
+      //                       onPressed: () async {
+      //                         await controller?.pauseCamera();
+      //                         cameraon=false;
+      //                         setState(() {
+                                
+      //                         });
+      //                       },
+      //                       child: Icon(
+      //               Icons.pause,
+      //               color: AppColors.secondaryElement,
+      //               size: 26,
+      //             ),
+      //                     ): ElevatedButton(
+      //                       onPressed: () async {
+      //                         await controller?.resumeCamera();
+      //                         cameraon=true;
+      //                         setState(() {
+                                
+      //                         });
+      //                       },
+      //                       child: Icon(
+      //               Icons.play_arrow,
+      //               color: AppColors.secondaryElement,
+      //               size: 26,
+      //             ),
+      //                     ),
+                        
+                 
+      //             InkWell(
+      //                 onTap: () async {
+      //                   await controller?.flipCamera();
+      //                   setState(() {});
+      //                 },
+      //                 child: FutureBuilder(
+      //                   future: controller?.getCameraInfo(),
+      //                   builder: (context, snapshot) {
+      //                     if (snapshot.data != null) {
+      //                       return Icon(Icons.cameraswitch,
+      //                           color: AppColors.secondaryElement);
+      //                     } else {
+      //                       return Text('loading',
+      //                           style: TextStyle(color: Colors.black));
+      //                     }
+      //                   },
+      //                 )),
+      //           ],
+      //         ),
+      //   ),
+      // ),
+     
       body: Column(
         children: <Widget>[
-          Expanded( child: _buildQrView(context)),
+          Flexible( child: _buildQrView(context)),
           // Expanded(
           //   flex: 0,
           //   child: FittedBox(
@@ -154,7 +243,7 @@ class _QrScannerState extends State<QrScanner> {
               cutOutSize: scanArea),
           onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
         ),
-       controller !=null? Positioned(
+       !loading? Positioned(
             bottom: 15,
             left: 15,
             right: 15,
@@ -170,11 +259,11 @@ class _QrScannerState extends State<QrScanner> {
                       future: controller?.getFlashStatus(),
                       builder: (context, snapshot) {
                         return Icon(
-                            snapshot.data ? Icons.flash_on : Icons.flash_off,
+                          snapshot.hasData &&  snapshot.data ? Icons.flash_on : Icons.flash_off,
                             color: AppColors.secondaryElement);
                       },
                     )),
-
+                      
                 // SizedBox(width: 10,)
               cameraon? ElevatedButton(
                           onPressed: () async {
@@ -231,6 +320,7 @@ class _QrScannerState extends State<QrScanner> {
   void _onQRViewCreated(QRViewController controller) {
     setState(() {
       this.controller = controller;
+      loading=false;
     });
     controller.scannedDataStream.listen((scanData) async {
       controller.pauseCamera();

@@ -110,6 +110,7 @@ class AppService {
   }
   Future<dynamic> getrecipesub() async {
      String accessToken = await getAccessToken();
+     print(accessToken);
     dio.options.headers['Authorization'] = "Bearer " + accessToken;
     try {
       var resp = await this.dio.get(
@@ -136,8 +137,8 @@ class AppService {
   }
   
   Future<dynamic> checkradius(data) async {
-    String accessToken = await getAccessToken();
-    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    // String accessToken = await getAccessToken();
+    // dio.options.headers['Authorization'] = "Bearer " + accessToken;
     try {
       FormData formData = new FormData.fromMap(data);
       var resp = await this.dio.post("/restaurantWithinGivenKM", data: formData);

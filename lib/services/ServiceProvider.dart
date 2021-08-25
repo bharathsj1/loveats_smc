@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potbelly/models/subscription_model.dart';
+import 'package:toast/toast.dart';
 
 import 'appServices.dart';
 
@@ -10,11 +11,14 @@ class ServiceProvider with ChangeNotifier  {
   bool userloactionenable=false;
   var userlocaladdress;
   
-  getsubdata() async {
+  getsubdata(context) async {
     var res= await AppService().checksubweek();
    if(res['success']== true){
     usermealsub= res['already_subscribed'];
     freemealweek= res['free_meal_taken'];
+   }
+   else{
+       Toast.show('Comment is empty', context, duration: 3);
    }
     print(res);
     notifyListeners();

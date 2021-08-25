@@ -263,8 +263,8 @@ class _HomeScreenState extends State<HomeScreen> {
     print(_isGuest);
     // return;
     if (_isGuest == null || !_isGuest) {
-      Provider.of<ServiceProvider>(context, listen: false).getsubdata();
       getsubrecipe();
+      Provider.of<ServiceProvider>(context, listen: false).getsubdata(context);
     }
   }
 
@@ -323,7 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var response = await AppService().getrecipe();
     recipes = response['data'];
     print(recipes);
-    // loader3 = false;
+    loader3 = false;
     setState(() {});
   }
 

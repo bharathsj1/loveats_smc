@@ -716,7 +716,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () => Navigator.pushNamed(
                       context, AppRouter.userSubscriptionList).then((value) {
                         getSpecificUserSubscription();
-                        Provider.of<ServiceProvider>(context, listen: false).getsubdata();
+                        Provider.of<ServiceProvider>(context, listen: false).getsubdata(context);
                       }),
                 ),
                 // SettingsListTile(
