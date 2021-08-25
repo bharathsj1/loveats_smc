@@ -5,6 +5,7 @@ import 'dart:io' show Platform;
 import 'package:device_info/device_info.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_oauth/firebase_auth_oauth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -21,6 +22,7 @@ import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart';
+import 'package:toast/toast.dart';
 
 class Service {
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -79,6 +81,7 @@ class Service {
       print(value.data);
       if (value.data['success'] == true) {
         print('success');
+        print(value.data);
         _isEverthingFine = true;
         accessToken = value.data['access_token'];
         message = 'success';
@@ -179,6 +182,36 @@ class Service {
     }
   }
 
+   signInWithAppleonandroid(context) async {
+    await Service().removeGuest();
+
+     try{
+                  // OAuthCredential 
+                  User
+                  user = await FirebaseAuthOAuth()
+          .openSignInFlow("apple.com", ["email","name"],);
+          // ("apple.com", ["email"], {"locale": "en"});
+          print(user);
+          if(user!=null){
+              bool isUserAvailable = await checkIfUserAvailable(user.uid);
+        if (isUserAvailable) {
+          print('vailbale');
+          return {'msg':'successfully logged in','user':user};
+        } else {
+          print('not avai');
+          return {'msg':'register screen','user':user};
+        }
+          }
+                }
+                 on PlatformException catch (error) {
+                  print(error);
+                   Toast.show(error.message, context, duration: 3);
+                   return {'msg':error.message};
+                }
+
+  
+  }
+
   Future<void> logout(BuildContext context) async {
     await Service().removeGuest();
 
@@ -268,8 +301,9 @@ class Service {
         _isAvailable = true;
         UserData _user;
         var pref = await initializdPrefs();
-
+        print(_user);
         _user = UserData.fromJson(value.data);
+        print(_user);
         print(_user.data);
         await setKeyData('accessToken', _user.accessToken);
         await setKeyData('name', _user.data.custFirstName);

@@ -16,7 +16,6 @@ import 'package:potbelly/vendor_screens.dart/open_direction.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
-import 'package:flutter_gifimage/flutter_gifimage.dart';
 
 class New_Splash extends StatefulWidget {
   @override
@@ -25,7 +24,6 @@ class New_Splash extends StatefulWidget {
 
 class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  GifController controller;
 
   AnimationController animationcontroll;
   @override
@@ -58,9 +56,9 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
 
   @override
   dispose() {
-    if (controller != null) {
-      controller.dispose();
-    }
+    // if (controller != null) {
+    //   controller.dispose();
+    // }
     // animationcontroll.dispose();
     super.dispose();
   }

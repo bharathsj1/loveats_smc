@@ -135,6 +135,20 @@ class AppService {
     }
   }
   
+  Future<dynamic> checkradius(data) async {
+    String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      FormData formData = new FormData.fromMap(data);
+      var resp = await this.dio.post("/restaurantWithinGivenKM", data: formData);
+      print(resp);
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+  
   Future<dynamic> getrecipedetails(id) async {
     try {
       var resp = await this.dio.get(
@@ -190,6 +204,26 @@ class AppService {
   Future<String> getAccessToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString('accessToken');
+  }
+
+  Future localaddress() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var get= sharedPreferences.getString('localaddress');
+    if(get !=null){
+      return jsonDecode(get);
+    }
+    else return null;
+  }
+
+  Future savelocaladdress(getloc,location,address) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var data={
+      'location': getloc,
+      'address': address,
+      'coords': location
+    };
+   sharedPreferences.setString('localaddress', jsonEncode(data));
+   return 'saved';
   }
 
   Future<String> gettype() async {
