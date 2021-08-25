@@ -27,7 +27,7 @@ class _CartScreenState extends State<CartScreen> {
   List cartlist = [];
   List packlist = [];
   List newcart = [];
-  bool loader = true;
+  bool loader = false;
   bool cutlery = false;
   bool addrestip = false;
   double newrestip = 0.00;
@@ -173,7 +173,7 @@ class _CartScreenState extends State<CartScreen> {
   void initState() {
     getcartlist();
     // getpackcartlist();
-    getSpecificUserSubscription();
+    // getSpecificUserSubscription();
     super.initState();
   }
 

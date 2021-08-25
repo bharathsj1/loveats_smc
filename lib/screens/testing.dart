@@ -225,7 +225,7 @@ class _AddNewCartState extends State<AddNewCart> {
                                               child: TextField(
                                                 controller: cardnumber,
                                                 cursorColor: AppColors.secondaryElement,
-
+                                                maxLength: 16,
                                                 keyboardType:
                                                     TextInputType.number,
                                                     style: TextStyle(
@@ -237,6 +237,8 @@ class _AddNewCartState extends State<AddNewCart> {
                                                   // borderSide: new BorderSide(color: Colors.teal)),
                                                   //       contentPadding: EdgeInsets.all(5),
                                                   border: InputBorder.none,
+                                                  counterText: "",
+
                                                   // prefixIcon: Icon(
                                                   //   Icons.person,
                                                   //   color: mainColor,
@@ -589,78 +591,82 @@ class _AddNewCartState extends State<AddNewCart> {
       ),
       bottomNavigationBar:  Material(
         elevation: 5,
-        child: Container(
-          color: AppColors.white,
-          margin: EdgeInsets.only(top: 5),
-          height: 65,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-               loader?  Padding(
-          padding: const EdgeInsets.only(bottom:8.0),
-          child: Center(
-              child: CircularProgressIndicator(
-                valueColor:
-                    AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
+        child:  Padding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            color: AppColors.white,
+            margin: EdgeInsets.only(top: 5),
+            height: 65,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                 loader?  Padding(
+            padding: const EdgeInsets.only(bottom:8.0),
+            child: Center(
+                child: CircularProgressIndicator(
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
+                ),
               ),
+          ):    PotbellyButton(
+                  'Save Card',
+                  onTap: () async {
+
+                    FocusScope.of(context).unfocus();
+                    setState(() {
+                    loader=true;
+                      
+                    });
+                     if(this.cardnumber.text.trim() !='' && this.cardholder.text.trim() !=''&& this.expm.text.trim() !='' && this.expy.text.trim() !='' && this.cvv.text.trim() !=''  ){
+                       var data={
+                         'number': cardnumber.text,
+                         'name': cardholder.text,
+                         'phone': cardnumber.text,
+                         'email': 'ali@gmail.com',
+                         'cvc': cvv.text,
+                         'exp_month': expm.text,
+                         'exp_year': '2022',
+                       };
+                        var respo = await AppService().savecard(data);
+                        print(respo);
+                        if(respo['success'] == true){
+
+                        loader=false;
+                        Navigator.pop(context);
+                        Toast.show('New method saved', context, duration: 3);
+                        setState(() {
+                          
+                        });
+                        }
+                        else{
+                        loader=false;
+                           Toast.show('error', context, duration: 3);
+                        }
+
+                     }
+                  },
+                  buttonHeight: 45,
+                  buttonWidth: MediaQuery.of(context).size.width * 0.89,
+                  buttonTextStyle: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'roboto',
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: cardholder.text.trim().length >0 &&
+                      cardnumber.text.trim().length >0 && 
+                      expm.text.trim().length >0 &&
+                      expy.text.trim().length >0 &&
+                      cvv.text.trim().length >0 
+                      
+                          ? AppColors.secondaryElement
+                          : AppColors.grey),
+                ),
+              ],
             ),
-        ):    PotbellyButton(
-                'Save Card',
-                onTap: () async {
-
-                  FocusScope.of(context).unfocus();
-                  setState(() {
-                  loader=true;
-                    
-                  });
-                   if(this.cardnumber.text.trim() !='' && this.cardholder.text.trim() !=''&& this.expm.text.trim() !='' && this.expy.text.trim() !='' && this.cvv.text.trim() !=''  ){
-                     var data={
-                       'number': cardnumber.text,
-                       'name': cardholder.text,
-                       'phone': cardnumber.text,
-                       'email': 'ali@gmail.com',
-                       'cvc': cvv.text,
-                       'exp_month': expm.text,
-                       'exp_year': '2022',
-                     };
-                      var respo = await AppService().savecard(data);
-                      print(respo);
-                      if(respo['success'] == true){
-
-                      loader=false;
-                      Navigator.pop(context);
-                      Toast.show('New method saved', context, duration: 3);
-                      setState(() {
-                        
-                      });
-                      }
-                      else{
-                      loader=false;
-                         Toast.show('error', context, duration: 3);
-                      }
-
-                   }
-                },
-                buttonHeight: 45,
-                buttonWidth: MediaQuery.of(context).size.width * 0.89,
-                buttonTextStyle: TextStyle(
-                    fontSize: 18,
-                    fontFamily: 'roboto',
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    color: cardholder.text.trim().length >0 &&
-                    cardnumber.text.trim().length >0 && 
-                    expm.text.trim().length >0 &&
-                    expy.text.trim().length >0 &&
-                    cvv.text.trim().length >0 
-                    
-                        ? AppColors.secondaryElement
-                        : AppColors.grey),
-              ),
-            ],
           ),
         ),
       ),
