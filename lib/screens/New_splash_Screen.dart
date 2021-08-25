@@ -16,6 +16,7 @@ import 'package:potbelly/vendor_screens.dart/open_direction.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
+
 class New_Splash extends StatefulWidget {
   @override
   _New_SplashState createState() => _New_SplashState();
@@ -31,15 +32,14 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
     // controller.repeat(min: 0,max: 90,period: Duration(milliseconds: 3000));
     // controller.repeat(min: 0,max: 90,period: Duration(milliseconds: 3000));
     // precacheImage(AssetImage('assets/love_splash.gif'),context);
-   Future.delayed(const Duration(milliseconds: 5000), () {
-     navigatetonext(context);
+    Future.delayed(const Duration(milliseconds: 5000), () {
+      navigatetonext(context);
 // Here you can write your code
-  print('object');
-  // setState(() {
-  //   // Here you can write your code for open new view
-  // });
-
-});
+      print('object');
+      // setState(() {
+      //   // Here you can write your code for open new view
+      // });
+    });
 
     // TODO: implement initState
     // initialize();
@@ -49,7 +49,7 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
     // );
     // WidgetsBinding.instance.addPostFrameCallback((_){
     //   print('hereee');
-      
+
     // });
     super.initState();
   }
@@ -68,65 +68,59 @@ class _New_SplashState extends State<New_Splash> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Center(
-      //     child: Lottie.asset(
-      //   // 'assets/curryloveatsupdate.json',
-      //   'assets/loveats_splash2.json',
-      //   // 'assets/food2.json',
-      //   // 'assets/food3.json',
-      //   controller: animationcontroll,
+          //     child: Lottie.asset(
+          //   // 'assets/curryloveatsupdate.json',
+          //   'assets/loveats_splash2.json',
+          //   // 'assets/food2.json',
+          //   // 'assets/food3.json',
+          //   controller: animationcontroll,
 
-      //   onLoaded: (value) {
-      //     animationcontroll.addStatusListener((status) {
-      //       if (status == AnimationStatus.completed) {
-      //         navigatetonext(context);
-      //       }
-      //     });
-      //     animationcontroll
-      //       ..duration = value.duration
-      //       ..forward();
-      //   },
-      // )
+          //   onLoaded: (value) {
+          //     animationcontroll.addStatusListener((status) {
+          //       if (status == AnimationStatus.completed) {
+          //         navigatetonext(context);
+          //       }
+          //     });
+          //     animationcontroll
+          //       ..duration = value.duration
+          //       ..forward();
+          //   },
+          // )
 
-     child: Image.asset("assets/love_splash.gif",
-      fit: BoxFit.fill,
-      // frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-      //   print('herrrrrreeeee222');
-      //     if (wasSynchronouslyLoaded) {
-      //       return child;
-      //     }
-      //     return child;
-      // },
-           height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-)
+          child: Image.asset(
+        "assets/love_splash.gif",
+        fit: BoxFit.fill,
+        // frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+        //   print('herrrrrreeeee222');
+        //     if (wasSynchronouslyLoaded) {
+        //       return child;
+        //     }
+        //     return child;
+        // },
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+      )
 
+          //      child:  GifImage(
+          //         controller: controller,
+          //         fit: BoxFit.fill,
+          //          height: MediaQuery.of(context).size.height,
+          //         width: MediaQuery.of(context).size.width,
 
+          //         onFetchCompleted: (){
+          //     controller.animateTo(90,duration: Duration(milliseconds: 3000));
 
+          //  controller.addStatusListener((status) {
 
-  //      child:  GifImage(
-  //         controller: controller,
-  //         fit: BoxFit.fill,
-  //          height: MediaQuery.of(context).size.height,
-  //         width: MediaQuery.of(context).size.width,
+          //           if (status == AnimationStatus.completed) {
+          //             navigatetonext(context);
+          //             // print('hereeeeeee');
+          //           }
+          //         });
+          //         },
+          //         image: AssetImage("assets/love_splash.gif",),
 
-  //         onFetchCompleted: (){
-  //     controller.animateTo(90,duration: Duration(milliseconds: 3000));
-        
-  //  controller.addStatusListener((status) {
-
-  //           if (status == AnimationStatus.completed) {
-  //             navigatetonext(context);
-  //             // print('hereeeeeee');
-  //           }
-  //         });
-  //         },
-  //         image: AssetImage("assets/love_splash.gif",),
-          
-  //    )
-   
-
-     
-
+          //    )
 
           // child: SizedBox(
           //   child: FittedBox(
