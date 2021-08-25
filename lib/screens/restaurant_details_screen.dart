@@ -33,7 +33,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
-import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:skeleton_text/skeleton_text.dart';

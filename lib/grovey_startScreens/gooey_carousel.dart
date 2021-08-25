@@ -15,9 +15,13 @@ import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/vendor_screens.dart/Home_screen.dart';
 import 'package:potbelly/widgets/snackbar.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import './ProviderService.dart';
 import 'package:provider/provider.dart';
 import 'sun_moon.dart';
+import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_oauth/firebase_auth_oauth.dart';
 
 import 'gooey_edge_clipper.dart';
 
@@ -452,12 +456,26 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                             // child: Image.asset('assets/images/apple.png',height: 30,width: 30,),
                                           ),
                                         )
-                                      : Container(),
-                                  Platform.isIOS
-                                      ? SizedBox(
+                                      : InkWell(
+                                    onTap: () {
+                                      _signInWithAppleOnandroid(context);
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(10.0),
+                                      decoration: new BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
+                                      ),
+                                      child: new Icon(
+                                      FontAwesomeIcons.apple,
+                                      color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                   SizedBox(
                                           width: 50,
                                         )
-                                      : Container(),
+                                     ,
                                   InkWell(
                                     onTap: () {
                                       _signInWithGoogle(context);
@@ -977,25 +995,161 @@ class GooeyCarouselState extends State<GooeyCarousel>
     } else if (message.contains('register screen')) {
       FirebaseAuth _auth = FirebaseAuth.instance;
       var currUser = _auth.currentUser;
-      Navigator.pop(context);
+      // Navigator.pop(context);
       newemailController.text = currUser.email;
+      fullnameController.text = currUser.displayName.isNotEmpty? currUser.displayName:'LovEats User';
       uid = currUser.uid;
       type = 2;
-      setState(() {});
-      bottomsheet2();
+      // setState(() {});
+      // bottomsheet2();
 
-      // Navigator.pushAndRemoveUntil(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (_) => RegisterScreen(
-      //         email: currUser.email,
-      //          uid: currUser.uid,
-      //          type: 2,
-      //       ),
-      //     ),
-      //     (route) => false);
+  UserModel userModel = UserModel(
+        uid,
+        fullnameController.text,
+        newemailController.text,
+        '12345678',
+        '',
+        '');
+      print(uid);
+    var message = await _service.registerUserWithEmail(
+        userModel, _profilePicture, uid, type ?? 0);
+    print(message);
+    if (message == 'success') {
+      final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+      var udid;
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        udid = androidInfo.id;
+      } else {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        udid = iosInfo.identifierForVendor;
+      }
+      
+      _firebaseMessaging.getToken().then((tokeen) {
+        var data = {'device_id': udid, 'firebase_token': tokeen};
+        AppService().savedeicetoken(data).then((value) {
+          print(value);
+            loader=true;
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (_) =>
+                      // BubbleTabBarDemo(type: '2')
+                      HomeScreen()),
+              (route) => false);
+        });
+
+      });
+        loader=true;
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (_) =>
+                  // BubbleTabBarDemo(type: '2')
+                  HomeScreen()));
+    } else {
+      showSnackBar(context, message);
+    }
+
+      
     } else
       showSnackBar(context, message);
+  }
+  _signInWithAppleOnandroid(BuildContext context) async {
+    var message = await Service().signInWithAppleonandroid(context);
+    print(message);
+
+    if (message['msg'].contains('successfully')) {
+      var type = await AppService().gettype();
+      var udid;
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        udid = androidInfo.id;
+      } else {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        udid = iosInfo.identifierForVendor;
+      }
+      _firebaseMessaging.getToken().then((tokeen) {
+        var data = {'device_id': udid, 'firebase_token': tokeen};
+        AppService().savedeicetoken(data).then((value) {
+          print(value);
+          Navigator.pop(context);
+          Provider.of<ProviderService>(context, listen: false).allfalse();
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (_) =>
+                      // BubbleTabBarDemo(type: type,)
+                      type == '2' ? HomeScreen() : Vendor_Home_screen()),
+              (route) => false);
+        });
+      });
+    } else if (message['msg'].contains('register screen')) {
+      // FirebaseAuth _auth = FirebaseAuth.instance;
+      // var currUser = _auth.currentUser;
+      // Navigator.pop(context);
+ 
+      newemailController.text = message['user'].email;
+      fullnameController.text = message['user'].displayName !=null? message['user'].displayName :'lovEats User';
+      uid = message['user'].uid;
+      type = 2;
+      // setState(() {});
+      // bottomsheet2();
+
+  UserModel userModel = UserModel(
+        message['user'].uid,
+        fullnameController.text,
+        newemailController.text,
+        '12345678',
+        '',
+        '');
+      print(uid);
+    var data = await _service.registerUserWithEmail(
+        userModel, _profilePicture, message['user'].uid, type ?? 0);
+    print(data);
+    if (data == 'success') {
+      final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+      var udid;
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        udid = androidInfo.id;
+      } else {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        udid = iosInfo.identifierForVendor;
+      }
+      
+      _firebaseMessaging.getToken().then((tokeen) {
+        var data = {'device_id': udid, 'firebase_token': tokeen};
+        AppService().savedeicetoken(data).then((value) {
+          print(value);
+            loader=true;
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (_) =>
+                      // BubbleTabBarDemo(type: '2')
+                      HomeScreen()),
+              (route) => false);
+        });
+
+      });
+        loader=true;
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (_) =>
+                  // BubbleTabBarDemo(type: '2')
+                  HomeScreen()));
+    } else {
+      showSnackBar(context, data);
+    }
+
+      
+    } else
+      showSnackBar(context, message['msg']);
   }
 
   _signInWithEmail(BuildContext context, TextEditingController emailCont,

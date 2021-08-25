@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lottie/lottie.dart';
@@ -28,10 +29,11 @@ import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/heading_row.dart';
 import 'package:potbelly/widgets/search_input_field.dart';
 import 'package:provider/provider.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 import 'package:toast/toast.dart';
 import 'package:video_player/video_player.dart';
-
+import 'package:geocoder/geocoder.dart';
 import 'Recipe_list.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -66,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isGuest = false;
   bool lottie = false;
   bool lottie2 = false;
+  
   String selected_address = 'Your Location';
   List subscription = [
     'assets/images/sub3.png',
@@ -88,7 +91,171 @@ class _HomeScreenState extends State<HomeScreen> {
     getrecipes();
     getpopularitem();
     isUserGuest();
+    checklocation();
     super.initState();
+  }
+
+  checklocation() async {
+    var res = await AppService().localaddress();
+    if (res != null) {
+      Provider.of<ServiceProvider>(context, listen: false).checklocation();
+    } else {
+      userlocation();
+    }
+  }
+
+  userlocation() async {
+    var location = await _determinePosition();
+    if (location != null) {
+       var addresses = await Geocoder.local.findAddressesFromCoordinates(Coordinates(location.latitude, location.longitude));
+     print(addresses[0]);
+     var locdata={
+       'latitude':location.latitude,
+       'longitude':location.longitude,
+     };
+
+     var addressdata={
+       'addressLine':addresses[0].addressLine,
+       'city': addresses[0].locality,
+       'country': addresses[0].countryName,
+     };
+
+      AppService().savelocaladdress(true, locdata,addressdata);
+      Provider.of<ServiceProvider>(context, listen: false).checklocation();
+
+    } else {
+      locationalert();
+    }
+  }
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Toast.show(
+          'Location services are disabled. Turn on your location', context,
+          duration: 4);
+      // return Future.error('Location services are disabled.');
+      return null;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Toast.show(
+            'Location permissions are denied. Turn on your location', context,
+            duration: 4);
+        // return Future.error('Location permissions are denied');
+        return null;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      Toast.show(
+          'Location permissions are permanently denied, we cannot request permissions. Turn on your location',
+          context,
+          duration: 4);
+      // return Future.error(
+      //   'Location permissions are permanently denied, we cannot request permissions.');
+      return null;
+    }
+    return await Geolocator.getCurrentPosition();
+  }
+
+  locationalert() {
+    var alertStyle = AlertStyle(
+        animationType: AnimationType.fromTop,
+        isCloseButton: false,
+        isOverlayTapDismiss: false,
+        descStyle: TextStyle(
+            fontWeight: FontWeight.normal, color: Colors.grey, fontSize: 16),
+        animationDuration: Duration(milliseconds: 400),
+        alertBorder: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.0),
+          side: BorderSide(
+            color: Colors.grey,
+          ),
+        ),
+        titleStyle: TextStyle(
+            color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
+        constraints: BoxConstraints.expand(width: 300),
+        //First to chars "55" represents transparency of color
+        // overlayColor: Color(0x55000000),
+
+        alertElevation: 1,
+        alertAlignment: Alignment.center);
+
+    return Alert(
+      context: context,
+      style: alertStyle,
+      // type: AlertType.info,
+
+      title: "Important".toUpperCase(),
+      desc:
+          "Please allow location permission and turn on your location to see best restaurant near you",
+      image: Image.asset(
+        'assets/images/alert.png',
+        alignment: Alignment.center,
+        height: 50,
+        width: 50,
+      ),
+
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Close",
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+          height: 40,
+          onPressed: () async {
+            Navigator.pop(context);
+            var location = await _determinePosition();
+            if (location != null) {
+              var addresses = await Geocoder.local.findAddressesFromCoordinates(Coordinates(location.latitude, location.longitude));
+       var locdata={
+       'latitude':location.latitude,
+       'longitude':location.longitude,
+     };
+
+     var addressdata={
+       'addressLine':addresses[0].addressLine,
+       'city': addresses[0].locality,
+       'country': addresses[0].countryName,
+     };
+      AppService().savelocaladdress(true, locdata,addressdata);
+      Provider.of<ServiceProvider>(context, listen: false).checklocation();
+
+            } else {
+              AppService().savelocaladdress(false, null,null);
+      Provider.of<ServiceProvider>(context, listen: false).checklocation();
+
+            }
+            // userlocation();
+          },
+          // color: Color.fromRGBO(0, 179, 134, 1.0),
+          color: AppColors.grey,
+          radius: BorderRadius.circular(5.0),
+        ),
+        DialogButton(
+          child: Text(
+            "Retry",
+            style: TextStyle(color: Colors.white, fontSize:16,letterSpacing: 1.1),
+          ),
+          height: 40,
+
+          onPressed: () {
+            Navigator.pop(context);
+            userlocation();
+          },
+          // color: Color.fromRGBO(0, 179, 134, 1.0),
+          color: AppColors.secondaryElement,
+          radius: BorderRadius.circular(5.0),
+        ),
+        
+      ],
+    ).show();
   }
 
   checkguestandcall() async {
@@ -96,8 +263,8 @@ class _HomeScreenState extends State<HomeScreen> {
     print(_isGuest);
     // return;
     if (_isGuest == null || !_isGuest) {
-    Provider.of<ServiceProvider>(context, listen: false).getsubdata();
-    getsubrecipe();
+      Provider.of<ServiceProvider>(context, listen: false).getsubdata();
+      getsubrecipe();
     }
   }
 
@@ -1087,7 +1254,7 @@ class _HomeScreenState extends State<HomeScreen> {
               //   setState(() {});
               // }
               if (name == 'Table Service') {
-                Navigator.pushNamed(context, AppRouter.Table_Scanner);
+                Navigator.pushNamed(context, AppRouter.Qr_Scanner,arguments: this.resturants);
               } else {
                 Navigator.pushNamed(context, AppRouter.Filter_Items,
                     arguments: {
@@ -1137,14 +1304,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScopeNode currentFocus = FocusScope.of(context);
-        if (!currentFocus.hasPrimaryFocus) {
-          currentFocus.unfocus();
-        }
-      },
-      child: Scaffold(
+    return GestureDetector(onTap: () {
+      FocusScopeNode currentFocus = FocusScope.of(context);
+      if (!currentFocus.hasPrimaryFocus) {
+        currentFocus.unfocus();
+      }
+    }, child: Consumer<ServiceProvider>(builder: (context, service, child) {
+      return Scaffold(
         // appBar: PreferredSize(
         //   preferredSize: Size(MediaQuery.of(context).size.width, 0),
         //   child: AppBar(
@@ -1225,7 +1391,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     .width *
                                                 0.40,
                                             child: Text(
-                                              selected_address,
+                                              service.userlocaladdress == null
+                                                  ? 'Unknown Location'
+                                                  : 
+                                                  service.userlocaladdress['addressLine'],
+                                                  // 'location',
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold),
@@ -2020,8 +2190,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-      ),
-    );
+      );
+    }));
   }
 
   bottomSheetForLocation(BuildContext context) async {
@@ -2033,9 +2203,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Handle the result in your way
     if (result != null) {
-      print(result.latLng);
-      selected_address = result.formattedAddress;
-      setState(() {});
+       var locdata={
+       'latitude':result.latLng.latitude,
+       'longitude':result.latLng.longitude,
+     };
+
+     var addressdata={
+       'addressLine': result.formattedAddress,
+       'city': result.city.name,
+       'country': result.country.name
+     };
+
+      AppService().savelocaladdress(true, locdata,addressdata);
+      Provider.of<ServiceProvider>(context, listen: false).checklocation();
+      // selected_address = result.formattedAddress;
+      // setState(() {});
     }
 
     // return showModalBottomSheet(

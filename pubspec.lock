@@ -295,6 +295,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.2"
+  firebase:
+    dependency: transitive
+    description:
+      name: firebase
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "9.0.1"
   firebase_auth:
     dependency: "direct main"
     description:
@@ -302,6 +309,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  firebase_auth_oauth:
+    dependency: "direct main"
+    description:
+      name: firebase_auth_oauth
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
+  firebase_auth_oauth_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_auth_oauth_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
+  firebase_auth_oauth_web:
+    dependency: transitive
+    description:
+      name: firebase_auth_oauth_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
   firebase_auth_platform_interface:
     dependency: transitive
     description:
@@ -391,13 +419,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
-  flutter_gifimage:
-    dependency: "direct main"
-    description:
-      name: flutter_gifimage
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
   flutter_hooks:
     dependency: "direct main"
     description:
@@ -506,6 +527,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  geocoder:
+    dependency: "direct main"
+    description:
+      name: geocoder
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.1"
   geolocator:
     dependency: "direct main"
     description:
@@ -891,6 +919,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  qr_code_scanner:
+    dependency: "direct main"
+    description:
+      name: qr_code_scanner
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.2"
   quiver:
     dependency: transitive
     description:
@@ -905,13 +940,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
-  rotated_corner_decoration:
-    dependency: "direct main"
-    description:
-      name: rotated_corner_decoration
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   rxdart:
     dependency: transitive
     description:

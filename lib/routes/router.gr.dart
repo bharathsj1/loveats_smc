@@ -35,6 +35,7 @@ import 'package:potbelly/screens/login_screen.dart';
 import 'package:potbelly/screens/myorder_details.dart';
 import 'package:potbelly/screens/orderlist.dart';
 import 'package:potbelly/screens/paymentsuccess.dart';
+import 'package:potbelly/screens/qr_scanner.dart';
 import 'package:potbelly/screens/resturant_info.dart';
 import 'package:potbelly/screens/splash_screen.dart';
 import 'package:potbelly/screens/forgot_password_screen.dart';
@@ -144,6 +145,7 @@ class AppRouter {
   static const View_Gallery = '/View_Gallery';
   static const Add_post_comments = '/Add_post_comments';
   static const Filtered_Restaurant = '/Filtered_Restaurant';
+  static const Qr_Scanner = '/Qr_Scanner';
   static const testing = '/testing';
 
   static const userAddresses = '/user_addresses';
@@ -214,6 +216,11 @@ class AppRouter {
       case AppRouter.Recipe_details:
         return MaterialPageRoute<dynamic>(
           builder: (_) => RecipeDetails(data: args,),
+          settings: settings,
+        );
+      case AppRouter.Qr_Scanner:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => QrScanner(data: args,),
           settings: settings,
         );
       case AppRouter.Steps_Screen:
