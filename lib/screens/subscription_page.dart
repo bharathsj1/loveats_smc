@@ -68,7 +68,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                   alignment: Alignment.center,
                   color: AppColors.secondaryElement,
                   child: Text(
-                    'Choose Your Subscription',
+                    'Available plans',
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -111,7 +111,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
             const SizedBox(
               height: 20.0,
             ),
-            PotbellyButton('Subscribe', onTap: () async {
+            PotbellyButton('Join now', onTap: () async {
               String userId = await Service().getUserId();
               print(userId);
 

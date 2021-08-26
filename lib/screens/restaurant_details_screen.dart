@@ -2052,7 +2052,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     //       RemovedSwipeItem(animation: animation),
     // );
     var cart;
-    cart = await CartProvider().getcartslist();
+    cart = await Provider.of<CartProvider>(context, listen: false).getcartslist();
     for (var i = 0; i < fooditems.length; i++) {
       int index = cart.indexWhere((x) => x['id'] == fooditems[i]['id']);
       if (index == -1) {
@@ -2158,7 +2158,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
     //       RemovedSwipeItem(animation: animation),
     // );
     var cart;
-    cart = await CartProvider().getcartslist();
+    cart = await Provider.of<CartProvider>(context, listen: false).getcartslist();
     for (var j = 0; j < fooditemswithcat.length; j++) {
       for (var i = 0; i < fooditemswithcat[j]['menuItems'].length; i++) {
         int index = cart.indexWhere(
@@ -2177,7 +2177,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
 
   checkchanges(newfooditems) async {
     var cart;
-    cart = await CartProvider().getcartslist();
+    cart = await Provider.of<CartProvider>(context, listen: false).getcartslist();
     for (var i = 0; i < newfooditems.length; i++) {
       int index = cart.indexWhere((x) => x['id'] == newfooditems[i]['id']);
       if (index == -1) {
@@ -2192,7 +2192,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
 
   checkcomplete() async {
         var cart;
-    cart = await CartProvider().getcartslist();
+    cart = await Provider.of<CartProvider>(context, listen: false).getcartslist();
     if(cart.length == 0){
           cartbtn = false;
 

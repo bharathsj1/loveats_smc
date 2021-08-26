@@ -9,6 +9,7 @@ class CartProvider with ChangeNotifier {
   List uchatlist = [];
   double totalAmount = 0.0;
   double packtotalAmount = 0.0;
+  int cartitemlength=0;
 
    void updatecartaddon(context, product ,newaddon,oldaddon) async {
      await getcarts();
@@ -312,6 +313,7 @@ class CartProvider with ChangeNotifier {
       print('cartitems');
       print(cartitems);
       print(cartitems.length);
+      cartitemlength= cartitems.length;
       double total = 0;
       cartitems.forEach((f) {
         total += (f['price']) * double.parse(f['qty']);
@@ -322,6 +324,8 @@ class CartProvider with ChangeNotifier {
       notifyListeners();
     } else {
       cartitems.clear();
+      cartitemlength= 0;
+    notifyListeners();
       return cartitems;
     }
   }
@@ -356,9 +360,13 @@ class CartProvider with ChangeNotifier {
 
       print('cartitems');
       print(cartitems.length);
+     cartitemlength= cartitems.length;
+    notifyListeners();
       return cartitems;
     } else {
       cartitems.clear();
+         cartitemlength= 0;
+    notifyListeners();
       return cartitems;
     }
   }

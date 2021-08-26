@@ -4,6 +4,7 @@ import 'package:potbelly/screens/custom_header.dart';
 import 'package:potbelly/services/cartservice.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
+import 'package:provider/provider.dart';
 
 class Cart extends StatefulWidget {
   static const int TAB_NO = 1;
@@ -20,7 +21,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
   int shipping = 3;
 
   getcartlist() async {
-    var cart = await CartProvider().getcartslist();
+    var cart = await Provider.of<CartProvider>(context, listen: false).getcartslist();
     cartlist.clear();
     for (var item in cart) {
       cartlist.add(item);

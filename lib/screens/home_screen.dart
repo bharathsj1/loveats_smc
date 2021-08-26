@@ -23,6 +23,7 @@ import 'package:potbelly/screens/settings_screen.dart';
 import 'package:potbelly/services/DatabaseManager.dart';
 import 'package:potbelly/services/ServiceProvider.dart';
 import 'package:potbelly/services/appServices.dart';
+import 'package:potbelly/services/cartservice.dart';
 import 'package:potbelly/services/firebaseSetup.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
@@ -35,6 +36,7 @@ import 'package:toast/toast.dart';
 import 'package:video_player/video_player.dart';
 import 'package:geocoder/geocoder.dart';
 import 'Recipe_list.dart';
+import 'package:badges/badges.dart';
 
 class HomeScreen extends StatefulWidget {
   static const int TAB_NO = 0;
@@ -92,6 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
     getpopularitem();
     isUserGuest();
     checklocation();
+     Provider.of<CartProvider>(context, listen: false).getcartslist();
     super.initState();
   }
 
@@ -1309,8 +1312,9 @@ class _HomeScreenState extends State<HomeScreen> {
       if (!currentFocus.hasPrimaryFocus) {
         currentFocus.unfocus();
       }
-    }, child: Consumer<ServiceProvider>(builder: (context, service, child) {
-      return Scaffold(
+    }, child: Consumer<CartProvider>(builder: (context, cartservice, child) {
+      return Consumer<ServiceProvider>(builder: (context, service, child) {
+      return  Scaffold(
         // appBar: PreferredSize(
         //   preferredSize: Size(MediaQuery.of(context).size.width, 0),
         //   child: AppBar(
@@ -1421,28 +1425,32 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(right: 20.0),
-                                  child: InkWell(
-                                      onTap: () async {
-                                        Navigator.pushNamed(
-                                          context,
-                                          AppRouter.cart_Screen,
-                                        );
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.rectangle,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: Colors.grey[300],
-                                                  blurRadius: 7.0,
-                                                  spreadRadius: 0.5),
-                                            ]),
-                                        child: Icon(
-                                          OMIcons.shoppingCart,
-                                          color: AppColors.black,
-                                          size: 21,
-                                        ),
-                                      )),
+                                  child:  InkWell(
+                                        onTap: () async {
+                                          Navigator.pushNamed(
+                                            context,
+                                            AppRouter.cart_Screen,
+                                          );
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.rectangle,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    color: Colors.grey[300],
+                                                    blurRadius: 7.0,
+                                                    spreadRadius: 0.5),
+                                              ]),
+                                          child: Badge(
+                                    badgeColor: AppColors.secondaryElement,
+      badgeContent: Text(cartservice.cartitemlength.toString(),style: TextStyle(color: Colors.white,fontSize: 12)),
+                                    child: Icon(
+                                            OMIcons.shoppingCart,
+                                            color: AppColors.black,
+                                            size: 21,
+                                          ),
+                                        )),
+                                  ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(right: 15.0),
@@ -2190,7 +2198,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
+
       );
+      });
     }));
   }
 

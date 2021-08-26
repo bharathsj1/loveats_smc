@@ -3,6 +3,7 @@ import 'package:potbelly/main.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/cartservice.dart';
 import 'package:potbelly/values/values.dart';
+import 'package:provider/provider.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 
 class AddExtraScreen extends StatefulWidget {
@@ -166,6 +167,7 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
                   print(cartdata);
                   print(this.itemqty);
                   CartProvider().addToCart(context, cartdata);
+                  Provider.of<CartProvider>(context, listen: false).getcartslist();
                   // if (fooditems[index]['cart'] !=
                   //         null &&
                   //     fooditems[index]['cart'] ==
@@ -184,7 +186,7 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
                   // print(fooditems[index]);
                   // Navigator.pop(context);
                   setState(() {});
-                  Navigator.pop(context);
+                  Navigator.pop(context); 
                 }
               },
               child: Container(

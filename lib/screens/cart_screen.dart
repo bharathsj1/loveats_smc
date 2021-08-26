@@ -55,7 +55,7 @@ class _CartScreenState extends State<CartScreen> {
 
   getcartlist() async {
     print(await Service().getUserdata());
-    var cart = await CartProvider().getcartslist();
+    var cart = await Provider.of<CartProvider>(context, listen: false).getcartslist();
     cartlist.clear();
     newcart.clear();
     print(cart);

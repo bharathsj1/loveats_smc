@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/screens/New_splash_Screen.dart';
 import 'package:potbelly/services/ServiceProvider.dart';
+import 'package:potbelly/services/cartservice.dart';
 import 'package:potbelly/theme.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -25,6 +26,7 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => ProviderService()),
         ChangeNotifierProvider(create: (_) => ServiceProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
       ],
       child: Consumer<ProviderService>(
         builder: (context, appState, child) {

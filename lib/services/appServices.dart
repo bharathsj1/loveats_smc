@@ -125,6 +125,7 @@ class AppService {
   Future<dynamic> checksubweek() async {
      String accessToken = await getAccessToken();
     dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    print(accessToken);
     try {
       var resp = await this.dio.get(
             "/checkAllMealSubscription",

@@ -6,6 +6,7 @@ import 'package:potbelly/services/cartservice.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
+import 'package:provider/provider.dart';
 
 class OldCartScreen extends StatefulWidget {
   const OldCartScreen({Key key}) : super(key: key);
@@ -37,7 +38,7 @@ class _OldCartScreenState extends State<OldCartScreen> {
 
   getcartlist() async {
     print(await Service().getUserdata());
-    var cart = await CartProvider().getcartslist();
+    var cart = await Provider.of<CartProvider>(context, listen: false).getcartslist();
     cartlist.clear();
     newcart.clear();
     print(cart);
