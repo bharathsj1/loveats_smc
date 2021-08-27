@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_stripe/flutter_stripe.dart' hide Card;
+import 'package:flutter_stripe/flutter_stripe.dart' ;
+import 'package:potbelly/Stripe_cards/loading_button.dart';
 import 'package:potbelly/models/get_all_subscription_model.dart';
 import 'package:potbelly/models/specific_user_subscription_model.dart';
 import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/paymentservice.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/subscription_webview.dart';
@@ -30,6 +32,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   @override
   void initState() {
     getSubscriptionPlans();
+    // storesubs();
     // getSpecificUserSubscription();
     super.initState();
   }
@@ -51,6 +54,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   //   _isLoading = false;
   //   setState(() {});
   // }
+
+  CardFieldInputDetails _card;
 
   @override
   Widget build(BuildContext context) {
@@ -86,15 +91,95 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                           index,
                         );
                       }),
-                )
+                ),
+              
               ],
             ),
+      // body:   Column(
+      //   children: [
+      //     Padding(
+      //       padding: EdgeInsets.all(16),
+      //       child: CardField(
+      //         // autofocus: true,
+      //         cvcHintText: 'CVC',
+      //         enablePostalCode: false,
+      //         expirationHintText: 'MM/YY',
+      //         numberHintText: '4242424242424242',
+      //         postalCodeHintText: 'postal code',
+      //         cursorColor: Colors.grey,
+              
+      //         onCardChanged: (card) {
+      //           setState(() {
+      //             _card = card;
+      //           });
+      //         },
+      //       ),
+      //     ),
+      //     Padding(
+      //       padding: EdgeInsets.symmetric(horizontal: 16),
+      //       child: LoadingButton(
+      //         onPressed: _card?.complete == true ? _handlePayPress : null,
+      //         text: 'Pay',
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 
-  Card buildCard(BuildContext context, int index) {
+  
+  Future<void> _handlePayPress() async {
+    if (_card == null) {
+      return;
+    }
+
+    try {
+
+    // 1. Gather customer billing information (ex. email)
+
+    final billingDetails = BillingDetails(
+      email: 'email@stripe.com',
+      phone: '+48888000888',
+      address: Address(
+        city: 'Houston',
+        country: 'US',
+        line1: '1459  Circle Drive',
+        line2: '',
+        state: 'Texas',
+        postalCode: '77063',
+      ),
+    ); // mocked data for tests
+
+    // 2. Create payment method
+    final paymentMethod =
+        await Stripe.instance.createPaymentMethod(PaymentMethodParams.card());
+    //   billingDetails: billingDetails,
+    // ));
+    // pm_1JTArvHxiL0NyAbFpH42h9yq
+    print(paymentMethod);
+
+    // 3. call API to create PaymentIntent
+    // final paymentIntentResult = await callNoWebhookPayEndpointMethodId(
+    //   useStripeSdk: true,
+    //   paymentMethodId: paymentMethod.id,
+    //   currency: 'usd', // mocked data
+    //   items: [
+    //     {'id': 'id'}
+    //   ],
+    // );
+
+
+
+    } catch (e) {
+       ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: $e')));
+    }
+  }
+
+
+  Container buildCard(BuildContext context, int index) {
     var data = _getAllSubscriptionModel.data[index];
-    return Card(
+    return Container(
       child: Container(
         width: MediaQuery.of(context).size.width * 0.90,
         margin: EdgeInsets.all(10),
@@ -122,17 +207,21 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
               bool isDone = await checkAlreadyApplied(userId, data.id);
               if (isDone) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => SubscriptionWebview(
-                      planId: data.id,
-                      userId: userId,
-                      isrecipe: false,
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (_) => SubscriptionWebview(
+                //       planId: data.id,
+                //       userId: userId,
+                //       isrecipe: false,
                       
-                    ),
-                  ),
-                );
+                //     ),
+                //   ),
+                // );
+                 Navigator.pushNamed(context, AppRouter.testing,
+                                    arguments: {
+                                      'subscribe':true
+                                    });
               } else {
                 Toast.show(
                     'You are already subscribed for this package', context);
@@ -154,6 +243,16 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     _isLoading = false;
     print(_getAllSubscriptionModel);
     // getSpecificUserSubscription();
+    setState(() {});
+  }
+
+   storesubs() async {
+     var data={
+      //  'user_id':42,
+       'payment_method_id':'pm_1JTArvHxiL0NyAbFpH42h9yq'
+     };
+    var response = await AppService().storesub(data);
+    print(response);
     setState(() {});
   }
 

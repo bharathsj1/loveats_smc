@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart' hide Card;
 import 'package:potbelly/services/appServices.dart';
+import 'package:potbelly/services/paymentservice.dart';
+import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,7 +32,7 @@ class _AddNewCartState extends State<AddNewCart> {
   bool checkBoxValue = true;
   // PaymentMethod _paymentMethod;
   dynamic _item;
-  bool loader=false;
+  bool loader = false;
 
   var service = AppService();
 
@@ -45,6 +48,9 @@ class _AddNewCartState extends State<AddNewCart> {
   var username = "";
   var id;
   var photo = "";
+  bool usecustomcard = false;
+
+  CardDetails _card = CardDetails();
 
   localdata() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -69,6 +75,8 @@ class _AddNewCartState extends State<AddNewCart> {
 
   @override
   void initState() {
+    this.usecustomcard = widget.data['subscribe'];
+    setState(() {});
     super.initState();
   }
 
@@ -106,7 +114,7 @@ class _AddNewCartState extends State<AddNewCart> {
         ),
         // centerTitle: true,
         title: Text(
-          'Add a Payment method',
+          usecustomcard ? 'Buy Subscription' : 'Add a Payment method',
           style: Styles.customTitleTextStyle(
             color: AppColors.black,
             fontWeight: FontWeight.bold,
@@ -224,14 +232,21 @@ class _AddNewCartState extends State<AddNewCart> {
                                               width: 170,
                                               child: TextField(
                                                 controller: cardnumber,
-                                                cursorColor: AppColors.secondaryElement,
+                                                cursorColor:
+                                                    AppColors.secondaryElement,
                                                 maxLength: 16,
+                                                onChanged: (number) {
+                                                  setState(() {
+                                                    _card = _card.copyWith(
+                                                        number: number);
+                                                  });
+                                                },
                                                 keyboardType:
                                                     TextInputType.number,
-                                                    style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.grey,
-                                                  ),
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.grey,
+                                                ),
                                                 decoration: InputDecoration(
                                                   //         border: new OutlineInputBorder(
                                                   // borderSide: new BorderSide(color: Colors.teal)),
@@ -250,7 +265,6 @@ class _AddNewCartState extends State<AddNewCart> {
                                                     fontSize: 14,
                                                     color: Colors.grey,
                                                   ),
-                                                  
 
                                                   // border:OutlineInputBorder(
                                                   //   borderRadius:BorderRadius.circular(20.0),
@@ -334,12 +348,13 @@ class _AddNewCartState extends State<AddNewCart> {
                                                   0.75,
                                               child: TextField(
                                                 controller: cardholder,
-                                                cursorColor: AppColors.secondaryElement,
+                                                cursorColor:
+                                                    AppColors.secondaryElement,
 
-                                                 style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.grey,
-                                                  ),
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.grey,
+                                                ),
                                                 decoration: InputDecoration(
                                                   // contentPadding: EdgeInsets.all(5),
                                                   border: InputBorder.none,
@@ -400,13 +415,22 @@ class _AddNewCartState extends State<AddNewCart> {
                                                   width: 30,
                                                   child: TextField(
                                                     controller: expm,
-                                                cursorColor: AppColors.secondaryElement,
+                                                    cursorColor: AppColors
+                                                        .secondaryElement,
 
                                                     maxLength: 2,
-                                                     style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.grey,
-                                                  ),
+                                                    onChanged: (number) {
+                                                      setState(() {
+                                                        _card = _card.copyWith(
+                                                            expirationMonth:
+                                                                int.tryParse(
+                                                                    number));
+                                                      });
+                                                    },
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.grey,
+                                                    ),
                                                     keyboardType:
                                                         TextInputType.number,
                                                     decoration: InputDecoration(
@@ -448,13 +472,21 @@ class _AddNewCartState extends State<AddNewCart> {
                                                   width: 30,
                                                   child: TextField(
                                                     controller: expy,
-                                                cursorColor: AppColors.secondaryElement,
-
+                                                    cursorColor: AppColors
+                                                        .secondaryElement,
+                                                    onChanged: (number) {
+                                                      setState(() {
+                                                        _card = _card.copyWith(
+                                                            expirationYear:
+                                                                int.tryParse(
+                                                                    number));
+                                                      });
+                                                    },
                                                     maxLength: 2,
-                                                     style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.grey,
-                                                  ),
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.grey,
+                                                    ),
                                                     keyboardType:
                                                         TextInputType.number,
                                                     decoration: InputDecoration(
@@ -510,13 +542,19 @@ class _AddNewCartState extends State<AddNewCart> {
                                               width: 30,
                                               child: TextField(
                                                 controller: cvv,
-                                                cursorColor: AppColors.secondaryElement,
-
+                                                cursorColor:
+                                                    AppColors.secondaryElement,
+                                                onChanged: (number) {
+                                                  setState(() {
+                                                    _card = _card.copyWith(
+                                                        cvc: number);
+                                                  });
+                                                },
                                                 maxLength: 3,
-                                                 style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.grey,
-                                                  ),
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.grey,
+                                                ),
                                                 keyboardType:
                                                     TextInputType.number,
                                                 decoration: InputDecoration(
@@ -548,33 +586,6 @@ class _AddNewCartState extends State<AddNewCart> {
                                   ],
                                 ),
                               ),
-                              // Padding(
-                              //   padding: const EdgeInsets.only(left: 10),
-                              //   child: Row(
-                              //     mainAxisAlignment: MainAxisAlignment.start,
-                              //     children: [
-                              //       Container(
-                              //         child: Checkbox(
-                              //             value: savecard,
-                              //             activeColor: AppColors.secondaryElement,
-                              //             onChanged: (bool newValue) {
-                              //               setState(() {
-                              //                 savecard = newValue;
-                              //               });
-                              //             }),
-                              //       ),
-                              //       Container(
-                              //           // width: MediaQuery.of(context).size.width * 0.6,
-                              //           child: Text(
-                              //         'SAVE CARD',
-                              //         style: TextStyle(fontSize: 10),
-                              //       )),
-                              //     ],
-                              //   ),
-                              // ),
-                              // SizedBox(
-                              //   height: 40,
-                              // ),
                             ],
                           ),
 
@@ -589,11 +600,11 @@ class _AddNewCartState extends State<AddNewCart> {
           ],
         ),
       ),
-      bottomNavigationBar:  Material(
+      bottomNavigationBar: Material(
         elevation: 5,
-        child:  Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Container(
             color: AppColors.white,
             margin: EdgeInsets.only(top: 5),
@@ -602,69 +613,124 @@ class _AddNewCartState extends State<AddNewCart> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                 loader?  Padding(
-            padding: const EdgeInsets.only(bottom:8.0),
-            child: Center(
-                child: CircularProgressIndicator(
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
-                ),
-              ),
-          ):    PotbellyButton(
-                  'Save Card',
-                  onTap: () async {
-
-                    FocusScope.of(context).unfocus();
-                    setState(() {
-                    loader=true;
-                      
-                    });
-                     if(this.cardnumber.text.trim() !='' && this.cardholder.text.trim() !=''&& this.expm.text.trim() !='' && this.expy.text.trim() !='' && this.cvv.text.trim() !=''  ){
-                       var data={
-                         'number': cardnumber.text,
-                         'name': cardholder.text,
-                         'phone': cardnumber.text,
-                         'email': 'ali@gmail.com',
-                         'cvc': cvv.text,
-                         'exp_month': expm.text,
-                         'exp_year': '2022',
-                       };
-                        var respo = await AppService().savecard(data);
-                        print(respo);
-                        if(respo['success'] == true){
-
-                        loader=false;
-                        Navigator.pop(context);
-                        Toast.show('New method saved', context, duration: 3);
-                        setState(() {
-                          
-                        });
-                        }
-                        else{
-                        loader=false;
-                           Toast.show('error', context, duration: 3);
-                        }
-
-                     }
-                  },
-                  buttonHeight: 45,
-                  buttonWidth: MediaQuery.of(context).size.width * 0.89,
-                  buttonTextStyle: TextStyle(
-                      fontSize: 18,
-                      fontFamily: 'roboto',
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: cardholder.text.trim().length >0 &&
-                      cardnumber.text.trim().length >0 && 
-                      expm.text.trim().length >0 &&
-                      expy.text.trim().length >0 &&
-                      cvv.text.trim().length >0 
-                      
-                          ? AppColors.secondaryElement
-                          : AppColors.grey),
-                ),
+                loader
+                    ? Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.secondaryElement),
+                          ),
+                        ),
+                      )
+                    : PotbellyButton(
+                        'Save Card',
+                        onTap: () async {
+                          FocusScope.of(context).unfocus();
+                          setState(() {
+                            loader = true;
+                          });
+                          if (this.cardnumber.text.trim() != '' &&
+                              this.cardholder.text.trim() != '' &&
+                              this.expm.text.trim() != '' &&
+                              this.expy.text.trim() != '' &&
+                              this.cvv.text.trim() != '') {
+                            if (usecustomcard) {
+                              try{
+                              await Stripe.instance
+                                  .dangerouslyUpdateCardDetails(_card);
+                              final paymentMethod = await Stripe.instance
+                                  .createPaymentMethod(
+                                      PaymentMethodParams.card(
+                                       
+                                      ));
+                                   
+                              setState(() {});
+                              print(paymentMethod);
+                               var userstripe = await Service().getStripeUserId();
+                               print(userstripe);
+                             var data={
+                              //  'method':paymentMethod.id,
+                               'customer':userstripe
+                             };
+                             var respo=  await PaymentService().attachmethod(data,paymentMethod.id);
+                             print(respo);
+                              if(respo ==null){
+                                 Toast.show('Error', context, duration: 3);
+                                 loader = false;
+                                 setState(() { 
+                                 });
+                              }
+                              else{
+                                
+                              var data2 = {
+                                //  'user_id':42,
+                                'payment_method_id': paymentMethod.id
+                                // 'payment_method_id': 'pm_1JTCIEHxiL0NyAbFOj0g7r9Q'
+                              };
+                              var response = await AppService().storesub(data2);
+                              print(response);
+                              if(response ==null){
+                                 Toast.show('Error', context, duration: 3);
+                                 loader = false;
+                                 setState(() { 
+                                 });
+                              }
+                              else{
+                                 loader = false;
+                                Navigator.pop(context);
+                                Toast.show('Subscribed', context,
+                                    duration: 3);
+                                setState(() {});
+                              }
+                              }
+                              }
+                              catch(error){
+                                 Toast.show('Error', context, duration: 3);
+                              }
+                              setState(() {});
+                            } else {
+                              var data = {
+                                'number': cardnumber.text,
+                                'name': cardholder.text,
+                                'phone': cardnumber.text,
+                                'email': 'ali@gmail.com',
+                                'cvc': cvv.text,
+                                'exp_month': expm.text,
+                                'exp_year': '2022',
+                              };
+                              var respo = await AppService().savecard(data);
+                              print(respo);
+                              if (respo['success'] == true) {
+                                loader = false;
+                                Navigator.pop(context);
+                                Toast.show('New method saved', context,
+                                    duration: 3);
+                                setState(() {});
+                              } else {
+                                loader = false;
+                                Toast.show('error', context, duration: 3);
+                              }
+                            }
+                          }
+                        },
+                        buttonHeight: 45,
+                        buttonWidth: MediaQuery.of(context).size.width * 0.89,
+                        buttonTextStyle: TextStyle(
+                            fontSize: 18,
+                            fontFamily: 'roboto',
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: cardholder.text.trim().length > 0 &&
+                                    cardnumber.text.trim().length > 0 &&
+                                    expm.text.trim().length > 0 &&
+                                    expy.text.trim().length > 0 &&
+                                    cvv.text.trim().length > 0
+                                ? AppColors.secondaryElement
+                                : AppColors.grey),
+                      ),
               ],
             ),
           ),

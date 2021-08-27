@@ -137,6 +137,19 @@ class AppService {
     }
   }
   
+  Future<dynamic> storesub(data) async {
+    String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      FormData formData = new FormData.fromMap(data);
+      var resp = await this.dio.post("/storeSubscription", data: formData);
+      print(resp);
+      return resp.data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
   Future<dynamic> checkradius(data) async {
     // String accessToken = await getAccessToken();
     // dio.options.headers['Authorization'] = "Bearer " + accessToken;

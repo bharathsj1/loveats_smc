@@ -406,6 +406,16 @@ class Service {
     final shared = await initializdPrefs();
     return shared.getInt('USERID').toString();
   }
+  Future<String> getUserstripId() async {
+    final shared = await initializdPrefs();
+    return shared.getInt('STRIPE_CUS_ID').toString();
+  }
+
+  Future getuserdata() async {
+    final shared = await initializdPrefs();
+    var data= shared.get('userdata');
+    return jsonDecode(data);
+  }
 
   Future<int> getUserId_int() async {
     final shared = await initializdPrefs();

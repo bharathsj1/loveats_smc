@@ -12,6 +12,7 @@ import 'package:potbelly/widgets/custom_text_form_field.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:place_picker/place_picker.dart';
 import 'package:potbelly/widgets/spaces.dart';
+import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 
 class CheckOutScreen1 extends StatefulWidget {
@@ -747,7 +748,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
         print(_paymentSheetData['client_secret']);
         print(mycards[selectedcard]['customer']);
         setState(() {});
-        var resp = await Stripe.instance.confirmPaymentMethod(
+        var resp = await Stripe.instance.confirmPayment(
             _paymentSheetData['client_secret'],
             PaymentMethodParams.cardFromMethodId(
                 paymentMethodId: mycards[selectedcard]['id'].toString(),
@@ -952,6 +953,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                 Navigator.of(context).pop();
                 this.loader3 = false;
                 await CartProvider().clearcart();
+                Provider.of<CartProvider>(context, listen: false).getcartslist();
                 setState(() {});
                 Navigator.pushNamed(context, AppRouter.CheckOut3, arguments: {
                   'type': widget.checkoutdata['type'],
@@ -1089,7 +1091,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                                     print(mycards[selectedcard]['customer']);
                                     setState(() {});
                                     var resp = await Stripe.instance
-                                        .confirmPaymentMethod(
+                                        .confirmPayment(
                                             _paymentSheetData['client_secret'],
                                             PaymentMethodParams
                                                 .cardFromMethodId(
@@ -1109,6 +1111,9 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                                     }
                                   });
                                 }
+
+                                
+                                
                                 // var respo = await Stripe.instance.presentPaymentSheet(
                                 //     parameters: PresentPaymentSheetParameters(
                                 //       confirmPayment: true,
@@ -1570,7 +1575,9 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                           onTap: () async {
                             // Navigator.pushNamed(context, AppRouter.Add_new_Payment);
                             Navigator.pushNamed(context, AppRouter.testing,
-                                    arguments: null)
+                                    arguments: {
+                                      'subscribe':false
+                                    })
                                 .then((value) {
                               getsavedcards();
                             });
