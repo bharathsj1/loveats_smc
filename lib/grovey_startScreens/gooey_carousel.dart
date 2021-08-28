@@ -1026,9 +1026,9 @@ class GooeyCarouselState extends State<GooeyCarousel>
       if (currUser.email != null) {
         Navigator.pop(context);
         newemailController.text = currUser.email;
-        fullnameController.text = currUser.displayName.isNotEmpty
+        fullnameController.text = currUser.displayName != null
             ? currUser.displayName
-            : 'LovEats User';
+            : 'lovEats User';
         uid = currUser.uid;
         type = 2;
         // setState(() {});
@@ -1067,13 +1067,13 @@ class GooeyCarouselState extends State<GooeyCarousel>
                   (route) => false);
             });
           });
-          loader = true;
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (_) =>
-                      // BubbleTabBarDemo(type: '2')
-                      HomeScreen()));
+          // loader = true;
+          // Navigator.pushReplacement(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (_) =>
+          //             // BubbleTabBarDemo(type: '2')
+          //             HomeScreen()));
         } else {
           showSnackBar(context, message);
         }
@@ -1169,14 +1169,15 @@ class GooeyCarouselState extends State<GooeyCarousel>
                   (route) => false);
             });
           });
-          loader = true;
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (_) =>
-                      // BubbleTabBarDemo(type: '2')
-                      HomeScreen()));
-        } else {
+          // loader = true;
+          // Navigator.pushReplacement(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (_) =>
+          //             // BubbleTabBarDemo(type: '2')
+          //             HomeScreen()));
+        }
+         else {
           showSnackBar(context, data);
         }
       } else {
