@@ -33,7 +33,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   UserModel userModel;
-  bool _isLoading = false;
+  bool _isLoading = true;
   SharedPreferences prefs;
   List bookmarks = [];
   List ratings = [];

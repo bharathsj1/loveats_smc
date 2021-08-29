@@ -25,6 +25,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   SpecificUserSubscriptionModel _specificUserSubscriptionModel;
   var _paymentSheetData;
   bool _isLoading = true;
+  bool loading1 = false;
   TextStyle descriptionStyle = TextStyle(
     fontSize: 14.0,
     color: Colors.black38,
@@ -196,12 +197,28 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
             const SizedBox(
               height: 20.0,
             ),
-            PotbellyButton('Join now', onTap: () async {
+           loading1
+                      ? Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  AppColors.secondaryElement),
+                            ),
+                          ),
+                        )
+                      :  PotbellyButton('Join now', onTap: () async {
+                        setState(() {
+                          loading1=true;
+                        });
               String userId = await Service().getUserId();
               print(userId);
 
               if (userId == null) {
                 showToaster('Some Error Occured');
+                setState(() {
+                          loading1=false;
+                        });
                 return;
               }
 
@@ -218,11 +235,17 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                 //     ),
                 //   ),
                 // );
+                setState(() {
+                          loading1=false;
+                        });
                  Navigator.pushNamed(context, AppRouter.testing,
                                     arguments: {
                                       'subscribe':true
                                     });
               } else {
+                setState(() {
+                          loading1=false;
+                        });
                 Toast.show(
                     'You are already subscribed for this package', context);
                 return;

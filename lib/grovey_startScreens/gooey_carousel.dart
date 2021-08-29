@@ -49,6 +49,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
     with SingleTickerProviderStateMixin {
   int _currentIndex;
   bool loader = false;
+  bool appleloader = false;
   @override
   void initState() {
     // Provider.of(context, listen: false)._edge = GooeyEdge(count: 25);
@@ -451,28 +452,47 @@ class GooeyCarouselState extends State<GooeyCarousel>
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Platform.isIOS
+                                  appleloader
+                                          ? Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 8.0),
+                                              child: Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                              Color>(
+                                                          AppColors.white),
+                                                ),
+                                              ),
+                                            )
+                                          :  Platform.isIOS
                                       ? InkWell(
-                                          onTap: () {
-                                            _signInWithApple(context);
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                10, 5, 10, 10),
-                                            decoration: new BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.white,
-                                            ),
-                                            child: Icon(
-                                              FontAwesomeIcons.apple,
-                                              color: Colors.black,
-                                              size: 28,
-                                            ),
-                                            // child: Image.asset('assets/images/apple.png',height: 30,width: 30,),
-                                          ),
-                                        )
+                                              onTap: () {
+                                                appleloader = true;
+                                                setState(() {});
+                                                _signInWithApple(context);
+                                              },
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 5, 10, 10),
+                                                decoration: new BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.white,
+                                                ),
+                                                child: Icon(
+                                                  FontAwesomeIcons.apple,
+                                                  color: Colors.black,
+                                                  size: 28,
+                                                ),
+                                                // child: Image.asset('assets/images/apple.png',height: 30,width: 30,),
+                                              ),
+                                            )
                                       : InkWell(
                                           onTap: () {
+                                            appleloader = true;
+                                            setState(() {});
                                             _signInWithAppleOnandroid(context);
                                           },
                                           child: Container(
@@ -1010,6 +1030,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
         AppService().savedeicetoken(data).then((value) {
           print(value);
           Navigator.pop(context);
+          loader = false;
+          setState(() {});
           Provider.of<ProviderService>(context, listen: false).allfalse();
           Navigator.pushAndRemoveUntil(
               context,
@@ -1024,7 +1046,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
       FirebaseAuth _auth = FirebaseAuth.instance;
       var currUser = _auth.currentUser;
       if (currUser.email != null) {
-        Navigator.pop(context);
+        // Navigator.pop(context);
         newemailController.text = currUser.email;
         fullnameController.text = currUser.displayName != null
             ? currUser.displayName
@@ -1057,7 +1079,9 @@ class GooeyCarouselState extends State<GooeyCarousel>
             var data = {'device_id': udid, 'firebase_token': tokeen};
             AppService().savedeicetoken(data).then((value) {
               print(value);
-              loader = true;
+              appleloader = false;
+              appleloader = false;
+              setState(() {});
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
@@ -1067,7 +1091,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
                   (route) => false);
             });
           });
-          // loader = true;
+          // appleloader = false;
           // Navigator.pushReplacement(
           //     context,
           //     MaterialPageRoute(
@@ -1076,15 +1100,21 @@ class GooeyCarouselState extends State<GooeyCarousel>
           //             HomeScreen()));
         } else {
           showSnackBar(context, message);
+          appleloader = false;
+          setState(() {});
         }
       } else {
         Toast.show(
             'Something went wrong, Please try to login with different account',
             context,
             duration: 3);
+        appleloader = false;
+        setState(() {});
       }
     } else
       showSnackBar(context, message);
+    appleloader = false;
+    setState(() {});
   }
 
   _signInWithAppleOnandroid(BuildContext context) async {
@@ -1108,6 +1138,8 @@ class GooeyCarouselState extends State<GooeyCarousel>
           print(value);
           Navigator.pop(context);
           Provider.of<ProviderService>(context, listen: false).allfalse();
+          appleloader = false;
+          setState(() {});
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
@@ -1159,7 +1191,9 @@ class GooeyCarouselState extends State<GooeyCarousel>
             var data = {'device_id': udid, 'firebase_token': tokeen};
             AppService().savedeicetoken(data).then((value) {
               print(value);
-              loader = true;
+              appleloader = false;
+              appleloader = false;
+              setState(() {});
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
@@ -1169,25 +1203,30 @@ class GooeyCarouselState extends State<GooeyCarousel>
                   (route) => false);
             });
           });
-          // loader = true;
+          // appleloader = false;
           // Navigator.pushReplacement(
           //     context,
           //     MaterialPageRoute(
           //         builder: (_) =>
           //             // BubbleTabBarDemo(type: '2')
           //             HomeScreen()));
-        }
-         else {
+        } else {
           showSnackBar(context, data);
+          appleloader = false;
+          setState(() {});
         }
       } else {
         Toast.show(
             'Something went wrong, Please try to login with different account',
             context,
             duration: 3);
+        appleloader = false;
+        setState(() {});
       }
     } else
       showSnackBar(context, message['msg']);
+    appleloader = false;
+    setState(() {});
   }
 
   _signInWithEmail(BuildContext context, TextEditingController emailCont,

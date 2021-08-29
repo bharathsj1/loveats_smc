@@ -92,7 +92,9 @@ class Service {
         await setKeyData('accessToken', accessToken);
         await setKeyData('accounttype', _user.data.custAccountType);
         await setKeyData('photo', _user.data.custProfileImage ?? '');
-
+        if (_user.data.stripeCusId != null) {
+          await setKeyData('STRIPE_CUS_ID', _user.data.stripeCusId);
+        }
         await setKeyData('userdata', jsonEncode(value.data['data']));
       } else {
         print(value.data['message']);
@@ -182,34 +184,32 @@ class Service {
     }
   }
 
-   signInWithAppleonandroid(context) async {
+  signInWithAppleonandroid(context) async {
     await Service().removeGuest();
 
-     try{
-                  // OAuthCredential 
-                  User
-                  user = await FirebaseAuthOAuth()
-          .openSignInFlow("apple.com", ["email","name"],);
-          // ("apple.com", ["email"], {"locale": "en"});
-          print(user);
-          if(user!=null){
-              bool isUserAvailable = await checkIfUserAvailable(user.uid);
+    try {
+      // OAuthCredential
+      User user = await FirebaseAuthOAuth().openSignInFlow(
+        "apple.com",
+        ["email", "name"],
+      );
+      // ("apple.com", ["email"], {"locale": "en"});
+      print(user);
+      if (user != null) {
+        bool isUserAvailable = await checkIfUserAvailable(user.uid);
         if (isUserAvailable) {
           print('vailbale');
-          return {'msg':'successfully logged in','user':user};
+          return {'msg': 'successfully logged in', 'user': user};
         } else {
           print('not avai');
-          return {'msg':'register screen','user':user};
+          return {'msg': 'register screen', 'user': user};
         }
-          }
-                }
-                 on PlatformException catch (error) {
-                  print(error);
-                   Toast.show(error.message, context, duration: 3);
-                   return {'msg':error.message};
-                }
-
-  
+      }
+    } on PlatformException catch (error) {
+      print(error);
+      Toast.show(error.message, context, duration: 3);
+      return {'msg': error.message};
+    }
   }
 
   Future<void> logout(BuildContext context) async {
@@ -311,10 +311,10 @@ class Service {
         await setKeyData('accounttype', _user.data.custAccountType);
         await setKeyData('photo', _user.data.custProfileImage ?? '');
         await pref.setInt('USERID', value.data['data']['id']);
-        if (_user.data.stripeCusId != null)
+        if (_user.data.stripeCusId != null){
           await setKeyData('STRIPE_CUS_ID', _user.data.stripeCusId);
-
-        await setKeyData('userdata', jsonEncode(value.data['data']));
+        }
+      await setKeyData('userdata', jsonEncode(value.data['data']));
       }
     }).catchError((onError) {
       print(onError.toString());
@@ -406,6 +406,7 @@ class Service {
     final shared = await initializdPrefs();
     return shared.getInt('USERID').toString();
   }
+
   Future<String> getUserstripId() async {
     final shared = await initializdPrefs();
     return shared.getInt('STRIPE_CUS_ID').toString();
@@ -413,7 +414,7 @@ class Service {
 
   Future getuserdata() async {
     final shared = await initializdPrefs();
-    var data= shared.get('userdata');
+    var data = shared.get('userdata');
     return jsonDecode(data);
   }
 
@@ -552,7 +553,7 @@ class Service {
   Future<GetAllSubscriptionModel> getAllSubscription() async {
     try {
       Response response = await dio.request('/get-all-subscription-plans');
-       print(response);
+      print(response);
       if (response.data['success'] == true)
         return GetAllSubscriptionModel.fromJson(response.data);
       else

@@ -50,7 +50,7 @@ class _AddNewCartState extends State<AddNewCart> {
   var photo = "";
   bool usecustomcard = false;
 
-  CardDetails _card = CardDetails();
+  CardDetails _card ;
 
   localdata() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -76,7 +76,8 @@ class _AddNewCartState extends State<AddNewCart> {
   @override
   void initState() {
     this.usecustomcard = widget.data['subscribe'];
-    setState(() {});
+    // setState(() {});
+    _card = CardDetails();
     super.initState();
   }
 
@@ -230,24 +231,27 @@ class _AddNewCartState extends State<AddNewCart> {
                                                 horizontal: 20, vertical: 0),
                                             child: Container(
                                               width: 170,
-                                              child: TextField(
+                                              child: TextFormField(
                                                 controller: cardnumber,
+                                                autofocus: true,
                                                 cursorColor:
                                                     AppColors.secondaryElement,
                                                 maxLength: 16,
+                                                keyboardType:
+                                                    TextInputType.number,
                                                 onChanged: (number) {
                                                   setState(() {
                                                     _card = _card.copyWith(
                                                         number: number);
                                                   });
                                                 },
-                                                keyboardType:
-                                                    TextInputType.number,
+                                                
                                                 style: TextStyle(
                                                   fontSize: 14,
                                                   color: Colors.grey,
                                                 ),
                                                 decoration: InputDecoration(
+                                                
                                                   //         border: new OutlineInputBorder(
                                                   // borderSide: new BorderSide(color: Colors.teal)),
                                                   //       contentPadding: EdgeInsets.all(5),
@@ -269,7 +273,9 @@ class _AddNewCartState extends State<AddNewCart> {
                                                   // border:OutlineInputBorder(
                                                   //   borderRadius:BorderRadius.circular(20.0),
                                                   // ),
+                                                  
                                                 ),
+                                                
                                                 // obscureText: true,
                                               ),
                                             ),
