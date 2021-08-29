@@ -531,7 +531,7 @@ class Service {
     accessToken = await getAccessToken();
 
     dio.options.headers['Authorization'] = "Bearer " + accessToken;
-
+    print(dio.options.headers['Authorization']);
     Response response = await dio.request(
       '/get-specific-user-subs',
     );
