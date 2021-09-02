@@ -630,7 +630,7 @@ class _AddNewCartState extends State<AddNewCart> {
                         ),
                       )
                     : PotbellyButton(
-                        'Save Card',
+                      this.usecustomcard?'Pay Now  ( ${StringConst.currency}'+widget.data['plandata'].amount+' )'  : 'Save Card',
                         onTap: () async {
                           FocusScope.of(context).unfocus();
                           setState(() {

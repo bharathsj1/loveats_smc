@@ -549,6 +549,29 @@ class Service {
       return null;
     }
   }
+  Future<SpecificUserSubscriptionModel>
+      getrescipeSubscription() async {
+    accessToken = await getAccessToken();
+
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    print(dio.options.headers['Authorization']);
+    Response response = await dio.request(
+      '/get-specific-user-receipe-subs',
+    );
+    print(response.data);
+
+    if (response.data['success'] == true) {
+      try {
+        return SpecificUserSubscriptionModel.fromJson(response.data);
+      } catch (onError) {
+        print('ERROR hai');
+        print(onError.toString());
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
 
   Future<GetAllSubscriptionModel> getAllSubscription() async {
     try {

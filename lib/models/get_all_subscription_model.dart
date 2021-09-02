@@ -54,6 +54,7 @@ class Datum {
     this.unitLabel,
     this.updated,
     this.url,
+    this.amount,
   });
 
   String id;
@@ -73,6 +74,7 @@ class Datum {
   dynamic unitLabel;
   int updated;
   dynamic url;
+  String amount;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
@@ -92,6 +94,7 @@ class Datum {
         unitLabel: json["unit_label"],
         updated: json["updated"],
         url: json["url"],
+        amount: json["amount"],
       );
 
   Map<String, dynamic> toJson() => {

@@ -50,6 +50,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
   int _currentIndex;
   bool loader = false;
   bool appleloader = false;
+
   @override
   void initState() {
     // Provider.of(context, listen: false)._edge = GooeyEdge(count: 25);
@@ -453,21 +454,19 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   appleloader
-                                          ? Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 8.0),
-                                              child: Center(
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation<
-                                                              Color>(
-                                                          AppColors.white),
-                                                ),
-                                              ),
-                                            )
-                                          :  Platform.isIOS
-                                      ? InkWell(
+                                      ? Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 8.0),
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      AppColors.white),
+                                            ),
+                                          ),
+                                        )
+                                      : Platform.isIOS
+                                          ? InkWell(
                                               onTap: () {
                                                 appleloader = true;
                                                 setState(() {});
@@ -489,24 +488,26 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                                 // child: Image.asset('assets/images/apple.png',height: 30,width: 30,),
                                               ),
                                             )
-                                      : InkWell(
-                                          onTap: () {
-                                            appleloader = true;
-                                            setState(() {});
-                                            _signInWithAppleOnandroid(context);
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.all(10.0),
-                                            decoration: new BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.white,
+                                          : InkWell(
+                                              onTap: () {
+                                                appleloader = true;
+                                                setState(() {});
+                                                _signInWithAppleOnandroid(
+                                                    context);
+                                              },
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                decoration: new BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.white,
+                                                ),
+                                                child: new Icon(
+                                                  FontAwesomeIcons.apple,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
                                             ),
-                                            child: new Icon(
-                                              FontAwesomeIcons.apple,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ),
                                   SizedBox(
                                     width: 50,
                                   ),
@@ -591,6 +592,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
   }
 
   bottomsheet2() {
+    var validator2=validator;
     return showModalBottomSheet(
         // elevation: 5,
         context: context,
@@ -626,6 +628,14 @@ class GooeyCarouselState extends State<GooeyCarousel>
                         physics: BouncingScrollPhysics(),
                         child: Form(
                           key: _formKey2,
+                          autovalidate: validator2,
+                            onChanged: () {
+        setState(() {
+          // if (validator == true) {
+            _formKey2.currentState.validate();
+          // }
+        });
+      },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -677,6 +687,15 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                       keyboardType: TextInputType.name,
                                       validator: (value) =>
                                           nameValidator(value),
+                                      onChanged: (val) {
+                                        setState(() {
+                                          // if (validator2 == true) {
+                                            print('here');
+                                            _formKey2.currentState.validate();
+                                            setState(() {});
+                                          // }
+                                        });
+                                      },
                                       style: TextStyle(
                                           // fontFamily: "WorkSansSemiBold",
                                           fontSize: 14.0,
@@ -735,6 +754,15 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                       keyboardType: TextInputType.phone,
                                       validator: (value) =>
                                           phoneValidator(value),
+                                           onChanged: (val) {
+                                        setState(() {
+                                          // if (validator2 == true) {
+                                            print('here');
+                                            _formKey2.currentState.validate();
+                                            setState(() {});
+                                          // }
+                                        });
+                                      },
                                       style: TextStyle(
                                           // fontFamily: "WorkSansSemiBold",
                                           fontSize: 14.0,
@@ -791,8 +819,20 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                       // focusNode: myFocusNodeEmailLogin,
                                       controller: newemailController,
                                       keyboardType: TextInputType.emailAddress,
+                                      
                                       validator: (value) =>
                                           emailValidation(value),
+                                           onChanged: (val) {
+                                             print('e');
+                                             print(val);
+                                        setState(() {
+                                          // if (validator2 == true) {
+                                            print('here');
+                                            _formKey2.currentState.validate();
+                                            setState(() {});
+                                          // }
+                                        });
+                                      },
                                       style: TextStyle(
                                           // fontFamily: "WorkSansSemiBold",
                                           fontSize: 14.0,
@@ -898,6 +938,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                           //     MaterialPageRoute(
                                           //         builder: (_) => BubbleTabBarDemo(type: '2')),
                                           //     (route) => false);
+
                                           loader = true;
                                           setState(() {});
                                           validateFormAndCreateUser(context);
@@ -985,17 +1026,26 @@ class GooeyCarouselState extends State<GooeyCarousel>
   final newpasswordController = TextEditingController();
   final fullnameController = TextEditingController();
   final phoneController = TextEditingController();
+  bool validator = false;
 
   emailValidation(String value) {
-    if (value.isEmpty)
-      return 'Email is required';
-    else if (!value.contains('@')) return 'Invalid Email';
+    // if (value.isEmpty)
+    //   return 'Email is required';
+    // else if (!value.contains('@')) return 'Invalid Email';
+    String patttern =
+        r"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$";
+    RegExp regExp = new RegExp(patttern);
+    if (value.length == 0) {
+      return "Email is Required";
+    } else if (!regExp.hasMatch(value)) {
+      return "Must be a valid email address";
+    }
   }
 
   passwordValidation(String value) {
     if (value.isEmpty)
       return 'Password is required';
-    else if (value.length < 8) return 'Password is wrong';
+    else if (value.length < 8) return 'Password must be at least 8 characters';
   }
 
   nameValidator(String value) {
@@ -1007,7 +1057,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
   phoneValidator(String value) {
     if (value.isEmpty)
       return 'Phone number is required';
-    else if (value.length < 10) return 'Invalid PHone Number';
+    else if (value.length < 10) return 'Invalid Phone Number';
   }
 
   _signInWithApple(BuildContext context) async {
@@ -1334,54 +1384,59 @@ class GooeyCarouselState extends State<GooeyCarousel>
     BuildContext context,
   ) async {
     print('In Validating form section');
+    if (_formKey2.currentState.validate()) {
+      UserModel userModel = UserModel(
+          '',
+          fullnameController.text,
+          newemailController.text,
+          newpasswordController.text,
+          phoneController.text,
+          '');
+      // String uid = uid;
+      print(uid);
+      var message = await _service.registerUserWithEmail(
+          userModel, _profilePicture, uid, type ?? 0);
+      print(message);
+      if (message == 'success') {
+        final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+        var udid;
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        if (Platform.isAndroid) {
+          AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+          udid = androidInfo.id;
+        } else {
+          IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+          udid = iosInfo.identifierForVendor;
+        }
 
-    UserModel userModel = UserModel(
-        '',
-        fullnameController.text,
-        newemailController.text,
-        newpasswordController.text,
-        phoneController.text,
-        '');
-    // String uid = uid;
-    print(uid);
-    var message = await _service.registerUserWithEmail(
-        userModel, _profilePicture, uid, type ?? 0);
-    print(message);
-    if (message == 'success') {
-      final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-      var udid;
-      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      if (Platform.isAndroid) {
-        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        udid = androidInfo.id;
-      } else {
-        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-        udid = iosInfo.identifierForVendor;
-      }
-
-      _firebaseMessaging.getToken().then((tokeen) {
-        var data = {'device_id': udid, 'firebase_token': tokeen};
-        AppService().savedeicetoken(data).then((value) {
-          print(value);
-          loader = true;
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (_) =>
-                      // BubbleTabBarDemo(type: '2')
-                      HomeScreen()),
-              (route) => false);
+        _firebaseMessaging.getToken().then((tokeen) {
+          var data = {'device_id': udid, 'firebase_token': tokeen};
+          AppService().savedeicetoken(data).then((value) {
+            print(value);
+            loader = true;
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (_) =>
+                        // BubbleTabBarDemo(type: '2')
+                        HomeScreen()),
+                (route) => false);
+          });
         });
-      });
-      loader = true;
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (_) =>
-                  // BubbleTabBarDemo(type: '2')
-                  HomeScreen()));
+        loader = true;
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (_) =>
+                    // BubbleTabBarDemo(type: '2')
+                    HomeScreen()));
+      } else {
+        loader = false;
+        setState(() {});
+        showSnackBar(context, message);
+      }
     } else {
-      showSnackBar(context, message);
+      print('Not Validate');
     }
   }
 }

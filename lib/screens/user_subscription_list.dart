@@ -14,36 +14,22 @@ class UserSubscriptionList extends StatefulWidget {
 
 class _UserSubscriptionListState extends State<UserSubscriptionList> {
   SpecificUserSubscriptionModel _specificUserSubscriptionModel;
+  SpecificUserSubscriptionModel _specificUserrecipeSubscriptionModel;
   bool _isLoading = true;
   @override
   void initState() {
     getCurrentUserSubscription();
+    getrescipeSubscription();
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(' Subscriptions List'),
-      ),
-      body: _isLoading
-          ? Center(
-              child: Text('Please wait ...'),
-            )
-          : _specificUserSubscriptionModel == null ||
-                  _specificUserSubscriptionModel.data.length == 0
-              ? Center(
-                  child: Text('You have not subscribed'),
-                )
-              : Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: _specificUserSubscriptionModel.data.length,
-                        itemBuilder: (context, index) {
-                          var data = _specificUserSubscriptionModel.data[index];
-                          return Column(
+   mealsubscription() {
+   
+    return List.generate(
+        _specificUserSubscriptionModel.data.length,
+        (index) {
+        var data = _specificUserSubscriptionModel.data[index];
+        return Column(
                             children: [
                               Container(
                                 margin: EdgeInsets.all(10.0),
@@ -140,7 +126,39 @@ class _UserSubscriptionListState extends State<UserSubscriptionList> {
                                       children: [
                                         Text('Status'),
                                         Spacer(),
-                                        Text(data.status)
+                                        Text(toBeginningOfSentenceCase(data.status))
+                                      ],
+                                    ),
+                                      const Divider(),
+                                _specificUserSubscriptionModel.allowedPerweek==null?Container():    Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text('Meal Per Week',style: TextStyle(fontWeight: FontWeight.bold)),
+                                            Spacer(),
+                                            Text(_specificUserSubscriptionModel.allowedPerweek.toString(),style: TextStyle(fontWeight: FontWeight.bold),)
+                                          ],
+                                        ),
+                                    const Divider(),
+                                      ],
+                                    ),
+                               _specificUserSubscriptionModel.leftThisweek==null?Container():     Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text('Meal Left (Weekly)',style: TextStyle(fontWeight: FontWeight.bold)),
+                                            Spacer(),
+                                            Text(_specificUserSubscriptionModel.leftThisweek.toString(),style: TextStyle(fontWeight: FontWeight.bold))
+                                          ],
+                                        ),
+                                    const Divider(),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text('Next Free Meal',style: TextStyle(fontWeight: FontWeight.bold)),
+                                        Spacer(),
+                                        Text(_specificUserSubscriptionModel.nextfreeMeal ==null? 'Available': _specificUserSubscriptionModel.nextfreeMeal,style: TextStyle(fontSize: 15,color: AppColors.secondaryElement,fontWeight: FontWeight.bold))
                                       ],
                                     ),
                                     const Divider(),
@@ -149,11 +167,219 @@ class _UserSubscriptionListState extends State<UserSubscriptionList> {
                               )
                             ],
                           );
-                        },
+        });}
+
+   recipesubscription() {
+   
+    return List.generate(
+        _specificUserrecipeSubscriptionModel.data.length,
+        (index) {
+        var data = _specificUserrecipeSubscriptionModel.data[index];
+        return Column(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(width: 2.0),
+                                  color: AppColors.secondaryColor,
+                                ),
+                                padding: EdgeInsets.all(20.0),
+                                child: Column(
+                                  children: [
+                                    data.status == 'active'
+                                        ? Align(
+                                            alignment: Alignment.topRight,
+                                            child: IconButton(
+                                              icon: Icon(
+                                                Icons.delete_outlined,
+                                                color: Colors.red,
+                                              ),
+                                              onPressed: () {
+                                                cancelSubsc(data.id);
+                                              },
+                                            ),
+                                          )
+                                        : const SizedBox(),
+                                    Row(
+                                      children: [
+                                        Text('Interval'),
+                                        Spacer(),
+                                        Text(data.plan.interval.toUpperCase()),
+                                      ],
+                                    ),
+                                    const Divider(),
+                                    Row(
+                                      children: [
+                                        Text('Subcription Id'),
+                                        Spacer(),
+                                        Text(data.id),
+                                      ],
+                                    ),
+                                    const Divider(),
+                                    Row(
+                                      children: [
+                                        Text('Start Date'),
+                                        Spacer(),
+                                        Text(
+                                          DateFormat('dd-MMM-yyy').format(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                data.currentPeriodStart * 1000),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const Divider(),
+                                    Row(
+                                      children: [
+                                        Text('End Date'),
+                                        Spacer(),
+                                        Text(
+                                          DateFormat('dd-MMM-yyy').format(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                data.currentPeriodEnd * 1000),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const Divider(),
+                                    Row(
+                                      children: [
+                                        Text('Amount '),
+                                        Spacer(),
+                                        Text((double.tryParse(data
+                                                        .items
+                                                        .data[0]
+                                                        .price
+                                                        .unitAmountDecimal) /
+                                                    100)
+                                                .toString() +
+                                            ' ' +
+                                            data.items.data[0].price.currency
+                                                .toUpperCase()),
+                                      ],
+                                    ),
+                                    const Divider(),
+                                    Row(
+                                      children: [
+                                        Text('Type'),
+                                        Spacer(),
+                                        Text(data.items.data[0].price.type
+                                            .toUpperCase()),
+                                      ],
+                                    ),
+                                    const Divider(),
+                                    Row(
+                                      children: [
+                                        Text('Status'),
+                                        Spacer(),
+                                        Text(toBeginningOfSentenceCase(data.status))
+                                      ],
+                                    ),
+                                    // const Divider(),
+                                    // Row(
+                                    //   children: [
+                                    //     Text('Total Recipes'),
+                                    //     Spacer(),
+                                    //     Text(_specificUserrecipeSubscriptionModel.slotleft.toString())
+                                    //   ],
+                                    // ),
+                                    const Divider(),
+                                    Row(
+                                      children: [
+                                        Text('Recipes Per Week',style: TextStyle(fontWeight: FontWeight.bold)),
+                                        Spacer(),
+                                        Text(_specificUserrecipeSubscriptionModel.allowedPerweek.toString(),style: TextStyle(fontWeight: FontWeight.bold),)
+                                      ],
+                                    ),
+                                    const Divider(),
+                                    Row(
+                                      children: [
+                                        Text('Recipes Left (Weekly)',style: TextStyle(fontWeight: FontWeight.bold)),
+                                        Spacer(),
+                                        Text(_specificUserrecipeSubscriptionModel.leftThisweek.toString(),style: TextStyle(fontWeight: FontWeight.bold))
+                                      ],
+                                    ),
+                                    const Divider(),
+                                    Row(
+                                      children: [
+                                        Text('Next Free Recipe',style: TextStyle(fontWeight: FontWeight.bold)),
+                                        Spacer(),
+                                        Text(_specificUserrecipeSubscriptionModel.nextfreeMeal ==null? 'Available': _specificUserrecipeSubscriptionModel.nextfreeMeal,style: TextStyle(fontSize: 15,color: AppColors.secondaryElement,fontWeight: FontWeight.bold))
+                                      ],
+                                    ),
+                                    const Divider(),
+                                  ],
+                                ),
+                              )
+                            ],
+                          );
+        });}
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(' Subscriptions List'),
+      ),
+      body: _isLoading
+          ? Center(
+              child: Text('Please wait ...'),
+            )
+          : (_specificUserSubscriptionModel == null ||
+                  _specificUserSubscriptionModel.data.length == 0) && ( _specificUserrecipeSubscriptionModel == null ||
+                  _specificUserrecipeSubscriptionModel.data.length == 0)
+              ? Center(
+                  child: Text('You have not subscribed'),
+                )
+              : SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                  _specificUserSubscriptionModel == null ||
+                    _specificUserSubscriptionModel.data.length == 0? Container():   Padding(
+                       padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                       child: Text(
+                        'LovEats Plans',
+                        style: Styles.customTitleTextStyle(
+                          color: AppColors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: Sizes.TEXT_SIZE_18,
+                        ),
                       ),
-                    ),
+                     ),
+                    Column(
+                        children: 
+                        // [
+                          // Expanded(
+                          //   child: ListView.builder(
+                          //     itemCount: _specificUserSubscriptionModel.data.length,
+                          //     itemBuilder: (context, index) {
+                          //       var data = _specificUserSubscriptionModel.data[index];
+                          //       return
+                          //     },
+                          //   ),
+                          // ),
+                        // ],
+                        mealsubscription()
+                      ),
+              
+                       _specificUserSubscriptionModel == null ||
+                    _specificUserSubscriptionModel.data.length == 0? Container():   Padding(
+                       padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                       child: Text(
+                        'Recipe Plans',
+                        style: Styles.customTitleTextStyle(
+                          color: AppColors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: Sizes.TEXT_SIZE_18,
+                        ),
+                      ),
+                     ),
+                    Column(
+                        children: recipesubscription())
                   ],
                 ),
+              ),
     );
   }
 
@@ -163,6 +389,14 @@ class _UserSubscriptionListState extends State<UserSubscriptionList> {
         await Service().getSpecificUserSubscriptionData();
     _isLoading = false;
     print(_specificUserSubscriptionModel);
+    setState(() {});
+  }
+  void getrescipeSubscription() async {
+    print(await Service().getStripeUserId());
+    _specificUserrecipeSubscriptionModel =
+        await Service().getrescipeSubscription();
+    // _isLoading = false;
+    print(_specificUserrecipeSubscriptionModel);
     setState(() {});
   }
 

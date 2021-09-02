@@ -194,6 +194,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
               data.description ?? 'Not Available',
               style: descriptionStyle,
             ),
+            Text(
+             data.amount !=null? '${StringConst.currency}'+data.amount : '',
+              style: descriptionStyle,
+            ),
             const SizedBox(
               height: 20.0,
             ),
@@ -223,7 +227,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
               }
 
               bool isDone = await checkAlreadyApplied(userId, data.id);
-              if (isDone) {
+              if (!isDone) {
                 // Navigator.push(
                 //   context,
                 //   MaterialPageRoute(
@@ -240,7 +244,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                         });
                  Navigator.pushNamed(context, AppRouter.testing,
                                     arguments: {
-                                      'subscribe':true
+                                      'subscribe':true,
+                                      'plandata': data
                                     });
               } else {
                 setState(() {

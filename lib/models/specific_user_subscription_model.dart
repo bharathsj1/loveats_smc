@@ -17,11 +17,22 @@ class SpecificUserSubscriptionModel {
     this.success,
     this.data,
     this.message,
+    this.slotleft,
+  this.nextfreeMeal,
+  this.subscriptionEnd,
+  this.leftThisweek,
+  this.allowedPerweek,
   });
 
   bool success;
   List<SpecificUserSubscriptionModelDatum> data;
   String message;
+    dynamic slotleft;
+  dynamic nextfreeMeal;
+  dynamic subscriptionEnd;
+  dynamic leftThisweek;
+  dynamic allowedPerweek;
+
 
   factory SpecificUserSubscriptionModel.fromJson(Map<String, dynamic> json) =>
       SpecificUserSubscriptionModel(
@@ -29,6 +40,11 @@ class SpecificUserSubscriptionModel {
         data: List<SpecificUserSubscriptionModelDatum>.from(json["data"]
             .map((x) => SpecificUserSubscriptionModelDatum.fromJson(x))),
         message: json["message"],
+        slotleft: json["slots_left"],
+        nextfreeMeal: json["next_free_meal"],
+        subscriptionEnd: json["subscription_end"],
+        allowedPerweek: json["total_receipe_allowed_per_week"],
+        leftThisweek: json["total_receipe_left_per_week"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -78,6 +94,7 @@ class SpecificUserSubscriptionModelDatum {
     this.transferData,
     this.trialEnd,
     this.trialStart,
+
   });
 
   String id;
@@ -162,6 +179,7 @@ class SpecificUserSubscriptionModelDatum {
         transferData: json['sub']["transfer_data"],
         trialEnd: json['sub']["trial_end"],
         trialStart: json['sub']["trial_start"],
+        
       );
 
   Map<String, dynamic> toJson() => {
