@@ -236,7 +236,7 @@ class _AddNewCartState extends State<AddNewCart> {
                                                   controller: cardnumber,
                                                   autofocus: true,
                                                   autofillHints: [
-                                                    AutofillHints.telephoneNumber,
+                                                    AutofillHints.creditCardNumber,
                                                     // AutofillHints.telephoneNumber,
                                                     // AutofillHints.telephoneNumberNational,
                                                     
@@ -367,7 +367,8 @@ class _AddNewCartState extends State<AddNewCart> {
                                                     //  AutofillHints.creditCardNumber,
                                                     // AutofillHints.telephoneNumber,
                                                     // AutofillHints.telephoneNumberNational,
-                                                    AutofillHints.givenName,
+                                                    AutofillHints.creditCardName,
+                                                    AutofillHints.creditCardGivenName,
                                                    
                                                   ],
                                                   cursorColor:
