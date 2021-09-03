@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -28,6 +29,7 @@ import 'package:potbelly/services/firebaseSetup.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/widgets/heading_row.dart';
+import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:potbelly/widgets/search_input_field.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -70,6 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isGuest = false;
   bool lottie = false;
   bool lottie2 = false;
+  bool cartbtn = false;
+
   
   String selected_address = 'Your Location';
   List subscription = [
@@ -343,8 +347,428 @@ class _HomeScreenState extends State<HomeScreen> {
     popularitem = response['data'];
     print(popularitem);
     loader4 = false;
+    checkchanges();
     setState(() {});
   }
+
+  
+  bottomSheetforaddcart(BuildContext context, i) {
+    var itemqty = '1';
+    return showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        // backgroundColor: Colors.black54,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+        ),
+        builder: (context) {
+          return StatefulBuilder(builder: (BuildContext context,
+              StateSetter setState /*You can rename this!*/) {
+            return Container(
+              // height: MediaQuery.of(context).size.height * 0.4,
+              // height: dou,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15)),
+                    child: CachedNetworkImage(
+                      imageUrl: popularitem[i]['menu_image'],
+                      width: MediaQuery.of(context).size.width,
+                      height: 190,
+                      fit: BoxFit.cover,
+                      // imageBuilder: (context, imageProvider) =>
+                      //     Container(
+                      //   decoration: BoxDecoration(
+                      //     image: DecorationImage(
+                      //         image: imageProvider,
+                      //         fit: BoxFit.cover,
+                      //         colorFilter: ColorFilter.mode(
+                      //             Colors.red, BlendMode.colorBurn)),
+                      //   ),
+                      // ),
+                      placeholder: (context, url) => Container(
+                        height: 190,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.secondaryElement),
+                          ),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+                  ),
+                popularitem[i]['cart'] !=null && popularitem[i]['cart']?    Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                         Text('Already in your cart',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppColors.black,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: .3,
+                              )),
+                          SizedBox(
+                            height: 0,
+                          ),
+                       InkWell(
+                              onTap: () {
+                          Navigator.pushNamed(context, AppRouter.cart_Screen)
+                              .then((value) {
+                                Navigator.pop(context);
+                            checkchanges();
+                          });
+                        },
+                         child: Material(
+                              elevation: 2,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 14),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text('1x',
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: AppColors.secondaryElement,
+                                                fontWeight: FontWeight.bold
+                                                // letterSpacing: .3,
+                                                )),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(popularitem[i]['menu_name'],
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              color: Colors.black87,
+                                              letterSpacing: .3,
+                                            )),
+                                      ],
+                                    ),
+                                    Text('Edit in cart',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: AppColors.secondaryElement,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: .3,
+                                        )),
+                                  ],
+                                ),
+                              ),
+                            ),
+                       ),
+                           SizedBox(
+                            height: 10,
+                          ),
+                      ],
+                    ),
+                  ):Container(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                       
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(popularitem[i]['menu_name'],
+                                textAlign: TextAlign.left,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.dmSerifDisplay(
+                                  textStyle: Styles.customTitleTextStyle(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: Sizes.TEXT_SIZE_22,
+                                  ),
+                                )),
+                            Text(
+                                // hotlist[i]['distance'] +
+                                '${StringConst.currency}' +
+                                    popularitem[i]['menu_price'],
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.openSans(
+                                  textStyle: Styles.customNormalTextStyle(
+                                      color: Colors.black54,
+                                      fontSize: Sizes.TEXT_SIZE_16,
+                                      fontWeight: FontWeight.bold),
+                                )),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Text(popularitem[i]['menu_details'],
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: AppColors.grey,
+                              letterSpacing: .3,
+                            )),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            var data = RestaurentsModel.fromJson({
+                              'data': [popularitem[i]['restaurant']],
+                              'success': true,
+                              'message': 'ok'
+                            });
+                            print(popularitem[i]['restaurant']);
+                            Navigator.pushNamed(context, AppRouter.Add_Extra,
+                                arguments: {
+                                  'update': false,
+                                  'item': popularitem[i],
+                                  // 'restaurant': widget.restaurantDetails.data
+                                  'restaurant': data.data[0]
+                                }).then((value) {
+                              Navigator.pop(context);
+                              checkchanges();
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.add,
+                                color: AppColors.secondaryElement,
+                                size: 16,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text('Customize Food',
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Styles.customTitleTextStyle(
+                                    color: AppColors.secondaryElement,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  )),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    if (int.parse(itemqty) > 1) {
+                                      itemqty =
+                                          (int.parse(itemqty) - 1).toString();
+                                      setState(() {});
+                                      // totalprice();
+                                      if (int.parse(itemqty) == 1) {
+                                        // disabled = false;
+                                        setState(() {});
+                                      }
+                                      setState(() {});
+                                    }
+                                    // Provider.of<CartProvider>(context, listen: false)
+                                    //     .removeToCart(cartlist[i]);
+                                  },
+                                  child: Container(
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.zero,
+                                      decoration: BoxDecoration(
+                                          color: AppColors.black,
+                                          borderRadius:
+                                              BorderRadius.circular(100)),
+                                      width: 25,
+                                      height: 25,
+                                      // child: Text(
+                                      //   "-",
+                                      //   style: TextStyle(
+                                      //       color: AppColors.secondaryElement,
+                                      //       fontSize: 70),
+                                      // )
+                                      child: Icon(
+                                        FontAwesomeIcons.minus,
+                                        color: AppColors.white,
+                                        size: 10,
+                                      )),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  itemqty,
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      color: AppColors.secondaryElement,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    print('here');
+                                    itemqty =
+                                        (int.parse(itemqty) + 1).toString();
+                                    print(itemqty);
+                                    setState(() {});
+
+                                    // Provider.of<CartProvider>(context, listen: false)
+                                    //     .addToCart(context, data);
+                                  },
+                                  child: Container(
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.zero,
+                                      decoration: BoxDecoration(
+                                          color: AppColors.black,
+                                          borderRadius:
+                                              BorderRadius.circular(100)),
+                                      width: 25,
+                                      height: 25,
+                                      // child: Text(
+                                      //   "-",
+                                      //   style: TextStyle(
+                                      //       color: AppColors.secondaryElement,
+                                      //       fontSize: 70),
+                                      // )
+                                      child: Icon(
+                                        FontAwesomeIcons.plus,
+                                        color: AppColors.white,
+                                        size: 10,
+                                      )),
+                                ),
+                              ],
+                            ),
+                            PotbellyButton(
+                              'Add to Cart',
+                              onTap: () async {
+                                var data = RestaurentsModel.fromJson({
+                                  'data': [popularitem[i]['restaurant']],
+                                  'success': true,
+                                  'message': 'ok'
+                                });
+                                print(popularitem[i]);
+                                Map<String, dynamic> cartdata = {
+                                  'id': popularitem[i]['id'],
+                                  'restaurantId': popularitem[i]['rest_id'],
+                                  'image': popularitem[i]['menu_image'],
+                                  'details': popularitem[i]['menu_details'],
+                                  'name': popularitem[i]['menu_name'],
+                                  'price': double.parse(popularitem[i]['menu_price']),
+                                  'payableAmount':
+                                      popularitem[i]['menu_price'].toString(),
+                                  'qty': itemqty,
+                                  'data': popularitem[i],
+                                  'is_free': popularitem[i]['is_free'],
+                                  'restaurantdata': data.data[0],
+                                  // 'topping': toppings
+                                  //     .where((product) => product['check'] == true)
+                                  //     .toList(),
+                                  // 'drink': drinks
+                                  //     .where((product) => product['check'] == true)
+                                  //     .toList()
+                                  'addon': []
+                                };
+                                print(cartdata);
+                                print(itemqty);
+                                CartProvider().addToCart(context, cartdata);
+                                await Provider.of<CartProvider>(context,
+                                        listen: false)
+                                    .getcartslist();
+                                checkchanges();
+                                // if (fooditems[index]['cart'] !=
+                                //         null &&
+                                //     fooditems[index]['cart'] ==
+                                //         true) {
+                                //   var qtyy = int.parse(
+                                //       fooditems[index]['qty2']);
+                                //   qtyy++;
+                                //   fooditems[index]['qty2'] =
+                                //       qtyy.toString();
+                                // } else {
+                                //   fooditems[index]['qty2'] =
+                                //       fooditems[index]['qty'];
+                                // }
+
+                                // fooditems[index]['cart'] = true;
+                                // print(fooditems[index]);
+                                // Navigator.pop(context);
+                                setState(() {});
+                                Navigator.pop(context);
+                              },
+                              buttonHeight: 40,
+                              buttonWidth:
+                                  MediaQuery.of(context).size.width * 0.5,
+                              buttonTextStyle: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: AppColors.secondaryElement),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          });
+        });
+  }
+
+
+    checkchanges() async {
+    var cart = [];
+    cart =
+        await Provider.of<CartProvider>(context, listen: false).getcartslist();
+    if (cart.length == 0) {
+      cartbtn = false;
+      for (var j = 0; j < popularitem.length; j++) {
+        popularitem[j]['cart'] = false;
+        popularitem[j]['qty2'] = '1';
+      }
+    }
+    for (var j = 0; j < popularitem.length; j++) {
+      int index = cart.indexWhere((x) => x['id'] == popularitem[j]['id']);
+      if (index == -1) {
+      } else {
+        popularitem[j]['cart'] = true;
+        cartbtn = true;
+        print('here');
+        print(cart[index]['qty']);
+        popularitem[j]['qty2'] = cart[index]['qty'];
+      }
+    }
+
+    setState(() {});
+  }
+
+
 
   searchfromlist() {
     // print(searchlist[0].delivery);
@@ -807,31 +1231,21 @@ class _HomeScreenState extends State<HomeScreen> {
         popularitem.length,
         (i) => InkWell(
               onTap: () {
-                // Navigator.pushNamed(
-                //   context,
-                //   AppRouter.HotspotsDetailsScreen,
-                //   arguments: RestaurantDetails(
-                //       imagePath: hotspotlist[i]['image'],
-                //       restaurantName: hotspotlist[i]['name'],
-                //       restaurantAddress: hotspotlist[i]['address'],
-                //       // rating: hotspotlist[i]['rating'],
-                //       rating: '3.2',
-                //       category: '',
-                //       distance: hotspotlist[i]['distance'] + ' Km',
-                //       data: hotspotlist[i]),
-                // );
-                var data = RestaurentsModel.fromJson({
-                  'data': [popularitem[i]['restaurant']],
-                  'success': true,
-                  'message': 'ok'
-                });
-                print(popularitem[i]['restaurant']);
-                Navigator.pushNamed(context, AppRouter.Add_Extra, arguments: {
-                  'update': false,
-                  'item': popularitem[i],
-                  // 'restaurant': widget.restaurantDetails.data
-                  'restaurant': data.data[0]
-                });
+                
+                // var data = RestaurentsModel.fromJson({
+                //   'data': [popularitem[i]['restaurant']],
+                //   'success': true,
+                //   'message': 'ok'
+                // });
+                // print(popularitem[i]['restaurant']);
+                // Navigator.pushNamed(context, AppRouter.Add_Extra, arguments: {
+                //   'update': false,
+                //   'item': popularitem[i],
+                //   // 'restaurant': widget.restaurantDetails.data
+                //   'restaurant': data.data[0]
+                // });
+
+                bottomSheetforaddcart(context,i);
               },
               child: Container(
                 // height: 245,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/services/ServiceProvider.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/cartservice.dart';
 import 'package:potbelly/services/paymentservice.dart';
@@ -729,6 +730,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
         };
         AppService().sendnotispecificuser(data);
         loader3 = false;
+          Provider.of<ServiceProvider>(context, listen: false).getsubdata(context);
         Navigator.pushNamed(context, AppRouter.CheckOut3,
             arguments: {'type': 'recipe', 'orderId': orderId});
       });
@@ -790,6 +792,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
             };
             AppService().sendnotispecificuser(data);
             loader3 = false;
+              Provider.of<ServiceProvider>(context, listen: false).getsubdata(context);
             Navigator.pushNamed(context, AppRouter.CheckOut3,
                 arguments: {'type': 'recipe', 'orderId': orderId});
           });
@@ -882,6 +885,7 @@ class _CheckOutScreen1State extends State<CheckOutScreen1> {
                 this.loader3 = false;
 
                 setState(() {});
+                  Provider.of<ServiceProvider>(context, listen: false).getsubdata(context);
                 Navigator.pushNamed(context, AppRouter.CheckOut3, arguments: {
                   'type': widget.checkoutdata['type'],
                   'orderId': orderId

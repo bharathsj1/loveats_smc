@@ -22,6 +22,8 @@ import 'package:potbelly/widgets/spaces.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'WebView.dart';
+
 class ProfileScreen extends StatefulWidget {
   static const int TAB_NO = 3;
 
@@ -57,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var noti = await AppService().getnoti();
     print(noti);
     notilist = noti['data'];
-     notilist= notilist.reversed.toList();
+    notilist = notilist.reversed.toList();
     loader2 = false;
     setState(() {});
   }
@@ -100,14 +102,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
     super.initState();
   }
-    getreviews() async {
+
+  getreviews() async {
     var response = await AppService().getratings();
     ratings = response['data'];
     rloader = false;
     print(response);
     setState(() {});
   }
-
 
   initialize() {
     _viewsByIndex = <Widget>[
@@ -322,7 +324,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  social(){
+  social() {
     return Container();
   }
 
@@ -350,56 +352,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         bottomNavigationBar: navBar,
         body: _isLoading
-            ?CircularIndicator()
+            ? CircularIndicator()
             : Container(
                 margin: EdgeInsets.only(top: Sizes.MARGIN_8),
                 child: ListView(
                   children: <Widget>[
-                  _selectedNavIndex != 4?  Column(
-                      children: [
-                        prefs.getString('photo') != null &&
-                                prefs.getString('photo') != ''
-                            ? CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                  StringConst.LIVE_PICTURE_URL +
-                                      prefs.getString('photo'),
-                                ),
-                                backgroundColor: Colors.transparent,
-                                minRadius: Sizes.RADIUS_60,
-                                maxRadius: Sizes.RADIUS_60,
-                              )
-                            : CircleAvatar(
-                                backgroundImage:
-                                    AssetImage('assets/images/andy.png'),
-                                backgroundColor: Colors.transparent,
-                                minRadius: Sizes.RADIUS_40,
-                                maxRadius: Sizes.RADIUS_40,
-                              ),
-                        SpaceH8(),
-                        Text(prefs.getString('name') ?? 'Not Available',
-                            style: Styles.foodyBiteTitleTextStyle),
-                        SpaceH8(),
-                        Text(prefs.getString('email') ?? 'Not Available',
-                            style: Styles.foodyBiteSubtitleTextStyle),
-                        _specificUserSubscriptionModel == null ||
-                                _specificUserSubscriptionModel.data.length <= 0
-                            ? const SizedBox()
-                            : checkanyactive()? Container(
-                                width: double.infinity,
-                                margin: EdgeInsets.symmetric(vertical: 10.0),
-                                padding: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                    color: AppColors.secondaryColor),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'Subscribed'.toUpperCase(),
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ):Container(),
-                      ],
-                    ):Container(),
+                    _selectedNavIndex != 4
+                        ? Column(
+                            children: [
+                              prefs.getString('photo') != null &&
+                                      prefs.getString('photo') != ''
+                                  ? CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        StringConst.LIVE_PICTURE_URL +
+                                            prefs.getString('photo'),
+                                      ),
+                                      backgroundColor: Colors.transparent,
+                                      minRadius: Sizes.RADIUS_60,
+                                      maxRadius: Sizes.RADIUS_60,
+                                    )
+                                  : CircleAvatar(
+                                      backgroundImage:
+                                          AssetImage('assets/images/andy.png'),
+                                      backgroundColor: Colors.transparent,
+                                      minRadius: Sizes.RADIUS_40,
+                                      maxRadius: Sizes.RADIUS_40,
+                                    ),
+                              SpaceH8(),
+                              Text(prefs.getString('name') ?? 'Not Available',
+                                  style: Styles.foodyBiteTitleTextStyle),
+                              SpaceH8(),
+                              Text(prefs.getString('email') ?? 'Not Available',
+                                  style: Styles.foodyBiteSubtitleTextStyle),
+                              _specificUserSubscriptionModel == null ||
+                                      _specificUserSubscriptionModel
+                                              .data.length <=
+                                          0
+                                  ? const SizedBox()
+                                  : checkanyactive()
+                                      ? Container(
+                                          width: double.infinity,
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: 10.0),
+                                          padding: const EdgeInsets.all(20),
+                                          decoration: BoxDecoration(
+                                              color: AppColors.secondaryColor),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            'Subscribed'.toUpperCase(),
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+                            ],
+                          )
+                        : Container(),
                     _selectedNavIndex == 3
                         ? Column(
                             children: [
@@ -426,169 +435,229 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           )
                         : Container(),
-               
-                 _selectedNavIndex == 4?   Padding(
-                  padding: const EdgeInsets.symmetric(horizontal:20.0),
-                   child: Column(
-                     crossAxisAlignment: CrossAxisAlignment.start,
-                     children: [
-                     Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                       children: [
-                        prefs.getString('photo') != null &&
-                                  prefs.getString('photo') != ''
-                              ? CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                    StringConst.LIVE_PICTURE_URL +
-                                        prefs.getString('photo'),
-                                  ),
-                                  backgroundColor: Colors.transparent,
-                                  minRadius:50,
-                                  maxRadius:50,
-                                )
-                              : CircleAvatar(
-                                  backgroundImage:
-                                      AssetImage('assets/images/andy.png'),
-                                  backgroundColor: Colors.transparent,
-                                  minRadius: 50,
-                                  maxRadius: 50,
-                                ),
-                                 IntrinsicHeight(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    detail(number: "50", text: "Reviews"),
-                                    VerticalDivider(
-                                      width: Sizes.WIDTH_40,
-                                      thickness: 1.0,
+                    _selectedNavIndex == 4
+                        ? Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    prefs.getString('photo') != null &&
+                                            prefs.getString('photo') != ''
+                                        ? CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                              StringConst.LIVE_PICTURE_URL +
+                                                  prefs.getString('photo'),
+                                            ),
+                                            backgroundColor: Colors.transparent,
+                                            minRadius: 50,
+                                            maxRadius: 50,
+                                          )
+                                        : CircleAvatar(
+                                            backgroundImage: AssetImage(
+                                                'assets/images/andy.png'),
+                                            backgroundColor: Colors.transparent,
+                                            minRadius: 50,
+                                            maxRadius: 50,
+                                          ),
+                                    IntrinsicHeight(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          detail(number: "50", text: "Reviews"),
+                                          VerticalDivider(
+                                            width: Sizes.WIDTH_40,
+                                            thickness: 1.0,
+                                          ),
+                                          detail(
+                                              number: "100k",
+                                              text: "Followers"),
+                                          VerticalDivider(
+                                            width: Sizes.WIDTH_40,
+                                            thickness: 1.0,
+                                          ),
+                                          detail(
+                                              number: "30", text: "Following"),
+                                          SpaceH24(),
+                                        ],
+                                      ),
                                     ),
-                                    detail(number: "100k", text: "Followers"),
-                                    VerticalDivider(
-                                      width: Sizes.WIDTH_40,
-                                      thickness: 1.0,
-                                    ),
-                                    detail(number: "30", text: "Following"),
-                                    SpaceH24(),
                                   ],
                                 ),
-                              ),
-                     ],),
-                     SizedBox(height: 10,),
-                      Text(toBeginningOfSentenceCase(prefs.getString('name')) ?? 'Not Available',
-                              style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: Colors.black)),
-                     SizedBox(height: 5,),
-                      Text(toBeginningOfSentenceCase('My first priority will always be food because it is the only thing which gives us the energy to live.') ?? 'Not Available',
-                              style: TextStyle(fontSize: 14,fontWeight: FontWeight.normal,color: Colors.black54)),
-                     SizedBox(height: 15,),
-                      Center(
-                        child: PotbellyButton(
-                            'Edit Profile',
-                            onTap: () {
-                            
-                            },
-                            buttonHeight: 42,
-                            buttonWidth: MediaQuery.of(context).size.width * 0.90,
-                            buttonTextStyle: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(width: 0.5,color: Colors.grey),
-                                color: Colors.transparent),
-                          ),
-                      ),
-                      SizedBox(height: 15,)
-                     
-                      ],),
-                      
-                     
-                 ):Container(),
-                   _selectedNavIndex != 4?   Divider(
-                      height: 24,
-                      thickness: 1.0,
-                      color: Colors.grey.shade300,
-                    ):Container(),
-                  _selectedNavIndex == 4?   Divider(
-                      height: 2.5,
-                      thickness: 2.0,
-                      color: Colors.black87,
-                    ):Container(),
-                   _selectedNavIndex == 4? Padding(
-                     padding: const EdgeInsets.only(top:0.0),
-                     child: Wrap(children: postlist()),
-                   ):Container(),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                    toBeginningOfSentenceCase(
+                                            prefs.getString('name')) ??
+                                        'Not Available',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black)),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                    toBeginningOfSentenceCase(
+                                            'My first priority will always be food because it is the only thing which gives us the energy to live.') ??
+                                        'Not Available',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black54)),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Center(
+                                  child: PotbellyButton(
+                                    'Edit Profile',
+                                    onTap: () {},
+                                    buttonHeight: 42,
+                                    buttonWidth:
+                                        MediaQuery.of(context).size.width *
+                                            0.90,
+                                    buttonTextStyle: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(4),
+                                        border: Border.all(
+                                            width: 0.5, color: Colors.grey),
+                                        color: Colors.transparent),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                )
+                              ],
+                            ),
+                          )
+                        : Container(),
+                    _selectedNavIndex != 4
+                        ? Divider(
+                            height: 24,
+                            thickness: 1.0,
+                            color: Colors.grey.shade300,
+                          )
+                        : Container(),
+                    _selectedNavIndex == 4
+                        ? Divider(
+                            height: 2.5,
+                            thickness: 2.0,
+                            color: Colors.black87,
+                          )
+                        : Container(),
+                    _selectedNavIndex == 4
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 0.0),
+                            child: rloader
+                                ? Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 20.0),
+                                      child: Align(
+                                          alignment: Alignment.topCenter,
+                                          child: Image.asset(
+                                            'assets/images/loader.gif',
+                                            height: 80,
+                                            width: 80,
+                                          )),
+                                    ),
+                                  )
+                                : ratings.length == 0
+                                    ? Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(20.0),
+                                          child: Text(
+                                            'No Post Available',
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      )
+                                    : Wrap(children: postlist()),
+                          )
+                        : Container(),
                     _selectedNavIndex == 0
                         ? homewidget()
                         : _selectedNavIndex == 1
                             ? bookmarkwidget()
                             : _selectedNavIndex == 2
                                 ? notificationwidget()
-                                : _selectedNavIndex == 3? profilewidget():social()
+                                : _selectedNavIndex == 3
+                                    ? profilewidget()
+                                    : social()
                   ],
                 ),
               ));
   }
 
-  List allpost=[
+  List allpost = [
     'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
     'https://www.eatright.org/-/media/eatrightimages/health/pregnancy/fertilityandreproduction/bean-corn-tomato-salad-1056788234.jpg?h=450&w=600&la=en&hash=8E919F45C2E0A8D540BB725663DD2F7F3A8CB804',
     'https://tecadvo.com/wp-content/uploads/2020/10/13.jpg',
     'https://media.self.com/photos/5f189b76c58e27c99fbef9e3/1:1/w_850,h_849,c_limit/blackberry-vanilla-french-toast.jpg',
     'https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/10/Eat-Grains-Beans-Food-732x549-Thumbnail-732x549.jpg',
     'https://images.squarespace-cdn.com/content/v1/53621c77e4b0ab57db4d48d5/1497488872780-JUR4XENC89U8RIQ30FEY/IMG_9881.JPG?format=500w'
-    'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+        'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
     'https://www.eatright.org/-/media/eatrightimages/health/pregnancy/fertilityandreproduction/bean-corn-tomato-salad-1056788234.jpg?h=450&w=600&la=en&hash=8E919F45C2E0A8D540BB725663DD2F7F3A8CB804',
     'https://tecadvo.com/wp-content/uploads/2020/10/13.jpg',
     'https://media.self.com/photos/5f189b76c58e27c99fbef9e3/1:1/w_850,h_849,c_limit/blackberry-vanilla-french-toast.jpg',
     'https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/10/Eat-Grains-Beans-Food-732x549-Thumbnail-732x549.jpg',
     'https://images.squarespace-cdn.com/content/v1/53621c77e4b0ab57db4d48d5/1497488872780-JUR4XENC89U8RIQ30FEY/IMG_9881.JPG?format=500w'
   ];
-  
-  postlist(){
-     return List.generate(
-       ratings.length ,
-        (i) =>InkWell(
-          onTap: (){
-            Navigator.pushNamed(context, AppRouter.Post_view,arguments: ratings);
-          },
-          child: Container(
-            decoration: BoxDecoration(border: Border.all(width: 1.5,color: Colors.black)),
-            child: CachedNetworkImage(
-                                imageUrl: StringConst.BASE_imageURL+ ratings[i]['image'],
-                                width: (MediaQuery.of(context).size.width/3)-3,
-                                height: (MediaQuery.of(context).size.width/3)-3,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => Center(
-                                  child: Container(
-                                    // height: 150,
-        
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          AppColors.secondaryElement),
-                                    ),
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    Icon(Icons.error),
-                              ),
+
+  postlist() {
+    return List.generate(
+      ratings.length,
+      (i) => InkWell(
+        onTap: () {
+          Navigator.pushNamed(context, AppRouter.Post_view, arguments: ratings);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              border: Border.all(width: 1.5, color: Colors.black)),
+          child: CachedNetworkImage(
+            imageUrl: StringConst.BASE_imageURL + ratings[i]['image'],
+            width: (MediaQuery.of(context).size.width / 3) - 3,
+            height: (MediaQuery.of(context).size.width / 3) - 3,
+            fit: BoxFit.cover,
+            placeholder: (context, url) => Center(
+              child: Container(
+                // height: 150,
+
+                child: CircularProgressIndicator(
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
+                ),
+              ),
+            ),
+            errorWidget: (context, url, error) => Icon(Icons.error),
           ),
-        ),);
+        ),
+      ),
+    );
   }
 
   void getSpecificUserSubscription() async {
     _specificUserSubscriptionModel =
         await Service().getSpecificUserSubscriptionData();
     print(_specificUserSubscriptionModel.data);
-      _isLoading = false;
+    _isLoading = false;
     setState(() {});
-    
   }
 
-  checkanyactive(){
-    
+  checkanyactive() {
     for (var i = 0; i < _specificUserSubscriptionModel.data.length; i++) {
-      if(_specificUserSubscriptionModel.data[i].status =='active'){
+      if (_specificUserSubscriptionModel.data[i].status == 'active') {
         return true;
       }
     }
@@ -688,10 +757,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               context: context,
               tiles: <Widget>[
                 SettingsListTile(
-                  titleColor: AppColors.black,
-                  title: "Cart",
-                  onTap: () =>Navigator.pushNamed(context, AppRouter.cart_Screen)
-                ),
+                    titleColor: AppColors.black,
+                    title: "Cart",
+                    onTap: () =>
+                        Navigator.pushNamed(context, AppRouter.cart_Screen)),
                 SettingsListTile(
                   titleColor: AppColors.black,
                   title: "Orders History",
@@ -701,8 +770,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SettingsListTile(
                   titleColor: AppColors.black,
                   title: "My Address",
-                   onTap: () => Navigator
-                      .pushNamed(context,AppRouter.userAddresses),
+                  onTap: () =>
+                      Navigator.pushNamed(context, AppRouter.userAddresses),
                 ),
                 SettingsListTile(
                   titleColor: AppColors.black,
@@ -714,10 +783,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   titleColor: AppColors.black,
                   title: "Subscriptions",
                   onTap: () => Navigator.pushNamed(
-                      context, AppRouter.userSubscriptionList).then((value) {
-                        getSpecificUserSubscription();
-                        Provider.of<ServiceProvider>(context, listen: false).getsubdata(context);
-                      }),
+                          context, AppRouter.userSubscriptionList)
+                      .then((value) {
+                    getSpecificUserSubscription();
+                    Provider.of<ServiceProvider>(context, listen: false)
+                        .getsubdata(context);
+                  }),
                 ),
                 // SettingsListTile(
                 //     title: "Change Language",
@@ -777,7 +848,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SettingsListTile(
                   titleColor: AppColors.black,
                   title: "Privacy Policy",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WebViewPage(
+                                url: 'https://loveats.app/privacy-policy-ap')));
+                  },
                 ),
                 SettingsListTile(
                   title: "Terms & Conditions",
@@ -809,10 +886,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _logoutFunction(BuildContext context) async {
-     Provider.of<ProviderService>(context, listen: false)
-                          .allfalse();
-                      Provider.of<ProviderService>(context, listen: false)
-                          .reset();
+    Provider.of<ProviderService>(context, listen: false).allfalse();
+    Provider.of<ProviderService>(context, listen: false).reset();
     await Service().logout(context);
   }
 
@@ -895,7 +970,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   getUserDetail() async {
     prefs = await Service().initializdPrefs();
-   
   }
 
   Widget detail({@required String number, @required String text}) {
@@ -916,5 +990,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
-
-

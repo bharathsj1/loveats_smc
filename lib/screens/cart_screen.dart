@@ -148,13 +148,16 @@ class _CartScreenState extends State<CartScreen> {
     double addon = 0;
     cartlist.forEach((f) {
       total += (f['price']) * double.parse(f['qty']);
+      if(f['addon'] != null){
+
        f['addon'].forEach((g) {
       addon += double.parse(g['data']['price']);
     });
+      }
     });
     print(addon);
-    totalAmount = total;
     totalAmount += addon;
+    totalAmount = total;
     print('total');
     print(totalAmount);
   }

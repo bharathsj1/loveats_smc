@@ -34,7 +34,7 @@ class ServiceProvider with ChangeNotifier  {
       'rest_id':1,
       'lat':lat,
       'lng': lng,
-      'within_KM':40
+      'within_km':6420
     };
     print(data);
     var res= await AppService().checkradius(data);

@@ -76,6 +76,7 @@ dependencies:
   qr_code_scanner: ^0.5.2
   firebase_auth_oauth: ^1.0.3
   badges: ^2.0.1
+  flutter_countdown_timer: ^4.1.0
   
   
 

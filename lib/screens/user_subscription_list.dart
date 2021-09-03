@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:intl/intl.dart';
 import 'package:potbelly/models/specific_user_subscription_model.dart';
 import 'package:potbelly/services/service.dart';
@@ -304,7 +305,12 @@ class _UserSubscriptionListState extends State<UserSubscriptionList> {
                                       children: [
                                         Text('Next Free Recipe',style: TextStyle(fontWeight: FontWeight.bold)),
                                         Spacer(),
-                                        Text(_specificUserrecipeSubscriptionModel.nextfreeMeal ==null? 'Available': _specificUserrecipeSubscriptionModel.nextfreeMeal,style: TextStyle(fontSize: 15,color: AppColors.secondaryElement,fontWeight: FontWeight.bold))
+                                        // Text(_specificUserrecipeSubscriptionModel.nextfreeMeal ==null? 'Available': _specificUserrecipeSubscriptionModel.nextfreeMeal,style: TextStyle(fontSize: 15,color: AppColors.secondaryElement,fontWeight: FontWeight.bold))
+                                      CountdownTimer(
+             
+              onEnd: (){},
+              endTime: endTime,
+          ),
                                       ],
                                     ),
                                     const Divider(),
@@ -397,8 +403,17 @@ class _UserSubscriptionListState extends State<UserSubscriptionList> {
         await Service().getrescipeSubscription();
     // _isLoading = false;
     print(_specificUserrecipeSubscriptionModel);
+    final startTime = DateTime.parse(_specificUserrecipeSubscriptionModel.nextfreeMeal);
+    final currentTime = DateTime.now();
+    final diff_dy = currentTime.difference(startTime).inDays;
+
+    print(diff_dy);
+
+  
     setState(() {});
   }
+
+  int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 30;
 
   cancelSubsc(id) async {
     bool isOK = await Service().cancelStripeSubscription(id);

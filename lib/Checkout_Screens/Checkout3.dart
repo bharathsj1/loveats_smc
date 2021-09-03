@@ -63,13 +63,15 @@ class _CheckOutScreen3State extends State<CheckOutScreen3> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        // leading: InkWell(
-        //   onTap: () => AppRouter.navigator.pop(),
-        //   child: Image.asset(
-        //     ImagePath.arrowBackIcon,
-        //     color: AppColors.headingText,
-        //   ),
-        // ),
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Image.asset(
+            ImagePath.arrowBackIcon,
+            color: AppColors.headingText,
+          ),
+        ),
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: widget.checkoutdata['type'] =='subscription'?null: Text(

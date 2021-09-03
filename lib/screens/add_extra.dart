@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:potbelly/main.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/cartservice.dart';
 import 'package:potbelly/values/values.dart';
+import 'package:potbelly/widgets/potbelly_button.dart';
 import 'package:provider/provider.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 
@@ -125,10 +127,181 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
               fontWeight: FontWeight.bold,
               fontFamily: 'roboto'),
         ),
-        actions: [
-          InkWell(
-              onTap: () {
-                if (widget.data['update'] != null &&
+        // actions: [
+        //   InkWell(
+        //       onTap: () {
+        //         if (widget.data['update'] != null &&
+        //             widget.data['update'] == true) {
+        //           CartProvider().updatecartaddon(
+        //               context,
+        //               widget.data['item'],
+        //               addons
+        //                   .where((pro) => pro['check'] == true)
+        //                   .toList(),
+        //               widget.data['addon']);
+        //           print(widget.data['item']);
+        //           Navigator.pop(context, true);
+        //         } else {
+        //           print(widget.data['item']);
+        //           Map<String, dynamic> cartdata = {
+        //             'id': widget.data['item']['id'],
+        //             'restaurantId': widget.data['item']['rest_id'],
+        //             'image': widget.data['item']['menu_image'],
+        //             'details': widget.data['item']['menu_details'],
+        //             'name': widget.data['item']['menu_name'],
+        //             'price': double.parse(widget.data['item']['menu_price']),
+        //             'payableAmount':
+        //                 widget.data['item']['menu_price'].toString(),
+        //             'qty': this.itemqty,
+        //             'data': widget.data['item'],
+        //             'is_free': widget.data['item']['is_free'],
+        //             'restaurantdata': widget.data['restaurant'],
+        //             // 'topping': toppings
+        //             //     .where((product) => product['check'] == true)
+        //             //     .toList(),
+        //             // 'drink': drinks
+        //             //     .where((product) => product['check'] == true)
+        //             //     .toList()
+        //             'addon': addons
+        //                 .where((product) => product['check'] == true)
+        //                 .toList()
+        //           };
+        //           print(cartdata);
+        //           print(this.itemqty);
+        //           CartProvider().addToCart(context, cartdata);
+        //           Provider.of<CartProvider>(context, listen: false).getcartslist();
+        //           // if (fooditems[index]['cart'] !=
+        //           //         null &&
+        //           //     fooditems[index]['cart'] ==
+        //           //         true) {
+        //           //   var qtyy = int.parse(
+        //           //       fooditems[index]['qty2']);
+        //           //   qtyy++;
+        //           //   fooditems[index]['qty2'] =
+        //           //       qtyy.toString();
+        //           // } else {
+        //           //   fooditems[index]['qty2'] =
+        //           //       fooditems[index]['qty'];
+        //           // }
+
+        //           // fooditems[index]['cart'] = true;
+        //           // print(fooditems[index]);
+        //           // Navigator.pop(context);
+        //           setState(() {});
+        //           Navigator.pop(context); 
+        //         }
+        //       },
+        //       child: Container(
+        //           child: Icon(
+        //         Icons.check,
+        //         color: AppColors.secondaryElement,
+        //       ))),
+        //   SizedBox(
+        //     width: 15,
+        //   )
+        // ],
+     
+      ),
+      bottomNavigationBar: widget.data['item']['is_free']==1?Container(height: 0,width: 0,): Material(
+          elevation: 20,
+          child: Container(
+            padding: EdgeInsets.only(top: 5),
+            height: 60,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal:12.0),
+              child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(width: 5,),
+                      InkWell(
+                        onTap: () {
+                          if (int.parse(this.itemqty) > 1) {
+                            this.itemqty = (int.parse(this.itemqty) - 1).toString();
+                            setState(() {});
+                            // totalprice();
+                            if (int.parse(this.itemqty) == 1) {
+                              // disabled = false;
+                              setState(() {});
+                            }
+                            setState(() {});
+                          }
+                          // Provider.of<CartProvider>(context, listen: false)
+                          //     .removeToCart(cartlist[i]);
+                        },
+ child: Container(
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.zero,
+                          decoration: BoxDecoration(
+                              color: AppColors.black,
+                              borderRadius: BorderRadius.circular(100)),
+                          width: 25,
+                          height: 25,
+                          // child: Text(
+                          //   "-",
+                          //   style: TextStyle(
+                          //       color: AppColors.secondaryElement,
+                          //       fontSize: 70),
+                          // )
+                          child: Icon(
+                            FontAwesomeIcons.minus,
+                            color: AppColors.white,
+                            size: 10,
+                          )),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        this.itemqty,
+                        style: TextStyle(
+                            fontSize: 32,
+                            color: AppColors.secondaryElement,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          print('here');
+                          this.itemqty = (int.parse(this.itemqty) + 1).toString();
+                          print(this.itemqty);
+                          setState(() {});
+
+                          // Provider.of<CartProvider>(context, listen: false)
+                          //     .addToCart(context, data);
+                        },
+                        child: Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.zero,
+                      decoration: BoxDecoration(
+                          color: AppColors.black,
+                          borderRadius: BorderRadius.circular(100)),
+                      width: 25,
+                      height: 25,
+                      // child: Text(
+                      //   "-",
+                      //   style: TextStyle(
+                      //       color: AppColors.secondaryElement,
+                      //       fontSize: 70),
+                      // )
+                      child: Icon(
+                        FontAwesomeIcons.plus,
+                        color: AppColors.white,
+                        size: 10,
+                      )),
+                      ),
+                    ],
+                  ),
+                       PotbellyButton(
+                          'Add to Cart',
+                          onTap: () async {
+                           if (widget.data['update'] != null &&
                     widget.data['update'] == true) {
                   CartProvider().updatecartaddon(
                       context,
@@ -188,106 +361,19 @@ class _AddExtraScreenState extends State<AddExtraScreen> {
                   setState(() {});
                   Navigator.pop(context); 
                 }
-              },
-              child: Container(
-                  child: Icon(
-                Icons.check,
-                color: AppColors.secondaryElement,
-              ))),
-          SizedBox(
-            width: 15,
-          )
-        ],
-      ),
-      bottomNavigationBar: widget.data['item']['is_free']==1?Container(height: 0,width: 0,): Material(
-          elevation: 20,
-          child: Container(
-            padding: EdgeInsets.only(top: 5),
-            height: 60,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.white,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                InkWell(
-                  onTap: () {
-                    if (int.parse(this.itemqty) > 1) {
-                      this.itemqty = (int.parse(this.itemqty) - 1).toString();
-                      setState(() {});
-                      // totalprice();
-                      if (int.parse(this.itemqty) == 1) {
-                        // disabled = false;
-                        setState(() {});
-                      }
-                      setState(() {});
-                    }
-                    // Provider.of<CartProvider>(context, listen: false)
-                    //     .removeToCart(cartlist[i]);
-                  },
-                  child: Container(
-                      alignment: Alignment.topCenter,
-                      padding: EdgeInsets.zero,
-                      decoration: BoxDecoration(
-                          color: AppColors.black,
-                          borderRadius: BorderRadius.circular(100)),
-                      width: 32,
-                      height: 32,
-                      // child: Text(
-                      //   "-",
-                      //   style: TextStyle(
-                      //       color: AppColors.secondaryElement,
-                      //       fontSize: 70),
-                      // )
-                      child: Icon(
-                        Icons.minimize,
-                        color: AppColors.white,
-                        size: 20,
-                      )),
-                ),
-                SizedBox(
-                  width: 15,
-                ),
-                Text(
-                  this.itemqty,
-                  style: TextStyle(
-                      fontSize: 32,
-                      color: AppColors.secondaryElement,
-                      fontWeight: FontWeight.w400),
-                ),
-                SizedBox(
-                  width: 15,
-                ),
-                InkWell(
-                  onTap: () {
-                    print('here');
-                    this.itemqty = (int.parse(this.itemqty) + 1).toString();
-                    print(this.itemqty);
-                    setState(() {});
-
-                    // Provider.of<CartProvider>(context, listen: false)
-                    //     .addToCart(context, data);
-                  },
-                  child: Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.zero,
-                      decoration: BoxDecoration(
-                          color: AppColors.black,
-                          borderRadius: BorderRadius.circular(100)),
-                      width: 32,
-                      height: 32,
-                      // child: Text(
-                      //   "-",
-                      //   style: TextStyle(
-                      //       color: AppColors.secondaryElement,
-                      //       fontSize: 70),
-                      // )
-                      child: Icon(
-                        Icons.add,
-                        color: AppColors.white,
-                        size: 20,
-                      )),
-                ),
-              ],
+                          },
+                          buttonHeight: 40,
+                          buttonWidth: MediaQuery.of(context).size.width * 0.5,
+                          buttonTextStyle: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: AppColors.secondaryElement),
+                        ),
+                ],
+              ),
             ),
           )),
       body: SingleChildScrollView(
