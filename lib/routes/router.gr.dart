@@ -14,7 +14,9 @@ import 'package:potbelly/screens/Enjoy_meal.dart';
 import 'package:potbelly/screens/FilterItem.dart';
 import 'package:potbelly/screens/Filter_sort.dart';
 import 'package:potbelly/screens/Filters_Screen.dart';
+import 'package:potbelly/screens/My_social.dart';
 import 'package:potbelly/screens/NewSearch_screen.dart';
+import 'package:potbelly/screens/New_Profile.dart';
 import 'package:potbelly/screens/New_splash_Screen.dart';
 import 'package:potbelly/screens/Post_view.dart';
 import 'package:potbelly/screens/Recipe_details.dart';
@@ -147,6 +149,8 @@ class AppRouter {
   static const Filtered_Restaurant = '/Filtered_Restaurant';
   static const Qr_Scanner = '/Qr_Scanner';
   static const testing = '/testing';
+  static const New_profile_screen = '/New_profile_screen';
+  static const My_social = '/My_social';
 
   static const userAddresses = '/user_addresses';
   Navigator navigator = Navigator();
@@ -246,6 +250,16 @@ class AppRouter {
       case AppRouter.Filter_Items:
         return MaterialPageRoute<dynamic>(
           builder: (_) => FilterItems(data: args),
+          settings: settings,
+        );
+      case AppRouter.New_profile_screen:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => NewProfileScreen(),
+          settings: settings,
+        );
+      case AppRouter.My_social:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => MySocial(),
           settings: settings,
         );
       // case AppRouter.Table_Scanner:

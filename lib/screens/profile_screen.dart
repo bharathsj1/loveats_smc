@@ -39,8 +39,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   SharedPreferences prefs;
   List bookmarks = [];
   List ratings = [];
-  bool loader = true;
   bool rloader = true;
+  bool loader = true;
   List<NavBarItemData> _navBarItems;
   List<Widget> _viewsByIndex;
   int _selectedNavIndex = 0;

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:potbelly/models/subscription_model.dart';
+import 'package:potbelly/services/service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
@@ -14,6 +15,8 @@ class ServiceProvider with ChangeNotifier  {
   bool userloactionenable=false;
   var userlocaladdress;
   int cartitemlength=0;
+  SharedPreferences prefs;
+
   
   getsubdata(context) async {
     var res= await AppService().checksubweek();
@@ -75,6 +78,10 @@ class ServiceProvider with ChangeNotifier  {
       cartitemlength=0;
     }
     notifyListeners();
+  }
+
+     getUserDetail() async {
+    prefs = await Service().initializdPrefs();
   }
 
 }

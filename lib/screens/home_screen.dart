@@ -272,6 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_isGuest == null || !_isGuest) {
       getsubrecipe();
       Provider.of<ServiceProvider>(context, listen: false).getsubdata(context);
+      Provider.of<ServiceProvider>(context, listen: false).getUserDetail();
     }
   }
 
@@ -1878,7 +1879,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       if (_isGuest == null || !_isGuest) {
                                         Navigator.pushNamed(
                                           context,
-                                          AppRouter.profileScreen,
+                                          // AppRouter.profileScreen,
+                                          AppRouter.New_profile_screen,
                                         );
                                       } else
                                         _askLoginDialog(context);

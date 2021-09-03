@@ -17,6 +17,7 @@ class _UserSubscriptionListState extends State<UserSubscriptionList> {
   SpecificUserSubscriptionModel _specificUserSubscriptionModel;
   SpecificUserSubscriptionModel _specificUserrecipeSubscriptionModel;
   bool _isLoading = true;
+  bool _isLoading2 = true;
   @override
   void initState() {
     getCurrentUserSubscription();
@@ -327,7 +328,7 @@ class _UserSubscriptionListState extends State<UserSubscriptionList> {
       appBar: AppBar(
         title: Text(' Subscriptions List'),
       ),
-      body: _isLoading
+      body: _isLoading || _isLoading2
           ? Center(
               child: Text('Please wait ...'),
             )
@@ -401,13 +402,14 @@ class _UserSubscriptionListState extends State<UserSubscriptionList> {
     print(await Service().getStripeUserId());
     _specificUserrecipeSubscriptionModel =
         await Service().getrescipeSubscription();
-    // _isLoading = false;
-    print(_specificUserrecipeSubscriptionModel);
-    final startTime = DateTime.parse(_specificUserrecipeSubscriptionModel.nextfreeMeal);
-    final currentTime = DateTime.now();
-    final diff_dy = currentTime.difference(startTime).inDays;
+    _isLoading2 = false;
 
-    print(diff_dy);
+    // print(_specificUserrecipeSubscriptionModel);
+    // final startTime = DateTime.parse(_specificUserrecipeSubscriptionModel.nextfreeMeal);
+    // final currentTime = DateTime.now();
+    // final diff_dy = currentTime.difference(startTime).inDays;
+
+    // print(diff_dy);
 
   
     setState(() {});
