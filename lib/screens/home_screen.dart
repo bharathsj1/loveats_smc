@@ -729,7 +729,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         SizedBox(
-                          height: 10,
+                          height: 20,
                         ),
                       ],
                     ),
@@ -1844,7 +1844,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Navigator.pushNamed(
                                             context,
                                             AppRouter.cart_Screen,
-                                          );
+                                          ).then((value) {
+                                            checkchanges();
+                                          });
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(

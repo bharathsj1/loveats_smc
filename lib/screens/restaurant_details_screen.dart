@@ -1599,6 +1599,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
           // }).then((value) {
           //   checkchanges(newfooditems);
           // });
+          print(newfooditems[i]);
           bottomSheetforaddcart(context,newfooditems[i]);
         },
         child: Container(
@@ -2505,11 +2506,11 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                             PotbellyButton(
                               'Add to Cart',
                               onTap: () async {
-                                var data = RestaurentsModel.fromJson({
-                                  'data': [items['restaurant']],
-                                  'success': true,
-                                  'message': 'ok'
-                                });
+                                // var data = RestaurentsModel.fromJson({
+                                //   'data': [items['restaurant']],
+                                //   'success': true,
+                                //   'message': 'ok'
+                                // });
                                 print(items);
                                 Map<String, dynamic> cartdata = {
                                   'id': items['id'],
@@ -2523,7 +2524,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                                   'qty': itemqty,
                                   'data': items,
                                   'is_free': items['is_free'],
-                                  'restaurantdata': data.data[0],
+                                  'restaurantdata':widget.restaurantDetails.data,
                                   // 'topping': toppings
                                   //     .where((product) => product['check'] == true)
                                   //     .toList(),
@@ -2573,7 +2574,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen>
                           ],
                         ),
                         SizedBox(
-                          height: 10,
+                          height: 20,
                         ),
                       ],
                     ),

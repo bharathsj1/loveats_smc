@@ -457,7 +457,7 @@ class _FilterItemsState extends State<FilterItems> {
                           ],
                         ),
                         SizedBox(
-                          height: 10,
+                          height: 20,
                         ),
                       ],
                     ),

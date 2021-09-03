@@ -50,7 +50,7 @@ class _AddNewCartState extends State<AddNewCart> {
   var photo = "";
   bool usecustomcard = false;
 
-  CardDetails _card ;
+  CardDetails _card;
 
   localdata() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -234,6 +234,10 @@ class _AddNewCartState extends State<AddNewCart> {
                                               child: TextFormField(
                                                 controller: cardnumber,
                                                 autofocus: true,
+                                                autofillHints: [
+                                                  AutofillHints.creditCardNumber,
+                                                 
+                                                ],
                                                 cursorColor:
                                                     AppColors.secondaryElement,
                                                 maxLength: 16,
@@ -245,13 +249,12 @@ class _AddNewCartState extends State<AddNewCart> {
                                                         number: number);
                                                   });
                                                 },
-                                                
+
                                                 style: TextStyle(
                                                   fontSize: 14,
                                                   color: Colors.grey,
                                                 ),
                                                 decoration: InputDecoration(
-                                                
                                                   //         border: new OutlineInputBorder(
                                                   // borderSide: new BorderSide(color: Colors.teal)),
                                                   //       contentPadding: EdgeInsets.all(5),
@@ -273,9 +276,8 @@ class _AddNewCartState extends State<AddNewCart> {
                                                   // border:OutlineInputBorder(
                                                   //   borderRadius:BorderRadius.circular(20.0),
                                                   // ),
-                                                  
                                                 ),
-                                                
+
                                                 // obscureText: true,
                                               ),
                                             ),
@@ -354,6 +356,10 @@ class _AddNewCartState extends State<AddNewCart> {
                                                   0.75,
                                               child: TextField(
                                                 controller: cardholder,
+                                                 autofillHints: [
+                                                  AutofillHints.creditCardName,
+                                                 
+                                                ],
                                                 cursorColor:
                                                     AppColors.secondaryElement,
 
@@ -425,6 +431,10 @@ class _AddNewCartState extends State<AddNewCart> {
                                                         .secondaryElement,
 
                                                     maxLength: 2,
+                                                     autofillHints: [
+                                                  AutofillHints.creditCardExpirationMonth,
+                                                 
+                                                ],
                                                     onChanged: (number) {
                                                       setState(() {
                                                         _card = _card.copyWith(
@@ -478,6 +488,10 @@ class _AddNewCartState extends State<AddNewCart> {
                                                   width: 30,
                                                   child: TextField(
                                                     controller: expy,
+                                                     autofillHints: [
+                                                  AutofillHints.creditCardExpirationYear,
+                                                 
+                                                ],
                                                     cursorColor: AppColors
                                                         .secondaryElement,
                                                     onChanged: (number) {
@@ -550,6 +564,7 @@ class _AddNewCartState extends State<AddNewCart> {
                                                 controller: cvv,
                                                 cursorColor:
                                                     AppColors.secondaryElement,
+                                                    
                                                 onChanged: (number) {
                                                   setState(() {
                                                     _card = _card.copyWith(
@@ -630,7 +645,11 @@ class _AddNewCartState extends State<AddNewCart> {
                         ),
                       )
                     : PotbellyButton(
-                      this.usecustomcard?'Pay Now  ( ${StringConst.currency}'+widget.data['plandata'].amount+' )'  : 'Save Card',
+                        this.usecustomcard
+                            ? 'Pay Now  ( ${StringConst.currency}' +
+                                widget.data['plandata'].amount +
+                                ' )'
+                            : 'Save Card',
                         onTap: () async {
                           FocusScope.of(context).unfocus();
                           setState(() {
@@ -642,57 +661,52 @@ class _AddNewCartState extends State<AddNewCart> {
                               this.expy.text.trim() != '' &&
                               this.cvv.text.trim() != '') {
                             if (usecustomcard) {
-                              try{
-                              await Stripe.instance
-                                  .dangerouslyUpdateCardDetails(_card);
-                              final paymentMethod = await Stripe.instance
-                                  .createPaymentMethod(
-                                      PaymentMethodParams.card(
-                                       
-                                      ));
-                                   
-                              setState(() {});
-                              print(paymentMethod);
-                               var userstripe = await Service().getStripeUserId();
-                               print(userstripe);
-                             var data={
-                              //  'method':paymentMethod.id,
-                               'customer':userstripe
-                             };
-                             var respo=  await PaymentService().attachmethod(data,paymentMethod.id);
-                             print(respo);
-                              if(respo ==null){
-                                 Toast.show('Error', context, duration: 3);
-                                 loader = false;
-                                 setState(() { 
-                                 });
-                              }
-                              else{
-                                
-                              var data2 = {
-                                //  'user_id':42,
-                                'payment_method_id': paymentMethod.id
-                                // 'payment_method_id': 'pm_1JTCIEHxiL0NyAbFOj0g7r9Q'
-                              };
-                              var response = await AppService().storesub(data2);
-                              print(response);
-                              if(response ==null){
-                                 Toast.show('Error', context, duration: 3);
-                                 loader = false;
-                                 setState(() { 
-                                 });
-                              }
-                              else{
-                                 loader = false;
-                                Navigator.pop(context);
-                                Toast.show('Subscribed', context,
-                                    duration: 3);
+                              try {
+                                await Stripe.instance
+                                    .dangerouslyUpdateCardDetails(_card);
+                                final paymentMethod = await Stripe.instance
+                                    .createPaymentMethod(
+                                        PaymentMethodParams.card());
+
                                 setState(() {});
-                              }
-                              }
-                              }
-                              catch(error){
-                                 Toast.show('Error', context, duration: 3);
+                                print(paymentMethod);
+                                var userstripe =
+                                    await Service().getStripeUserId();
+                                print(userstripe);
+                                var data = {
+                                  //  'method':paymentMethod.id,
+                                  'customer': userstripe
+                                };
+                                var respo = await PaymentService()
+                                    .attachmethod(data, paymentMethod.id);
+                                print(respo);
+                                if (respo == null) {
+                                  Toast.show('Error', context, duration: 3);
+                                  loader = false;
+                                  setState(() {});
+                                } else {
+                                  var data2 = {
+                                    //  'user_id':42,
+                                    'payment_method_id': paymentMethod.id
+                                    // 'payment_method_id': 'pm_1JTCIEHxiL0NyAbFOj0g7r9Q'
+                                  };
+                                  var response =
+                                      await AppService().storesub(data2);
+                                  print(response);
+                                  if (response == null) {
+                                    Toast.show('Error', context, duration: 3);
+                                    loader = false;
+                                    setState(() {});
+                                  } else {
+                                    loader = false;
+                                    Navigator.pop(context);
+                                    Toast.show('Subscribed', context,
+                                        duration: 3);
+                                    setState(() {});
+                                  }
+                                }
+                              } catch (error) {
+                                Toast.show('Error', context, duration: 3);
                               }
                               setState(() {});
                             } else {
