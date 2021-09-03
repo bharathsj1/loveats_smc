@@ -178,440 +178,453 @@ class _AddNewCartState extends State<AddNewCart> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.only(top: 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          // SizedBox(
-                          //   height: 20,
-                          // ),
-                          // Padding(
-                          //   padding: const EdgeInsets.symmetric(
-                          //       horizontal: 20, vertical: 0),
-                          //   child: Container(
-                          //     child: Row(
-                          //       mainAxisAlignment: MainAxisAlignment.center,
-                          //       children: [
-                          //         Text('${StringConst.currency}'+this.totalprice.toStringAsFixed(2),
-                          //             style: TextStyle(
-                          //                 fontSize: 40, color: Colors.black45)),
-                          //       ],
-                          //     ),
-                          //   ),
-                          // ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8),
-                                      child: Text(
-                                        'CARD NUMBER',
-                                        style: TextStyle(
-                                            fontSize: 11,
-                                            color: AppColors.black),
+                      child: AutofillGroup(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            // SizedBox(
+                            //   height: 20,
+                            // ),
+                            // Padding(
+                            //   padding: const EdgeInsets.symmetric(
+                            //       horizontal: 20, vertical: 0),
+                            //   child: Container(
+                            //     child: Row(
+                            //       mainAxisAlignment: MainAxisAlignment.center,
+                            //       children: [
+                            //         Text('${StringConst.currency}'+this.totalprice.toStringAsFixed(2),
+                            //             style: TextStyle(
+                            //                 fontSize: 40, color: Colors.black45)),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 8),
+                                        child: Text(
+                                          'CARD NUMBER',
+                                          style: TextStyle(
+                                              fontSize: 11,
+                                              color: AppColors.black),
+                                        ),
                                       ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Card(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5.0),
-                                          ),
-                                          // elevation: 2,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 20, vertical: 0),
-                                            child: Container(
-                                              width: 170,
-                                              child: TextFormField(
-                                                controller: cardnumber,
-                                                autofocus: true,
-                                                autofillHints: [
-                                                  AutofillHints.creditCardNumber,
-                                                 
-                                                ],
-                                                cursorColor:
-                                                    AppColors.secondaryElement,
-                                                maxLength: 16,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                onChanged: (number) {
-                                                  setState(() {
-                                                    _card = _card.copyWith(
-                                                        number: number);
-                                                  });
-                                                },
-
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.grey,
-                                                ),
-                                                decoration: InputDecoration(
-                                                  //         border: new OutlineInputBorder(
-                                                  // borderSide: new BorderSide(color: Colors.teal)),
-                                                  //       contentPadding: EdgeInsets.all(5),
-                                                  border: InputBorder.none,
-                                                  counterText: "",
-
-                                                  // prefixIcon: Icon(
-                                                  //   Icons.person,
-                                                  //   color: mainColor,
-                                                  //   size: 20,
-                                                  // ),
-                                                  hintText:
-                                                      '1234  2341  1234  3256',
-                                                  hintStyle: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.grey,
-                                                  ),
-
-                                                  // border:OutlineInputBorder(
-                                                  //   borderRadius:BorderRadius.circular(20.0),
-                                                  // ),
-                                                ),
-
-                                                // obscureText: true,
-                                              ),
+                                      Row(
+                                        children: [
+                                          Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0),
                                             ),
-                                          ),
-                                        ),
-                                        Card(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5.0),
-                                          ),
-                                          // elevation: 2,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 0),
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                    width: 40,
-                                                    child: Container(
-                                                      width: 30,
-                                                      height: 50,
-                                                      decoration: BoxDecoration(
-                                                          image: DecorationImage(
-                                                              image: AssetImage(
-                                                                  'assets/images/visa2.png'))),
-                                                    )),
-                                                Container(
-                                                    width: 40,
-                                                    child: Container(
-                                                      width: 30,
-                                                      height: 50,
-                                                      decoration: BoxDecoration(
-                                                          image: DecorationImage(
-                                                              image: AssetImage(
-                                                                  'assets/images/master.png'))),
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8),
-                                      child: Text(
-                                        'CARDHOLDER NAME',
-                                        style: TextStyle(
-                                            fontSize: 11,
-                                            color: AppColors.black),
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Card(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5.0),
-                                          ),
-                                          // elevation: 2,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 20, vertical: 0),
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.75,
-                                              child: TextField(
-                                                controller: cardholder,
-                                                 autofillHints: [
-                                                  AutofillHints.creditCardName,
-                                                 
-                                                ],
-                                                cursorColor:
-                                                    AppColors.secondaryElement,
-
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.grey,
-                                                ),
-                                                decoration: InputDecoration(
-                                                  // contentPadding: EdgeInsets.all(5),
-                                                  border: InputBorder.none,
-                                                  // prefixIcon: Icon(
-                                                  //   Icons.person,
-                                                  //   color: mainColor,
-                                                  //   size: 20,
-                                                  // ),
-                                                  hintText: 'ENTER NAME',
-                                                  hintStyle: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.grey,
-                                                  ),
-
-                                                  // border:OutlineInputBorder(
-                                                  //   borderRadius:BorderRadius.circular(20.0),
-                                                  // ),
-                                                ),
-                                                // obscureText: true,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Row(
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8),
-                                          child: Text(
-                                            'EXPIRE DATE',
-                                            style: TextStyle(fontSize: 11),
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Card(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(5.0),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 20,
-                                                        vertical: 0),
-                                                child: Container(
-                                                  width: 30,
-                                                  child: TextField(
-                                                    controller: expm,
-                                                    cursorColor: AppColors
-                                                        .secondaryElement,
-
-                                                    maxLength: 2,
-                                                     autofillHints: [
-                                                  AutofillHints.creditCardExpirationMonth,
-                                                 
-                                                ],
-                                                    onChanged: (number) {
-                                                      setState(() {
-                                                        _card = _card.copyWith(
-                                                            expirationMonth:
-                                                                int.tryParse(
-                                                                    number));
-                                                      });
-                                                    },
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.grey,
-                                                    ),
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    decoration: InputDecoration(
-                                                      // contentPadding: EdgeInsets.all(5),
-                                                      border: InputBorder.none,
-                                                      // prefixIcon: Icon(
-                                                      //   Icons.person,
-                                                      //   color: mainColor,
-                                                      //   size: 20,
-                                                      counterText: "",
-                                                      // ),
-                                                      hintText: 'MM',
-                                                      hintStyle: TextStyle(
-                                                        fontSize: 14,
-                                                        color: Colors.grey,
-                                                      ),
-
-                                                      // border:OutlineInputBorder(
-                                                      //   borderRadius:BorderRadius.circular(20.0),
-                                                      // ),
-                                                    ),
-                                                    // obscureText: true,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Card(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(5.0),
-                                              ),
-                                              // elevation: 2,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 20,
-                                                        vertical: 0),
-                                                child: Container(
-                                                  width: 30,
-                                                  child: TextField(
-                                                    controller: expy,
-                                                     autofillHints: [
-                                                  AutofillHints.creditCardExpirationYear,
-                                                 
-                                                ],
-                                                    cursorColor: AppColors
-                                                        .secondaryElement,
-                                                    onChanged: (number) {
-                                                      setState(() {
-                                                        _card = _card.copyWith(
-                                                            expirationYear:
-                                                                int.tryParse(
-                                                                    number));
-                                                      });
-                                                    },
-                                                    maxLength: 2,
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.grey,
-                                                    ),
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    decoration: InputDecoration(
-                                                      // contentPadding: EdgeInsets.all(5),
-                                                      border: InputBorder.none,
-                                                      // prefixIcon: Icon(
-                                                      //   Icons.person,
-                                                      //   color: mainColor,
-                                                      //   size: 20,
-                                                      counterText: "",
-                                                      // ),
-                                                      hintText: 'YY',
-                                                      hintStyle: TextStyle(
-                                                        fontSize: 14,
-                                                        color: Colors.grey,
-                                                      ),
-
-                                                      // border:OutlineInputBorder(
-                                                      //   borderRadius:BorderRadius.circular(20.0),
-                                                      // ),
-                                                    ),
-                                                    // obscureText: true,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8),
-                                          child: Text(
-                                            'CVV',
-                                            style: TextStyle(fontSize: 11),
-                                          ),
-                                        ),
-                                        Card(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5.0),
-                                          ),
-                                          // elevation: 2,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 20, vertical: 0),
-                                            child: Container(
-                                              width: 30,
-                                              child: TextField(
-                                                controller: cvv,
-                                                cursorColor:
-                                                    AppColors.secondaryElement,
+                                            // elevation: 2,
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 20, vertical: 0),
+                                              child: Container(
+                                                width: 170,
+                                                child: TextField(
+                                                  controller: cardnumber,
+                                                  autofocus: true,
+                                                  autofillHints: [
+                                                    AutofillHints.telephoneNumber,
+                                                    // AutofillHints.telephoneNumber,
+                                                    // AutofillHints.telephoneNumberNational,
                                                     
-                                                onChanged: (number) {
-                                                  setState(() {
-                                                    _card = _card.copyWith(
-                                                        cvc: number);
-                                                  });
-                                                },
-                                                maxLength: 3,
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.grey,
-                                                ),
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                decoration: InputDecoration(
-                                                  // contentPadding: EdgeInsets.all(5),
-                                                  border: InputBorder.none,
-                                                  counterText: "",
-                                                  // prefixIcon: Icon(
-                                                  //   Icons.person,
-                                                  //   color: mainColor,
-                                                  //   size: 20,
-                                                  // ),
-                                                  hintText: '123',
-                                                  hintStyle: TextStyle(
+                                                    // AutofillHints.email,
+                                                   
+                                                  ],
+                                                  cursorColor:
+                                                      AppColors.secondaryElement,
+                                                  maxLength: 16,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  onChanged: (number) {
+                                                    setState(() {
+                                                      _card = _card.copyWith(
+                                                          number: number);
+                                                    });
+                                                  },
+                      
+                                                  style: TextStyle(
                                                     fontSize: 14,
                                                     color: Colors.grey,
                                                   ),
-
-                                                  // border:OutlineInputBorder(
-                                                  //   borderRadius:BorderRadius.circular(20.0),
-                                                  // ),
+                                                  decoration: InputDecoration(
+                                                    //         border: new OutlineInputBorder(
+                                                    // borderSide: new BorderSide(color: Colors.teal)),
+                                                    //       contentPadding: EdgeInsets.all(5),
+                                                    border: InputBorder.none,
+                                                    counterText: "",
+                      
+                                                    // prefixIcon: Icon(
+                                                    //   Icons.person,
+                                                    //   color: mainColor,
+                                                    //   size: 20,
+                                                    // ),
+                                                    hintText:
+                                                        '1234  2341  1234  3256',
+                                                    hintStyle: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.grey,
+                                                    ),
+                      
+                                                    // border:OutlineInputBorder(
+                                                    //   borderRadius:BorderRadius.circular(20.0),
+                                                    // ),
+                                                  ),
+                      
+                                                  // obscureText: true,
                                                 ),
-                                                // obscureText: true,
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                          Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0),
+                                            ),
+                                            // elevation: 2,
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 10, vertical: 0),
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                      width: 40,
+                                                      child: Container(
+                                                        width: 30,
+                                                        height: 50,
+                                                        decoration: BoxDecoration(
+                                                            image: DecorationImage(
+                                                                image: AssetImage(
+                                                                    'assets/images/visa2.png'))),
+                                                      )),
+                                                  Container(
+                                                      width: 40,
+                                                      child: Container(
+                                                        width: 30,
+                                                        height: 50,
+                                                        decoration: BoxDecoration(
+                                                            image: DecorationImage(
+                                                                image: AssetImage(
+                                                                    'assets/images/master.png'))),
+                                                      )),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-
-                          // end--------------------------------------------------------------------------------------------
-                        ],
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 8),
+                                        child: Text(
+                                          'CARDHOLDER NAME',
+                                          style: TextStyle(
+                                              fontSize: 11,
+                                              color: AppColors.black),
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0),
+                                            ),
+                                            // elevation: 2,
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 20, vertical: 0),
+                                              child: Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.75,
+                                                child: TextField(
+                                                  controller: cardholder,
+                                                 
+                                                   autofillHints: [
+                                                    // AutofillHints.creditCardName,
+                                                    //  AutofillHints.creditCardNumber,
+                                                    // AutofillHints.telephoneNumber,
+                                                    // AutofillHints.telephoneNumberNational,
+                                                    AutofillHints.givenName,
+                                                   
+                                                  ],
+                                                  cursorColor:
+                                                      AppColors.secondaryElement,
+                      
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.grey,
+                                                  ),
+                                                  keyboardType: TextInputType.name,
+                                                  decoration: InputDecoration(
+                                                    // contentPadding: EdgeInsets.all(5),
+                                                    border: InputBorder.none,
+                                                    // prefixIcon: Icon(
+                                                    //   Icons.person,
+                                                    //   color: mainColor,
+                                                    //   size: 20,
+                                                    // ),
+                                                    // labelText: 'Name',
+                                                    hintText: 'Name',
+                                                    hintStyle: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.grey,
+                                                    ),
+                      
+                                                    // border:OutlineInputBorder(
+                                                    //   borderRadius:BorderRadius.circular(20.0),
+                                                    // ),
+                                                  ),
+                                                  // obscureText: true,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Row(
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 8),
+                                            child: Text(
+                                              'EXPIRE DATE',
+                                              style: TextStyle(fontSize: 11),
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              Card(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5.0),
+                                                ),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                          horizontal: 20,
+                                                          vertical: 0),
+                                                  child: Container(
+                                                    width: 30,
+                                                    child: TextField(
+                                                      controller: expm,
+                                                      cursorColor: AppColors
+                                                          .secondaryElement,
+                      
+                                                      maxLength: 2,
+                                                       autofillHints: [
+                                                    AutofillHints.creditCardExpirationMonth,
+                                                   
+                                                  ],
+                                                      onChanged: (number) {
+                                                        setState(() {
+                                                          _card = _card.copyWith(
+                                                              expirationMonth:
+                                                                  int.tryParse(
+                                                                      number));
+                                                        });
+                                                      },
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.grey,
+                                                      ),
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      decoration: InputDecoration(
+                                                        // contentPadding: EdgeInsets.all(5),
+                                                        border: InputBorder.none,
+                                                        // prefixIcon: Icon(
+                                                        //   Icons.person,
+                                                        //   color: mainColor,
+                                                        //   size: 20,
+                                                        counterText: "",
+                                                        // ),
+                                                        hintText: 'MM',
+                                                        hintStyle: TextStyle(
+                                                          fontSize: 14,
+                                                          color: Colors.grey,
+                                                        ),
+                      
+                                                        // border:OutlineInputBorder(
+                                                        //   borderRadius:BorderRadius.circular(20.0),
+                                                        // ),
+                                                      ),
+                                                      // obscureText: true,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Card(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5.0),
+                                                ),
+                                                // elevation: 2,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                          horizontal: 20,
+                                                          vertical: 0),
+                                                  child: Container(
+                                                    width: 30,
+                                                    child: TextField(
+                                                      controller: expy,
+                                                       autofillHints: [
+                                                    AutofillHints.creditCardExpirationYear,
+                                                   
+                                                  ],
+                                                      cursorColor: AppColors
+                                                          .secondaryElement,
+                                                      onChanged: (number) {
+                                                        setState(() {
+                                                          _card = _card.copyWith(
+                                                              expirationYear:
+                                                                  int.tryParse(
+                                                                      number));
+                                                        });
+                                                      },
+                                                      maxLength: 2,
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.grey,
+                                                      ),
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      decoration: InputDecoration(
+                                                        // contentPadding: EdgeInsets.all(5),
+                                                        border: InputBorder.none,
+                                                        // prefixIcon: Icon(
+                                                        //   Icons.person,
+                                                        //   color: mainColor,
+                                                        //   size: 20,
+                                                        counterText: "",
+                                                        // ),
+                                                        hintText: 'YY',
+                                                        hintStyle: TextStyle(
+                                                          fontSize: 14,
+                                                          color: Colors.grey,
+                                                        ),
+                      
+                                                        // border:OutlineInputBorder(
+                                                        //   borderRadius:BorderRadius.circular(20.0),
+                                                        // ),
+                                                      ),
+                                                      // obscureText: true,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 8),
+                                            child: Text(
+                                              'CVV',
+                                              style: TextStyle(fontSize: 11),
+                                            ),
+                                          ),
+                                          Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0),
+                                            ),
+                                            // elevation: 2,
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 20, vertical: 0),
+                                              child: Container(
+                                                width: 30,
+                                                child: TextField(
+                                                  controller: cvv,
+                                                  cursorColor:
+                                                      AppColors.secondaryElement,
+                                                      
+                                                  onChanged: (number) {
+                                                    setState(() {
+                                                      _card = _card.copyWith(
+                                                          cvc: number);
+                                                    });
+                                                  },
+                                                  maxLength: 3,
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.grey,
+                                                  ),
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  decoration: InputDecoration(
+                                                    // contentPadding: EdgeInsets.all(5),
+                                                    border: InputBorder.none,
+                                                    counterText: "",
+                                                    // prefixIcon: Icon(
+                                                    //   Icons.person,
+                                                    //   color: mainColor,
+                                                    //   size: 20,
+                                                    // ),
+                                                    hintText: '123',
+                                                    hintStyle: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.grey,
+                                                    ),
+                      
+                                                    // border:OutlineInputBorder(
+                                                    //   borderRadius:BorderRadius.circular(20.0),
+                                                    // ),
+                                                  ),
+                                                  // obscureText: true,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                      
+                            // end--------------------------------------------------------------------------------------------
+                          ],
+                        ),
                       ),
                     ),
                   )
