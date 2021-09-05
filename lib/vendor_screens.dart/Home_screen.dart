@@ -2,9 +2,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/services/ServiceProvider.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/firebaseSetup.dart';
 import 'package:potbelly/values/values.dart';
+import 'package:provider/provider.dart';
 
 class Vendor_Home_screen extends StatefulWidget {
   static const int TAB_NO = 0;
@@ -15,7 +17,7 @@ class Vendor_Home_screen extends StatefulWidget {
 }
 
 class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
-  List orderslist = [];
+  // List orderslist = [];
   bool loader = true;
   bool reloader = true;
   TextStyle subHeadingTextStyle = Styles.customTitleTextStyle(
@@ -40,23 +42,28 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
 
   @override
   void initState() {
+      Provider.of<ServiceProvider>(context, listen: false)
+                          .getUserDetail();
      FirebaseSetup().configureFirebase(context);
     //  _register();
-    getorders();
+    // getorders();
+   
+     Provider.of<ServiceProvider>(context, listen: false)
+                          .getorders();
     super.initState();
   }
 
   getorders() async {
     var orders = await AppService().getOrdersRestaurent();
     print(orders);
-    orderslist = orders['data'];
-    print(orderslist);
+    // orderslist = orders['data'];
+    // print(orderslist);
     loader = false;
     reloader = false;
     setState(() {});
   }
 
-  List<Widget> card() {
+  List<Widget> card(orderslist) {
     return List.generate(
         orderslist.length,
         (i) => InkWell(
@@ -66,7 +73,10 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                     .then((value) {
                   setState(() {
                     reloader = true;
-                    getorders();
+                    // getorders();
+
+                    Provider.of<ServiceProvider>(context, listen: false)
+                          .getorders();
                   });
                 });
               },
@@ -194,6 +204,7 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
 
   @override
   Widget build(BuildContext context) {
+    return Consumer<ServiceProvider>(builder: (context, service, child) {
     return Scaffold(
       
       appBar: AppBar(
@@ -218,7 +229,7 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                                       // if (!_isGuest) {
                                         Navigator.pushNamed(
                                           context,
-                                          AppRouter.profileScreen,
+                                          AppRouter.New_profile_screen,
                                         );
                                       // } else
                                       //   _askLoginDialog(context);
@@ -246,14 +257,14 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
         ],
       ),
       
-      body: loader
+      body: service.loader
           ? Center(
               child: CircularProgressIndicator(
                 valueColor:
                     AlwaysStoppedAnimation<Color>(AppColors.secondaryElement),
               ),
             )
-          : reloader
+          : service.reloader
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -276,7 +287,7 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                     ],
                   ),
                 )
-              : orderslist.length == 0
+              : service.orderslist.length == 0
                   ? Center(
                       child: Container(
                         child: Text('No order available'),
@@ -289,7 +300,7 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                             height: 8,
                           ),
                           Column(
-                            children: card(),
+                            children: card(service.orderslist),
                           ),
                           SizedBox(
                             height: 30,
@@ -298,5 +309,6 @@ class _Vendor_Home_screenState extends State<Vendor_Home_screen> {
                       ),
                     ),
     );
+    });
   }
 }

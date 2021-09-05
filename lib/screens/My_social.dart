@@ -71,13 +71,9 @@ class _MySocialState extends State<MySocial> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    service.prefs.getString('photo') != null &&
-                                            service.prefs.getString('photo') != ''
+                                    service.userData['profile_picture'] !=null && service.userData['profile_picture'].isNotEmpty
                                         ? CircleAvatar(
-                                            backgroundImage: NetworkImage(
-                                              StringConst.LIVE_PICTURE_URL +
-                                                  service.prefs.getString('photo'),
-                                            ),
+                                            backgroundImage: NetworkImage(StringConst.BASE_imageURL+ service.userData['profile_picture']),
                                             backgroundColor: Colors.transparent,
                                             minRadius: 50,
                                             maxRadius: 50,

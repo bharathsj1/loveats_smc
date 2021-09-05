@@ -16,6 +16,10 @@ class ServiceProvider with ChangeNotifier  {
   var userlocaladdress;
   int cartitemlength=0;
   SharedPreferences prefs;
+  var userData={};
+  List orderslist = [];
+  bool loader = true;
+  bool reloader = true;
 
   
   getsubdata(context) async {
@@ -82,6 +86,32 @@ class ServiceProvider with ChangeNotifier  {
 
      getUserDetail() async {
     prefs = await Service().initializdPrefs();
+    userData = await AppService().getCurrentUserData2();
+    print('userData');
+    print(userData);
+    notifyListeners();
+  }
+
+
+    getorders() async {
+    // notifyListeners();
+    String accounttype = await AppService().gettype();
+    var orders = await AppService().getOrdersRestaurent();
+    print(orders);
+    orderslist = orders['data'];
+    if(accounttype =='4'){
+    orderslist= orderslist.reversed.toList();
+    }
+    loader = false;
+    reloader = false;
+    notifyListeners();
+  }
+
+  resetorder(){
+    loader=true;
+    reloader=true;
+    orderslist.clear();
+    notifyListeners();
   }
 
 }

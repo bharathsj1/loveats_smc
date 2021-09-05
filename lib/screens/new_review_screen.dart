@@ -16,6 +16,8 @@ import 'package:potbelly/widgets/search_card.dart';
 import 'package:potbelly/widgets/search_input_field.dart';
 import 'package:potbelly/widgets/spaces.dart';
 import 'package:toast/toast.dart';
+import 'package:photofilters/photofilters.dart';
+import 'package:image/image.dart' as imageLib;
 
 class NewReviewScreen extends StatefulWidget {
    var orderdata;
@@ -196,9 +198,50 @@ class _NewReviewScreenState extends State<NewReviewScreen> {
          print('sizeInBytes3');
          print(sizeInBytess);
           setState(() {
-            selectedfile = compressedFile;
-            _imageSelected = true;
+            selectedfile= compressedFile;
+            // _imageSelected = true;
           });
+           var cimage = imageLib.decodeImage(await selectedfile.readAsBytes());
+           cimage = imageLib.copyResize(cimage, width: 600);
+           Map imagefile = await Navigator.push(
+      context,
+      new MaterialPageRoute(
+        builder: (context) => new PhotoFilterSelector(
+          title: Text("Filters",style: TextStyle(color: AppColors.secondaryElement,)),
+          image: cimage,
+          filters: presetFiltersList,
+          circleShape: false,
+          appBarColor: AppColors.white,
+          filename: selectedfile.path.split('/').last,
+          loader: Center(child:Align(
+                  alignment: Alignment.center,
+                  child: Image.asset(
+                    'assets/images/loader.gif',
+                    height: 80,
+                    width: 80,
+                  )),),
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+    
+    if (imagefile != null && imagefile.containsKey('image_filtered')) {
+      setState(() {
+        selectedfile = imagefile['image_filtered'];
+            _imageSelected = true;
+      });
+      //  final fff = File(selectedfile.path);            
+         int sizeInBytesss2 = selectedfile.lengthSync();
+      print('sizeInBytesss2');
+      print(sizeInBytesss2);
+    }
+    else{
+        _imageSelected = false;
+      selectedfile=null;
+      setState(() {
+        
+      });
+    }
           // doUploadImage(base64Encode(compressedFile.readAsBytesSync()));
     // }
     }
@@ -249,8 +292,49 @@ class _NewReviewScreenState extends State<NewReviewScreen> {
          print(sizeInBytess);
           setState(() {
             selectedfile= compressedFile;
-            _imageSelected = true;
+            // _imageSelected = true;
           });
+           var cimage = imageLib.decodeImage(await selectedfile.readAsBytes());
+           cimage = imageLib.copyResize(cimage, width: 600);
+           Map imagefile = await Navigator.push(
+      context,
+      new MaterialPageRoute(
+        builder: (context) => new PhotoFilterSelector(
+          title: Text("Filters",style: TextStyle(color: AppColors.secondaryElement,)),
+          image: cimage,
+          filters: presetFiltersList,
+          circleShape: false,
+          appBarColor: AppColors.white,
+          filename: selectedfile.path.split('/').last,
+          loader: Center(child:Align(
+                  alignment: Alignment.center,
+                  child: Image.asset(
+                    'assets/images/loader.gif',
+                    height: 80,
+                    width: 80,
+                  )),),
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+    
+    if (imagefile != null && imagefile.containsKey('image_filtered')) {
+      setState(() {
+        selectedfile = imagefile['image_filtered'];
+            _imageSelected = true;
+      });
+      //  final fff = File(selectedfile.path);            
+         int sizeInBytesss2 = selectedfile.lengthSync();
+      print('sizeInBytesss2');
+      print(sizeInBytesss2);
+    }
+    else{
+        _imageSelected = false;
+      selectedfile=null;
+      setState(() {
+        
+      });
+    }
           // doUploadImage(base64Encode(compressedFile.readAsBytesSync()));
     // }
     }

@@ -77,6 +77,8 @@ dependencies:
   firebase_auth_oauth: ^1.0.3
   badges: ^2.0.1
   flutter_countdown_timer: ^4.1.0
+  photofilters: ^3.0.1
+  like_button: ^2.0.3
   
   
 

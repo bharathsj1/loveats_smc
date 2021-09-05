@@ -24,7 +24,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
     super.initState();
   }
 
-  profileoptionlist(sub) {
+  profileoptionlist(pic, sub) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -40,19 +40,34 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
           children: [
             Row(
               children: [
-                Material(
-                  elevation: 10,
-                  shadowColor: Colors.grey[400],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/andy.png'),
-                    backgroundColor: Colors.transparent,
-                    minRadius: Sizes.RADIUS_18,
-                    maxRadius: Sizes.RADIUS_18,
-                  ),
-                ),
+                (pic != null && pic.isNotEmpty)
+                    ? Material(
+                        elevation: 10,
+                        shadowColor: Colors.grey[400],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(StringConst.BASE_imageURL + pic),
+                          backgroundColor: Colors.grey.shade300,
+                          minRadius: Sizes.RADIUS_18,
+                          maxRadius: Sizes.RADIUS_18,
+                        ),
+                      )
+                    : Material(
+                        elevation: 10,
+                        shadowColor: Colors.grey[400],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage('assets/images/andy.png'),
+                          backgroundColor: Colors.transparent,
+                          minRadius: Sizes.RADIUS_18,
+                          maxRadius: Sizes.RADIUS_18,
+                        ),
+                      ),
                 SizedBox(
                   width: 30,
                 ),
@@ -259,176 +274,181 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ServiceProvider>(builder: (context, service, child) {
-    return Consumer<CartProvider>(builder: (context, cartservice, child) {
-      return Scaffold(
-        backgroundColor: Color(0xFFF9FBFA),
-        appBar: AppBar(
-          elevation: 1.5,
-          // centerTitle: true,
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Account',
-                style: Styles.customTitleTextStyle(
-                  color: AppColors.black,
-                  fontWeight: FontWeight.w600,
-                  fontSize: Sizes.TEXT_SIZE_18,
+      return Consumer<CartProvider>(builder: (context, cartservice, child) {
+        var user=service.prefs.getString('accounttype');
+        print(user);
+        return Scaffold(
+          backgroundColor: Color(0xFFF9FBFA),
+          appBar: AppBar(
+            elevation: 1.5,
+            // centerTitle: true,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Account',
+                  style: Styles.customTitleTextStyle(
+                    color: AppColors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: Sizes.TEXT_SIZE_18,
+                  ),
                 ),
-              ),
-              Text(
-                service.prefs.getString('email') ?? '',
-                style: Styles.customTitleTextStyle(
-                  color: AppColors.grey,
-                  fontWeight: FontWeight.w300,
-                  fontSize: 14,
+                Text(
+                  service.prefs.getString('email') ?? '',
+                  style: Styles.customTitleTextStyle(
+                    color: AppColors.grey,
+                    fontWeight: FontWeight.w300,
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-            InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, AppRouter.My_social);
-                },
-                child: profileoptionlist(service.usermealsub),),
-              SizedBox(
-                height: 20,
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, AppRouter.editProfileScreen);
-                },
-                child: optionlist(null, 'Edit Profile', Icons.edit, true),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, AppRouter.changePasswordScreen);
-                },
-                child: optionlist(
-                    null, 'Change Password', Icons.lock_outline, false),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    AppRouter.cart_Screen,
-                  );
-                },
-                child: optionlist(cartservice.cartitemlength.toString(), 'Cart',
-                    OMIcons.shoppingCart, true),
-              ),
-              InkWell(
-                onTap: () {
-                  // Navigator.pushNamed(context, AppRouter.changePasswordScreen);
-                },
-                child:
-                    optionlist(null, 'Wallet', OMIcons.monetizationOn, false),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, AppRouter.notificationsScreen);
-                },
-                child: optionlist(
-                    null, 'Notifications', OMIcons.notifications, false),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, AppRouter.bookmarksScreen);
-                },
-                child: optionlist(null, 'Bookmarks', OMIcons.bookmarks, true),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, AppRouter.order_list);
-                },
-                child: optionlist(null, 'My Order', OMIcons.history, false),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, AppRouter.userAddresses);
-                },
-                child:
-                    optionlist(null, 'My Address', OMIcons.myLocation, false),
-              ),
-              InkWell(
-                onTap: () {
-                  // Navigator.pushNamed(context, AppRouter.changePasswordScreen);
-                },
-                child:
-                    optionlist(null, 'My Transactions', OMIcons.payment, false),
-              ),
-              InkWell(
-                onTap: () {
-                 Navigator.pushNamed(
-                          context, AppRouter.userSubscriptionList)
-                      .then((value) {
-                    
-                    Provider.of<ServiceProvider>(context, listen: false)
-                        .getsubdata(context);});
-                },
-                child: optionlist(null, 'My Subscription',
-                    Icons.auto_awesome_motion_outlined, false),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+              user=='2'?  InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRouter.My_social);
+                  },
+                  child: profileoptionlist(
+                      service.userData['profile_picture'], service.usermealsub),
+                ):Container(),
+                SizedBox(
+                  height: 20,
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRouter.editProfileScreen);
+                  },
+                  child: optionlist(null, 'Edit Profile', Icons.edit, true),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(
+                        context, AppRouter.changePasswordScreen);
+                  },
+                  child: optionlist(
+                      null, 'Change Password', Icons.lock_outline, false),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+            user=='2'?     InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      AppRouter.cart_Screen,
+                    );
+                  },
+                  child: optionlist(cartservice.cartitemlength.toString(),
+                      'Cart', OMIcons.shoppingCart, true),
+                ):Container(),
+               user=='2'?  InkWell(
+                  onTap: () {
+                    // Navigator.pushNamed(context, AppRouter.changePasswordScreen);
+                  },
+                  child:
+                      optionlist(null, 'Wallet', OMIcons.monetizationOn, false),
+                ):Container(),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRouter.notificationsScreen);
+                  },
+                  child: optionlist(
+                      null, 'Notifications', OMIcons.notifications, false),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+             user=='2'?    Column(children: [
+
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRouter.bookmarksScreen);
+                  },
+                  child: optionlist(null, 'Bookmarks', OMIcons.bookmarks, true),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRouter.order_list);
+                  },
+                  child: optionlist(null, 'My Order', OMIcons.history, false),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRouter.userAddresses);
+                  },
+                  child:
+                      optionlist(null, 'My Address', OMIcons.myLocation, false),
+                ),
+                InkWell(
+                  onTap: () {
+                    // Navigator.pushNamed(context, AppRouter.changePasswordScreen);
+                  },
+                  child: optionlist(
+                      null, 'My Transactions', OMIcons.payment, false),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRouter.userSubscriptionList)
+                        .then((value) {
+                      Provider.of<ServiceProvider>(context, listen: false)
+                          .getsubdata(context);
+                    });
+                  },
+                  child: optionlist(null, 'My Subscription',
+                      Icons.auto_awesome_motion_outlined, false),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ],):Container(),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => WebViewPage(
                                 url: 'https://loveats.app/privacy-policy-ap')));
-                },
-                child: optionlist(
-                    null, 'Privacy Policy', Icons.security_outlined, false),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
+                  },
+                  child: optionlist(
+                      null, 'Privacy Policy', Icons.security_outlined, false),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => WebViewPage(
                                 url: 'https://loveats.app/privacy-policy-ap')));
-                },
-                child: optionlist(null, 'Terms & Conditions',
-                    Icons.description_outlined, false),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              InkWell(
-                onTap: () {
-                 _logoutDialog(context);
-                },
-                child: logout('Logout', Icons.logout_outlined),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-            ],
+                  },
+                  child: optionlist(null, 'Terms & Conditions',
+                      Icons.description_outlined, false),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                InkWell(
+                  onTap: () {
+                    _logoutDialog(context);
+                  },
+                  child: logout('Logout', Icons.logout_outlined),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
           ),
-        ),
-      );
-    });
+        );
+      });
     });
   }
 
-
-  
   Future<void> _logoutDialog(BuildContext context) async {
     return showDialog<void>(
       context: context,
@@ -442,6 +462,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
   _logoutFunction(BuildContext context) async {
     Provider.of<ProviderService>(context, listen: false).allfalse();
     Provider.of<ProviderService>(context, listen: false).reset();
+    Provider.of<ServiceProvider>(context, listen: false).resetorder();
     await Service().logout(context);
   }
 
@@ -475,9 +496,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
                   child: Text(
                     'Are you sure you want to Logout ?',
                     style: textTheme.title.copyWith(
-                      fontSize: Sizes.TEXT_SIZE_20,
-                      color: Colors.black54
-                    ),
+                        fontSize: Sizes.TEXT_SIZE_20, color: Colors.black54),
                   ),
                 ),
               ),
@@ -497,8 +516,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
                         color: AppColors.greyShade1,
                       ),
                     ),
-                    textStyle:
-                        textTheme.button.copyWith(color: Colors.black54),
+                    textStyle: textTheme.button.copyWith(color: Colors.black54),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   AlertDialogButton(
@@ -522,5 +540,4 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
       ),
     );
   }
-
 }

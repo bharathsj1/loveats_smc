@@ -7,10 +7,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:potbelly/routes/router.gr.dart';
+import 'package:potbelly/services/ServiceProvider.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/values/values.dart';
 import 'package:potbelly/vendor_screens.dart/open_direction.dart';
 import 'package:potbelly/widgets/potbelly_button.dart';
+import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
@@ -292,6 +294,8 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                       // 'user_id': widget.orderdata['customer_id']
                     };
                     AppService().sendnotideliveryboy(data2);
+                    Provider.of<ServiceProvider>(context, listen: false)
+                          .getorders();
                   } else {
                     var data = {
                       'title': 'Order Rejected',
@@ -304,6 +308,8 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                   widget.orderdata['super_admin'] = type;
                   loader = false;
                   setState(() {});
+                  Provider.of<ServiceProvider>(context, listen: false)
+                          .getorders();
                 }
               });
              }
@@ -328,16 +334,23 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                       'user_id': widget.orderdata['customer_id']
                     };
                     AppService().sendnotispecificuser(data);
+                    print(widget.orderdata['rest_details']);
                      var data2 = {
                         'title': 'New Order',
                         'body':
-                            'Order#'+widget.orderdata['id']+' was assigned to you',
+                            'Order#'+widget.orderdata['id'].toString()+' was assigned to you',
                         // 'title': 'Order Delivered',
                         // 'body': 'Thanks for ordering, Enjoy you meal',
                         // 'data': value.toString(),
-                        'user_id': widget.orderdata['rest_details']['user_id']
+                        'user_id': widget.orderdata['order_detail'][0]['rest_details']['user_id']
                       };
+                       
                       AppService().sendnotispecificuser(data2);
+                       loader = false;
+
+                  setState(() {});
+                  Provider.of<ServiceProvider>(context, listen: false)
+                          .getorders();
                   } else {
                     var data = {
                       'title': 'Order Rejected',
@@ -350,6 +363,8 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                   widget.orderdata['super_admin'] = type;
                   loader = false;
                   setState(() {});
+                  Provider.of<ServiceProvider>(context, listen: false)
+                          .getorders();
                 }
               });
             } else {
@@ -377,6 +392,8 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                       // 'user_id': widget.orderdata['customer_id']
                     };
                     AppService().sendnotideliveryboy(data2);
+                    Provider.of<ServiceProvider>(context, listen: false)
+                          .getorders();
                   }
                 });
               } else if (type == 'onway') {
@@ -396,6 +413,8 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                         'user_id': widget.orderdata['customer_id']
                       };
                       AppService().sendnotispecificuser(data);
+                      Provider.of<ServiceProvider>(context, listen: false)
+                          .getorders();
                     }
                   });
                    SharedPreferences pref = await SharedPreferences.getInstance();
@@ -892,6 +911,26 @@ class _OrdersDetailsState extends State<OrdersDetails> {
                                         'driving': false
                                       });
                                 }
+                                //  Navigator.pushNamed(
+                                //     context, AppRouter.Open_maps,
+                                //     arguments: {
+                                //       'lat': double.parse(
+                                //           widget.orderdata['user_address']
+                                //               ['user_latitude']),
+                                //       'long': double.parse(
+                                //           widget.orderdata['user_address']
+                                //               ['user_longitude']),
+                                //       'address':
+                                //           widget.orderdata['user_address']
+                                //                   ['address'] +
+                                //               ', ' +
+                                //               widget.orderdata['user_address']
+                                //                   ['city'] +
+                                //               ', ' +
+                                //               widget.orderdata['user_address']
+                                //                   ['country'],
+                                //     });
+                              
                               } else {
                                 Navigator.pushNamed(
                                     context, AppRouter.Open_maps,

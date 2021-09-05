@@ -98,6 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
     getpopularitem();
     isUserGuest();
     checklocation();
+      Provider.of<ServiceProvider>(context, listen: false).getUserDetail();
      Provider.of<CartProvider>(context, listen: false).getcartslist();
     super.initState();
   }
@@ -272,7 +273,6 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_isGuest == null || !_isGuest) {
       getsubrecipe();
       Provider.of<ServiceProvider>(context, listen: false).getsubdata(context);
-      Provider.of<ServiceProvider>(context, listen: false).getUserDetail();
     }
   }
 
@@ -1894,7 +1894,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                     // )
                                     child: Padding(
                                       padding: const EdgeInsets.only(top: 4.0),
-                                      child: Material(
+                                      child: service.userData['profile_picture'] !=null && service.userData['profile_picture'].isNotEmpty ?
+                                      Material(
+                                        elevation: 10,
+                                        shadowColor: Colors.grey[400],
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                        ),
+                                        child: CircleAvatar(
+                                          backgroundImage: NetworkImage(StringConst.BASE_imageURL+ service.userData['profile_picture']),
+                                          backgroundColor: Colors.grey.shade300,
+                                          minRadius: Sizes.RADIUS_14,
+                                          maxRadius: Sizes.RADIUS_14,
+                                        ),
+                                      ):
+                                       Material(
                                         elevation: 10,
                                         shadowColor: Colors.grey[400],
                                         shape: RoundedRectangleBorder(
@@ -1904,7 +1919,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: CircleAvatar(
                                           backgroundImage: AssetImage(
                                               'assets/images/andy.png'),
-                                          backgroundColor: Colors.transparent,
+                                          backgroundColor: Colors.grey.shade300,
                                           minRadius: Sizes.RADIUS_14,
                                           maxRadius: Sizes.RADIUS_14,
                                         ),

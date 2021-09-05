@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:potbelly/grovey_startScreens/demo.dart';
+import 'package:potbelly/screens/home_screen.dart';
 import 'package:potbelly/screens/login_screen.dart';
 import 'package:potbelly/screens/root_screen.dart';
 import 'package:potbelly/screens/root_screen2.dart';
@@ -296,7 +298,7 @@ class _Open_directionState extends State<Open_direction> {
                 context,
                 MaterialPageRoute(
                     builder: (_) =>
-                        shared != null ? shared == '2'? RootScreen():  RootScreen2() : BackgroundVideo()),
+                        shared != null ? shared == '2'? HomeScreen():  Vendor_Home_screen() : GooeyEdgeDemo()),
                 (route) => false);
               },
               child: Icon(
@@ -401,7 +403,10 @@ class _Open_directionState extends State<Open_direction> {
         PointLatLng(widget.desdirection['clat'], widget.desdirection['clong']),
         PointLatLng(widget.desdirection['lat'], widget.desdirection['long']),
         travelMode: TravelMode.driving,
-        wayPoints: [PolylineWayPoint(location: "Sabo, Yaba Lagos Nigeria")]);
+        optimizeWaypoints: true
+
+        // wayPoints: [PolylineWayPoint(location: "Sabo, Yaba Lagos Nigeria")]
+        );
      print(result);
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) {

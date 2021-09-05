@@ -20,9 +20,12 @@ import 'package:potbelly/models/specific_user_subscription_model.dart';
 import 'package:potbelly/models/user.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/values/values.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 import 'package:toast/toast.dart';
+
+import 'ServiceProvider.dart';
 
 class Service {
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -634,7 +637,7 @@ class Service {
     }
   }
 
-  Future<bool> updateProfile(Map<String, dynamic> data) async {
+  Future<bool> updateProfile(Map<String, dynamic> data,context) async {
     var pref = await initializdPrefs();
     FormData _formData = FormData.fromMap(data);
     String accessToken = await getAccessToken();
@@ -644,6 +647,28 @@ class Service {
           options: Options(method: 'POST'), data: _formData);
       if (response.data['success'] == true) {
         await setKeyData('userdata', jsonEncode(response.data['data']));
+        Provider.of<ServiceProvider>(context, listen: false).getUserDetail();
+        return true;
+      } else {
+        return false;
+      }
+    } catch (onError) {
+      print(onError.toString());
+      return false;
+    }
+  }
+  Future<bool> updateProfilepic(Map<String, dynamic> data,context) async {
+    var pref = await initializdPrefs();
+    FormData _formData = FormData.fromMap(data);
+    String accessToken = await getAccessToken();
+    dio.options.headers['Authorization'] = "Bearer " + accessToken;
+    try {
+      Response response = await dio.request('/update-profile-picture',
+          options: Options(method: 'POST'), data: _formData);
+      if (response.data['success'] == true) {
+        await setKeyData('userdata', jsonEncode(response.data['data']));
+        Provider.of<ServiceProvider>(context, listen: false).getUserDetail();
+        print(response.data);
         return true;
       } else {
         return false;

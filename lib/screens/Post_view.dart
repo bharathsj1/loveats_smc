@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:like_button/like_button.dart';
 import 'package:potbelly/routes/router.gr.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
+import 'package:potbelly/widgets/Heart_Animation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
@@ -44,6 +46,8 @@ class _PostViewState extends State<PostView> {
       }
     }
   }
+
+  bool isheartAnimation = false;
 
   postlist() {
     var ratings = widget.postdata;
@@ -88,72 +92,161 @@ class _PostViewState extends State<PostView> {
                   SizedBox(
                     height: 8,
                   ),
-                  Container(
-                    color: AppColors.white,
-                    height: 350,
-                    width: MediaQuery.of(context).size.width,
-                    child: CachedNetworkImage(
-                      imageUrl: StringConst.BASE_imageURL + ratings[i]['image'],
-                      height: 350,
-                      width: MediaQuery.of(context).size.width,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => Center(
-                        child: Container(
-                          // height: 150,
+                  GestureDetector(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        AspectRatio(
+                          aspectRatio: 1,
+                          child: Container(
+                            color: AppColors.white,
+                            height: 350,
+                            width: MediaQuery.of(context).size.width,
+                            child: CachedNetworkImage(
+                              imageUrl: StringConst.BASE_imageURL +
+                                  ratings[i]['image'],
+                              height: 350,
+                              width: MediaQuery.of(context).size.width,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Center(
+                                child: Container(
+                                  // height: 150,
 
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                AppColors.secondaryElement),
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.secondaryElement),
+                                  ),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                            ),
                           ),
                         ),
-                      ),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
+                        Opacity(
+                          opacity: ratings[i]['animation'] != null &&
+                                  ratings[i]['animation']
+                              ? 1
+                              : 0,
+                          child: HeartAnimationWidget(
+                              isAnimating: ratings[i]['animation'] == null
+                                  ? false
+                                  : ratings[i]['animation'],
+                              child:
+                                  //     Icon(
+                                  //   Icons.favorite,
+                                  //   color: Colors.white,
+                                  //   size: 100,
+                                  // ),
+                                  Image.asset(
+                                'assets/images/newlogo.png',
+                                height: 100,
+                                width: 100,
+                              ),
+                              duration: Duration(milliseconds: 500),
+                              onEnd: () {
+                                // isheartAnimation=false;
+                                print('endedd');
+                                ratings[i]['animation'] = false;
+                                print(ratings[i]['animation']);
+                                setState(() {});
+                              }),
+                        )
+                      ],
                     ),
+                    onDoubleTap: () {
+                      setState(() {
+                        // isheartAnimation = true;
+                        ratings[i]['animation'] = true;
+                        print(ratings[i]['animation']);
+                        // ratings[i]['Is_liked'] = true;
+                        if (ratings[i]['Is_liked'] == null ||
+                            ratings[i]['Is_liked'] == false) {
+                          ratings[i]['Is_liked'] = true;
+                          // print(ratings);
+                          setState(() {});
+
+                          like(ratings[i]);
+                        }
+                      });
+                    },
                   ),
                   SizedBox(
                     height: 8,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 14.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
-                            InkWell(
-                                onTap: () {
-                                  ratings[i]['Is_liked'] =
-                                      ratings[i]['Is_liked'] != null
-                                          ? !ratings[i]['Is_liked']
-                                          : true;
-                                  // print(ratings);
-                                  setState(() {});
-                                  like(ratings[i]);
-                                },
-                                child: Icon(
+                            // InkWell(
+                            //     onTap: () {
+                            //       ratings[i]['Is_liked'] =
+                            //           ratings[i]['Is_liked'] != null
+                            //               ? !ratings[i]['Is_liked']
+                            //               : true;
+                            //       // print(ratings);
+                            //       setState(() {});
+                            //       like(ratings[i]);
+                            //     },
+                            //     child: Icon(
+                            //       ratings[i]['Is_liked'] != null &&
+                            //               ratings[i]['Is_liked']
+                            //           ? Icons.favorite
+                            //           : Icons.favorite_border_outlined,
+                            //       color: ratings[i]['Is_liked'] != null &&
+                            //               ratings[i]['Is_liked']
+                            //           ? Colors.red
+                            //           : Colors.grey.shade600,
+                            //       size: 28,
+                            //     )),
+                            LikeButton(
+                              size: 28,
+                              likeBuilder: (isLiked) {
+                                final Color = ratings[i]['Is_liked'] != null &&
+                                        ratings[i]['Is_liked']
+                                    ? Colors.red
+                                    : Colors.grey.shade600;
+                                return Icon(
                                   ratings[i]['Is_liked'] != null &&
                                           ratings[i]['Is_liked']
                                       ? Icons.favorite
                                       : Icons.favorite_border_outlined,
-                                  color: ratings[i]['Is_liked'] != null &&
-                                          ratings[i]['Is_liked']
-                                      ? Colors.red
-                                      : Colors.grey.shade600,
+                                  color: Color,
                                   size: 28,
-                                )),
+                                );
+                              },
+                              onTap: (isLiked) async {
+                                ratings[i]['Is_liked'] =
+                                    ratings[i]['Is_liked'] != null
+                                        ? !ratings[i]['Is_liked']
+                                        : true;
+                                // print(ratings);
+                                setState(() {});
+                                like(ratings[i]);
+                                // ratings[i]['Is_liked']=!ratings[i]['Is_liked'];
+
+                                return ratings[i]['Is_liked'];
+                              },
+                            ),
+
                             SizedBox(
                               width: 12,
                             ),
                             InkWell(
-                              onTap: (){
-                                Navigator.pushNamed(context, AppRouter.Add_post_comments,arguments: ratings[i]);
-                              },
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, AppRouter.Add_post_comments,
+                                      arguments: ratings[i]);
+                                },
                                 child: Container(
                                     child: Icon(
-                              Icons.messenger_outline_sharp,
-                              color: Colors.grey.shade600,
-                              size: 24,
-                            ))),
+                                  Icons.messenger_outline_sharp,
+                                  color: Colors.grey.shade600,
+                                  size: 24,
+                                ))),
                             SizedBox(
                               width: 12,
                             ),
@@ -177,7 +270,7 @@ class _PostViewState extends State<PostView> {
                   ),
                   ratings[i]['likes'].length > 0
                       ? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
                           child: Text(
                               'Liked by ${ratings[i]['likes'].length} users',
                               style: TextStyle(
@@ -190,7 +283,7 @@ class _PostViewState extends State<PostView> {
                     height: 6,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: Row(
                       children: [
                         prefs != null
@@ -204,15 +297,19 @@ class _PostViewState extends State<PostView> {
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black))
                             : Container(),
-                          SizedBox(width: 4,),
-                        ratings[i]['comment'] !=null ||  ratings[i]['comment'] !=''?  Text(
-                              toBeginningOfSentenceCase(
-                                      ratings[i]['comment']),
-                              style: TextStyle(
-                                  fontSize: 12,
-
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black)):Container()
+                        SizedBox(
+                          width: 4,
+                        ),
+                        ratings[i]['comment'] != null ||
+                                ratings[i]['comment'] != ''
+                            ? Text(
+                                toBeginningOfSentenceCase(
+                                    ratings[i]['comment']),
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black))
+                            : Container()
                       ],
                     ),
                   )

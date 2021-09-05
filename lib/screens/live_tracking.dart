@@ -298,7 +298,8 @@ class _Live_TrackingState extends State<Live_Tracking> {
         PointLatLng(double.parse(widget.desdirection['clat']), double.parse(widget.desdirection['clong'])),
         PointLatLng(widget.desdirection['lat'], widget.desdirection['long']),
         travelMode: TravelMode.driving,
-        wayPoints: [PolylineWayPoint(location: "Sabo, Yaba Lagos Nigeria")]);
+        // wayPoints: [PolylineWayPoint(location: "Sabo, Yaba Lagos Nigeria")]
+        );
     print(result);
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) {

@@ -4,15 +4,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:potbelly/screens/notification_screen.dart';
+import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/messagepopup.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/vendor_screens.dart/vendor_notifications.dart';
 import 'package:provider/provider.dart';
 
+import 'ServiceProvider.dart';
+
 class FirebaseSetup {
   // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   String savedMessageId  = "";
    configureFirebase(context) async {
+       String accounttype = await AppService().gettype();
      await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,
@@ -22,6 +26,10 @@ class FirebaseSetup {
   
     // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if(accounttype !='2'){
+        Provider.of<ServiceProvider>(context, listen: false)
+                          .getorders();
+      }
       print(savedMessageId);
       print( message.messageId);
       print(savedMessageId != message.messageId);
@@ -41,6 +49,10 @@ class FirebaseSetup {
 }
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      if(accounttype !='2'){
+        Provider.of<ServiceProvider>(context, listen: false)
+                          .getorders();
+      }
       if (message.data != null) {
         // Provider.of<ProviderPage>(context, listen: false).changenoti();
         print("onLaunch");

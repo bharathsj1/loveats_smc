@@ -634,4 +634,13 @@ class AppService {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return JsonDecoder().convert(sharedPreferences.getString('userdata'));
   }
+  getCurrentUserData2() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if(sharedPreferences.getString('userdata') ==null){
+      return {};
+    }
+    else{
+    return JsonDecoder().convert(sharedPreferences.getString('userdata'));
+    }
+  }
 }

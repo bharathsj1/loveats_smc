@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:potbelly/models/UserModel.dart';
 import 'package:potbelly/screens/home_screen.dart';
+import 'package:potbelly/services/ServiceProvider.dart';
 import 'package:potbelly/services/appServices.dart';
 import 'package:potbelly/services/service.dart';
 import 'package:potbelly/values/values.dart';
@@ -413,6 +414,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
                                 child: InkWell(
                                   onTap: () {
                                     Service().saveGuest();
+                                       Provider.of<ServiceProvider>(context, listen: false).getUserDetail();
                                     Navigator.pushAndRemoveUntil(
                                         context,
                                         MaterialPageRoute(
@@ -1083,6 +1085,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
           loader = false;
           setState(() {});
           Provider.of<ProviderService>(context, listen: false).allfalse();
+          Provider.of<ServiceProvider>(context, listen: false).getUserDetail();
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
@@ -1132,6 +1135,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
               appleloader = false;
               appleloader = false;
               setState(() {});
+                 Provider.of<ServiceProvider>(context, listen: false).getUserDetail();
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
@@ -1190,6 +1194,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
           Provider.of<ProviderService>(context, listen: false).allfalse();
           appleloader = false;
           setState(() {});
+             Provider.of<ServiceProvider>(context, listen: false).getUserDetail();
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
@@ -1244,6 +1249,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
               appleloader = false;
               appleloader = false;
               setState(() {});
+                 Provider.of<ServiceProvider>(context, listen: false).getUserDetail();
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
@@ -1302,6 +1308,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
             Navigator.pop(context);
             Provider.of<ProviderService>(context, listen: false).allfalse();
             loader = false;
+               Provider.of<ServiceProvider>(context, listen: false).getUserDetail();
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
@@ -1339,7 +1346,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
         AppService().savedeicetoken(data).then((value) {
           Navigator.pop(context);
           Provider.of<ProviderService>(context, listen: false).allfalse();
-
+             Provider.of<ServiceProvider>(context, listen: false).getUserDetail();
           print(value);
           Navigator.pushAndRemoveUntil(
               context,
@@ -1414,6 +1421,7 @@ class GooeyCarouselState extends State<GooeyCarousel>
           AppService().savedeicetoken(data).then((value) {
             print(value);
             loader = true;
+            Provider.of<ServiceProvider>(context, listen: false).getUserDetail();
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
